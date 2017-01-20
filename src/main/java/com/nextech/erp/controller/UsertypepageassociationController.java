@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.nextech.erp.model.Page;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;

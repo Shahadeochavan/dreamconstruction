@@ -1,17 +1,21 @@
 package com.nextech.erp.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name="unit")
-public class Unit {
+@NamedQuery(name="Unit.findAll", query="SELECT u FROM Unit u")
+public class Unit implements Serializable {
+	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@Column(name="id")
@@ -39,6 +43,9 @@ public class Unit {
 	private Timestamp updatedDate;
 	
 	private boolean isactive;
+	
+	@OneToMany(mappedBy="unit")
+	private List<RawMaterial> rawmaterials;
 	public long getId() {
 		return id;
 	}
@@ -100,6 +107,14 @@ public class Unit {
 
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
+	}
+
+	public List<RawMaterial> getRawmaterials() {
+		return rawmaterials;
+	}
+
+	public void setRawmaterials(List<RawMaterial> rawmaterials) {
+		this.rawmaterials = rawmaterials;
 	}
 
 

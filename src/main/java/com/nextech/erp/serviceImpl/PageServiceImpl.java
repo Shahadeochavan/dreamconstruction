@@ -3,14 +3,13 @@ package com.nextech.erp.serviceImpl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.PageDao;
 import com.nextech.erp.model.Page;
 import com.nextech.erp.service.PageService;
 
 public class PageServiceImpl implements PageService{
+	
 	@Autowired
 	PageDao pagedao;
 

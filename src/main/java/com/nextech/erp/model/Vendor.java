@@ -1,20 +1,20 @@
 package com.nextech.erp.model;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 import javax.validation.constraints.Size;
-
+import org.hibernate.annotations.NamedQuery;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
-@Table(name = "vendor")
-public class Vendor {
-
+@NamedQuery(name="Vendor.findAll", query="SELECT v FROM Vendor v")
+public class Vendor implements Serializable {
+	private static final long serialVersionUID = 1L;
 	@Id
 	@Column(name = "id")
 	private long id;

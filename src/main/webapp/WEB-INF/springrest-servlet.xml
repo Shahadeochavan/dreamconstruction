@@ -1,0 +1,57 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+	<context:component-scan base-package="com.nextech.erp" />
+	<mvc:annotation-driven />
+	<bean id="validator"
+		class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/erp" />
+		<property name="username" value="root" />
+		<property name="password" value="root" />
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="annotatedClasses">
+			<list>
+				<value>com.nextech.erp.model.User</value>
+				<value>com.nextech.erp.model.Usertype</value>
+				<value>com.nextech.erp.model.Usertypepageassociation</value>
+				<value>com.nextech.erp.model.Page</value>
+				<value>com.nextech.erp.model.Vendor</value>
+				<value>com.nextech.erp.model.Statustransition</value>
+				<value>com.nextech.erp.model.Status</value>
+			</list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="txManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+	
+	<bean id="userdao" class="com.nextech.erp.daoImpl.UserDaoImpl" />
+	<bean id="userservice" class="com.nextech.erp.serviceImpl.UserServiceImpl" />
+	<bean id="userTypeDao" class="com.nextech.erp.daoImpl.UsertypeDaoImpl" />
+	<bean id="userTypeService" class="com.nextech.erp.serviceImpl.UserTypeServiceImpl" />
+	<bean id="pagedao" class="com.nextech.erp.daoImpl.PapeDaoImpl" />
+	<bean id="pageservice" class="com.nextech.erp.serviceImpl.PageServiceImpl" />
+	<bean id="usertypepageassociationDao" class="com.nextech.erp.daoImpl.UsertypepageassociationDaoImpl" />
+	<bean id="usertypepageassociationService"
+		class="com.nextech.erp.serviceImpl.UsertypepageassociationServiceImpl" />
+	<bean id="vendorDao" class="com.nextech.erp.daoImpl.VendorDaoImpl" />
+	<bean id="vendorService" class="com.nextech.erp.serviceImpl.VendorServiceImpl" />
+	<bean id="statustransitionDao" class="com.nextech.erp.daoImpl.StatustransitionDaoImpl" />
+	<bean id="statustransitionService" class="com.nextech.erp.serviceImpl.StatustransitionServiceImpl" />
+	<bean id="statusDao" class="com.nextech.erp.daoImpl.StatusDaoImpl" />
+	<bean id="statusService" class="com.nextech.erp.serviceImpl.StatusServiceImpl" />
+</beans>

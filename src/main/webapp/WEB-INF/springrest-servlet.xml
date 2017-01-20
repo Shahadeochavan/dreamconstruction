@@ -25,6 +25,8 @@
 				<value>com.nextech.erp.model.Vendor</value>
 				<value>com.nextech.erp.model.Statustransition</value>
 				<value>com.nextech.erp.model.Status</value>
+				<value>com.nextech.erp.model.Product</value>
+				<value>com.nextech.erp.model.Unit</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -54,4 +56,8 @@
 	<bean id="statustransitionService" class="com.nextech.erp.serviceImpl.StatustransitionServiceImpl" />
 	<bean id="statusDao" class="com.nextech.erp.daoImpl.StatusDaoImpl" />
 	<bean id="statusService" class="com.nextech.erp.serviceImpl.StatusServiceImpl" />
+	<bean id="productDao" class="com.nextech.erp.daoImpl.ProductDaoImpl" />
+	<bean id="productService" class="com.nextech.erp.serviceImpl.ProductServiceImpl" />
+	<bean id="unittDao" class="com.nextech.erp.daoImpl.UnitDaoImpl" />
+	<bean id="unitService" class="com.nextech.erp.serviceImpl.UnitServiceImpl" />
 </beans>

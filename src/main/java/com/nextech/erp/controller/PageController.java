@@ -28,8 +28,8 @@ public class PageController {
 	PageService pageservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPage(
-			@Valid @RequestBody Page page, BindingResult bindingResult) {
+	public @ResponseBody UserStatus addPage(@Valid @RequestBody Page page,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -75,7 +75,6 @@ public class PageController {
 	}
 
 	@CrossOrigin(origins = "http://localhost:8080")
-	/* Getting List of objects in Json format in Spring Restful Services */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Page> getPage() {
 
@@ -90,9 +89,8 @@ public class PageController {
 		return PageList;
 	}
 
-	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteEmployee(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
 
 		try {
 			Page page = pageservice.getPageById(id);

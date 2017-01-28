@@ -1,0 +1,244 @@
+package com.nextech.erp.model;
+
+import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Date;
+import java.sql.Timestamp;
+import java.util.List;
+
+
+/**
+ * The persistent class for the rawmaterialorder database table.
+ * 
+ */
+@Entity
+@NamedQuery(name="Rawmaterialorder.findAll", query="SELECT r FROM Rawmaterialorder r")
+public class Rawmaterialorder implements Serializable {
+	private static final long serialVersionUID = 1L;
+
+	@Id
+	private int id;
+
+	@Column(name="actual_price")
+	private float actualPrice;
+
+	@Column(name="created_by")
+	private String createdBy;
+
+	@Column(name="created_date")
+	private Timestamp createdDate;
+
+	@Temporal(TemporalType.DATE)
+	private Date createDate;
+
+	private String description;
+
+	@Temporal(TemporalType.DATE)
+	@Column(name="expected_delivery_date")
+	private Date expectedDeliveryDate;
+
+	private byte isactive;
+
+	private String name;
+
+	@Column(name="other_charges")
+	private float otherCharges;
+
+	private int quantity;
+
+	private float tax;
+
+	private float totalprice;
+
+	@Column(name="updated_by")
+	private String updatedBy;
+
+	@Column(name="updated_date")
+	private Timestamp updatedDate;
+
+	//bi-directional many-to-one association to Rawmaterial
+	@ManyToOne
+	private Rawmaterial rawmaterial;
+
+	//bi-directional many-to-one association to Status
+	@ManyToOne
+	private Status status;
+
+	//bi-directional many-to-one association to Vendor
+	@ManyToOne
+	private Vendor vendor;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	@OneToMany(mappedBy="rawmaterialorder")
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
+
+	public Rawmaterialorder() {
+	}
+
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public float getActualPrice() {
+		return this.actualPrice;
+	}
+
+	public void setActualPrice(float actualPrice) {
+		this.actualPrice = actualPrice;
+	}
+
+	public String getCreatedBy() {
+		return this.createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Timestamp getCreatedDate() {
+		return this.createdDate;
+	}
+
+	public void setCreatedDate(Timestamp createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public Date getCreateDate() {
+		return this.createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public Date getExpectedDeliveryDate() {
+		return this.expectedDeliveryDate;
+	}
+
+	public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
+	}
+
+	public byte getIsactive() {
+		return this.isactive;
+	}
+
+	public void setIsactive(byte isactive) {
+		this.isactive = isactive;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public float getOtherCharges() {
+		return this.otherCharges;
+	}
+
+	public void setOtherCharges(float otherCharges) {
+		this.otherCharges = otherCharges;
+	}
+
+	public int getQuantity() {
+		return this.quantity;
+	}
+
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
+
+	public float getTax() {
+		return this.tax;
+	}
+
+	public void setTax(float tax) {
+		this.tax = tax;
+	}
+
+	public float getTotalprice() {
+		return this.totalprice;
+	}
+
+	public void setTotalprice(float totalprice) {
+		this.totalprice = totalprice;
+	}
+
+	public String getUpdatedBy() {
+		return this.updatedBy;
+	}
+
+	public void setUpdatedBy(String updatedBy) {
+		this.updatedBy = updatedBy;
+	}
+
+	public Timestamp getUpdatedDate() {
+		return this.updatedDate;
+	}
+
+	public void setUpdatedDate(Timestamp updatedDate) {
+		this.updatedDate = updatedDate;
+	}
+
+	public Rawmaterial getRawmaterial() {
+		return this.rawmaterial;
+	}
+
+	public void setRawmaterial(Rawmaterial rawmaterial) {
+		this.rawmaterial = rawmaterial;
+	}
+
+	public Status getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
+	public Vendor getVendor() {
+		return this.vendor;
+	}
+
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
+	}
+
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories() {
+		return this.rawmaterialorderhistories;
+	}
+
+	public void setRawmaterialorderhistories(List<Rawmaterialorderhistory> rawmaterialorderhistories) {
+		this.rawmaterialorderhistories = rawmaterialorderhistories;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistory(Rawmaterialorderhistory rawmaterialorderhistory) {
+		getRawmaterialorderhistories().add(rawmaterialorderhistory);
+		rawmaterialorderhistory.setRawmaterialorder(this);
+
+		return rawmaterialorderhistory;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistory(Rawmaterialorderhistory rawmaterialorderhistory) {
+		getRawmaterialorderhistories().remove(rawmaterialorderhistory);
+		rawmaterialorderhistory.setRawmaterialorder(null);
+
+		return rawmaterialorderhistory;
+	}
+
+}

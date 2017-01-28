@@ -1,83 +1,72 @@
 package com.nextech.erp.model;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
+/**
+ * The persistent class for the status database table.
+ * 
+ */
 @Entity
-@Table(name="status")
-public class Status {
-	
+@NamedQuery(name="Status.findAll", query="SELECT s FROM Status s")
+public class Status implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	@Id
-	@Column(name="id")
-	private long id;
-	
-	@NotEmpty(message = "Please enter your name")
-	@Size(min = 2, max = 15, message = "{Please enter greater than 5 or less than 30 character material name}")
-	@Column(name="name")
-	private String name;
-	
-	@Size(min = 5, max = 15, message = "{Please enter greater than 5 or less than 30 character description}")
-	@Column(name="description")
-	private String description;
-	
-	@Size(min = 5, max = 15, message = "{Please enter greater than 5 or less than 30 character type}")
-	@Column(name="type")
-	private String type;
-	
-	@Column(name = "created_By")
+	private int id;
+
+	@Column(name="created_by")
 	private int createdBy;
 
-	@Column(name = "created_Date")
+	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@Column(name = "updated_By")
+	private String description;
+
+	private boolean isactive;
+
+	private String name;
+
+	private String type;
+
+	@Column(name="updated_by")
 	private int updatedBy;
 
-	@Column(name = "updated_Date")
+	@Column(name="updated_date")
 	private Timestamp updatedDate;
-	
-	private boolean isactive;
-	public long getId() {
-		return id;
+
+	//bi-directional many-to-one association to Productinventoryhistory
+	@OneToMany(mappedBy="status")
+	private List<Productinventoryhistory> productinventoryhistories;
+
+	//bi-directional many-to-one association to Productorder
+	@OneToMany(mappedBy="status")
+	private List<Productorder> productorders;
+
+	//bi-directional many-to-one association to Rawmaterialinventoryhistory
+	@OneToMany(mappedBy="status")
+	private List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories;
+
+	//bi-directional many-to-one association to Rawmaterialorder
+	@OneToMany(mappedBy="status")
+	private List<Rawmaterialorder> rawmaterialorders;
+
+	public Status() {
 	}
 
-	public void setId(long id) {
+	public int getId() {
+		return this.id;
+	}
+
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public int getCreatedBy() {
-		return createdBy;
+		return this.createdBy;
 	}
 
 	public void setCreatedBy(int createdBy) {
@@ -85,15 +74,47 @@ public class Status {
 	}
 
 	public Timestamp getCreatedDate() {
-		return createdDate;
+		return this.createdDate;
 	}
 
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
 	}
 
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public boolean getIsactive() {
+		return this.isactive;
+	}
+
+	public void setIsactive(boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getType() {
+		return this.type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
 	public int getUpdatedBy() {
-		return updatedBy;
+		return this.updatedBy;
 	}
 
 	public void setUpdatedBy(int updatedBy) {
@@ -101,20 +122,99 @@ public class Status {
 	}
 
 	public Timestamp getUpdatedDate() {
-		return updatedDate;
+		return this.updatedDate;
 	}
 
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 
-	public boolean isIsactive() {
-		return isactive;
+	public List<Productinventoryhistory> getProductinventoryhistories() {
+		return this.productinventoryhistories;
 	}
 
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
+	public void setProductinventoryhistories(List<Productinventoryhistory> productinventoryhistories) {
+		this.productinventoryhistories = productinventoryhistories;
 	}
 
+	public Productinventoryhistory addProductinventoryhistory(Productinventoryhistory productinventoryhistory) {
+		getProductinventoryhistories().add(productinventoryhistory);
+		productinventoryhistory.setStatus(this);
+
+		return productinventoryhistory;
+	}
+
+	public Productinventoryhistory removeProductinventoryhistory(Productinventoryhistory productinventoryhistory) {
+		getProductinventoryhistories().remove(productinventoryhistory);
+		productinventoryhistory.setStatus(null);
+
+		return productinventoryhistory;
+	}
+
+	public List<Productorder> getProductorders() {
+		return this.productorders;
+	}
+
+	public void setProductorders(List<Productorder> productorders) {
+		this.productorders = productorders;
+	}
+
+	public Productorder addProductorder(Productorder productorder) {
+		getProductorders().add(productorder);
+		productorder.setStatus(this);
+
+		return productorder;
+	}
+
+	public Productorder removeProductorder(Productorder productorder) {
+		getProductorders().remove(productorder);
+		productorder.setStatus(null);
+
+		return productorder;
+	}
+
+	public List<Rawmaterialinventoryhistory> getRawmaterialinventoryhistories() {
+		return this.rawmaterialinventoryhistories;
+	}
+
+	public void setRawmaterialinventoryhistories(List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories) {
+		this.rawmaterialinventoryhistories = rawmaterialinventoryhistories;
+	}
+
+	public Rawmaterialinventoryhistory addRawmaterialinventoryhistory(Rawmaterialinventoryhistory rawmaterialinventoryhistory) {
+		getRawmaterialinventoryhistories().add(rawmaterialinventoryhistory);
+		rawmaterialinventoryhistory.setStatus(this);
+
+		return rawmaterialinventoryhistory;
+	}
+
+	public Rawmaterialinventoryhistory removeRawmaterialinventoryhistory(Rawmaterialinventoryhistory rawmaterialinventoryhistory) {
+		getRawmaterialinventoryhistories().remove(rawmaterialinventoryhistory);
+		rawmaterialinventoryhistory.setStatus(null);
+
+		return rawmaterialinventoryhistory;
+	}
+
+	public List<Rawmaterialorder> getRawmaterialorders() {
+		return this.rawmaterialorders;
+	}
+
+	public void setRawmaterialorders(List<Rawmaterialorder> rawmaterialorders) {
+		this.rawmaterialorders = rawmaterialorders;
+	}
+
+	public Rawmaterialorder addRawmaterialorder(Rawmaterialorder rawmaterialorder) {
+		getRawmaterialorders().add(rawmaterialorder);
+		rawmaterialorder.setStatus(this);
+
+		return rawmaterialorder;
+	}
+
+	public Rawmaterialorder removeRawmaterialorder(Rawmaterialorder rawmaterialorder) {
+		getRawmaterialorders().remove(rawmaterialorder);
+		rawmaterialorder.setStatus(null);
+
+		return rawmaterialorder;
+	}
 
 }

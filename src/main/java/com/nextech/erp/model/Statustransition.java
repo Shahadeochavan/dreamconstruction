@@ -1,126 +1,72 @@
 package com.nextech.erp.model;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-
+/**
+ * The persistent class for the statustransition database table.
+ * 
+ */
 @Entity
-@Table(name = "statustransition")
-public class Statustransition {
+@NamedQuery(name="Statustransition.findAll", query="SELECT s FROM Statustransition s")
+public class Statustransition implements Serializable {
+	private static final long serialVersionUID = 1L;
 
-	@NotNull
 	@Id
-	@Column(name = "id")
-	private long id;
+	private int id;
 
-	@NotEmpty(message = "Please enter your name")
-	@Size(min = 2, max = 15, message = "{Please enter greater than 5 or less than 30 character material name}")
-	@Column(name = "name")
-	private String name;
-
-	@Size(min = 5, max = 15, message = "{Please enter greater than 5 or less than 30 character description}")
-	@Column(name = "description")
-	private String description;
-
-	@NotEmpty(message = "Please enter your from status")
-	@Size(min = 2, max = 15, message = "{Please enter greater than 5 or less than 30 character status}")
-	@Column(name = "from_status")
-	private String from_status;
-
-	@NotEmpty(message = "Please enter your to status")
-	@Size(min = 2, max = 15, message = "{Please enter greater than 5 or less than 30 character status}")
-	@Column(name = "to_status")
-	private String to_status;
-
-	@NotEmpty(message = "Please enter your email address")
-	@Email(message = "Please enter valid email address")
-	@Column(name = "isNotificationEmail")
-	private String isNotificationEmail;
-
-	@Size(min = 10,max = 10, message = "{phone number entered valid number and 10 minimum digits}")
-	@Column(name = "isNotificationSMS")
-	private String isNotificationSMS;
-
-	@Column(name = "created_By")
+	@Column(name="created_by")
 	private int createdBy;
 
-	@Column(name = "created_Date")
+	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@Column(name = "updated_By")
-	private int updatedBy;
+	private String description;
 
-	@Column(name = "updated_Date")
-	private Timestamp updatedDate;
+	@Column(name="from_status")
+	private String fromStatus;
 
 	private boolean isactive;
 
-	public String getTo_status() {
-		return to_status;
+	private String isNotificationEmail;
+
+	private String isNotificationSMS;
+
+	private String name;
+
+	@Column(name="to_status")
+	private String toStatus;
+
+	@Column(name="updated_by")
+	private int updatedBy;
+
+	@Column(name="updated_date")
+	private Timestamp updatedDate;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	@OneToMany(mappedBy="statustransition1")
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories1;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	@OneToMany(mappedBy="statustransition2")
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories2;
+
+	public Statustransition() {
 	}
 
-	public void setTo_status(String to_status) {
-		this.to_status = to_status;
+	public int getId() {
+		return this.id;
 	}
 
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getFrom_status() {
-		return from_status;
-	}
-
-	public void setFrom_status(String from_status) {
-		this.from_status = from_status;
-	}
-
-	public String getIsNotificationEmail() {
-		return isNotificationEmail;
-	}
-
-	public void setIsNotificationEmail(String isNotificationEmail) {
-		this.isNotificationEmail = isNotificationEmail;
-	}
-
-	public String getIsNotificationSMS() {
-		return isNotificationSMS;
-	}
-
-	public void setIsNotificationSMS(String isNotificationSMS) {
-		this.isNotificationSMS = isNotificationSMS;
-	}
-
 	public int getCreatedBy() {
-		return createdBy;
+		return this.createdBy;
 	}
 
 	public void setCreatedBy(int createdBy) {
@@ -128,15 +74,71 @@ public class Statustransition {
 	}
 
 	public Timestamp getCreatedDate() {
-		return createdDate;
+		return this.createdDate;
 	}
 
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
 	}
 
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getFromStatus() {
+		return this.fromStatus;
+	}
+
+	public void setFromStatus(String fromStatus) {
+		this.fromStatus = fromStatus;
+	}
+
+	public boolean getIsactive() {
+		return this.isactive;
+	}
+
+	public void setIsactive(boolean isactive) {
+		this.isactive = isactive;
+	}
+
+	public String getIsNotificationEmail() {
+		return this.isNotificationEmail;
+	}
+
+	public void setIsNotificationEmail(String isNotificationEmail) {
+		this.isNotificationEmail = isNotificationEmail;
+	}
+
+	public String getIsNotificationSMS() {
+		return this.isNotificationSMS;
+	}
+
+	public void setIsNotificationSMS(String isNotificationSMS) {
+		this.isNotificationSMS = isNotificationSMS;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getToStatus() {
+		return this.toStatus;
+	}
+
+	public void setToStatus(String toStatus) {
+		this.toStatus = toStatus;
+	}
+
 	public int getUpdatedBy() {
-		return updatedBy;
+		return this.updatedBy;
 	}
 
 	public void setUpdatedBy(int updatedBy) {
@@ -144,19 +146,55 @@ public class Statustransition {
 	}
 
 	public Timestamp getUpdatedDate() {
-		return updatedDate;
+		return this.updatedDate;
 	}
 
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
 
-	public boolean isIsactive() {
-		return isactive;
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories1() {
+		return this.rawmaterialorderhistories1;
 	}
 
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
+	public void setRawmaterialorderhistories1(List<Rawmaterialorderhistory> rawmaterialorderhistories1) {
+		this.rawmaterialorderhistories1 = rawmaterialorderhistories1;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistories1(Rawmaterialorderhistory rawmaterialorderhistories1) {
+		getRawmaterialorderhistories1().add(rawmaterialorderhistories1);
+		rawmaterialorderhistories1.setStatustransition1(this);
+
+		return rawmaterialorderhistories1;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistories1(Rawmaterialorderhistory rawmaterialorderhistories1) {
+		getRawmaterialorderhistories1().remove(rawmaterialorderhistories1);
+		rawmaterialorderhistories1.setStatustransition1(null);
+
+		return rawmaterialorderhistories1;
+	}
+
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories2() {
+		return this.rawmaterialorderhistories2;
+	}
+
+	public void setRawmaterialorderhistories2(List<Rawmaterialorderhistory> rawmaterialorderhistories2) {
+		this.rawmaterialorderhistories2 = rawmaterialorderhistories2;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistories2(Rawmaterialorderhistory rawmaterialorderhistories2) {
+		getRawmaterialorderhistories2().add(rawmaterialorderhistories2);
+		rawmaterialorderhistories2.setStatustransition2(this);
+
+		return rawmaterialorderhistories2;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistories2(Rawmaterialorderhistory rawmaterialorderhistories2) {
+		getRawmaterialorderhistories2().remove(rawmaterialorderhistories2);
+		rawmaterialorderhistories2.setStatustransition2(null);
+
+		return rawmaterialorderhistories2;
 	}
 
 }

@@ -4,56 +4,51 @@ import java.io.Serializable;
 import javax.persistence.*;
 import java.sql.Timestamp;
 
+
 /**
  * The persistent class for the usertypepageassociation database table.
  * 
  */
 @Entity
-@NamedQuery(name = "Usertypepageassociation.findAll", query = "SELECT u FROM Usertypepageassociation u")
+@NamedQuery(name="Usertypepageassociation.findAll", query="SELECT u FROM Usertypepageassociation u")
 public class Usertypepageassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private long id;
+	private int id;
 
-	@Column(name = "created_by")
+	@Column(name="created_by")
 	private String createdBy;
 
-	@Column(name = "created_date")
+	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@Column(name = "updated_by")
+	private boolean isactive;
+
+	@Column(name="updated_by")
 	private String updatedBy;
 
-	@Column(name = "updated_date")
+	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	// bi-directional many-to-one association to Usertype
+	//bi-directional many-to-one association to Usertype
 	@ManyToOne
-	@JoinColumn(name = "usertypeid")
+	@JoinColumn(name="usertypeid")
 	private Usertype usertype;
-	// bi-directional many-to-one association to Page
+
+	//bi-directional many-to-one association to Page
 	@ManyToOne
-	@JoinColumn(name = "pageid")
+	@JoinColumn(name="pageid")
 	private Page page;
 
 	public Usertypepageassociation() {
 	}
-	private boolean isactive;
 
-	public boolean isIsactive() {
-		return isactive;
-	}
-
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
-	}
-
-	public long getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -71,6 +66,14 @@ public class Usertypepageassociation implements Serializable {
 
 	public void setCreatedDate(Timestamp createdDate) {
 		this.createdDate = createdDate;
+	}
+
+	public boolean getIsactive() {
+		return this.isactive;
+	}
+
+	public void setIsactive(boolean isactive) {
+		this.isactive = isactive;
 	}
 
 	public String getUpdatedBy() {

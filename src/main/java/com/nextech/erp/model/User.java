@@ -1,16 +1,7 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -23,10 +14,9 @@ import java.sql.Timestamp;
 @NamedQuery(name="User.findAll", query="SELECT u FROM User u")
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
-	@NotNull
+
 	@Id
-	private long id;
+	private int id;
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -39,27 +29,19 @@ public class User implements Serializable {
 
 	@Temporal(TemporalType.DATE)
 	private Date doj;
-	
-    @Email(message="Please enter valid email address")
+
 	private String email;
-    
-    @Size(min = 2, max = 15, message = "{Please enter greater than 2 or less than 15 character firstName}")
-    @NotEmpty(message="Please enter your first name")
+
 	@Column(name="first_name")
 	private String firstName;
 
 	private boolean isactive;
-    
-	@Size(min=2,max=15 ,message="{Please enter greater than 2 or less than 15 character lastName}")
+
 	@Column(name="last_name")
 	private String lastName;
 
-	@NotEmpty(message="Please enter your valid number")
-    @Size(min = 10,max = 10, message ="{phone number entered [${validatedValue}] is invalid. It must have at least {min} digits}")
 	private String mobile;
 
-
-	@Size(min=5,message="{Please enter 5 digit password}")
 	private String password;
 
 	@Column(name="updated_by")
@@ -68,32 +50,23 @@ public class User implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	@NotNull
 	private String userid;
 
 	//bi-directional many-to-one association to Usertype
-	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name="usertypeid")
 	private Usertype usertype;
 
 	public User() {
-	
 	}
 
-	
-
-	public long getId() {
-		return id;
+	public int getId() {
+		return this.id;
 	}
 
-
-
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
-
-
 
 	public String getCreatedBy() {
 		return this.createdBy;
@@ -143,8 +116,8 @@ public class User implements Serializable {
 		this.firstName = firstName;
 	}
 
-	public boolean isIsactive() {
-		return isactive;
+	public boolean getIsactive() {
+		return this.isactive;
 	}
 
 	public void setIsactive(boolean isactive) {

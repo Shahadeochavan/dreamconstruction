@@ -1,79 +1,58 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.sql.Timestamp;
 import java.util.List;
+
 
 /**
  * The persistent class for the usertype database table.
  * 
  */
 @Entity
-@NamedQuery(name = "Usertype.findAll", query = "SELECT u FROM Usertype u")
+@NamedQuery(name="Usertype.findAll", query="SELECT u FROM Usertype u")
 public class Usertype implements Serializable {
 	private static final long serialVersionUID = 1L;
-   
-	@NotNull
-	@Id
-	private long id;
 
-	@Column(name = "created_by")
+	@Id
+	private int id;
+
+	@Column(name="created_by")
 	private String createdBy;
 
-	@Column(name = "created_date")
+	@Column(name="created_date")
 	private Timestamp createdDate;
-	private boolean isactive;
 
-	public boolean isIsactive() {
-		return isactive;
-	}
-
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
-	}
-	  
-	@Size(min = 5, max = 15, message = "{Please enter greater than 5 or less than 30 character description}")
 	private String description;
 
-	@Column(name = "updated_by")
+	private boolean isactive;
+
+	@Column(name="updated_by")
 	private String updatedBy;
-  
-	
-	@Column(name = "updated_date")
+
+	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	 @Size(min = 2, max = 15, message = "{Please enter greater than 2 or less than 15 character usertypeName}")
-	@Column(name = "usertype_name")
+	@Column(name="usertype_name")
 	private String usertypeName;
 
-	// bi-directional many-to-one association to User
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usertype", cascade = CascadeType.ALL)
+	//bi-directional many-to-one association to User
+	@OneToMany(mappedBy="usertype")
 	private List<User> users;
 
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usertype", cascade = CascadeType.ALL)
+	//bi-directional many-to-one association to Usertypepageassociation
+	@OneToMany(mappedBy="usertype")
 	private List<Usertypepageassociation> usertypepageassociations;
 
-	public Usertype(int id) {
-		this.id=id;
-	}
-	
 	public Usertype() {
 	}
 
-	public long getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -99,6 +78,14 @@ public class Usertype implements Serializable {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public boolean getIsactive() {
+		return this.isactive;
+	}
+
+	public void setIsactive(boolean isactive) {
+		this.isactive = isactive;
 	}
 
 	public String getUpdatedBy() {
@@ -151,21 +138,18 @@ public class Usertype implements Serializable {
 		return this.usertypepageassociations;
 	}
 
-	public void setUsertypepageassociations(
-			List<Usertypepageassociation> usertypepageassociations) {
+	public void setUsertypepageassociations(List<Usertypepageassociation> usertypepageassociations) {
 		this.usertypepageassociations = usertypepageassociations;
 	}
 
-	public Usertypepageassociation addUsertypepageassociation(
-			Usertypepageassociation usertypepageassociation) {
+	public Usertypepageassociation addUsertypepageassociation(Usertypepageassociation usertypepageassociation) {
 		getUsertypepageassociations().add(usertypepageassociation);
 		usertypepageassociation.setUsertype(this);
 
 		return usertypepageassociation;
 	}
 
-	public Usertypepageassociation removeUsertypepageassociation(
-			Usertypepageassociation usertypepageassociation) {
+	public Usertypepageassociation removeUsertypepageassociation(Usertypepageassociation usertypepageassociation) {
 		getUsertypepageassociations().remove(usertypepageassociation);
 		usertypepageassociation.setUsertype(null);
 

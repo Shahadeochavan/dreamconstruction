@@ -3,6 +3,10 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -26,6 +30,8 @@ public class Rawmaterialorder implements Serializable {
 	@Id
 	private long id;
 
+	@DecimalMax(value = "100.00", message = "The actualPrice value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The actualPrice value can not be less than 1.00 digit ")
 	@Column(name="actual_price")
 	private float actualPrice;
 
@@ -48,15 +54,25 @@ public class Rawmaterialorder implements Serializable {
 
 	private boolean isactive;
 
+	@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@DecimalMax(value = "100.00", message = "The otherCharges value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The otherCharges value can not be less than 1.00 digit ")
 	@Column(name="other_charges")
 	private float otherCharges;
 
+	 @Min(value = 0, message = "please enter quantity")
+	/* @Max(value = 100, message = "quantity should be maximum 100")*/
 	private int quantity;
 
+	/*@DecimalMax(value = "100.00", message = "The tax value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The tax value can not be less than 1.00 digit ")*/
 	private float tax;
 
+	/*@DecimalMax(value = "100.00", message = "The totalprice value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The totalprice value can not be less than 1.00 digit ")*/
 	private float totalprice;
 
 	@Column(name="updated_by")

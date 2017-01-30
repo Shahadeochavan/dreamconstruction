@@ -3,8 +3,10 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 import java.util.Date;
 import java.sql.Timestamp;
@@ -37,16 +39,24 @@ public class User implements Serializable {
 	@Email(message="{email should be enter valid")
 	private String email;
 
+	@NotBlank(message="{first Name should not be blank}")
+	@Size(min = 2, max = 255, message = "{first Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="first_name")
 	private String firstName;
 
 	private boolean isactive;
 
+	@NotBlank(message="{last Name should not be blank}")
+	@Size(min = 2, max = 255, message = "{last Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="last_name")
 	private String lastName;
 
+	@NotBlank(message="{contact number  should not be blank}")
+	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String mobile;
 
+	@NotBlank(message="{password should not be blank}")
+	@Size(min = 5, max = 255, message = "{password sholud be greater than 5 or less than 255 characters or digits}")
 	private String password;
 
 	@Column(name="updated_by")
@@ -55,6 +65,8 @@ public class User implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
+	@NotBlank(message="{userid should not be blank}")
+	@Size(min = 5, max = 255, message = "{userid sholud be greater than 5 or less than 255 characters or digits}")
 	private String userid;
 
 	//bi-directional many-to-one association to Usertype

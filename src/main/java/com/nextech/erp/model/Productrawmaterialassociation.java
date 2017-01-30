@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+
 import java.sql.Timestamp;
 
 
@@ -25,6 +29,8 @@ public class Productrawmaterialassociation implements Serializable {
 
 	private boolean isactive;
 
+	 @Min(value = 0, message = "please enter quantity")
+	 @Max(value = 100, message = "quantity should be maximum 100")
 	private int quantity;
 
 	@Column(name="updated_by")

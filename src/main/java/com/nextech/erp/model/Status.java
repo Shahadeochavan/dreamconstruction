@@ -37,8 +37,12 @@ public class Status implements Serializable {
 
 	private boolean isactive;
 
+	@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{description sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@NotBlank(message="{type should not be blank}")
+	@Size(min = 2, max = 255, message = "{type sholud be greater than 2 or less than 255 characters}")
 	private String type;
 
 	@Column(name="updated_by")

@@ -3,6 +3,8 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -37,11 +39,17 @@ public class Rawmaterial implements Serializable {
 
 	private boolean isactive;
 
+	@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@NotBlank(message="{part number should not be blank}")
+	@Size(min = 2, max = 255, message = "{part number sholud be greater than 2 or less than 255 characters}")
 	@Column(name="part_number")
 	private String partNumber;
 
+	@DecimalMax(value = "100.00", message = "The pricePerUnit value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The pricePerUnit value can not be less than 1.00 digit ")
 	@Column(name="price_per_unit")
 	private float pricePerUnit;
 

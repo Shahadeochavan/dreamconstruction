@@ -3,6 +3,7 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -37,10 +38,15 @@ public class Rawmaterialinventory implements Serializable {
 
 	private boolean isactive;
 
+	@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	 @Min(value = 0, message = " please enter quantityavailabl")
 	private int quantityAvailable;
 
+	@NotBlank(message="{rack number should not be blank}")
+	@Size(min = 1, max = 255, message = "{rack number sholud be greater than 1 or less than 255 characters or digits}")
 	private Integer racknumber;
 
 	@Column(name="updated_by")

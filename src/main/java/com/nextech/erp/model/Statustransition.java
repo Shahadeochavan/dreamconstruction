@@ -36,6 +36,8 @@ public class Statustransition implements Serializable {
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	@NotBlank(message="{fromStatus should not be blank}")
+	@Size(min = 2, max = 255, message = "{fromStatus sholud be greater than 2 or less than 255 characters}")
 	@Column(name="from_status")
 	private String fromStatus;
 
@@ -44,10 +46,16 @@ public class Statustransition implements Serializable {
 	@Email(message="{email should be enter valid")
 	private String isNotificationEmail;
 
+	@NotBlank(message="{contact number  should not be blank}")
+	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String isNotificationSMS;
 
+	@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@NotBlank(message="{toStatus should not be blank}")
+	@Size(min = 2, max = 255, message = "{toStatus sholud be greater than 2 or less than 255 characters}")
 	@Column(name="to_status")
 	private String toStatus;
 

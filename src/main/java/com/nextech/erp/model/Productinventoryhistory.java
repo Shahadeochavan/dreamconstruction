@@ -3,6 +3,7 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -22,8 +23,10 @@ public class Productinventoryhistory implements Serializable {
 	@Id
 	private long id;
 
+	 @Min(value = 0, message = " please enter after quantity")
 	private int afterquantity;
 
+	 @Min(value = 0, message = " please enter before quantity")
 	private int beforequantity;
 
 	@Column(name="created_by")

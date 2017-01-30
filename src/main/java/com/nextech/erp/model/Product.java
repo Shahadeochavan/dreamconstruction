@@ -25,6 +25,8 @@ public class Product implements Serializable {
 	@Id
 	private long id;
 
+	@NotBlank(message="{client part number should not be blank}")
+	@Size(min = 1, max = 255, message = "{client part number sholud be greater than 4 or less than 255 characters or digits}")
 	private String clientpartnumber;
 
 	@Column(name="created_by")
@@ -37,12 +39,18 @@ public class Product implements Serializable {
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	@NotBlank(message="{design should not be blank}")
+	@Size(min = 2, max = 255, message = "{design sholud be greater than 2 or less than 255 characters}")
 	private String design;
 
 	private boolean isactive;
 
+	@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@NotBlank(message="{part number should not be blank}")
+	@Size(min = 1, max = 255, message = "{part number sholud be greater than 1 or less than 255 characters or digits}")
 	@Column(name="part_number")
 	private String partNumber;
 

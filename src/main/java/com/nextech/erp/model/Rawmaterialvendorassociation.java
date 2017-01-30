@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
+
 import java.sql.Timestamp;
 
 
@@ -25,9 +29,12 @@ public class Rawmaterialvendorassociation implements Serializable {
 
 	private boolean isactive;
 
+/*	@DecimalMax(value = "100.00", message = "The pricePerUnit value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The pricePerUnit value can not be less than 1.00 digit ")*/
 	@Column(name="price_per_unit")
 	private float pricePerUnit;
 
+	
 	@Column(name="updated_by")
 	private int updatedBy;
 

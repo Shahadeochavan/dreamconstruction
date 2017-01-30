@@ -43,6 +43,8 @@ public class Usertype implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
+	@NotBlank(message="{usertypeName should not be blank}")
+	@Size(min = 2, max = 255, message = "{usertypeName sholud be greater than 2 or less than 255 characters}")
 	@Column(name="usertype_name")
 	private String usertypeName;
 

@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Statustransition implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -47,21 +51,26 @@ public class Statustransition implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
-	@OneToMany(mappedBy="statustransition1")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "statustransition1", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories1;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
-	@OneToMany(mappedBy="statustransition2")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "statustransition2", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories2;
 
+	public Statustransition(int id) {
+		this.id=id;
+	}
 	public Statustransition() {
 	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

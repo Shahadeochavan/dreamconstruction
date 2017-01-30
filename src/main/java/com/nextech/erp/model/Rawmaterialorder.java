@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
 import java.sql.Timestamp;
 import java.util.List;
@@ -17,7 +21,7 @@ public class Rawmaterialorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="actual_price")
 	private float actualPrice;
@@ -37,7 +41,7 @@ public class Rawmaterialorder implements Serializable {
 	@Column(name="expected_delivery_date")
 	private Date expectedDeliveryDate;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private String name;
 
@@ -69,17 +73,23 @@ public class Rawmaterialorder implements Serializable {
 	private Vendor vendor;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
-	@OneToMany(mappedBy="rawmaterialorder")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
 
 	public Rawmaterialorder() {
 	}
 
-	public int getId() {
+	public Rawmaterialorder(int id) {
+		this.id=id;
+	}
+
+
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -131,11 +141,11 @@ public class Rawmaterialorder implements Serializable {
 		this.expectedDeliveryDate = expectedDeliveryDate;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

@@ -35,8 +35,10 @@ public class UsertypepageassociationDaoImpl implements UsertypepageassociationDa
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Usertypepageassociation) criteria.list().get(0)
+		Usertypepageassociation usertypepageassociation =criteria.list().size() > 0 ? (Usertypepageassociation) criteria.list().get(0)
 				: null;
+		session.close();
+		return usertypepageassociation;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })

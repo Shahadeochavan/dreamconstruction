@@ -16,7 +16,7 @@ public class Productorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -32,7 +32,7 @@ public class Productorder implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date expecteddeliveryDate;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private int quantity;
 
@@ -59,12 +59,15 @@ public class Productorder implements Serializable {
 
 	public Productorder() {
 	}
+	public Productorder(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -108,11 +111,11 @@ public class Productorder implements Serializable {
 		this.expecteddeliveryDate = expecteddeliveryDate;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

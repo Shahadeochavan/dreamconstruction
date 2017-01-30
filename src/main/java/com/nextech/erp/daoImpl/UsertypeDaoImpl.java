@@ -35,8 +35,10 @@ public class UsertypeDaoImpl implements UserTypeDao {
 		Criteria criteria = session.createCriteria(Usertype.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Usertype) criteria.list().get(0)
+		Usertype usertype= criteria.list().size() > 0 ? (Usertype) criteria.list().get(0)
 				: null;
+		session.close();
+		return usertype;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })

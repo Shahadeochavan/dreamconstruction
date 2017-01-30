@@ -15,7 +15,7 @@ public class Rawmaterialvendorassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -23,7 +23,7 @@ public class Rawmaterialvendorassociation implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	private byte isactive;
+	private boolean isactive;
 
 	@Column(name="price_per_unit")
 	private float pricePerUnit;
@@ -44,12 +44,15 @@ public class Rawmaterialvendorassociation implements Serializable {
 
 	public Rawmaterialvendorassociation() {
 	}
+	public Rawmaterialvendorassociation(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -69,11 +72,11 @@ public class Rawmaterialvendorassociation implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

@@ -36,8 +36,10 @@ public class StatusDaoImpl implements StatusDao{
 		Criteria criteria = session.createCriteria(Status.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Status) criteria.list().get(0)
+		Status status= criteria.list().size() > 0 ? (Status) criteria.list().get(0)
 				: null;
+		session.close();
+		return status;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -45,6 +47,7 @@ public class StatusDaoImpl implements StatusDao{
 	public List<Status> getStatusist() throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Status.class);
+		criteria.add(Restrictions.eq("isactive", true));
 		List<Status> statusList = criteria.list();
 		session.close();
 		return statusList;

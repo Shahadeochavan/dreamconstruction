@@ -29,14 +29,16 @@ public class UsertypepageassociationController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPageAss(
-			@Valid @RequestBody Usertypepageassociation usertypepageassociation, BindingResult bindingResult) {
+			@Valid @RequestBody Usertypepageassociation usertypepageassociation,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 			usertypepageassociationService.addPageAss(usertypepageassociation);
-			return new UserStatus(1, "Usertypepageassociation added Successfully !");
+			return new UserStatus(1,
+					"Usertypepageassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -74,7 +76,7 @@ public class UsertypepageassociationController {
 			return new UserStatus(1,
 					"Usertypepageassociation update Successfully !");
 		} catch (Exception e) {
-			 e.printStackTrace();
+			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -100,9 +102,11 @@ public class UsertypepageassociationController {
 	public @ResponseBody UserStatus deletePageAss(@PathVariable("id") long id) {
 
 		try {
-			Usertypepageassociation usertypepageassociation = usertypepageassociationService.getPageAssById(id);
+			Usertypepageassociation usertypepageassociation = usertypepageassociationService
+					.getPageAssById(id);
 			usertypepageassociation.setIsactive(false);
-			usertypepageassociationService.updatePageAss(usertypepageassociation);
+			usertypepageassociationService
+					.updatePageAss(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation deleted Successfully !");
 		} catch (Exception e) {

@@ -39,8 +39,10 @@ public class StatustransitionDaoImpl implements StatustransitionDao {
 		Criteria criteria = session.createCriteria(Statustransition.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Statustransition) criteria.list()
+		Statustransition statustransition =criteria.list().size() > 0 ? (Statustransition) criteria.list()
 				.get(0) : null;
+				session.close();
+				return statustransition;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })

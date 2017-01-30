@@ -70,7 +70,7 @@ public class UnitController {
 			unitservice.updateUnit(Unit);
 			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}

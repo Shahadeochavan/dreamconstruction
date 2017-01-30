@@ -15,7 +15,7 @@ public class Productinventoryhistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	private int afterquantity;
 
@@ -29,7 +29,7 @@ public class Productinventoryhistory implements Serializable {
 
 	private String description;
 
-	private byte isactive;
+	private boolean isactive;
 
 	@Column(name="updated_by")
 	private int updatedBy;
@@ -49,12 +49,16 @@ public class Productinventoryhistory implements Serializable {
 
 	public Productinventoryhistory() {
 	}
+	public Productinventoryhistory(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -98,11 +102,11 @@ public class Productinventoryhistory implements Serializable {
 		this.description = description;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

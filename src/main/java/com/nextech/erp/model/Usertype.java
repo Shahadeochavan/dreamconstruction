@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Usertype implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -38,21 +42,27 @@ public class Usertype implements Serializable {
 	private String usertypeName;
 
 	//bi-directional many-to-one association to User
-	@OneToMany(mappedBy="usertype")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usertype", cascade = CascadeType.ALL)
 	private List<User> users;
 
 	//bi-directional many-to-one association to Usertypepageassociation
-	@OneToMany(mappedBy="usertype")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "usertype", cascade = CascadeType.ALL)
 	private List<Usertypepageassociation> usertypepageassociations;
 
 	public Usertype() {
 	}
+	public Usertype(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Rawmaterialinventory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -26,7 +30,7 @@ public class Rawmaterialinventory implements Serializable {
 
 	private String description;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private String name;
 
@@ -45,17 +49,21 @@ public class Rawmaterialinventory implements Serializable {
 	private Rawmaterial rawmaterial;
 
 	//bi-directional many-to-one association to Rawmaterialinventoryhistory
-	@OneToMany(mappedBy="rawmaterialinventory")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialinventory", cascade = CascadeType.ALL)
 	private List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories;
 
 	public Rawmaterialinventory() {
 	}
+	public Rawmaterialinventory(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -83,11 +91,11 @@ public class Rawmaterialinventory implements Serializable {
 		this.description = description;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

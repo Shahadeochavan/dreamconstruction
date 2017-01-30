@@ -15,7 +15,7 @@ public class Rawmaterialinventoryhistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -25,7 +25,7 @@ public class Rawmaterialinventoryhistory implements Serializable {
 
 	private String description;
 
-	private byte isactive;
+	private boolean isactive;
 
 	@Column(name="updated_by")
 	private int updatedBy;
@@ -44,11 +44,16 @@ public class Rawmaterialinventoryhistory implements Serializable {
 	public Rawmaterialinventoryhistory() {
 	}
 
-	public int getId() {
+	public Rawmaterialinventoryhistory(int id) {
+		this.id=id;
+	}
+
+
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -76,11 +81,11 @@ public class Rawmaterialinventoryhistory implements Serializable {
 		this.description = description;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

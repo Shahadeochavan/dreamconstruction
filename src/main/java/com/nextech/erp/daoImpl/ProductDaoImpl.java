@@ -35,8 +35,10 @@ public class ProductDaoImpl implements ProductDao {
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Product) criteria.list().get(0)
+		Product product= criteria.list().size() > 0 ? (Product) criteria.list().get(0)
 				: null;
+		session.close();
+		return product;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -44,6 +46,7 @@ public class ProductDaoImpl implements ProductDao {
 	public List<Product> getProductist() throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Product.class);
+		criteria.add(Restrictions.eq("isactive", true));
 		List<Product> productList = criteria.list();
 		session.close();
 		return productList;

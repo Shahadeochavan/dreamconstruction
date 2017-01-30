@@ -15,7 +15,7 @@ public class Usertypepageassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -31,24 +31,28 @@ public class Usertypepageassociation implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Usertype
-	@ManyToOne
-	@JoinColumn(name="usertypeid")
-	private Usertype usertype;
-
 	//bi-directional many-to-one association to Page
 	@ManyToOne
 	@JoinColumn(name="pageid")
 	private Page page;
 
+	//bi-directional many-to-one association to Usertype
+	@ManyToOne
+	@JoinColumn(name="usertypeid")
+	private Usertype usertype;
+
 	public Usertypepageassociation() {
 	}
+	public Usertypepageassociation(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -92,20 +96,20 @@ public class Usertypepageassociation implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Usertype getUsertype() {
-		return this.usertype;
-	}
-
-	public void setUsertype(Usertype usertype) {
-		this.usertype = usertype;
-	}
-
 	public Page getPage() {
 		return this.page;
 	}
 
 	public void setPage(Page page) {
 		this.page = page;
+	}
+
+	public Usertype getUsertype() {
+		return this.usertype;
+	}
+
+	public void setUsertype(Usertype usertype) {
+		this.usertype = usertype;
 	}
 
 }

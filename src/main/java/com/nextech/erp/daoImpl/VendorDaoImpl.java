@@ -41,8 +41,10 @@ public class VendorDaoImpl implements VendorDao {
 		Criteria criteria = session.createCriteria(Vendor.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Vendor) criteria.list()
+		Vendor vendor= criteria.list().size() > 0 ? (Vendor) criteria.list()
 				.get(0) : null;
+				session.close();
+				return vendor;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })

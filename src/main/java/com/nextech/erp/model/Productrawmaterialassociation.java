@@ -15,7 +15,7 @@ public class Productrawmaterialassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -23,7 +23,7 @@ public class Productrawmaterialassociation implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private int quantity;
 
@@ -33,24 +33,27 @@ public class Productrawmaterialassociation implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterial
-	@ManyToOne
-	@JoinColumn(name="rawmaterialid")
-	private Rawmaterial rawmaterial;
-
 	//bi-directional many-to-one association to Product
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
 
+	//bi-directional many-to-one association to Rawmaterial
+	@ManyToOne
+	@JoinColumn(name="rawmaterialid")
+	private Rawmaterial rawmaterial;
+
 	public Productrawmaterialassociation() {
 	}
+	public Productrawmaterialassociation(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -70,11 +73,11 @@ public class Productrawmaterialassociation implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 
@@ -102,20 +105,20 @@ public class Productrawmaterialassociation implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Rawmaterial getRawmaterial() {
-		return this.rawmaterial;
-	}
-
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
-	}
-
 	public Product getProduct() {
 		return this.product;
 	}
 
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+
+	public Rawmaterial getRawmaterial() {
+		return this.rawmaterial;
+	}
+
+	public void setRawmaterial(Rawmaterial rawmaterial) {
+		this.rawmaterial = rawmaterial;
 	}
 
 }

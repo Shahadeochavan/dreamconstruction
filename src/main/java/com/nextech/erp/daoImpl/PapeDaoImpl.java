@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.PageDao;
 import com.nextech.erp.model.Page;
+import com.nextech.erp.model.Usertypepageassociation;
 
 public class PapeDaoImpl implements PageDao{
 
@@ -36,8 +37,10 @@ public class PapeDaoImpl implements PageDao{
 		Criteria criteria = session.createCriteria(Page.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Page) criteria.list().get(0)
+		Page page =criteria.list().size() > 0 ? (Page) criteria.list().get(0)
 				: null;
+		session.close();
+		return page;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -45,6 +48,7 @@ public class PapeDaoImpl implements PageDao{
 	public List<Page> getPageist() throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Page.class);
+		criteria.add(Restrictions.eq("isactive", true));
 		List<Page> pageList = criteria.list();
 		session.close();
 		return pageList;

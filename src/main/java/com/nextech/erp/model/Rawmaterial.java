@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Rawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -26,7 +30,7 @@ public class Rawmaterial implements Serializable {
 
 	private String description;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private String name;
 
@@ -42,34 +46,41 @@ public class Rawmaterial implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterialinventory
-	@OneToMany(mappedBy="rawmaterial")
-	private List<Rawmaterialinventory> rawmaterialinventories;
-
 	//bi-directional many-to-one association to Productrawmaterialassociation
-	@OneToMany(mappedBy="rawmaterial")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
 
 	//bi-directional many-to-one association to Unit
 	@ManyToOne
 	private Unit unit;
 
+	//bi-directional many-to-one association to Rawmaterialinventory
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
+	private List<Rawmaterialinventory> rawmaterialinventories;
+
 	//bi-directional many-to-one association to Rawmaterialorder
-	@OneToMany(mappedBy="rawmaterial")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rawmaterialorder> rawmaterialorders;
 
 	//bi-directional many-to-one association to Rawmaterialvendorassociation
-	@OneToMany(mappedBy="rawmaterial")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rawmaterialvendorassociation> rawmaterialvendorassociations;
 
 	public Rawmaterial() {
 	}
+	public Rawmaterial(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -97,11 +108,11 @@ public class Rawmaterial implements Serializable {
 		this.description = description;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 
@@ -145,28 +156,6 @@ public class Rawmaterial implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public List<Rawmaterialinventory> getRawmaterialinventories() {
-		return this.rawmaterialinventories;
-	}
-
-	public void setRawmaterialinventories(List<Rawmaterialinventory> rawmaterialinventories) {
-		this.rawmaterialinventories = rawmaterialinventories;
-	}
-
-	public Rawmaterialinventory addRawmaterialinventory(Rawmaterialinventory rawmaterialinventory) {
-		getRawmaterialinventories().add(rawmaterialinventory);
-		rawmaterialinventory.setRawmaterial(this);
-
-		return rawmaterialinventory;
-	}
-
-	public Rawmaterialinventory removeRawmaterialinventory(Rawmaterialinventory rawmaterialinventory) {
-		getRawmaterialinventories().remove(rawmaterialinventory);
-		rawmaterialinventory.setRawmaterial(null);
-
-		return rawmaterialinventory;
-	}
-
 	public List<Productrawmaterialassociation> getProductrawmaterialassociations() {
 		return this.productrawmaterialassociations;
 	}
@@ -195,6 +184,28 @@ public class Rawmaterial implements Serializable {
 
 	public void setUnit(Unit unit) {
 		this.unit = unit;
+	}
+
+	public List<Rawmaterialinventory> getRawmaterialinventories() {
+		return this.rawmaterialinventories;
+	}
+
+	public void setRawmaterialinventories(List<Rawmaterialinventory> rawmaterialinventories) {
+		this.rawmaterialinventories = rawmaterialinventories;
+	}
+
+	public Rawmaterialinventory addRawmaterialinventory(Rawmaterialinventory rawmaterialinventory) {
+		getRawmaterialinventories().add(rawmaterialinventory);
+		rawmaterialinventory.setRawmaterial(this);
+
+		return rawmaterialinventory;
+	}
+
+	public Rawmaterialinventory removeRawmaterialinventory(Rawmaterialinventory rawmaterialinventory) {
+		getRawmaterialinventories().remove(rawmaterialinventory);
+		rawmaterialinventory.setRawmaterial(null);
+
+		return rawmaterialinventory;
 	}
 
 	public List<Rawmaterialorder> getRawmaterialorders() {

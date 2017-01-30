@@ -35,8 +35,10 @@ public class UnitDaoImpl implements UnitDao{
 		Criteria criteria = session.createCriteria(Unit.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (Unit) criteria.list().get(0)
+		Unit unit= criteria.list().size() > 0 ? (Unit) criteria.list().get(0)
 				: null;
+		session.close();
+		return unit;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
@@ -44,6 +46,7 @@ public class UnitDaoImpl implements UnitDao{
 	public List<Unit> getUnitist() throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Unit.class);
+		criteria.add(Restrictions.eq("isactive", true));
 		List<Unit> unitList = criteria.list();
 		session.close();
 		return unitList;

@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Client implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	private String address;
 
@@ -36,7 +40,7 @@ public class Client implements Serializable {
 
 	private String emailid;
 
-	private byte isactive;
+	private boolean isactive;
 
 	@Column(name="updated_by")
 	private int updatedBy;
@@ -45,17 +49,21 @@ public class Client implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Productorder
-	@OneToMany(mappedBy="client")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
 	private List<Productorder> productorders;
 
 	public Client() {
 	}
+	public Client(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -123,11 +131,11 @@ public class Client implements Serializable {
 		this.emailid = emailid;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

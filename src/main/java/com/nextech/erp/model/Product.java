@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	private String clientpartnumber;
 
@@ -44,25 +48,31 @@ public class Product implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Productinventory
-	@OneToMany(mappedBy="product")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productinventory> productinventories;
 
 	//bi-directional many-to-one association to Productorder
-	@OneToMany(mappedBy="product")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productorder> productorders;
 
 	//bi-directional many-to-one association to Productrawmaterialassociation
-	@OneToMany(mappedBy="product")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
 
 	public Product() {
 	}
+	public Product(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

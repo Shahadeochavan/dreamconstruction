@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -16,7 +20,7 @@ public class Vendor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private int id;
+	private long id;
 
 	private String address;
 
@@ -60,21 +64,26 @@ public class Vendor implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Rawmaterialorder
-	@OneToMany(mappedBy="vendor")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
 	private List<Rawmaterialorder> rawmaterialorders;
 
 	//bi-directional many-to-one association to Rawmaterialvendorassociation
-	@OneToMany(mappedBy="vendor")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
 	private List<Rawmaterialvendorassociation> rawmaterialvendorassociations;
 
 	public Vendor() {
 	}
+	public Vendor(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

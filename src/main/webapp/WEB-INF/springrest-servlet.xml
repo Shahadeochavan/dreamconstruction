@@ -94,4 +94,6 @@
 		class="com.nextech.erp.serviceImpl.RawmaterialinventoryhistoryServiceImpl" />
 	<bean id="rawmaterialorderDao" class="com.nextech.erp.daoImpl.RawmaterialorderDaoImpl" />
 	<bean id="rawmaterialorderService" class="com.nextech.erp.serviceImpl.RawmaterialorderServiceImpl" />
+	<bean id="rawmaterialorderhistoryDao" class="com.nextech.erp.daoImpl.RawmaterialorderhistoryDaoImpl" />
+	<bean id="rawmaterialorderhistoryService" class="com.nextech.erp.serviceImpl.RawmaterialorderhistoryServiceImpl" />
 </beans>

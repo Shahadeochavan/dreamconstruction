@@ -21,4 +21,5 @@ public interface ProductRMAssoService {
 	public Productrawmaterialassociation updateProductrawmaterialassociation(
 			Productrawmaterialassociation productrawmaterialassociation)
 			throws Exception;
+	public Productrawmaterialassociation getPRAssociationById(long pid, long rid) throws Exception;
 }

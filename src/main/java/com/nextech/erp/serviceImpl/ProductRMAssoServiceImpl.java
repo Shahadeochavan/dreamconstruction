@@ -50,5 +50,10 @@ public class ProductRMAssoServiceImpl implements ProductRMAssoService {
 		return productrmassDao
 				.updateProductrawmaterialassociation(productrawmaterialassociation);
 	}
+	@Override
+	public Productrawmaterialassociation getPRAssociationById(long pid,long rid) throws Exception {
+		return productrmassDao.getPRMAssociationByPidRmid(pid,rid);
+	}
+
 
 }

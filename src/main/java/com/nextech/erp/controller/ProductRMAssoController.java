@@ -36,8 +36,14 @@ public class ProductRMAssoController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productRMAssoService
-					.addProductrawmaterialassociation(productrawmaterialassociation);
+			if (productRMAssoService.getPRAssociationById(
+					productrawmaterialassociation.getProduct().getId(),
+					productrawmaterialassociation.getRawmaterial().getId()) == null)
+				productRMAssoService
+						.addProductrawmaterialassociation(productrawmaterialassociation);
+			else
+				return new UserStatus(1,
+						"Productrawmaterialassociation added Successfully !");
 			return new UserStatus(1,
 					"Productrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {

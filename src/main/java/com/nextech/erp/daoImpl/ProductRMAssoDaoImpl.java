@@ -79,5 +79,18 @@ public class ProductRMAssoDaoImpl implements ProductRMAssoDao {
 		session.close();
 		return Productrawmaterialassociation;
 	}
+	@Override
+	public Productrawmaterialassociation getPRMAssociationByPidRmid(long pid, long rmid) throws Exception{
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("pid", pid));
+		criteria.add(Restrictions.eq("rid",rmid));
+		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list()
+				.get(0) : null;
+		session.close();
+		return Productrawmaterialassociation;
+	}
 }
 

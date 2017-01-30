@@ -3,6 +3,10 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,12 +26,20 @@ public class Client implements Serializable {
 	@Id
 	private long id;
 
+	@NotBlank(message="{address should not be blank}")
+	@Size(min = 2, max = 255, message = "{address sholud be greater than 2 or less than 255 characters}")
 	private String address;
 
+	@NotBlank(message="{company name  should not be blank}")
+	@Size(min = 2, max = 255, message = "{company name sholud be greater than 2 or less than 255 characters}")
 	private String companyname;
 
+	@NotBlank(message="{contact number  should not be blank}")
+	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String contactnumber;
 
+	@NotBlank(message="{person contact number  should not be blank}")
+	@Size(min = 10, max = 10, message = "{person contact number should be 10 digits}")
 	private String contactpersonname;
 
 	@Column(name="created_by")
@@ -36,8 +48,12 @@ public class Client implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+
+	@NotBlank(message="{description should not be blank}")
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	@Email(message="{email should be enter valid")
 	private String emailid;
 
 	private boolean isactive;

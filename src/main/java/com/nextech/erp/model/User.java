@@ -1,7 +1,11 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import org.hibernate.validator.constraints.Email;
+
 import java.util.Date;
 import java.sql.Timestamp;
 
@@ -30,6 +34,7 @@ public class User implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date doj;
 
+	@Email(message="{email should be enter valid")
 	private String email;
 
 	@Column(name="first_name")

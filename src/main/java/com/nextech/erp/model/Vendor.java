@@ -3,6 +3,10 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -21,17 +25,27 @@ public class Vendor implements Serializable {
 
 	@Id
 	private long id;
-
+	
+	@NotBlank(message="{address should not be blank}")
+	@Size(min = 2, max = 255, message = "{address sholud be greater than 2 or less than 255 characters}")
 	private String address;
 
+	@NotBlank(message="{city should not be blank}")
+	@Size(min = 2, max = 255, message = "{city sholud be greater than 2 or less than 255 characters}")
 	private String city;
 
+	@NotBlank(message="{company name  should not be blank}")
+	@Size(min = 2, max = 255, message = "{company name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="company_name")
 	private String companyName;
 
+	@NotBlank(message="{contact number  should not be blank}")
+	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	@Column(name="contact_number_mobile")
 	private String contactNumberMobile;
 
+	@NotBlank(message="{office contact number should not be blank}")
+	@Size(min = 10, max = 10, message = "{office contact number should be 10 digits}")
 	@Column(name="contact_number_office")
 	private String contactNumberOffice;
 
@@ -41,20 +55,30 @@ public class Vendor implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+	@NotBlank(message="{description should not be blank}")
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	@Email(message="{email should be enter valid")
 	private String email;
 
+	@NotBlank(message="{first Name should not be blank}")
+	@Size(min = 2, max = 255, message = "{first Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="first_name")
 	private String firstName;
 
 	private boolean isactive;
 
+	@NotBlank(message="{last Name should not be blank}")
+	@Size(min = 2, max = 255, message = "{last Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="last_name")
 	private String lastName;
 
+	@NotBlank(message="{postalcode should not be blank}")
 	private String postalcode;
 
+	@NotBlank(message="{state should not be blank}")
+	@Size(min = 2, max = 255, message = "{state sholud be greater than 2 or less than 255 characters}")
 	private String state;
 
 	@Column(name="updated_by")

@@ -1,7 +1,12 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import java.sql.Timestamp;
 
 
@@ -27,6 +32,8 @@ public class Productinventoryhistory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+	@NotBlank(message="{description should not be blank}")
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private boolean isactive;

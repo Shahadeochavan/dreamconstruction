@@ -93,6 +93,10 @@ public class Rawmaterialorder implements Serializable {
 	private Vendor vendor;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
+	private List<Orderrawmaterialassociation> orderrawmaterialassociations;
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
@@ -269,6 +273,15 @@ public class Rawmaterialorder implements Serializable {
 		rawmaterialorderhistory.setRawmaterialorder(null);
 
 		return rawmaterialorderhistory;
+	}
+
+	public List<Orderrawmaterialassociation> getOrderrawmaterialassociations() {
+		return orderrawmaterialassociations;
+	}
+
+	public void setOrderrawmaterialassociations(
+			List<Orderrawmaterialassociation> orderrawmaterialassociations) {
+		this.orderrawmaterialassociations = orderrawmaterialassociations;
 	}
 
 }

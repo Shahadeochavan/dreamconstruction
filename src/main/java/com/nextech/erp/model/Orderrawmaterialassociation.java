@@ -1,57 +1,50 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-
 import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the productrawmaterialassociation database table.
+ * The persistent class for the orderrawmaterialassociation database table.
  * 
  */
 @Entity
-@NamedQuery(name="Productrawmaterialassociation.findAll", query="SELECT p FROM Productrawmaterialassociation p")
-public class Productrawmaterialassociation implements Serializable {
+@NamedQuery(name="Orderrawmaterialassociation.findAll", query="SELECT o FROM Orderrawmaterialassociation o")
+public class Orderrawmaterialassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private long id;
 
 	@Column(name="created_by")
-	private String createdBy;
+	private int createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
 	private boolean isactive;
 
-	 @Min(value = 0, message = "please enter quantity")
-	 @Max(value = 100, message = "quantity should be maximum 100")
 	private int quantity;
 
 	@Column(name="updated_by")
-	private String updatedBy;
+	private int updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Product
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="productid")
-	private Product product;
-
 	//bi-directional many-to-one association to Rawmaterial
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="rawmaterialid")
+	@ManyToOne
 	private Rawmaterial rawmaterial;
 
-	public Productrawmaterialassociation() {
+	//bi-directional many-to-one association to Rawmaterialorder
+	@ManyToOne
+	@JoinColumn(name="order_id")
+	private Rawmaterialorder rawmaterialorder;
+
+	public Orderrawmaterialassociation() {
 	}
-	public Productrawmaterialassociation(int id) {
+	public Orderrawmaterialassociation(int id) {
 		this.id=id;
 	}
 
@@ -63,11 +56,11 @@ public class Productrawmaterialassociation implements Serializable {
 		this.id = id;
 	}
 
-	public String getCreatedBy() {
+	public int getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(int createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -95,11 +88,11 @@ public class Productrawmaterialassociation implements Serializable {
 		this.quantity = quantity;
 	}
 
-	public String getUpdatedBy() {
+	public int getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(int updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
@@ -111,20 +104,20 @@ public class Productrawmaterialassociation implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Product getProduct() {
-		return this.product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
 	public Rawmaterial getRawmaterial() {
 		return this.rawmaterial;
 	}
 
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
+	}
+
+	public Rawmaterialorder getRawmaterialorder() {
+		return this.rawmaterialorder;
+	}
+
+	public void setRawmaterialorder(Rawmaterialorder rawmaterialorder) {
+		this.rawmaterialorder = rawmaterialorder;
 	}
 
 }

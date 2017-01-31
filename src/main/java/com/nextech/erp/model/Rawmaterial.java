@@ -83,6 +83,10 @@ public class Rawmaterial implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rawmaterialvendorassociation> rawmaterialvendorassociations;
 
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
+	private List<Orderrawmaterialassociation> orderrawmaterialassociations;
 	public Rawmaterial() {
 	}
 	public Rawmaterial(int id) {
@@ -263,6 +267,13 @@ public class Rawmaterial implements Serializable {
 		rawmaterialvendorassociation.setRawmaterial(null);
 
 		return rawmaterialvendorassociation;
+	}
+	public List<Orderrawmaterialassociation> getOrderrawmaterialassociations() {
+		return orderrawmaterialassociations;
+	}
+	public void setOrderrawmaterialassociations(
+			List<Orderrawmaterialassociation> orderrawmaterialassociations) {
+		this.orderrawmaterialassociations = orderrawmaterialassociations;
 	}
 
 }

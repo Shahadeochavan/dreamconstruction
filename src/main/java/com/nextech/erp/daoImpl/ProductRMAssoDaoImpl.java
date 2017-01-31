@@ -81,12 +81,12 @@ public class ProductRMAssoDaoImpl implements ProductRMAssoDao {
 	}
 	@Override
 	public Productrawmaterialassociation getPRMAssociationByPidRmid(long pid, long rmid) throws Exception{
-		session = sessionFactory.openSession();
+ 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("pid", pid));
-		criteria.add(Restrictions.eq("rid",rmid));
+		criteria.add(Restrictions.eq("product.id", pid));
+		criteria.add(Restrictions.eq("rawmaterial.id",rmid));
 		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list()
 				.get(0) : null;
 		session.close();

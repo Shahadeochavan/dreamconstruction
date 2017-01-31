@@ -16,36 +16,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.nextech.erp.model.Productrawmaterialassociation;
-import com.nextech.erp.service.ProductRMAssoService;
+import com.nextech.erp.model.Orderrawmaterialassociation;
+import com.nextech.erp.service.OrderrawmaterialassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/productRMAsso")
-public class ProductRMAssoController {
+@RequestMapping("/orderrawmaterialassociation")
+public class OrderrawmaterialassociationController {
 
 	@Autowired
-	ProductRMAssoService productRMAssoService;
+	OrderrawmaterialassociationService orderrawmaterialassociationService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addProductrawmaterialassociation(
-			@Valid @RequestBody Productrawmaterialassociation productrawmaterialassociation,
+	public @ResponseBody UserStatus addOrderrawmaterialassociation(
+			@Valid @RequestBody Orderrawmaterialassociation orderrawmaterialassociation,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (productRMAssoService.getPRMAssociationByPidRmid(
-					productrawmaterialassociation.getProduct().getId(),
-					productrawmaterialassociation.getRawmaterial().getId()) == null)
-				productRMAssoService
-						.addProductrawmaterialassociation(productrawmaterialassociation);
-			else
-				return new UserStatus(1,
-						"Product raw materialassociation already exists !");
+			orderrawmaterialassociationService
+					.addOrderrawmaterialassociation(orderrawmaterialassociation);
 			return new UserStatus(1,
-					"Productrawmaterialassociation added Successfully !");
+					"Orderrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -62,26 +56,26 @@ public class ProductRMAssoController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productrawmaterialassociation getProductrawmaterialassociation(
+	public @ResponseBody Orderrawmaterialassociation getOrderrawmaterialassociation(
 			@PathVariable("id") long id) {
-		Productrawmaterialassociation Productrawmaterialassociation = null;
+		Orderrawmaterialassociation orderrawmaterialassociation = null;
 		try {
-			Productrawmaterialassociation = productRMAssoService
-					.getProductrawmaterialassociationById(id);
+			orderrawmaterialassociation = orderrawmaterialassociationService
+					.getOrderrawmaterialassociationById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Productrawmaterialassociation;
+		return orderrawmaterialassociation;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductrawmaterialassociation(
-			@RequestBody Productrawmaterialassociation productrawmaterialassociation) {
+	public @ResponseBody UserStatus updateOrderrawmaterialassociation(
+			@RequestBody Orderrawmaterialassociation orderrawmaterialassociation) {
 		try {
-			productRMAssoService
-					.updateProductrawmaterialassociation(productrawmaterialassociation);
+			orderrawmaterialassociationService
+					.updateOrderrawmaterialassociation(orderrawmaterialassociation);
 			return new UserStatus(1,
-					"Productrawmaterialassociation update Successfully !");
+					"Orderrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -90,32 +84,32 @@ public class ProductRMAssoController {
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productrawmaterialassociation> getProductrawmaterialassociation() {
+	public @ResponseBody List<Orderrawmaterialassociation> getOrderrawmaterialassociation() {
 
-		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
+		List<Orderrawmaterialassociation> orderrawmaterialassociationList = null;
 		try {
-			productrawmaterialassociationList = productRMAssoService
-					.getProductrawmaterialassociationList();
+			orderrawmaterialassociationList = orderrawmaterialassociationService
+					.getOrderrawmaterialassociationList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productrawmaterialassociationList;
+		return orderrawmaterialassociationList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductrawmaterialassociation(
+	public @ResponseBody UserStatus deleteOrderrawmaterialassociation(
 			@PathVariable("id") long id) {
 
 		try {
-			Productrawmaterialassociation productrawmaterialassociation = productRMAssoService
-					.getProductrawmaterialassociationById(id);
-			productrawmaterialassociation.setIsactive(false);
-			productRMAssoService
-					.updateProductrawmaterialassociation(productrawmaterialassociation);
+			Orderrawmaterialassociation orderrawmaterialassociation = orderrawmaterialassociationService
+					.getOrderrawmaterialassociationById(id);
+			orderrawmaterialassociation.setIsactive(false);
+			orderrawmaterialassociationService
+					.updateOrderrawmaterialassociation(orderrawmaterialassociation);
 			return new UserStatus(1,
-					"Productrawmaterialassociation deleted Successfully !");
+					"Orderrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

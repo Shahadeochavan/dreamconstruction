@@ -3,14 +3,12 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -23,7 +21,7 @@ public class Productorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private long id;
+	private int id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -34,8 +32,6 @@ public class Productorder implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	@Temporal(TemporalType.DATE)
@@ -43,8 +39,6 @@ public class Productorder implements Serializable {
 
 	private boolean isactive;
 
-	 @Min(value = 0, message = "please enter quantity")
-	 @Max(value = 100, message = "quantity should be maximum 100")
 	private int quantity;
 
 	@Column(name="updated_by")
@@ -53,10 +47,10 @@ public class Productorder implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Client
-	@ManyToOne
-	@JoinColumn(name="clientid")
-	private Client client;
+	//bi-directional many-to-one association to Orderproductassociation
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productorder", cascade = CascadeType.ALL)
+	private List<Orderproductassociation> orderproductassociations;
 
 	//bi-directional many-to-one association to Product
 	@ManyToOne
@@ -68,17 +62,22 @@ public class Productorder implements Serializable {
 	@JoinColumn(name="statusid")
 	private Status status;
 
+	//bi-directional many-to-one association to Client
+	@ManyToOne
+	@JoinColumn(name="clientid")
+	private Client client;
+
 	public Productorder() {
 	}
 	public Productorder(int id) {
 		this.id=id;
 	}
 
-	public long getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -154,12 +153,26 @@ public class Productorder implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Client getClient() {
-		return this.client;
+	public List<Orderproductassociation> getOrderproductassociations() {
+		return this.orderproductassociations;
 	}
 
-	public void setClient(Client client) {
-		this.client = client;
+	public void setOrderproductassociations(List<Orderproductassociation> orderproductassociations) {
+		this.orderproductassociations = orderproductassociations;
+	}
+
+	public Orderproductassociation addOrderproductassociation(Orderproductassociation orderproductassociation) {
+		getOrderproductassociations().add(orderproductassociation);
+		orderproductassociation.setProductorder(this);
+
+		return orderproductassociation;
+	}
+
+	public Orderproductassociation removeOrderproductassociation(Orderproductassociation orderproductassociation) {
+		getOrderproductassociations().remove(orderproductassociation);
+		orderproductassociation.setProductorder(null);
+
+		return orderproductassociation;
 	}
 
 	public Product getProduct() {
@@ -176,6 +189,14 @@ public class Productorder implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Client getClient() {
+		return this.client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
 }

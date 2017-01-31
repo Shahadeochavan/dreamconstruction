@@ -37,8 +37,8 @@ public class Unit implements Serializable {
 
 	private boolean isactive;
 
-	@NotBlank(message="{name should not be blank}")
-	@Size(min = 4, max = 255, message = "{name sholud be greater than 4 or less than 255 characters}")
+/*	@NotBlank(message="{name should not be blank}")
+	@Size(min = 4, max = 255, message = "{name sholud be greater than 4 or less than 255 characters}")*/
 	private String name;
 
 	@Column(name="updated_by")

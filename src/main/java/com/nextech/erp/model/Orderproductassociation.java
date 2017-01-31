@@ -1,18 +1,17 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the rawmaterialvendorassociation database table.
+ * The persistent class for the orderproductassociation database table.
  * 
  */
 @Entity
-@NamedQuery(name="Rawmaterialvendorassociation.findAll", query="SELECT r FROM Rawmaterialvendorassociation r")
-public class Rawmaterialvendorassociation implements Serializable {
+@NamedQuery(name="Orderproductassociation.findAll", query="SELECT o FROM Orderproductassociation o")
+public class Orderproductassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -26,29 +25,26 @@ public class Rawmaterialvendorassociation implements Serializable {
 
 	private boolean isactive;
 
-/*	@DecimalMax(value = "100.00", message = "The pricePerUnit value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The pricePerUnit value can not be less than 1.00 digit ")*/
-	@Column(name="price_per_unit")
-	private float pricePerUnit;
+	private int quantity;
 
-	
 	@Column(name="updated_by")
 	private int updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterial
+	//bi-directional many-to-one association to Product
 	@ManyToOne
-	private Rawmaterial rawmaterial;
+	private Product product;
 
-	//bi-directional many-to-one association to Vendor
+	//bi-directional many-to-one association to Productorder
 	@ManyToOne
-	private Vendor vendor;
+	@JoinColumn(name="order_id")
+	private Productorder productorder;
 
-	public Rawmaterialvendorassociation() {
+	public Orderproductassociation() {
 	}
-	public Rawmaterialvendorassociation(int id) {
+	public Orderproductassociation(int id) {
 		this.id=id;
 	}
 
@@ -84,12 +80,12 @@ public class Rawmaterialvendorassociation implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public float getPricePerUnit() {
-		return this.pricePerUnit;
+	public int getQuantity() {
+		return this.quantity;
 	}
 
-	public void setPricePerUnit(float pricePerUnit) {
-		this.pricePerUnit = pricePerUnit;
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
 	}
 
 	public int getUpdatedBy() {
@@ -108,20 +104,20 @@ public class Rawmaterialvendorassociation implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Rawmaterial getRawmaterial() {
-		return this.rawmaterial;
+	public Product getProduct() {
+		return this.product;
 	}
 
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
+	public void setProduct(Product product) {
+		this.product = product;
 	}
 
-	public Vendor getVendor() {
-		return this.vendor;
+	public Productorder getProductorder() {
+		return this.productorder;
 	}
 
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
+	public void setProductorder(Productorder productorder) {
+		this.productorder = productorder;
 	}
 
 }

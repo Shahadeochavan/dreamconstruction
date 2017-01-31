@@ -38,6 +38,7 @@
 				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
 				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
 				<value>com.nextech.erp.model.Client</value>
+				<value>com.nextech.erp.model.Orderproductassociation</value>
 
 			</list>
 		</property>
@@ -98,4 +99,6 @@
 	<bean id="rawmaterialorderhistoryService" class="com.nextech.erp.serviceImpl.RawmaterialorderhistoryServiceImpl" />
 	<bean id="rmvAssoDao" class="com.nextech.erp.daoImpl.RMVAssoDaoImpl" />
 	<bean id="rmvAssoService" class="com.nextech.erp.serviceImpl.RMVAssoServiceImpl" />
+	<bean id="orderproductassociationDao" class="com.nextech.erp.daoImpl.OrderproductassociationDaoImpl" />
+	<bean id="orderproductassociationService" class="com.nextech.erp.serviceImpl.OrderproductassociationServiceImpl" />
 </beans>

@@ -75,6 +75,9 @@ public class Product implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
 
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Orderproductassociation> orderproductassociations;
 	public Product() {
 	}
 	public Product(int id) {
@@ -233,6 +236,13 @@ public class Product implements Serializable {
 		productrawmaterialassociation.setProduct(null);
 
 		return productrawmaterialassociation;
+	}
+	public List<Orderproductassociation> getOrderproductassociations() {
+		return orderproductassociations;
+	}
+	public void setOrderproductassociations(
+			List<Orderproductassociation> orderproductassociations) {
+		this.orderproductassociations = orderproductassociations;
 	}
 
 }

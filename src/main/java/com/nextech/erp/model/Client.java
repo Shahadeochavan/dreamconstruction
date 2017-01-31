@@ -38,8 +38,7 @@ public class Client implements Serializable {
 	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String contactnumber;
 
-	@NotBlank(message="{person contact number  should not be blank}")
-	@Size(min = 10, max = 10, message = "{person contact number should be 10 digits}")
+	@Size(min = 2, max = 255, message = "{contactpersonname  sholud be greater than 2 or less than 255 characters}")
 	private String contactpersonname;
 
 	@Column(name="created_by")

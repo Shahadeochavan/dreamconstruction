@@ -45,8 +45,8 @@ public class Rawmaterialinventory implements Serializable {
 	 @Min(value = 0, message = " please enter quantityavailabl")
 	private int quantityAvailable;
 
-	@NotBlank(message="{rack number should not be blank}")
-	@Size(min = 1, max = 255, message = "{rack number sholud be greater than 1 or less than 255 characters or digits}")
+/*	@NotBlank(message="{rack number should not be blank}")
+	@Size(min = 1, max = 255, message = "{rack number sholud be greater than 1 or less than 255 characters or digits}")*/
 	private Integer racknumber;
 
 	@Column(name="updated_by")

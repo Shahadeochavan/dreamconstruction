@@ -8,10 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.PageDao;
 import com.nextech.erp.model.Page;
-import com.nextech.erp.model.Usertypepageassociation;
 
 public class PapeDaoImpl implements PageDao{
 

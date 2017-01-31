@@ -5,7 +5,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -30,8 +29,8 @@ public class Rawmaterialorder implements Serializable {
 	@Id
 	private long id;
 
-	@DecimalMax(value = "100.00", message = "The actualPrice value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The actualPrice value can not be less than 1.00 digit ")
+/*	@DecimalMax(value = "100.00", message = "The actualPrice value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The actualPrice value can not be less than 1.00 digit ")*/
 	@Column(name="actual_price")
 	private float actualPrice;
 
@@ -58,8 +57,8 @@ public class Rawmaterialorder implements Serializable {
 	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
-	@DecimalMax(value = "100.00", message = "The otherCharges value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The otherCharges value can not be less than 1.00 digit ")
+/*	@DecimalMax(value = "100.00", message = "The otherCharges value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The otherCharges value can not be less than 1.00 digit ")*/
 	@Column(name="other_charges")
 	private float otherCharges;
 

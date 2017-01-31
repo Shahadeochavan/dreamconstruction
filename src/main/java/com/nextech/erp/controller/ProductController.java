@@ -33,6 +33,7 @@ public class ProductController {
 						.getDefaultMessage());
 			}
 			productService.addProduct(product);
+			System.out.println(product.getId());
 			return new UserStatus(1, "Product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

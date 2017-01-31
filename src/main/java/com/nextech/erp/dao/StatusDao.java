@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Status;
 
 public interface StatusDao {
-	public boolean addStatus(Status status) throws Exception;
+	public Integer addStatus(Status status) throws Exception;
 
 	public Status getStatusById(long id) throws Exception;
 

@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductorderDao;
@@ -20,18 +19,13 @@ public class ProductorderDaoImpl implements ProductorderDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addProductorder(Productorder productorder) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(productorder);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addProductorder");
-			cve.printStackTrace();
-		}
-		return false;
+	public Integer addProductorder(Productorder productorder) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Integer id = (Integer) session.save(productorder);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

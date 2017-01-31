@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -16,8 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.model.Orderproductassociation;
+import com.nextech.erp.model.ProductOrderAssociationModel;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.service.ClientService;
+import com.nextech.erp.service.OrderproductassociationService;
 import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -26,7 +33,16 @@ public class ProductorderController {
 
 	@Autowired
 	ProductorderService productorderService;
+	
+	@Autowired
+	OrderproductassociationService orderproductassociationService;  
 
+	@Autowired
+	ClientService clientService;
+	
+	@Autowired
+	StatusService statusService; 
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorder(
 			@Valid @RequestBody Productorder productorder, BindingResult bindingResult) {
@@ -37,6 +53,45 @@ public class ProductorderController {
 			}
 			productorderService.addProductorder(productorder);
 			return new UserStatus(1, "Productorder added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
+	
+	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addMultipleProductorder(
+			@Valid @RequestBody ProductOrderAssociationModel productOrderAssociationModel, BindingResult bindingResult) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+			}
+			Productorder productorder= new Productorder();
+			productorder.setClient(clientService.getClientById(productOrderAssociationModel.getClient()));
+			productorder.setCreateDate(new Date());
+			productorder.setDescription(productOrderAssociationModel.getDescription());
+			productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());
+			productorder.setQuantity(productOrderAssociationModel.getOrderproductassociations().size());
+			productorder.setStatus(statusService.getStatusById(2));
+			productorder.setIsactive(true);
+			Integer orderId = productorderService.addProductorder(productorder);
+			List<Orderproductassociation> orderproductassociations = productOrderAssociationModel.getOrderproductassociations();
+			if(orderproductassociations !=null && !orderproductassociations.isEmpty()){
+				for (Orderproductassociation orderproductassociation : orderproductassociations) {
+					orderproductassociation.setProductorder(productorder);
+					orderproductassociationService.addOrderproductassociation(orderproductassociation);
+				}
+			}
+			return new UserStatus(1, "Multiple Productorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

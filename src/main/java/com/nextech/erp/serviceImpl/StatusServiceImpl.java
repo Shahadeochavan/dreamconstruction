@@ -14,7 +14,7 @@ public class StatusServiceImpl implements StatusService {
 	StatusDao statusDao;
 
 	@Override
-	public boolean addStatus(Status status) throws Exception {
+	public Integer addStatus(Status status) throws Exception {
 		status.setCreatedDate(new Timestamp(new Date().getTime()));
 		return statusDao.addStatus(status);
 	}

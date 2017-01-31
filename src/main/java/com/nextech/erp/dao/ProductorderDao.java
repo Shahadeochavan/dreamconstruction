@@ -6,7 +6,7 @@ import com.nextech.erp.model.Productorder;
 
 public interface ProductorderDao {
 
-	public boolean addProductorder(Productorder Productorder) throws Exception;
+	public Integer addProductorder(Productorder Productorder) throws Exception;
 
 	public Productorder getProductorderById(long id) throws Exception;
 

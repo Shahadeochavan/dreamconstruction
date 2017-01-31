@@ -20,7 +20,8 @@ import java.util.List;
 public class Productorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private int id;
 
 	@Column(name="created_by")
@@ -51,11 +52,6 @@ public class Productorder implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productorder", cascade = CascadeType.ALL)
 	private List<Orderproductassociation> orderproductassociations;
-
-	//bi-directional many-to-one association to Product
-	@ManyToOne
-	@JoinColumn(name="productid")
-	private Product product;
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
@@ -173,14 +169,6 @@ public class Productorder implements Serializable {
 		orderproductassociation.setProductorder(null);
 
 		return orderproductassociation;
-	}
-
-	public Product getProduct() {
-		return this.product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
 	}
 
 	public Status getStatus() {

@@ -20,13 +20,13 @@ public class StatusDaoImpl implements StatusDao{
 	Transaction tx = null;
 
 	@Override
-	public boolean addStatus(Status status) throws Exception {
+	public Integer addStatus(Status status) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		session.save(status);
+		Integer id = (Integer) session.save(status);
 		tx.commit();
 		session.close();
-		return false;
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

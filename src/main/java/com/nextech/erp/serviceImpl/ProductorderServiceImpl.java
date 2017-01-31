@@ -16,7 +16,7 @@ public class ProductorderServiceImpl implements ProductorderService {
 	ProductorderDao productorderDao;
 
 	@Override
-	public boolean addProductorder(Productorder productorder) throws Exception {
+	public Integer addProductorder(Productorder productorder) throws Exception {
 		productorder.setCreatedDate(new Timestamp(new Date().getTime()));
 		return productorderDao.addProductorder(productorder);
 	}

@@ -18,4 +18,6 @@ public interface OrderproductassociationDao {
 
 	public Orderproductassociation updateOrderproductassociation(
 			Orderproductassociation orderproductassociation) throws Exception;
+	
+	
 }

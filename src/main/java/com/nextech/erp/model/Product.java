@@ -65,11 +65,6 @@ public class Product implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productinventory> productinventories;
 
-	//bi-directional many-to-one association to Productorder
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Productorder> productorders;
-
 	//bi-directional many-to-one association to Productrawmaterialassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
@@ -194,28 +189,7 @@ public class Product implements Serializable {
 		return productinventory;
 	}
 
-	public List<Productorder> getProductorders() {
-		return this.productorders;
-	}
-
-	public void setProductorders(List<Productorder> productorders) {
-		this.productorders = productorders;
-	}
-
-	public Productorder addProductorder(Productorder productorder) {
-		getProductorders().add(productorder);
-		productorder.setProduct(this);
-
-		return productorder;
-	}
-
-	public Productorder removeProductorder(Productorder productorder) {
-		getProductorders().remove(productorder);
-		productorder.setProduct(null);
-
-		return productorder;
-	}
-
+	
 	public List<Productrawmaterialassociation> getProductrawmaterialassociations() {
 		return this.productrawmaterialassociations;
 	}

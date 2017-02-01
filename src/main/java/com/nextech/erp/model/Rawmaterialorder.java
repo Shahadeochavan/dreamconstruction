@@ -3,8 +3,6 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
@@ -96,7 +94,7 @@ public class Rawmaterialorder implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
-	private List<Orderrawmaterialassociation> orderrawmaterialassociations;
+	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
@@ -275,13 +273,13 @@ public class Rawmaterialorder implements Serializable {
 		return rawmaterialorderhistory;
 	}
 
-	public List<Orderrawmaterialassociation> getOrderrawmaterialassociations() {
-		return orderrawmaterialassociations;
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociations() {
+		return rawmaterialorderassociations;
 	}
 
-	public void setOrderrawmaterialassociations(
-			List<Orderrawmaterialassociation> orderrawmaterialassociations) {
-		this.orderrawmaterialassociations = orderrawmaterialassociations;
+	public void setRawmaterialorderassociations(
+			List<Rawmaterialorderassociation> rawmaterialorderassociations) {
+		this.rawmaterialorderassociations = rawmaterialorderassociations;
 	}
 
 }

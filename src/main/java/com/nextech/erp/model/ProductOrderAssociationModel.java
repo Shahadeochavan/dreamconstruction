@@ -13,7 +13,7 @@ public class ProductOrderAssociationModel implements Serializable{
 	private long client;
 	private Date deliveryDate;	
 	private Date createDate;	
-	private List<Orderproductassociation> orderproductassociations;
+	private List<Productorderassociation> orderproductassociations;
 	public String getDescription() {
 		return description;
 	}
@@ -38,11 +38,11 @@ public class ProductOrderAssociationModel implements Serializable{
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
 	}
-	public List<Orderproductassociation> getOrderproductassociations() {
+	public List<Productorderassociation> getOrderproductassociations() {
 		return orderproductassociations;
 	}
 	public void setOrderproductassociations(
-			List<Orderproductassociation> orderproductassociations) {
+			List<Productorderassociation> orderproductassociations) {
 		this.orderproductassociations = orderproductassociations;
 	}	
 	

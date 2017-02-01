@@ -10,25 +10,25 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.nextech.erp.dao.OrderproductassociationDao;
-import com.nextech.erp.model.Orderproductassociation;
+import com.nextech.erp.dao.ProductorderassociationDao;
+import com.nextech.erp.model.Productorderassociation;
 
-public class OrderproductassociationDaoImpl implements OrderproductassociationDao{
+public class ProductorderassociationDaoImpl implements ProductorderassociationDao{
 	@Autowired
 	SessionFactory sessionFactory;
 	Session session = null;
 	Transaction tx = null;
 
 	@Override
-	public boolean addOrderproductassociation(Orderproductassociation orderproductassociation) {
+	public boolean addProductorderassociation(Productorderassociation productorderassociation) {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			session.save(orderproductassociation);
+			session.save(productorderassociation);
 			tx.commit();
 			session.close();
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addOrderproductassociation");
+			System.out.println("Inside addProductorderassociation");
 			cve.printStackTrace();
 		}
 		return false;
@@ -36,32 +36,32 @@ public class OrderproductassociationDaoImpl implements OrderproductassociationDa
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Orderproductassociation getOrderproductassociationById(long id) throws Exception {
+	public Productorderassociation getProductorderassociationById(long id) throws Exception {
 		session = sessionFactory.openSession();
-		Criteria criteria = session.createCriteria(Orderproductassociation.class);
+		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		Orderproductassociation orderproductassociation = criteria.list().size() > 0 ? (Orderproductassociation) criteria.list()
+		Productorderassociation productorderassociation = criteria.list().size() > 0 ? (Productorderassociation) criteria.list()
 				.get(0) : null;
 		session.close();
-		return orderproductassociation;
+		return productorderassociation;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
-	public List<Orderproductassociation> getOrderproductassociationList() throws Exception {
+	public List<Productorderassociation> getProductorderassociationList() throws Exception {
 		session = sessionFactory.openSession();
-		Criteria criteria = session.createCriteria(Orderproductassociation.class);
+		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		List<Orderproductassociation> orderproductassociationList = criteria.list();
+		List<Productorderassociation> productorderassociationList = criteria.list();
 		session.close();
-		return orderproductassociationList;
+		return productorderassociationList;
 	}
 
 	@Override
-	public boolean deleteOrderproductassociation(long id) throws Exception {
+	public boolean deleteProductorderassociation(long id) throws Exception {
 		session = sessionFactory.openSession();
-		Object o = session.load(Orderproductassociation.class, id);
+		Object o = session.load(Productorderassociation.class, id);
 		tx = session.getTransaction();
 		session.beginTransaction();
 		session.delete(o);
@@ -70,13 +70,13 @@ public class OrderproductassociationDaoImpl implements OrderproductassociationDa
 	}
 
 	@Override
-	public Orderproductassociation updateOrderproductassociation(Orderproductassociation orderproductassociation) throws Exception {
+	public Productorderassociation updateProductorderassociation(Productorderassociation productorderassociation) throws Exception {
 		session = sessionFactory.openSession();
 		session.beginTransaction();
-		session.update(orderproductassociation);
+		session.update(productorderassociation);
 		session.getTransaction().commit();
 		session.close();
-		return orderproductassociation;
+		return productorderassociation;
 	}
 }
 

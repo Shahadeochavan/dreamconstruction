@@ -16,27 +16,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.model.Orderproductassociation;
-import com.nextech.erp.service.OrderproductassociationService;
+import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/orderproductassociation")
-public class OrderproductassociationController {
+@RequestMapping("/productorderassociation")
+public class ProductorderassociationController {
 
 	@Autowired
-	OrderproductassociationService orderproductassociationService;
+	ProductorderassociationService productorderassociationService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addOrderproductassociation(
-			@Valid @RequestBody Orderproductassociation orderproductassociation, BindingResult bindingResult) {
+	public @ResponseBody UserStatus addProductorderassociation(
+			@Valid @RequestBody Productorderassociation productorderassociation, BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			orderproductassociationService.addOrderproductassociation(orderproductassociation);
-			return new UserStatus(1, "Orderproductassociation added Successfully !");
+			productorderassociationService.addProductorderassociation(productorderassociation);
+			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -53,21 +53,21 @@ public class OrderproductassociationController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Orderproductassociation getOrderproductassociation(@PathVariable("id") long id) {
-		Orderproductassociation Orderproductassociation = null;
+	public @ResponseBody Productorderassociation getProductorderassociation(@PathVariable("id") long id) {
+		Productorderassociation productorderassociation = null;
 		try {
-			Orderproductassociation = orderproductassociationService.getOrderproductassociationById(id);
+			productorderassociation = productorderassociationService.getProductorderassociationById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Orderproductassociation;
+		return productorderassociation;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateOrderproductassociation(@RequestBody Orderproductassociation orderproductassociation) {
+	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation) {
 		try {
-			orderproductassociationService.updateOrderproductassociation(orderproductassociation);
-			return new UserStatus(1, "Orderproductassociation update Successfully !");
+			productorderassociationService.updateProductorderassociation(productorderassociation);
+			return new UserStatus(1, "Productorderassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -76,27 +76,27 @@ public class OrderproductassociationController {
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Orderproductassociation> getOrderproductassociation() {
+	public @ResponseBody List<Productorderassociation> getProductorderassociation() {
 
-		List<Orderproductassociation> orderproductassociationList = null;
+		List<Productorderassociation> productorderassociationList = null;
 		try {
-			orderproductassociationList = orderproductassociationService.getOrderproductassociationList();
+			productorderassociationList = productorderassociationService.getProductorderassociationList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return orderproductassociationList;
+		return productorderassociationList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteOrderproductassociation(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {
 
 		try {
-			Orderproductassociation orderproductassociation = orderproductassociationService.getOrderproductassociationById(id);
-			orderproductassociation.setIsactive(false);
-			orderproductassociationService.updateOrderproductassociation(orderproductassociation);
-			return new UserStatus(1, "Orderproductassociation deleted Successfully !");
+			Productorderassociation productorderassociation = productorderassociationService.getProductorderassociationById(id);
+			productorderassociation.setIsactive(false);
+			productorderassociationService.updateProductorderassociation(productorderassociation);
+			return new UserStatus(1, "Productorderassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

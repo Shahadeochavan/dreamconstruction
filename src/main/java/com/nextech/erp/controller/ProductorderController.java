@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.nextech.erp.model.Orderproductassociation;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.ProductOrderAssociationModel;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.service.ClientService;
-import com.nextech.erp.service.OrderproductassociationService;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
@@ -35,7 +34,7 @@ public class ProductorderController {
 	ProductorderService productorderService;
 	
 	@Autowired
-	OrderproductassociationService orderproductassociationService;  
+	ProductorderassociationService productorderassociationService;  
 
 	@Autowired
 	ClientService clientService;
@@ -84,11 +83,11 @@ public class ProductorderController {
 			productorder.setStatus(statusService.getStatusById(2));
 			productorder.setIsactive(true);
 			Integer orderId = productorderService.addProductorder(productorder);
-			List<Orderproductassociation> orderproductassociations = productOrderAssociationModel.getOrderproductassociations();
-			if(orderproductassociations !=null && !orderproductassociations.isEmpty()){
-				for (Orderproductassociation orderproductassociation : orderproductassociations) {
-					orderproductassociation.setProductorder(productorder);
-					orderproductassociationService.addOrderproductassociation(orderproductassociation);
+			List<Productorderassociation> Productorderassociations = productOrderAssociationModel.getOrderproductassociations();
+			if(Productorderassociations !=null && !Productorderassociations.isEmpty()){
+				for (Productorderassociation productorderassociation : Productorderassociations) {
+					productorderassociation.setProductorder(productorder);
+					productorderassociationService.addProductorderassociation(productorderassociation);
 				}
 			}
 			return new UserStatus(1, "Multiple Productorder added Successfully !");

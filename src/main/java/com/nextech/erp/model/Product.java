@@ -72,7 +72,7 @@ public class Product implements Serializable {
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
-	private List<Orderproductassociation> orderproductassociations;
+	private List<Productorderassociation> orderproductassociations;
 	public Product() {
 	}
 	public Product(int id) {
@@ -211,11 +211,11 @@ public class Product implements Serializable {
 
 		return productrawmaterialassociation;
 	}
-	public List<Orderproductassociation> getOrderproductassociations() {
+	public List<Productorderassociation> getOrderproductassociations() {
 		return orderproductassociations;
 	}
 	public void setOrderproductassociations(
-			List<Orderproductassociation> orderproductassociations) {
+			List<Productorderassociation> orderproductassociations) {
 		this.orderproductassociations = orderproductassociations;
 	}
 

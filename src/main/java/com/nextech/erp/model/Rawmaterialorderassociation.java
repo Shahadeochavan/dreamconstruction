@@ -6,12 +6,12 @@ import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the orderrawmaterialassociation database table.
+ * The persistent class for the rawmaterialorderassociation database table.
  * 
  */
 @Entity
-@NamedQuery(name="Orderrawmaterialassociation.findAll", query="SELECT o FROM Orderrawmaterialassociation o")
-public class Orderrawmaterialassociation implements Serializable {
+@NamedQuery(name="Rawmaterialorderassociation.findAll", query="SELECT r FROM Rawmaterialorderassociation r")
+public class Rawmaterialorderassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -42,10 +42,7 @@ public class Orderrawmaterialassociation implements Serializable {
 	@JoinColumn(name="order_id")
 	private Rawmaterialorder rawmaterialorder;
 
-	public Orderrawmaterialassociation() {
-	}
-	public Orderrawmaterialassociation(int id) {
-		this.id=id;
+	public Rawmaterialorderassociation() {
 	}
 
 	public long getId() {

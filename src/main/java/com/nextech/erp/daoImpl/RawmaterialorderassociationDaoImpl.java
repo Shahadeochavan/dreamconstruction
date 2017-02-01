@@ -10,27 +10,27 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.nextech.erp.dao.OrderrawmaterialassociationDao;
-import com.nextech.erp.model.Orderrawmaterialassociation;
+import com.nextech.erp.dao.RawmaterialorderassociationDao;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 
-public class OrderrawmaterialassociationDaoImpl implements
-		OrderrawmaterialassociationDao {
+public class RawmaterialorderassociationDaoImpl implements
+		RawmaterialorderassociationDao {
 	@Autowired
 	SessionFactory sessionFactory;
 	Session session = null;
 	Transaction tx = null;
 
 	@Override
-	public boolean addOrderrawmaterialassociation(
-			Orderrawmaterialassociation orderrawmaterialassociation) {
+	public boolean addRawmaterialorderassociation(
+			Rawmaterialorderassociation Rawmaterialorderassociation) {
 		try {
 			session = sessionFactory.openSession();
 			tx = session.beginTransaction();
-			session.save(orderrawmaterialassociation);
+			session.save(Rawmaterialorderassociation);
 			tx.commit();
 			session.close();
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addOrderrawmaterialassociation");
+			System.out.println("Inside adRawmaterialorderassociation");
 			cve.printStackTrace();
 		}
 		return false;
@@ -38,38 +38,38 @@ public class OrderrawmaterialassociationDaoImpl implements
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Orderrawmaterialassociation getOrderrawmaterialassociationById(
+	public Rawmaterialorderassociation getRawmaterialorderassociationById(
 			long id) throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session
-				.createCriteria(Orderrawmaterialassociation.class);
+				.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		Orderrawmaterialassociation orderrawmaterialassociation = criteria
-				.list().size() > 0 ? (Orderrawmaterialassociation) criteria
+		Rawmaterialorderassociation Rawmaterialorderassociation = criteria
+				.list().size() > 0 ? (Rawmaterialorderassociation) criteria
 				.list().get(0) : null;
 		session.close();
-		return orderrawmaterialassociation;
+		return Rawmaterialorderassociation;
 	}
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
-	public List<Orderrawmaterialassociation> getOrderrawmaterialassociationList()
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociationList()
 			throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session
-				.createCriteria(Orderrawmaterialassociation.class);
+				.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		List<Orderrawmaterialassociation> orderrawmaterialassociationList = criteria
+		List<Rawmaterialorderassociation> RawmaterialorderassociationList = criteria
 				.list();
 		session.close();
-		return orderrawmaterialassociationList;
+		return RawmaterialorderassociationList;
 	}
 
 	@Override
-	public boolean deleteOrderrawmaterialassociation(long id) throws Exception {
+	public boolean deleteRawmaterialorderassociation(long id) throws Exception {
 		session = sessionFactory.openSession();
-		Object o = session.load(Orderrawmaterialassociation.class, id);
+		Object o = session.load(Rawmaterialorderassociation.class, id);
 		tx = session.getTransaction();
 		session.beginTransaction();
 		session.delete(o);
@@ -78,14 +78,14 @@ public class OrderrawmaterialassociationDaoImpl implements
 	}
 
 	@Override
-	public Orderrawmaterialassociation updateOrderrawmaterialassociation(
-			Orderrawmaterialassociation orderrawmaterialassociation)
+	public Rawmaterialorderassociation updateRawmaterialorderassociation(
+			Rawmaterialorderassociation Rawmaterialorderassociation)
 			throws Exception {
 		session = sessionFactory.openSession();
 		session.beginTransaction();
-		session.update(orderrawmaterialassociation);
+		session.update(Rawmaterialorderassociation);
 		session.getTransaction().commit();
 		session.close();
-		return orderrawmaterialassociation;
+		return Rawmaterialorderassociation;
 	}
 }

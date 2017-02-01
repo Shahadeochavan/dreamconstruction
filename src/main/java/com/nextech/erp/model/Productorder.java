@@ -51,7 +51,7 @@ public class Productorder implements Serializable {
 	//bi-directional many-to-one association to Orderproductassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productorder", cascade = CascadeType.ALL)
-	private List<Orderproductassociation> orderproductassociations;
+	private List<Productorderassociation> orderproductassociations;
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
@@ -149,22 +149,22 @@ public class Productorder implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public List<Orderproductassociation> getOrderproductassociations() {
+	public List<Productorderassociation> getOrderproductassociations() {
 		return this.orderproductassociations;
 	}
 
-	public void setOrderproductassociations(List<Orderproductassociation> orderproductassociations) {
+	public void setOrderproductassociations(List<Productorderassociation> orderproductassociations) {
 		this.orderproductassociations = orderproductassociations;
 	}
 
-	public Orderproductassociation addOrderproductassociation(Orderproductassociation orderproductassociation) {
+	public Productorderassociation addOrderproductassociation(Productorderassociation orderproductassociation) {
 		getOrderproductassociations().add(orderproductassociation);
 		orderproductassociation.setProductorder(this);
 
 		return orderproductassociation;
 	}
 
-	public Orderproductassociation removeOrderproductassociation(Orderproductassociation orderproductassociation) {
+	public Productorderassociation removeOrderproductassociation(Productorderassociation orderproductassociation) {
 		getOrderproductassociations().remove(orderproductassociation);
 		orderproductassociation.setProductorder(null);
 

@@ -1,6 +1,7 @@
 package com.nextech.erp.service;
 
 import java.util.List;
+
 import com.nextech.erp.model.User;
 
 public interface UserService {
@@ -15,4 +16,10 @@ public interface UserService {
 	public User updateEntity(User user) throws Exception;
 
 	public User findByUserId(String string) throws Exception;
+
+	public User getUserByUserId(String userId) throws Exception;
+
+	public User getUserByEmail(String email) throws Exception;
+
+	public User getUserByMobile(String mobile) throws Exception;
 }

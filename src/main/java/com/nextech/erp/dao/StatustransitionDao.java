@@ -15,4 +15,6 @@ public interface StatustransitionDao {
 
 	public Statustransition updateStatustransition(
 			Statustransition statustransition) throws Exception;
+	
+	public Statustransition getStatustransitionByEmail(String email) throws Exception;
 }

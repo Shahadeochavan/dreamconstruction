@@ -3,10 +3,8 @@ package com.nextech.erp.serviceImpl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.UserDao;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.UserService;
@@ -16,9 +14,10 @@ public class UserServiceImpl implements UserService {
 	UserDao userdao;
 
 	@Override
-	public boolean addEntity(User user) throws ConstraintViolationException,Exception {
+	public boolean addEntity(User user) throws ConstraintViolationException,
+			Exception {
 		user.setCreatedDate(new Timestamp(new Date().getTime()));
-//		userValidator.validate(user, new Eerrors);
+		// userValidator.validate(user, new Eerrors);
 		return userdao.addEntity(user);
 	}
 
@@ -46,5 +45,20 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User findByUserId(String string) throws Exception {
 		return null;
+	}
+
+	@Override
+	public User getUserByUserId(String userid) throws Exception {
+		return userdao.getUserByUserId(userid);
+	}
+
+	@Override
+	public User getUserByEmail(String email) throws Exception {
+		return userdao.getUserByEmail(email);
+	}
+
+	@Override
+	public User getUserByMobile(String mobile) throws Exception {
+		return userdao.getUserByMobile(mobile);
 	}
 }

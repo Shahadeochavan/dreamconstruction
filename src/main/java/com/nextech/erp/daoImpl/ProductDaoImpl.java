@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Vendor;
 
 public class ProductDaoImpl implements ProductDao {
 
@@ -35,8 +36,8 @@ public class ProductDaoImpl implements ProductDao {
 		Criteria criteria = session.createCriteria(Product.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		Product product= criteria.list().size() > 0 ? (Product) criteria.list().get(0)
-				: null;
+		Product product = criteria.list().size() > 0 ? (Product) criteria
+				.list().get(0) : null;
 		session.close();
 		return product;
 	}
@@ -69,6 +70,32 @@ public class ProductDaoImpl implements ProductDao {
 		session.beginTransaction();
 		session.update(product);
 		session.getTransaction().commit();
+		session.close();
+		return product;
+	}
+
+	@Override
+	public Product getProductByName(String productname) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Product.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("name", productname));
+		Product product = criteria.list().size() > 0 ? (Product) criteria
+				.list().get(0) : null;
+		session.close();
+		return product;
+	}
+
+	@Override
+	public Product getProductByPartNumber(String partNumber) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Product.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("partNumber", partNumber));
+		Product product = criteria.list().size() > 0 ? (Product) criteria
+				.list().get(0) : null;
 		session.close();
 		return product;
 	}

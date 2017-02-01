@@ -36,8 +36,17 @@ public class VendorController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+
+			} else {
+				return new UserStatus(1, "CompanyName already exists !");
+			}
+			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+			} else {
+				return new UserStatus(1, "Email already exists !");
+			}
 			vendorService.addVendor(vendor);
-			return new UserStatus(1, "Vendor added Successfully !");
+			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

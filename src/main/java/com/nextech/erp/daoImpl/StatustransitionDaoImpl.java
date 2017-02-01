@@ -1,6 +1,7 @@
 package com.nextech.erp.daoImpl;
 
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -76,5 +77,18 @@ public class StatustransitionDaoImpl implements StatustransitionDao {
 		session.getTransaction().commit();
 		session.close();
 		return statustransition;
+	}
+	
+	@Override
+	public Statustransition getStatustransitionByEmail(String email) throws Exception{
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Statustransition.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("isNotificationEmail", email));
+		Statustransition statustransition= criteria.list().size() > 0 ? (Statustransition) criteria.list()
+				.get(0) : null;
+				session.close();
+				return statustransition;
 	}
 }

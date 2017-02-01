@@ -32,9 +32,17 @@ public class ProductController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			if (productService.getProductByName(product.getName()) == null) {
+
+			} else {
+				return new UserStatus(1, "product name  already exists !");
+			}
+			if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
+			} else {
+				return new UserStatus(1, "part number already exists !");
+			}
 			productService.addProduct(product);
-			System.out.println(product.getId());
-			return new UserStatus(1, "Product added Successfully !");
+			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

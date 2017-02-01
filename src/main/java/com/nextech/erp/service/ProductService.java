@@ -14,4 +14,8 @@ public interface ProductService {
 	public boolean deleteProduct(long id) throws Exception;
 
 	public Product updateProduct(Product product) throws Exception;
+	
+    public Product getProductByName(String name) throws Exception;
+	
+	public Product getProductByPartNumber(String partnumber) throws Exception;
 }

@@ -36,10 +36,23 @@ public class UserController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			if (userservice.getUserByUserId(user.getUserid()) == null) {
+
+			} else {
+				return new UserStatus(1, "UserId already exists !");
+			}
+			if (userservice.getUserByEmail(user.getEmail()) == null) {
+			} else {
+				return new UserStatus(1, "Email already exists !");
+			}
+
+			if (userservice.getUserByMobile(user.getMobile()) == null) {
+			} else {
+				return new UserStatus(1, "Mobile number already exists !");
+			}
 			userservice.addEntity(user);
 			return new UserStatus(1, "User added Successfully !");
-		}
-		catch (ConstraintViolationException cve) {
+		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
@@ -49,9 +62,10 @@ public class UserController {
 			pe.printStackTrace();
 			while (pe != null) {
 				list.add(pe.getMessage());
-		    }
-			System.out.println(list.get(list.size()-1));
-//			System.out.println(pe.initCause(new MySQLIntegrityConstraintViolationException()).getCause());
+			}
+			System.out.println(list.get(list.size() - 1));
+			// System.out.println(pe.initCause(new
+			// MySQLIntegrityConstraintViolationException()).getCause());
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
 			System.out.println("Inside Exception");
@@ -70,6 +84,7 @@ public class UserController {
 		}
 		return user;
 	}
+
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUser(@RequestBody User user) {

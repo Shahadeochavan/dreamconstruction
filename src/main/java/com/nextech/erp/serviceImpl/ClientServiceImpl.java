@@ -3,9 +3,7 @@ package com.nextech.erp.serviceImpl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.service.ClientService;
@@ -42,5 +40,14 @@ public class ClientServiceImpl implements ClientService{
 		return clientDao.updateClient(client);
 	}
 
+	@Override
+	public Client getClientByCompanyName(String companyName) throws Exception {
+		return clientDao.getClientByCompanyName(companyName);
+	}
+
+	@Override
+	public Client getClientByEmail(String email) throws Exception {
+		return clientDao.getClientByEmail(email);
+	}
 }
 

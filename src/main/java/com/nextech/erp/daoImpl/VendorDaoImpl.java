@@ -78,4 +78,28 @@ public class VendorDaoImpl implements VendorDao {
 		session.close();
 		return vendor;
 	}
+	@Override
+	public Vendor getVendorByCompanyName(String companyName) throws Exception{
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Vendor.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("companyName", companyName));
+		Vendor vendor= criteria.list().size() > 0 ? (Vendor) criteria.list()
+				.get(0) : null;
+				session.close();
+				return vendor;
+	}
+	@Override
+	public Vendor getVendorByEmail(String email) throws Exception{
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Vendor.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("email", email));
+		Vendor vendor= criteria.list().size() > 0 ? (Vendor) criteria.list()
+				.get(0) : null;
+				session.close();
+				return vendor;
+	}
 }

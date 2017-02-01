@@ -3,15 +3,13 @@ package com.nextech.erp.serviceImpl;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.StatustransitionDao;
 import com.nextech.erp.model.Statustransition;
 import com.nextech.erp.service.StatustransitionService;
 
 public class StatustransitionServiceImpl implements StatustransitionService {
-	
+
 	@Autowired
 	StatustransitionDao statustransitionDao;
 
@@ -42,6 +40,12 @@ public class StatustransitionServiceImpl implements StatustransitionService {
 			Statustransition statustransition) throws Exception {
 		statustransition.setUpdatedDate(new Timestamp(new Date().getTime()));
 		return statustransitionDao.updateStatustransition(statustransition);
+	}
+
+	@Override
+	public Statustransition getStatustransitionByEmail(String email)
+			throws Exception {
+		return statustransitionDao.getStatustransitionByEmail(email);
 	}
 
 }

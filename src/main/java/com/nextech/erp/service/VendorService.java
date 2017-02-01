@@ -14,4 +14,8 @@ public interface VendorService {
 	public boolean deleteVendor(long id) throws Exception;
 
 	public Vendor updateVendor(Vendor vendor) throws Exception;
+	
+	public Vendor getVendorByCompanyName(String companyName) throws Exception;
+	
+	public Vendor getVendorByEmail(String email) throws Exception;
 }

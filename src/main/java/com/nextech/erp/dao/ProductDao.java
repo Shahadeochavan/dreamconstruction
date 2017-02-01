@@ -1,7 +1,6 @@
 package com.nextech.erp.dao;
 
 import java.util.List;
-
 import com.nextech.erp.model.Product;
 
 public interface ProductDao {
@@ -14,5 +13,9 @@ public interface ProductDao {
 	public boolean deleteProduct(long id) throws Exception;
 
 	public Product updateProduct(Product product) throws Exception;
+	
+    public Product getProductByName(String name) throws Exception;
+	
+	public Product getProductByPartNumber(String partnumber) throws Exception;
 }
 

@@ -14,4 +14,8 @@ public interface ClientService {
 	public boolean deleteClient(long id) throws Exception;
 
 	public Client updateClient(Client Client) throws Exception;
+
+	public Client getClientByCompanyName(String companyName) throws Exception;
+
+	public Client getClientByEmail(String email) throws Exception;
 }

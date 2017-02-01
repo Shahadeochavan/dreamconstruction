@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.model.Client;
 
@@ -75,6 +74,32 @@ public class ClientDaoImpl implements ClientDao {
 		session.beginTransaction();
 		session.update(client);
 		session.getTransaction().commit();
+		session.close();
+		return client;
+	}
+
+	@Override
+	public Client getClientByCompanyName(String companyname) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Client.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("companyname", companyname));
+		Client client = criteria.list().size() > 0 ? (Client) criteria.list()
+				.get(0) : null;
+		session.close();
+		return client;
+	}
+
+	@Override
+	public Client getClientByEmail(String emailid) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Client.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("emailid", emailid));
+		Client client = criteria.list().size() > 0 ? (Client) criteria.list()
+				.get(0) : null;
 		session.close();
 		return client;
 	}

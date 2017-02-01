@@ -1,8 +1,10 @@
 package com.nextech.erp.controller;
 
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.model.Client;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.status.UserStatus;
@@ -21,7 +24,6 @@ import com.nextech.erp.status.UserStatus;
 @Controller
 @RequestMapping("/client")
 public class ClientController {
-
 
 	@Autowired
 	ClientService clientService;
@@ -34,8 +36,17 @@ public class ClientController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+
+			} else {
+				return new UserStatus(1, "CompanyName already exists !");
+			}
+			if (clientService.getClientByEmail(client.getEmailid()) == null) {
+			} else {
+				return new UserStatus(1, "Email already exists !");
+			}
 			clientService.addClient(client);
-			return new UserStatus(1, "Client added Successfully !");
+			return new UserStatus(1, "client added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

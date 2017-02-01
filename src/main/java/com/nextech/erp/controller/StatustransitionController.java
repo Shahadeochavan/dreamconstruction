@@ -30,13 +30,19 @@ public class StatustransitionController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
-			@Valid @RequestBody Statustransition statustransition, BindingResult bindingResult) {
+			@Valid @RequestBody Statustransition statustransition,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			statustransitionService.addStatustransition(statustransition);
+			if (statustransitionService
+					.getStatustransitionByEmail(statustransition
+							.getIsNotificationEmail()) == null)
+				statustransitionService.addStatustransition(statustransition);
+			else
+				return new UserStatus(1, "Email  already exists !");
 			return new UserStatus(1, "Statustransition added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -54,10 +60,12 @@ public class StatustransitionController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Statustransition getStatustransition(@PathVariable("id") long id) {
+	public @ResponseBody Statustransition getStatustransition(
+			@PathVariable("id") long id) {
 		Statustransition statustransition = null;
 		try {
-			statustransition = statustransitionService.getStatustransitionById(id);
+			statustransition = statustransitionService
+					.getStatustransitionById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,7 +73,8 @@ public class StatustransitionController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateStatustransition(@RequestBody Statustransition statustransition) {
+	public @ResponseBody UserStatus updateStatustransition(
+			@RequestBody Statustransition statustransition) {
 		try {
 			statustransitionService.updateStatustransition(statustransition);
 			return new UserStatus(1, "Statustransition update Successfully !");
@@ -81,7 +90,8 @@ public class StatustransitionController {
 
 		List<Statustransition> statustransitionList = null;
 		try {
-			statustransitionList = statustransitionService.getStatustransitionList();
+			statustransitionList = statustransitionService
+					.getStatustransitionList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,10 +101,12 @@ public class StatustransitionController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteStatustransition(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteStatustransition(
+			@PathVariable("id") long id) {
 
 		try {
-			Statustransition statustransition = statustransitionService.getStatustransitionById(id);
+			Statustransition statustransition = statustransitionService
+					.getStatustransitionById(id);
 			statustransition.setIsactive(false);
 			statustransitionService.updateStatustransition(statustransition);
 			return new UserStatus(1, "Statustransition deleted Successfully !");
@@ -104,4 +116,3 @@ public class StatustransitionController {
 
 	}
 }
-

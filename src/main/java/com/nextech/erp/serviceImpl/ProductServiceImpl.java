@@ -40,4 +40,13 @@ public class ProductServiceImpl implements ProductService {
 		return productDao.updateProduct(product);
 	}
 
+	@Override
+	public Product getProductByName(String name) throws Exception {
+		return productDao.getProductByName(name);
+	}
+
+	@Override
+	public Product getProductByPartNumber(String partnumber) throws Exception {
+		return productDao.getProductByPartNumber(partnumber);
+	}
 }

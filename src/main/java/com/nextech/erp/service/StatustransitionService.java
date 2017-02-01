@@ -1,7 +1,9 @@
 package com.nextech.erp.service;
 
 import java.util.List;
+
 import com.nextech.erp.model.Statustransition;
+import com.nextech.erp.model.Vendor;
 
 public interface StatustransitionService {
 	public boolean addStatustransition(Statustransition statustransition)
@@ -15,5 +17,7 @@ public interface StatustransitionService {
 
 	public Statustransition updateStatustransition(
 			Statustransition statustransition) throws Exception;
+	
+	public Statustransition getStatustransitionByEmail(String email) throws Exception;
 }
 

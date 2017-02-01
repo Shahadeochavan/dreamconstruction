@@ -39,4 +39,14 @@ public class VendorServiceImpl implements VendorService {
 		return vendorDao.updateVendor(vendor);
 	}
 
+	@Override
+	public Vendor getVendorByCompanyName(String companyName) throws Exception {
+		return vendorDao.getVendorByCompanyName(companyName);
+	}
+
+	@Override
+	public Vendor getVendorByEmail(String email) throws Exception {
+		return vendorDao.getVendorByEmail(email);
+	}
+
 }

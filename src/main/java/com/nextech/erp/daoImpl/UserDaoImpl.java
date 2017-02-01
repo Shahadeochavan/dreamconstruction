@@ -9,7 +9,6 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.UserDao;
 import com.nextech.erp.model.User;
 
@@ -20,14 +19,14 @@ public class UserDaoImpl implements UserDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addEntity(User user)  {
-		try{
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-		session.save(user);
-		tx.commit();
-		session.close();
-		}catch(ConstraintViolationException cve){
+	public boolean addEntity(User user) {
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.save(user);
+			tx.commit();
+			session.close();
+		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside addEntity");
 			cve.printStackTrace();
 		}
@@ -75,5 +74,44 @@ public class UserDaoImpl implements UserDao {
 		session.getTransaction().commit();
 		session.close();
 		return user;
+	}
+
+	@Override
+	public User getUserByUserId(String userid) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("userid", userid));
+		User User = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+				: null;
+		session.close();
+		return User;
+	}
+
+	@Override
+	public User getUserByEmail(String email) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("email", email));
+		User User = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+				: null;
+		session.close();
+		return User;
+	}
+
+	@Override
+	public User getUserByMobile(String mobile) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("mobile", mobile));
+		User User = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+				: null;
+		session.close();
+		return User;
 	}
 }

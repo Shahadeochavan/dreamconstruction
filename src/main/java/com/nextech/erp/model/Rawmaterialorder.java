@@ -25,7 +25,8 @@ public class Rawmaterialorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	private long id;
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	private int id;
 
 /*	@DecimalMax(value = "100.00", message = "The actualPrice value can not be more than 100.00 ")
 	@DecimalMin(value = "1.00", message = "The actualPrice value can not be less than 1.00 digit ")*/
@@ -107,11 +108,11 @@ public class Rawmaterialorder implements Serializable {
 	}
 
 
-	public long getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

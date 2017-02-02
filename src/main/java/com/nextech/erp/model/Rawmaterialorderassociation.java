@@ -44,6 +44,9 @@ public class Rawmaterialorderassociation implements Serializable {
 
 	public Rawmaterialorderassociation() {
 	}
+	public Rawmaterialorderassociation(int id) {
+		this.id=id;
+	}
 
 	public long getId() {
 		return this.id;

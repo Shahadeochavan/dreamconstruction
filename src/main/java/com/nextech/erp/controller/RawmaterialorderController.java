@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -17,21 +18,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.model.ProductOrderAssociationModel;
+import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialorderService;
+import com.nextech.erp.service.RawmaterialorderassociationService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
 @RequestMapping("/rawmaterialorder")
 public class RawmaterialorderController {
 
-
 	@Autowired
 	RawmaterialorderService rawmaterialorderService;
 
+	@Autowired
+	RawmaterialorderassociationService rawmaterialorderassociationService;
+
+	@Autowired
+	StatusService statusService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
-			@Valid @RequestBody Rawmaterialorder rawmaterialorder, BindingResult bindingResult) {
+			@Valid @RequestBody Rawmaterialorder rawmaterialorder,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -54,11 +68,50 @@ public class RawmaterialorderController {
 		}
 	}
 
+	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addMultipleProductorder(
+			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+			}
+			Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
+			rawmaterialorder.setCreateDate(new Date());
+			rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
+			rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
+			rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
+			rawmaterialorder.setStatus(statusService.getStatusById(2));
+			rawmaterialorder.setIsactive(true);
+			Integer orderId = rawmaterialorderService.addRawmaterialorder(rawmaterialorder);
+			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
+			if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
+				for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+					rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
+					rawmaterialorderassociationService.addRawmaterialorderassociation(rawmaterialorderassociation);
+				}
+			}
+			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialorder getRawmaterialorder(@PathVariable("id") long id) {
+	public @ResponseBody Rawmaterialorder getRawmaterialorder(
+			@PathVariable("id") long id) {
 		Rawmaterialorder rawmaterialorder = null;
 		try {
-			rawmaterialorder = rawmaterialorderService.getRawmaterialorderById(id);
+			rawmaterialorder = rawmaterialorderService
+					.getRawmaterialorderById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,7 +119,8 @@ public class RawmaterialorderController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialorder(@RequestBody Rawmaterialorder rawmaterialorder) {
+	public @ResponseBody UserStatus updateRawmaterialorder(
+			@RequestBody Rawmaterialorder rawmaterialorder) {
 		try {
 			rawmaterialorderService.updateRawmaterialorder(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder update Successfully !");
@@ -82,7 +136,8 @@ public class RawmaterialorderController {
 
 		List<Rawmaterialorder> rawmaterialorderList = null;
 		try {
-			rawmaterialorderList = rawmaterialorderService.getRawmaterialorderList();
+			rawmaterialorderList = rawmaterialorderService
+					.getRawmaterialorderList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,10 +147,12 @@ public class RawmaterialorderController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialorder(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteRawmaterialorder(
+			@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getRawmaterialorderById(id);
+			Rawmaterialorder rawmaterialorder = rawmaterialorderService
+					.getRawmaterialorderById(id);
 			rawmaterialorder.setIsactive(false);
 			rawmaterialorderService.updateRawmaterialorder(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder deleted Successfully !");

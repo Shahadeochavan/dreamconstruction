@@ -83,9 +83,9 @@ public class ProductorderController {
 			productorder.setStatus(statusService.getStatusById(2));
 			productorder.setIsactive(true);
 			Integer orderId = productorderService.addProductorder(productorder);
-			List<Productorderassociation> Productorderassociations = productOrderAssociationModel.getOrderproductassociations();
-			if(Productorderassociations !=null && !Productorderassociations.isEmpty()){
-				for (Productorderassociation productorderassociation : Productorderassociations) {
+			List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
+			if(productorderassociations !=null && !productorderassociations.isEmpty()){
+				for (Productorderassociation productorderassociation : productorderassociations) {
 					productorderassociation.setProductorder(productorder);
 					productorderassociationService.addProductorderassociation(productorderassociation);
 				}

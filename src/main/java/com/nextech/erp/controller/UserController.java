@@ -1,9 +1,12 @@
 package com.nextech.erp.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.nextech.erp.model.Authorization;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
@@ -27,6 +32,9 @@ public class UserController {
 
 	@Autowired
 	UserService userservice;
+	
+	@Autowired
+	com.nextech.erp.filter.TokenFactory tokenFactory;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
@@ -73,7 +81,24 @@ public class UserController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-
+	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
+	public String login(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		User user2 = userservice.getUserByUserId(user.getUserid());
+		if(authenticate(user, user2)){
+			Authorization authorization = new Authorization();
+			authorization.setUserid(user.getUserid());
+			authorization.setUpdatedDate(new Date());
+			String token = tokenFactory.createAccessJwtToken(user2);
+			System.out.println(token);
+			authorization.setToken(token);
+			response.addHeader("auth_token", token);
+		}
+		return "Login enabled";
+	}
+	
+	private boolean authenticate(User formUser,User dbUser){
+		return true;
+	}
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody User getUser(@PathVariable("id") long id) {
 		User user = null;

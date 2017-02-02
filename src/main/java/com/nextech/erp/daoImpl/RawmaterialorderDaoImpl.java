@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
@@ -20,18 +19,13 @@ public class RawmaterialorderDaoImpl implements RawmaterialorderDao{
 	Transaction tx = null;
 
 	@Override
-	public boolean addRawmaterialorder(Rawmaterialorder rawmaterialorder) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(rawmaterialorder);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addRawmaterialorder");
-			cve.printStackTrace();
-		}
-		return false;
+	public Integer addRawmaterialorder(Rawmaterialorder rawmaterialorder) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Integer id = (Integer) session.save(rawmaterialorder);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

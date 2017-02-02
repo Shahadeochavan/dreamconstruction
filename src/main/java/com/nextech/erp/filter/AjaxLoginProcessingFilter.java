@@ -34,22 +34,26 @@ public class AjaxLoginProcessingFilter implements Filter {
 					.toString();
 			if (!url.contains("login")) {
 				try {
-					String token = TokenFactory.decrypt(
-							((HttpServletRequest) request)
-									.getHeader("auth_token"),
-							new TokenFactory().getSecretKeySpec());
-					String[] string = token.split("-");
-					String str = string[string.length - 1];
-					if (new Date().getTime() - 1 * 60 * 1000 < new Long(str)) {
+					if(((HttpServletRequest) request).getHeader("auth_token") != null){
+						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), new TokenFactory().getSecretKeySpec());
+						String[] string = token.split("-");
+						String str = string[string.length - 1];
+						if (new Date().getTime() - 1 * 60 * 1000 < new Long(str)) {
+							request.setAttribute("user-auth", true);
+							chain.doFilter(request, response);
+						} else {
+	
+							throw new AuthenticationException();
+						}
+					}else{
+						request.setAttribute("user-auth", false);
 						chain.doFilter(request, response);
-					} else {
-
-						throw new AuthenticationException();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else {
+				request.setAttribute("user-auth", true);
 				chain.doFilter(request, response);
 			}
 		}

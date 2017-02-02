@@ -13,7 +13,7 @@ public class VendorServiceImpl implements VendorService {
 	VendorDao vendorDao;
 
 	@Override
-	public boolean addVendor(Vendor vendor) throws Exception {
+	public Integer addVendor(Vendor vendor) throws Exception {
 		vendor.setCreatedDate(new Timestamp(new Date().getTime()));
 		return vendorDao.addVendor(vendor);
 	}

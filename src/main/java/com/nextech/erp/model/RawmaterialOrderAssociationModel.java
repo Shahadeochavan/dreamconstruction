@@ -11,7 +11,8 @@ public class RawmaterialOrderAssociationModel implements Serializable {
 	private static final long serialVersionUID = 2264984414287739733L;
 	private String description;
 	private Date deliveryDate;	
-	private Date createDate;	
+	private Date createDate;
+	private long Vendor;
 	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
 	public String getDescription() {
 		return description;
@@ -37,6 +38,12 @@ public class RawmaterialOrderAssociationModel implements Serializable {
 	public void setRawmaterialorderassociations(
 			List<Rawmaterialorderassociation> rawmaterialorderassociations) {
 		this.rawmaterialorderassociations = rawmaterialorderassociations;
+	}
+	public long getVendor() {
+		return Vendor;
+	}
+	public void setVendor(long vendor) {
+		Vendor = vendor;
 	}
 
 }

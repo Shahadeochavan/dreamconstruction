@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,12 +39,13 @@ public class UserController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			if((Boolean)request.getAttribute("user-auth")){
 			if (userservice.getUserByUserId(user.getUserid()) == null) {
 
 			} else {
@@ -60,6 +62,9 @@ public class UserController {
 			}
 			userservice.addEntity(user);
 			return new UserStatus(1, "User added Successfully !");
+			}else{
+				new UserStatus(0, "User is not authenticated.");
+			}
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -75,25 +80,39 @@ public class UserController {
 			// System.out.println(pe.initCause(new
 			// MySQLIntegrityConstraintViolationException()).getCause());
 			return new UserStatus(0, pe.getCause().getMessage());
+		}catch(AuthenticationException authException){
+			
+			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
 			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
+		return new UserStatus(0, "User is not authenticated.");
 	}
 	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
-	public String login(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	public UserStatus login(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		User user2 = userservice.getUserByUserId(user.getUserid());
-		if(authenticate(user, user2)){
-			Authorization authorization = new Authorization();
-			authorization.setUserid(user.getUserid());
-			authorization.setUpdatedDate(new Date());
-			String token = tokenFactory.createAccessJwtToken(user2);
-			System.out.println(token);
-			authorization.setToken(token);
-			response.addHeader("auth_token", token);
+		try{
+			if(authenticate(user, user2)){
+				Authorization authorization = new Authorization();
+				authorization.setUserid(user.getUserid());
+				authorization.setUpdatedDate(new Date());
+				String token = tokenFactory.createAccessJwtToken(user2);
+				System.out.println(token);
+				authorization.setToken(token);
+				response.addHeader("auth_token", token);
+				return new UserStatus(1, "User logged in Successfully !");
+			}
+		}catch(AuthenticationException authException){
+			return new UserStatus(0, authException.getCause().getMessage());
+		}catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
 		}
-		return "Login enabled";
+		return new UserStatus(0, "Please enter correct credentials");
+		
 	}
 	
 	private boolean authenticate(User formUser,User dbUser){

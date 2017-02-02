@@ -52,8 +52,8 @@ public class Rawmaterialorder implements Serializable {
 
 	private boolean isactive;
 
-	@NotBlank(message="{name should not be blank}")
-	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
+	//@NotBlank(message="{name should not be blank}")
+	//@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
 /*	@DecimalMax(value = "100.00", message = "The otherCharges value can not be more than 100.00 ")
@@ -61,7 +61,7 @@ public class Rawmaterialorder implements Serializable {
 	@Column(name="other_charges")
 	private float otherCharges;
 
-	 @Min(value = 0, message = "please enter quantity")
+	 //@Min(value = 0, message = "please enter quantity")
 	/* @Max(value = 100, message = "quantity should be maximum 100")*/
 	private int quantity;
 
@@ -80,8 +80,8 @@ public class Rawmaterialorder implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Rawmaterial
-	@ManyToOne
-	private Rawmaterial rawmaterial;
+/*	@ManyToOne
+	private Rawmaterial rawmaterial;*/
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
@@ -227,14 +227,14 @@ public class Rawmaterialorder implements Serializable {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-
+/*
 	public Rawmaterial getRawmaterial() {
 		return this.rawmaterial;
 	}
 
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
-	}
+	}*/
 
 	public Status getStatus() {
 		return this.status;

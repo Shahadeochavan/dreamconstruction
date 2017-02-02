@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,16 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.nextech.erp.model.ProductOrderAssociationModel;
-import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -41,6 +37,9 @@ public class RawmaterialorderController {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	VendorService vendorService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
@@ -69,7 +68,7 @@ public class RawmaterialorderController {
 	}
 
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addMultipleProductorder(
+	public @ResponseBody UserStatus addMultipleRawmaterialorder(
 			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -81,6 +80,7 @@ public class RawmaterialorderController {
 			rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
 			rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
 			rawmaterialorder.setStatus(statusService.getStatusById(2));
+			rawmaterialorder.setVendor(vendorService.getVendorById(rawmaterialOrderAssociationModel.getVendor()));
 			rawmaterialorder.setIsactive(true);
 			Integer orderId = rawmaterialorderService.addRawmaterialorder(rawmaterialorder);
 			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();

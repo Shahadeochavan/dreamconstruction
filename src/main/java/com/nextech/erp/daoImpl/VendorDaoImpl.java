@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.VendorDao;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
 
 public class VendorDaoImpl implements VendorDao {
@@ -20,18 +21,13 @@ public class VendorDaoImpl implements VendorDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addVendor(Vendor vendor) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(vendor);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addVendor");
-			cve.printStackTrace();
-		}
-		return false;
+	public Integer addVendor(Vendor vendor) throws Exception {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Integer id = (Integer) session.save(vendor);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

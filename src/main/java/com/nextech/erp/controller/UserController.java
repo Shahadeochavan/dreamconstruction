@@ -94,7 +94,7 @@ public class UserController {
 	public UserStatus login(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		User user2 = userservice.getUserByUserId(user.getUserid());
 		try{
-			if(authenticate(user, user2)){
+			if(user2!= null && authenticate(user, user2)){
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
 				authorization.setUpdatedDate(new Date());
@@ -141,7 +141,7 @@ public class UserController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
+	/*@CrossOrigin(origins = "http://localhost:8080")*/
 	/* Getting List of objects in Json format in Spring Restful Services */
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<User> getUser() {

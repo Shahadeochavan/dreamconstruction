@@ -21,10 +21,10 @@ public class VendorDaoImpl implements VendorDao {
 	Transaction tx = null;
 
 	@Override
-	public Integer addVendor(Vendor vendor) throws Exception {
+	public Long addVendor(Vendor vendor) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		Integer id = (Integer) session.save(vendor);
+		Long id = (Long) session.save(vendor);
 		tx.commit();
 		session.close();
 		return id;

@@ -21,15 +21,19 @@ public class VendorDaoImpl implements VendorDao {
 	Transaction tx = null;
 
 	@Override
-	public Integer addVendor(Vendor vendor) throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-		Integer id = (Integer) session.save(vendor);
-		tx.commit();
-		session.close();
-		return id;
+	public boolean addVendor(Vendor vendor) throws Exception {
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.save(vendor);
+			tx.commit();
+			session.close();
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside vendor");
+			cve.printStackTrace();
+		}
+		return false;
 	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public Vendor getVendorById(long id) throws Exception {

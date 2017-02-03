@@ -55,6 +55,11 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>messages</value>
+        </property>
+    </bean>
 	<bean id="userdao" class="com.nextech.erp.daoImpl.UserDaoImpl" />
 	<bean id="userservice" class="com.nextech.erp.serviceImpl.UserServiceImpl" />
 	<bean id="userTypeDao" class="com.nextech.erp.daoImpl.UsertypeDaoImpl" />

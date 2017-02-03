@@ -7,6 +7,9 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,6 +25,7 @@ import java.util.List;
 @NamedQuery(name="Vendor.findAll", query="SELECT v FROM Vendor v")
 public class Vendor implements Serializable {
 	private static final long serialVersionUID = 1L;
+	
 
 	@Id
 	private long id;
@@ -59,11 +63,14 @@ public class Vendor implements Serializable {
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
-	@Email(message="{email should be enter valid")
+	//@Email(message="{email should be enter valid")
+	 @NotEmpty
+	  @Email
 	private String email;
 
 	@NotBlank(message="{first Name should not be blank}")
-	@Size(min = 2, max = 255, message = "{first Name sholud be greater than 2 or less than 255 characters}")
+	//@Size(min = 2, max = 255, message = "{first Name sholud be greater than 2 or less than 255 characters}")
+	@Size(min=2,max=10)
 	@Column(name="first_name")
 	private String firstName;
 

@@ -9,7 +9,7 @@ public interface PageDao {
 
 	public Page getPageById(long id) throws Exception;
 
-	public List<Page> getPageist() throws Exception;
+	public List<Page> getPageList() throws Exception;
 
 	public boolean deletePage(long id) throws Exception;
 

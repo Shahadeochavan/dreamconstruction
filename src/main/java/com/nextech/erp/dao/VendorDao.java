@@ -4,7 +4,8 @@ import java.util.List;
 import com.nextech.erp.model.Vendor;
 
 public interface VendorDao {
-	public boolean addVendor(Vendor vendor) throws Exception;
+
+	public Long addVendor(Vendor vendor) throws Exception;
 
 	public Vendor getVendorById(long id) throws Exception;
 

@@ -80,7 +80,7 @@ public class PageController {
 
 		List<Page> PageList = null;
 		try {
-			PageList = pageservice.getPageist();
+			PageList = pageservice.getPageList();
 
 		} catch (Exception e) {
 			e.printStackTrace();

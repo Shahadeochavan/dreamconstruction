@@ -31,7 +31,6 @@ public class Page implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-
 	@NotBlank(message="{description should not be blank}")
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
@@ -63,6 +62,7 @@ public class Page implements Serializable {
 	public Page(int id) {
 		this.id=id;
 	}
+
 
 	public long getId() {
 		return this.id;

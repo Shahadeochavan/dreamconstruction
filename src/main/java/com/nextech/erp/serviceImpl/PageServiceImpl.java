@@ -25,8 +25,8 @@ public class PageServiceImpl implements PageService{
 	}
 
 	@Override
-	public List<Page> getPageist() throws Exception {
-		return pagedao.getPageist();
+	public List<Page> getPageList() throws Exception {
+		return pagedao.getPageList();
 	}
 
 	@Override

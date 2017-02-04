@@ -46,6 +46,7 @@ public class UsertypepageassociationDaoImpl implements UsertypepageassociationDa
 	public List<Usertypepageassociation> getPageAssList() throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
 		List<Usertypepageassociation> usertypepageassociationList = criteria.list();
 		session.close();
 		return usertypepageassociationList;

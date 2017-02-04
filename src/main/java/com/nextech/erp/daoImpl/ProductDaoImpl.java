@@ -7,7 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Vendor;
@@ -21,11 +23,16 @@ public class ProductDaoImpl implements ProductDao {
 
 	@Override
 	public boolean addProduct(Product product) throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-		session.save(product);
-		tx.commit();
-		session.close();
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.save(product);
+			tx.commit();
+			session.close();
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside addRawmaterial");
+			cve.printStackTrace();
+		}
 		return false;
 	}
 

@@ -7,7 +7,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.PageDao;
 import com.nextech.erp.model.Page;
 
@@ -20,11 +22,16 @@ public class PapeDaoImpl implements PageDao{
 
 	@Override
 	public boolean addPage(Page page) throws Exception {
-		session = sessionFactory.openSession();
-		tx = session.beginTransaction();
-		session.save(page);
-		tx.commit();
-		session.close();
+		try {
+			session = sessionFactory.openSession();
+			tx = session.beginTransaction();
+			session.save(page);
+			tx.commit();
+			session.close();
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside page");
+			cve.printStackTrace();
+		}
 		return false;
 	}
 
@@ -43,7 +50,7 @@ public class PapeDaoImpl implements PageDao{
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
-	public List<Page> getPageist() throws Exception {
+	public List<Page> getPageList() throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Page.class);
 		criteria.add(Restrictions.eq("isactive", true));

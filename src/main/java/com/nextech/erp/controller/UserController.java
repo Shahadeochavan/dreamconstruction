@@ -1,6 +1,5 @@
 package com.nextech.erp.controller;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.UserService;
@@ -71,14 +71,7 @@ public class UserController {
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
 			System.out.println("Inside PersistenceException");
-			List<String> list = new ArrayList<String>();
 			pe.printStackTrace();
-			while (pe != null) {
-				list.add(pe.getMessage());
-			}
-			System.out.println(list.get(list.size() - 1));
-			// System.out.println(pe.initCause(new
-			// MySQLIntegrityConstraintViolationException()).getCause());
 			return new UserStatus(0, pe.getCause().getMessage());
 		}catch(AuthenticationException authException){
 			
@@ -90,6 +83,7 @@ public class UserController {
 		}
 		return new UserStatus(0, "User is not authenticated.");
 	}
+	
 	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
 	public UserStatus login(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		User user2 = userservice.getUserByUserId(user.getUserid());
@@ -98,7 +92,7 @@ public class UserController {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
 				authorization.setUpdatedDate(new Date());
-				String token = tokenFactory.createAccessJwtToken(user2);
+				String token = TokenFactory.createAccessJwtToken(user2);
 				System.out.println(token);
 				authorization.setToken(token);
 				response.addHeader("auth_token", token);

@@ -5,10 +5,13 @@ import java.util.Date;
 import java.util.List;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import com.nextech.erp.dao.UserDao;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.UserService;
 
+@Qualifier("userServiceImpl")
 public class UserServiceImpl implements UserService {
 	@Autowired
 	UserDao userdao;

@@ -15,14 +15,14 @@ import com.nextech.erp.model.User;
 @Component
 public class TokenFactory {
 
-	public SecretKeySpec getSecretKeySpec() {
+	public static SecretKeySpec getSecretKeySpec() {
 		String key = "lk8345ndkfdgclk8";
 		byte[] secretCode = key.getBytes();
 		SecretKeySpec secretKeySpec = new SecretKeySpec(secretCode, "AES");
 		return secretKeySpec;
 	}
 
-	public String createAccessJwtToken(User user) throws Exception {
+	public static String createAccessJwtToken(User user) throws Exception {
 		if (StringUtils.isEmpty(user.getUserid()))
 			throw new IllegalArgumentException(
 					"Cannot create JWT Token without username");

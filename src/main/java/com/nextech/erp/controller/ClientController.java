@@ -25,6 +25,7 @@ import com.nextech.erp.status.UserStatus;
 @RequestMapping("/client")
 public class ClientController {
 
+	
 	@Autowired
 	ClientService clientService;
 

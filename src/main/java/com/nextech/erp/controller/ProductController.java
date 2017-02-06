@@ -35,11 +35,11 @@ public class ProductController {
 			if (productService.getProductByName(product.getName()) == null) {
 
 			} else {
-				return new UserStatus(1, "product name  already exists !");
+				return new UserStatus(2, "product name  already exists !");
 			}
 			if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
 			} else {
-				return new UserStatus(1, "part number already exists !");
+				return new UserStatus(2, "part number already exists !");
 			}
 			productService.addProduct(product);
 			return new UserStatus(1, "product added Successfully !");

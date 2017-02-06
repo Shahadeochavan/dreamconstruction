@@ -39,11 +39,11 @@ public class ClientController {
 			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
 
 			} else {
-				return new UserStatus(1, "CompanyName already exists !");
+				return new UserStatus(2, "CompanyName already exists !");
 			}
 			if (clientService.getClientByEmail(client.getEmailid()) == null) {
 			} else {
-				return new UserStatus(1, "Email already exists !");
+				return new UserStatus(2, "Email already exists !");
 			}
 			clientService.addClient(client);
 			return new UserStatus(1, "client added Successfully !");

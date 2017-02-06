@@ -48,16 +48,16 @@ public class UserController {
 			if (userservice.getUserByUserId(user.getUserid()) == null) {
 
 			} else {
-				return new UserStatus(1, "UserId already exists !");
+				return new UserStatus(2, "UserId already exists !");
 			}
 			if (userservice.getUserByEmail(user.getEmail()) == null) {
 			} else {
-				return new UserStatus(1, "Email already exists !");
+				return new UserStatus(2, "Email already exists !");
 			}
 
 			if (userservice.getUserByMobile(user.getMobile()) == null) {
 			} else {
-				return new UserStatus(1, "Mobile number already exists !");
+				return new UserStatus(2, "Mobile number already exists !");
 			}
 			userservice.addEntity(user);
 			return new UserStatus(1, "User added Successfully !");

@@ -66,12 +66,12 @@ public class Vendor implements Serializable {
 
 	//@Email(message="{email should be enter valid")
 	 @NotEmpty
-	  @Email
+	 @Email
 	private String email;
 
-	@NotBlank(message="{first Name should not be blank}")
-	//@Size(min = 2, max = 255, message = "{first Name sholud be greater than 2 or less than 255 characters}")
-	@Size(min=2,max=10)
+	 @NotEmpty
+	//@NotBlank(message="{first Name should not be blank}")
+	@Size(min = 2, max = 255)
 	@Column(name="first_name")
 	private String firstName;
 

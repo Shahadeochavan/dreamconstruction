@@ -14,7 +14,7 @@ public class ClientServiceImpl implements ClientService{
 	ClientDao clientDao;
 
 	@Override
-	public boolean addClient(Client client) throws Exception {
+	public Long addClient(Client client) throws Exception {
 		client.setCreatedDate(new Timestamp(new Date().getTime()));
 		return clientDao.addClient(client);
 	}

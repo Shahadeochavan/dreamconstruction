@@ -14,7 +14,7 @@ public class ProductRMAssoServiceImpl implements ProductRMAssoService {
 	ProductRMAssoDao productrmassDao;
 
 	@Override
-	public boolean addProductrawmaterialassociation(
+	public Long addProductrawmaterialassociation(
 			Productrawmaterialassociation productrawmaterialassociation)
 			throws Exception {
 		productrawmaterialassociation.setCreatedDate(new Timestamp(new Date()

@@ -14,7 +14,7 @@ public class StatusServiceImpl implements StatusService {
 	StatusDao statusDao;
 
 	@Override
-	public Integer addStatus(Status status) throws Exception {
+	public Long addStatus(Status status) throws Exception {
 		status.setCreatedDate(new Timestamp(new Date().getTime()));
 		return statusDao.addStatus(status);
 	}

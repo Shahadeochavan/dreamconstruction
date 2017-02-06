@@ -17,7 +17,7 @@ public class RawmaterialinventoryServiceImpl implements
 	RawmaterialinventoryDao rawmaterialinventoryDao;
 
 	@Override
-	public boolean addRawmaterialinventory(
+	public Long addRawmaterialinventory(
 			Rawmaterialinventory rawmaterialinventory) throws Exception {
 		rawmaterialinventory
 				.setCreatedDate(new Timestamp(new Date().getTime()));

@@ -7,7 +7,6 @@ import com.nextech.erp.model.Vendor;
 public interface VendorService {
 	public Long addVendor(Vendor vendor) throws Exception;
 
-
 	public Vendor getVendorById(long id) throws Exception;
 
 	public List<Vendor> getVendorList() throws Exception;

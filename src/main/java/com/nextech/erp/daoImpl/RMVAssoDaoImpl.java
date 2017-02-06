@@ -21,18 +21,13 @@ public class RMVAssoDaoImpl implements RMVAssoDao{
 	Transaction tx = null;
 
 	@Override
-	public boolean addRawmaterialvendorassociation(Rawmaterialvendorassociation rawmaterialvendorassociation) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(rawmaterialvendorassociation);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addRawmaterialvendorassociation");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addRawmaterialvendorassociation(Rawmaterialvendorassociation rawmaterialvendorassociation) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(rawmaterialvendorassociation);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

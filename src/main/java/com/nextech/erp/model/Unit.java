@@ -21,8 +21,8 @@ import java.util.List;
 @NamedQuery(name="Unit.findAll", query="SELECT u FROM Unit u")
 public class Unit implements Serializable {
 	private static final long serialVersionUID = 1L;
-
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	@Column(name="created_by")

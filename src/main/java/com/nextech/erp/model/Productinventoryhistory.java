@@ -20,7 +20,8 @@ import java.sql.Timestamp;
 public class Productinventoryhistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	 @Min(value = 0, message = " please enter after quantity")

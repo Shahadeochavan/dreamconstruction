@@ -80,9 +80,9 @@ public class ProductorderController {
 			productorder.setDescription(productOrderAssociationModel.getDescription());
 			productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());
 			productorder.setQuantity(productOrderAssociationModel.getOrderproductassociations().size());
-			productorder.setStatus(statusService.getStatusById(2));
+			productorder.setStatus(statusService.getStatusById(productOrderAssociationModel.getStatus()));
 			productorder.setIsactive(true);
-			Integer orderId = productorderService.addProductorder(productorder);
+			Long orderId = productorderService.addProductorder(productorder);
 			List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
 			if(productorderassociations !=null && !productorderassociations.isEmpty()){
 				for (Productorderassociation productorderassociation : productorderassociations) {

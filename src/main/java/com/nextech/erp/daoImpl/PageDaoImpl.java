@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.nextech.erp.dao.PageDao;
 import com.nextech.erp.model.Page;
 
-public class PapeDaoImpl implements PageDao{
+public class PageDaoImpl implements PageDao{
 
 	@Autowired
 	SessionFactory sessionFactory;
@@ -21,20 +21,14 @@ public class PapeDaoImpl implements PageDao{
 	Transaction tx = null;
 
 	@Override
-	public boolean addPage(Page page) throws Exception {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(page);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside page");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addPage(Page page) throws Exception {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(page);
+		tx.commit();
+		session.close();
+		return id;
 	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public Page getPageById(long id) throws Exception {

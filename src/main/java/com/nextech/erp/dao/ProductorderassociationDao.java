@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Productorderassociation;
 
 public interface ProductorderassociationDao {
-	public boolean addProductorderassociation(
+	public Long addProductorderassociation(
 			Productorderassociation productorderassociation) throws Exception;
 
 	public Productorderassociation getProductorderassociationById(long id)

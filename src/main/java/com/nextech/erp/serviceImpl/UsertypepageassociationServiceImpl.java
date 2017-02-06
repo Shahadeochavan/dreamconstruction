@@ -14,7 +14,7 @@ public class UsertypepageassociationServiceImpl implements
 	UsertypepageassociationDao usertypepageassociationDao;
 
 	@Override
-	public boolean addPageAss(Usertypepageassociation usertypepageassociation)
+	public Long addPageAss(Usertypepageassociation usertypepageassociation)
 			throws Exception {
 		usertypepageassociation.setCreatedDate(new Timestamp(new Date()
 				.getTime()));

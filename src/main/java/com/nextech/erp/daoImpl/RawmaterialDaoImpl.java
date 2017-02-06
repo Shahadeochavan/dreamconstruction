@@ -20,18 +20,13 @@ public class RawmaterialDaoImpl implements RawmaterialDao{
 	Transaction tx = null;
 
 	@Override
-	public boolean addRawmaterial(Rawmaterial rawmaterial) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(rawmaterial);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addRawmaterial");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addRawmaterial(Rawmaterial rawmaterial) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(rawmaterial);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

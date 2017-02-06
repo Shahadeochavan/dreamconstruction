@@ -14,7 +14,7 @@ public class PageServiceImpl implements PageService{
 	PageDao pagedao;
 
 	@Override
-	public boolean addPage(Page page) throws Exception {
+	public Long addPage(Page page) throws Exception {
 		page.setCreatedDate(new Timestamp(new Date().getTime()));
 		return pagedao.addPage(page);
 	}

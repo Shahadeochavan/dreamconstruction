@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 
 public interface RMVAssoDao {
-	public boolean addRawmaterialvendorassociation(
+	public Long addRawmaterialvendorassociation(
 			Rawmaterialvendorassociation rawmaterialvendorassociation)
 			throws Exception;
 

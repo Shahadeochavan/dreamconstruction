@@ -14,7 +14,7 @@ public class UserTypeServiceImpl implements UserTypeService {
 	UserTypeDao userTypeDao;
 
 	@Override
-	public boolean addUsertype(Usertype userType) throws Exception {
+	public Long addUsertype(Usertype userType) throws Exception {
 		userType.setCreatedDate(new Timestamp(new Date().getTime()));
 		return userTypeDao.addUsertype(userType);
 	}

@@ -14,7 +14,7 @@ public class RawmaterialorderhistoryServiceImpl implements
 	RawmaterialorderhistoryDao rawmaterialorderhistoryDao;
 
 	@Override
-	public boolean addRawmaterialorderhistory(
+	public Long addRawmaterialorderhistory(
 			Rawmaterialorderhistory rawmaterialorderhistory) throws Exception {
 		rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date()
 				.getTime()));

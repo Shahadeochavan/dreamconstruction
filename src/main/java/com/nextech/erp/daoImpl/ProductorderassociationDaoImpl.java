@@ -20,18 +20,13 @@ public class ProductorderassociationDaoImpl implements ProductorderassociationDa
 	Transaction tx = null;
 
 	@Override
-	public boolean addProductorderassociation(Productorderassociation productorderassociation) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(productorderassociation);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addProductorderassociation");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addProductorderassociation(Productorderassociation productorderassociation) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(productorderassociation);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

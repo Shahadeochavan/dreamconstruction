@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.User;
 
 public interface UserService {
-	public boolean addEntity(User user) throws Exception;
+	public Long addEntity(User user) throws Exception;
 
 	public User getEntityById(long id) throws Exception;
 

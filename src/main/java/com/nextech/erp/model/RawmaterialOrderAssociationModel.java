@@ -13,6 +13,7 @@ public class RawmaterialOrderAssociationModel implements Serializable {
 	private Date deliveryDate;	
 	private Date createDate;
 	private long Vendor;
+	private long status;
 	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
 	public String getDescription() {
 		return description;
@@ -44,6 +45,12 @@ public class RawmaterialOrderAssociationModel implements Serializable {
 	}
 	public void setVendor(long vendor) {
 		Vendor = vendor;
+	}
+	public long getStatus() {
+		return status;
+	}
+	public void setStatus(long status) {
+		this.status = status;
 	}
 
 }

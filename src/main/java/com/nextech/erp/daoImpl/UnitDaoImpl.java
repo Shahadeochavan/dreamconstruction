@@ -19,13 +19,13 @@ public class UnitDaoImpl implements UnitDao{
 	Transaction tx = null;
 
 	@Override
-	public boolean addUnit(Unit unit) throws Exception {
+	public Long addUnit(Unit unit) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		session.save(unit);
+		Long id = (Long) session.save(unit);
 		tx.commit();
 		session.close();
-		return false;
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

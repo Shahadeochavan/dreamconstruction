@@ -15,7 +15,7 @@ public class UnitServiceImpl implements UnitService {
 	UnitDao unitdao;
 
 	@Override
-	public boolean addUnit(Unit unit) throws Exception {
+	public Long addUnit(Unit unit) throws Exception {
 		unit.setCreatedDate(new Timestamp(new Date().getTime()));
 		return unitdao.addUnit(unit);
 	}

@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.StatustransitionDao;
 import com.nextech.erp.model.Statustransition;
 
@@ -19,18 +20,13 @@ public class StatustransitionDaoImpl implements StatustransitionDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addStatustransition(Statustransition statustransition) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(statustransition);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addStatustransition");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addStatustransition(Statustransition statustransition) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(statustransition);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

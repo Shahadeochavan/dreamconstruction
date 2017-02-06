@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Rawmaterialorder;
 
 public interface RawmaterialorderDao {
-	public Integer addRawmaterialorder(Rawmaterialorder Rawmaterialorder) throws Exception;
+	public Long addRawmaterialorder(Rawmaterialorder Rawmaterialorder) throws Exception;
 
 	public Rawmaterialorder getRawmaterialorderById(long id) throws Exception;
 

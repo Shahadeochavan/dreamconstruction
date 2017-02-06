@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Usertypepageassociation;
 
 public interface UsertypepageassociationService {
-	public boolean addPageAss(Usertypepageassociation usertypepageassociation)
+	public Long addPageAss(Usertypepageassociation usertypepageassociation)
 			throws Exception;
 
 	public Usertypepageassociation getPageAssById(long id) throws Exception;

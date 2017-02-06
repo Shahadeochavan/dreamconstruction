@@ -17,7 +17,7 @@ public class RawmaterialorderassociationServiceImpl implements
 	RawmaterialorderassociationDao RawmaterialorderassociationDao;
 
 	@Override
-	public boolean addRawmaterialorderassociation(
+	public Long addRawmaterialorderassociation(
 			Rawmaterialorderassociation Rawmaterialorderassociation)
 			throws Exception {
 		Rawmaterialorderassociation.setCreatedDate(new Timestamp(new Date()

@@ -20,18 +20,13 @@ public class ProductinventoryDaoImpl implements ProductinventoryDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addProductinventory(Productinventory productinventory) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(productinventory);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addProductinventory");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addProductinventory(Productinventory productinventory) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(productinventory);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

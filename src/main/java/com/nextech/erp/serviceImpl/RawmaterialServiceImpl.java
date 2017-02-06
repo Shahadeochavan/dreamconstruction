@@ -15,7 +15,7 @@ public class RawmaterialServiceImpl implements RawmaterialService {
 	RawmaterialDao rawmaterialDao;
 
 	@Override
-	public boolean addRawmaterial(Rawmaterial rawmaterial) throws Exception {
+	public Long addRawmaterial(Rawmaterial rawmaterial) throws Exception {
 		rawmaterial.setCreatedDate(new Timestamp(new Date().getTime()));
 		return rawmaterialDao.addRawmaterial(rawmaterial);
 	}

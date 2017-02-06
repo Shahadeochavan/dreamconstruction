@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Rawmaterial;
 
 public interface RawmaterialDao {
-	public boolean addRawmaterial(Rawmaterial rawmaterial) throws Exception;
+	public Long addRawmaterial(Rawmaterial rawmaterial) throws Exception;
 
 	public Rawmaterial getRawmaterialById(long id) throws Exception;
 

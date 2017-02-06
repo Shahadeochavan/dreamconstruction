@@ -6,7 +6,7 @@ import com.nextech.erp.model.Rawmaterialinventoryhistory;
 
 public interface RawmaterialinventoryhistoryService {
 
-	public boolean addRawmaterialinventoryhistory(
+	public Long addRawmaterialinventoryhistory(
 			Rawmaterialinventoryhistory rawmaterialinventoryhistory)
 			throws Exception;
 

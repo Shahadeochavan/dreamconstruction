@@ -19,10 +19,10 @@ public class ProductorderDaoImpl implements ProductorderDao {
 	Transaction tx = null;
 
 	@Override
-	public Integer addProductorder(Productorder productorder) {
+	public Long addProductorder(Productorder productorder) {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		Integer id = (Integer) session.save(productorder);
+		Long id = (Long) session.save(productorder);
 		tx.commit();
 		session.close();
 		return id;

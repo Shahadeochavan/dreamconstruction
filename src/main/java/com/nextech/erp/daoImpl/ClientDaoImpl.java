@@ -7,8 +7,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.model.Client;
 
@@ -19,18 +19,13 @@ public class ClientDaoImpl implements ClientDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addClient(Client client) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(client);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addClient");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addClient(Client client) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(client);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

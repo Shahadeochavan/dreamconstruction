@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 
 public interface RawmaterialorderassociationService {
-	public boolean addRawmaterialorderassociation(
+	public Long addRawmaterialorderassociation(
 			Rawmaterialorderassociation Rawmaterialorderassociation)
 			throws Exception;
 

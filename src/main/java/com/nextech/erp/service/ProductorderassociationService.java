@@ -6,7 +6,7 @@ import com.nextech.erp.model.Productorderassociation;
 
 public interface ProductorderassociationService {
 
-	public boolean addProductorderassociation(
+	public Long addProductorderassociation(
 			Productorderassociation productorderassociation) throws Exception;
 
 	public Productorderassociation getProductorderassociationById(long id)

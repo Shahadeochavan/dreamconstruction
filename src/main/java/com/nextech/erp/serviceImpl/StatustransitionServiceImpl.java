@@ -14,7 +14,7 @@ public class StatustransitionServiceImpl implements StatustransitionService {
 	StatustransitionDao statustransitionDao;
 
 	@Override
-	public boolean addStatustransition(Statustransition statustransition)
+	public Long addStatustransition(Statustransition statustransition)
 			throws Exception {
 		statustransition.setCreatedDate(new Timestamp(new Date().getTime()));
 		return statustransitionDao.addStatustransition(statustransition);

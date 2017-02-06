@@ -7,7 +7,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductinventoryhistoryDao;
@@ -21,19 +20,14 @@ public class ProductinventoryhistoryDaoImpl implements
 	Transaction tx = null;
 
 	@Override
-	public boolean addProductinventoryhistory(
+	public Long addProductinventoryhistory(
 			Productinventoryhistory productinventoryhistory) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(productinventoryhistory);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addProductinventoryhistory");
-			cve.printStackTrace();
-		}
-		return false;
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(productinventoryhistory);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

@@ -19,10 +19,10 @@ public class RawmaterialorderDaoImpl implements RawmaterialorderDao{
 	Transaction tx = null;
 
 	@Override
-	public Integer addRawmaterialorder(Rawmaterialorder rawmaterialorder) {
+	public Long addRawmaterialorder(Rawmaterialorder rawmaterialorder) {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		Integer id = (Integer) session.save(rawmaterialorder);
+		Long id = (Long) session.save(rawmaterialorder);
 		tx.commit();
 		session.close();
 		return id;

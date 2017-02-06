@@ -79,10 +79,10 @@ public class RawmaterialorderController {
 			rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
 			rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
 			rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
-			rawmaterialorder.setStatus(statusService.getStatusById(2));
+			rawmaterialorder.setStatus(statusService.getStatusById(rawmaterialOrderAssociationModel.getStatus()));
 			rawmaterialorder.setVendor(vendorService.getVendorById(rawmaterialOrderAssociationModel.getVendor()));
 			rawmaterialorder.setIsactive(true);
-			Integer orderId = rawmaterialorderService.addRawmaterialorder(rawmaterialorder);
+			Long orderId = rawmaterialorderService.addRawmaterialorder(rawmaterialorder);
 			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
 			if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 				for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {

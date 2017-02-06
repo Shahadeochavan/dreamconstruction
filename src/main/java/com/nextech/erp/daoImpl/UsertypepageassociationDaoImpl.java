@@ -19,13 +19,13 @@ public class UsertypepageassociationDaoImpl implements UsertypepageassociationDa
 	Transaction tx = null;
 
 	@Override
-	public boolean addPageAss(Usertypepageassociation usertypepageassociation) throws Exception {
+	public Long addPageAss(Usertypepageassociation usertypepageassociation) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		session.save(usertypepageassociation);
+		Long id = (Long) session.save(usertypepageassociation);
 		tx.commit();
 		session.close();
-		return false;
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

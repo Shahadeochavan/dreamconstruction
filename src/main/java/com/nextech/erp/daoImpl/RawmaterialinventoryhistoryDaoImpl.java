@@ -21,18 +21,13 @@ public class RawmaterialinventoryhistoryDaoImpl implements Rawmaterialinventoryh
 	Transaction tx = null;
 
 	@Override
-	public boolean addRawmaterialinventoryhistory(Rawmaterialinventoryhistory rawmaterialinventoryhistory) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(rawmaterialinventoryhistory);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addRawmaterialinventoryhistory");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addRawmaterialinventoryhistory(Rawmaterialinventoryhistory rawmaterialinventoryhistory) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(rawmaterialinventoryhistory);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

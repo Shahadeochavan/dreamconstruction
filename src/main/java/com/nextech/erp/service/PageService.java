@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Page;
 
 public interface PageService {
-	public boolean addPage(Page page) throws Exception;
+	public Long addPage(Page page) throws Exception;
 
 	public Page getPageById(long id) throws Exception;
 

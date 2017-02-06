@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Productinventory;
 
 public interface ProductinventoryService {
-	public boolean addProductinventory(Productinventory Productinventory) throws Exception;
+	public Long addProductinventory(Productinventory Productinventory) throws Exception;
 
 	public Productinventory getProductinventoryById(long id) throws Exception;
 

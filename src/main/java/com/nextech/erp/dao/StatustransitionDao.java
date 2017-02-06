@@ -4,7 +4,7 @@ import java.util.List;
 import com.nextech.erp.model.Statustransition;
 
 public interface StatustransitionDao {
-	public boolean addStatustransition(Statustransition statustransition)
+	public Long addStatustransition(Statustransition statustransition)
 			throws Exception;
 
 	public Statustransition getStatustransitionById(long id) throws Exception;

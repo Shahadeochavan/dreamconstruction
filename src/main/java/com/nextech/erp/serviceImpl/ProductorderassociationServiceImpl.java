@@ -14,7 +14,7 @@ public class ProductorderassociationServiceImpl implements
 	ProductorderassociationDao productorderassociationDao;
 
 	@Override
-	public boolean addProductorderassociation(
+	public Long addProductorderassociation(
 			Productorderassociation productorderassociation) throws Exception {
 		productorderassociation.setCreatedDate(new Timestamp(new Date()
 				.getTime()));

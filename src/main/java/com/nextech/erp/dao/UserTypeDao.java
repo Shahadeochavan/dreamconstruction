@@ -4,7 +4,7 @@ import java.util.List;
 import com.nextech.erp.model.Usertype;
 
 public interface UserTypeDao {
-	public boolean addUsertype(Usertype user) throws Exception;
+	public Long addUsertype(Usertype user) throws Exception;
 
 	public Usertype getUsertypeById(long id) throws Exception;
 

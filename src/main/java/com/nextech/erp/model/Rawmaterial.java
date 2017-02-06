@@ -24,7 +24,8 @@ import java.util.List;
 public class Rawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	@Column(name="created_by")
@@ -48,8 +49,8 @@ public class Rawmaterial implements Serializable {
 	@Column(name="part_number")
 	private String partNumber;
 
-	@DecimalMax(value = "100.00", message = "The pricePerUnit value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The pricePerUnit value can not be less than 1.00 digit ")
+/*	@DecimalMax(value = "100.00", message = "The pricePerUnit value can not be more than 100.00 ")
+	@DecimalMin(value = "1.00", message = "The pricePerUnit value can not be less than 1.00 digit ")*/
 	@Column(name="price_per_unit")
 	private float pricePerUnit;
 

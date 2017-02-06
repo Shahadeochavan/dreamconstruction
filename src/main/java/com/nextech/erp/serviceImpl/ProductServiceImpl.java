@@ -14,7 +14,7 @@ public class ProductServiceImpl implements ProductService {
 	ProductDao productDao;
 
 	@Override
-	public boolean addProduct(Product product) throws Exception {
+	public Long addProduct(Product product) throws Exception {
 		product.setCreatedDate(new Timestamp(new Date().getTime()));
 		return productDao.addProduct(product);
 	}

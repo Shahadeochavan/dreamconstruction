@@ -19,15 +19,14 @@ public class UsertypeDaoImpl implements UserTypeDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addUsertype(Usertype userType) throws Exception {
+	public Long addUsertype(Usertype userType) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		session.save(userType);
+		Long id = (Long) session.save(userType);
 		tx.commit();
 		session.close();
-		return false;
+		return id;
 	}
-
 	@SuppressWarnings("deprecation")
 	@Override
 	public Usertype getUsertypeById(long id) throws Exception {

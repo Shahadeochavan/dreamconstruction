@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Productorder;
 
 public interface ProductorderService {
-	public Integer addProductorder(Productorder Productorder) throws Exception;
+	public Long addProductorder(Productorder Productorder) throws Exception;
 
 	public Productorder getProductorderById(long id) throws Exception;
 

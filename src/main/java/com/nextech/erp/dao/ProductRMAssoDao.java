@@ -5,7 +5,7 @@ import com.nextech.erp.model.Productrawmaterialassociation;
 
 public interface ProductRMAssoDao {
 
-	public boolean addProductrawmaterialassociation(
+	public Long addProductrawmaterialassociation(
 			Productrawmaterialassociation productrawmaterialassociation)
 			throws Exception;
 

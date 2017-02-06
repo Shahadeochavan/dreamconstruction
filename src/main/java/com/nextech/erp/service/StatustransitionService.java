@@ -6,7 +6,7 @@ import com.nextech.erp.model.Statustransition;
 import com.nextech.erp.model.Vendor;
 
 public interface StatustransitionService {
-	public boolean addStatustransition(Statustransition statustransition)
+	public Long addStatustransition(Statustransition statustransition)
 			throws Exception;
 
 	public Statustransition getStatustransitionById(long id) throws Exception;

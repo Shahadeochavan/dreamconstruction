@@ -21,18 +21,13 @@ public class ProductRMAssoDaoImpl implements ProductRMAssoDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addProductrawmaterialassociation(Productrawmaterialassociation Productrawmaterialassociation) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(Productrawmaterialassociation);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addProductrawmaterialassociation");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addProductrawmaterialassociation(Productrawmaterialassociation Productrawmaterialassociation) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(Productrawmaterialassociation);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

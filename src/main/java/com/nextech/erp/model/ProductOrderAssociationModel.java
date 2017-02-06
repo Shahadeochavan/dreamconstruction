@@ -11,6 +11,7 @@ public class ProductOrderAssociationModel implements Serializable{
 	private static final long serialVersionUID = 2264984414287739733L;
 	private String description;
 	private long client;
+	private long status;
 	private Date deliveryDate;	
 	private Date createDate;	
 	private List<Productorderassociation> orderproductassociations;
@@ -44,6 +45,12 @@ public class ProductOrderAssociationModel implements Serializable{
 	public void setOrderproductassociations(
 			List<Productorderassociation> orderproductassociations) {
 		this.orderproductassociations = orderproductassociations;
+	}
+	public long getStatus() {
+		return status;
+	}
+	public void setStatus(long status) {
+		this.status = status;
 	}	
 	
 }

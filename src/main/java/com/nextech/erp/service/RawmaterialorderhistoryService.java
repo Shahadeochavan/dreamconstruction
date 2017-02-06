@@ -6,7 +6,7 @@ import com.nextech.erp.model.Rawmaterialorderhistory;
 
 public interface RawmaterialorderhistoryService {
 
-	public boolean addRawmaterialorderhistory(
+	public Long addRawmaterialorderhistory(
 			Rawmaterialorderhistory rawmaterialorderhistory) throws Exception;
 
 	public Rawmaterialorderhistory getRawmaterialorderhistoryById(long id)

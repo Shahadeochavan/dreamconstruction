@@ -20,10 +20,10 @@ public class StatusDaoImpl implements StatusDao{
 	Transaction tx = null;
 
 	@Override
-	public Integer addStatus(Status status) throws Exception {
+	public Long addStatus(Status status) throws Exception {
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
-		Integer id = (Integer) session.save(status);
+		Long id = (Long) session.save(status);
 		tx.commit();
 		session.close();
 		return id;

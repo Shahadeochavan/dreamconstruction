@@ -24,7 +24,8 @@ import java.util.List;
 public class Productinventory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	@Column(name="created_by")
@@ -47,8 +48,8 @@ public class Productinventory implements Serializable {
     @Min(value = 0, message = " please enter quantityavailabl")
 	private int quantityavailable;
     
-    @Min(value = 1, message = "racknumber should be greater than 1 digit")
-	 @Max(value = 100, message = "racknumber should be less than 100 digit")
+/*    @Min(value = 1, message = "racknumber should be greater than 1 digit")
+	 @Max(value = 100, message = "racknumber should be less than 100 digit")*/
 	private int racknumber;
 
 	@Column(name="updated_by")

@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Productrawmaterialassociation;
 
 public interface ProductRMAssoService {
-	public boolean addProductrawmaterialassociation(
+	public Long addProductrawmaterialassociation(
 			Productrawmaterialassociation productrawmaterialassociation)
 			throws Exception;
 

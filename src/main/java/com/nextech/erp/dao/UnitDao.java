@@ -5,7 +5,7 @@ import java.util.List;
 import com.nextech.erp.model.Unit;
 
 public interface UnitDao {
-	public boolean addUnit(Unit unit) throws Exception;
+	public Long addUnit(Unit unit) throws Exception;
 
 	public Unit getUnitById(long id) throws Exception;
 

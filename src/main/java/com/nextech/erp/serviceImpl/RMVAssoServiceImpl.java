@@ -14,7 +14,7 @@ public class RMVAssoServiceImpl implements RMVAssoService{
 	RMVAssoDao rmvAssoDao;
 
 	@Override
-	public boolean addRawmaterialvendorassociation(Rawmaterialvendorassociation rawmaterialvendorassociation) throws Exception {
+	public Long addRawmaterialvendorassociation(Rawmaterialvendorassociation rawmaterialvendorassociation) throws Exception {
 		rawmaterialvendorassociation.setCreatedDate(new Timestamp(new Date().getTime()));
 		return rmvAssoDao.addRawmaterialvendorassociation(rawmaterialvendorassociation);
 	}

@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.UserDao;
 import com.nextech.erp.model.User;
 
@@ -19,18 +20,13 @@ public class UserDaoImpl implements UserDao {
 	Transaction tx = null;
 
 	@Override
-	public boolean addEntity(User user) {
-		try {
-			session = sessionFactory.openSession();
-			tx = session.beginTransaction();
-			session.save(user);
-			tx.commit();
-			session.close();
-		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside addEntity");
-			cve.printStackTrace();
-		}
-		return false;
+	public Long addEntity(User user) {
+		session = sessionFactory.openSession();
+		tx = session.beginTransaction();
+		Long id = (Long) session.save(user);
+		tx.commit();
+		session.close();
+		return id;
 	}
 
 	@SuppressWarnings("deprecation")

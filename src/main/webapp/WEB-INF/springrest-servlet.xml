@@ -64,7 +64,7 @@
 	<bean id="userservice" class="com.nextech.erp.serviceImpl.UserServiceImpl" />
 	<bean id="userTypeDao" class="com.nextech.erp.daoImpl.UsertypeDaoImpl" />
 	<bean id="userTypeService" class="com.nextech.erp.serviceImpl.UserTypeServiceImpl" />
-	<bean id="pagedao" class="com.nextech.erp.daoImpl.PapeDaoImpl" />
+	<bean id="pagedao" class="com.nextech.erp.daoImpl.PageDaoImpl" />
 	<bean id="pageservice" class="com.nextech.erp.serviceImpl.PageServiceImpl" />
 	<bean id="usertypepageassociationDao" class="com.nextech.erp.daoImpl.UsertypepageassociationDaoImpl" />
 	<bean id="usertypepageassociationService"

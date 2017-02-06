@@ -16,7 +16,7 @@ public class ProductinventoryServiceImpl implements ProductinventoryService {
 	ProductinventoryDao productinventoryDao;
 
 	@Override
-	public boolean addProductinventory(Productinventory productinventory)
+	public Long addProductinventory(Productinventory productinventory)
 			throws Exception {
 		productinventory.setCreatedDate(new Timestamp(new Date().getTime()));
 		return productinventoryDao.addProductinventory(productinventory);

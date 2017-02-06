@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 	UserDao userdao;
 
 	@Override
-	public boolean addEntity(User user) throws ConstraintViolationException,
+	public Long addEntity(User user) throws ConstraintViolationException,
 			Exception {
 		user.setCreatedDate(new Timestamp(new Date().getTime()));
 		// userValidator.validate(user, new Eerrors);

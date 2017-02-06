@@ -15,7 +15,7 @@ public class RawmaterialorderServiceImpl implements RawmaterialorderService{
 	RawmaterialorderDao rawmaterialorderDao;
 
 	@Override
-	public Integer addRawmaterialorder(Rawmaterialorder rawmaterialorder) throws Exception {
+	public Long addRawmaterialorder(Rawmaterialorder rawmaterialorder) throws Exception {
 		rawmaterialorder.setCreatedDate(new Timestamp(new Date().getTime()));
 		return rawmaterialorderDao.addRawmaterialorder(rawmaterialorder);
 	}

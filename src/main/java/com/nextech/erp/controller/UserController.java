@@ -49,7 +49,7 @@ public class UserController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if ((Boolean) request.getAttribute("user-auth")) {
+			if ((Boolean) request.getAttribute("auth_token")) {
 				if (userservice.getUserByUserId(user.getUserid()) == null) {
 				} else {
 					return new UserStatus(1, "UserId already exists !");
@@ -123,7 +123,7 @@ public class UserController {
 	public @ResponseBody User getUser(@PathVariable("id") long id) {
 		User user = null;
 		try {
-			user = userservice.getEntityById(id);
+			user = userservice.getEntityById(User.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -149,7 +149,7 @@ public class UserController {
 
 		List<User> userList = null;
 		try {
-			userList = userservice.getEntityList();
+			userList = userservice.getEntityList(User.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -163,7 +163,7 @@ public class UserController {
 	public @ResponseBody UserStatus deleteEmployee(@PathVariable("id") long id) {
 
 		try {
-			User user = userservice.getEntityById(id);
+			User user = userservice.getEntityById(User.class,id);
 			user.setIsactive(false);
 			userservice.updateEntity(user);
 			return new UserStatus(1, "User deleted Successfully !");

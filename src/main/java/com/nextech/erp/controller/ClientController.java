@@ -46,7 +46,7 @@ public class ClientController {
 			} else {
 				return new UserStatus(2, "Email already exists !");
 			}
-			clientService.addClient(client);
+			clientService.addEntity(client);
 			return new UserStatus(1, "client added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -67,7 +67,7 @@ public class ClientController {
 	public @ResponseBody Client getClient(@PathVariable("id") long id) {
 		Client client = null;
 		try {
-			client = clientService.getClientById(id);
+			client = clientService.getEntityById(Client.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,7 +77,7 @@ public class ClientController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateClient(@RequestBody Client client) {
 		try {
-			clientService.updateClient(client);
+			clientService.updateEntity(client);
 			return new UserStatus(1, "Client update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,7 +91,7 @@ public class ClientController {
 
 		List<Client> clientList = null;
 		try {
-			clientList = clientService.getClientList();
+			clientList = clientService.getEntityList(Client.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -104,9 +104,9 @@ public class ClientController {
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
-			Client client = clientService.getClientById(id);
+			Client client = clientService.getEntityById(Client.class,id);
 			client.setIsactive(false);
-			clientService.updateClient(client);
+			clientService.updateEntity(client);
 			return new UserStatus(1, "Client deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

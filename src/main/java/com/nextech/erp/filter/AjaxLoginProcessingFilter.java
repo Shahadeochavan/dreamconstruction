@@ -13,8 +13,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.UserService;
 public class AjaxLoginProcessingFilter implements Filter {
@@ -25,6 +27,9 @@ public class AjaxLoginProcessingFilter implements Filter {
 	@Autowired
 	TokenFactory tokenFactory;
 
+	@Autowired
+	private MessageSource messageSource;
+	
 	@Override
 	public void destroy() {
 
@@ -43,7 +48,8 @@ public class AjaxLoginProcessingFilter implements Filter {
 						User user = userService.getUserByUserId(string[0]);
 						if(user != null && user.getPassword().equals(string[1])){
 							String str = string[string.length - 1];
-							if (new Date().getTime() - 1 * 60 * 1000 < new Long(str)) {
+							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
+							if (new Date().getTime() - time * 1000 < new Long(str)) {
 								String generatedToken = TokenFactory.createAccessJwtToken(user);
 								System.out.println(generatedToken);
 								((HttpServletResponse) response).addHeader("auth_token", generatedToken);
@@ -75,6 +81,7 @@ public class AjaxLoginProcessingFilter implements Filter {
 	@Override
 	public void init(FilterConfig cfg) throws ServletException {
 		userService = (UserService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("userservice");
+		messageSource = (MessageSource)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("messageSource");
 	}
 	
 	

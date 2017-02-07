@@ -7,7 +7,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RawmaterialorderinvoiceDao;
-import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.service.RawmaterialorderinvoiceService;
 

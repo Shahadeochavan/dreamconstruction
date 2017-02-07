@@ -26,14 +26,14 @@ public class RawmaterialorderinvoiceController {
 	RawmaterialorderinvoiceService rawmaterialorderinvoiceservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addRawmaterialorderinvoice(@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
-			BindingResult bindingResult) {
+	public @ResponseBody UserStatus addRawmaterialorderinvoice(
+			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice, BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			rawmaterialorderinvoiceservice.addRawmaterialorderinvoice(rawmaterialorderinvoice);
+			Long RMOrderinvoiceId = rawmaterialorderinvoiceservice.addRawmaterialorderinvoice(rawmaterialorderinvoice);
+
 			return new UserStatus(1, "Rawmaterialorderinvoice added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -62,7 +62,8 @@ public class RawmaterialorderinvoiceController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialorderinvoice(@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice) {
+	public @ResponseBody UserStatus updateRawmaterialorderinvoice(
+			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice) {
 		try {
 			rawmaterialorderinvoiceservice.updateRawmaterialorderinvoice(rawmaterialorderinvoice);
 			return new UserStatus(1, "Rawmaterialorderinvoice update Successfully !");

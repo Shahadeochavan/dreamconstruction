@@ -70,6 +70,9 @@
 		</property>
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean>
+	<bean id="superDao" class="com.nextech.erp.daoImpl.SuperDaoImpl" />
+	<bean id="CRUDServiceImpl" class="com.nextech.erp.serviceImpl.CRUDServiceImpl" />
+	
 	<bean id="userdao" class="com.nextech.erp.daoImpl.UserDaoImpl" />
 	<bean id="userservice" class="com.nextech.erp.serviceImpl.UserServiceImpl" />
 	<bean id="userTypeDao" class="com.nextech.erp.daoImpl.UsertypeDaoImpl" />

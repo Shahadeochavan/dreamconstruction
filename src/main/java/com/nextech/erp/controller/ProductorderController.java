@@ -17,12 +17,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.nextech.erp.model.Productorderassociation;
+
+import com.mysql.fabric.xmlrpc.Client;
 import com.nextech.erp.model.ProductOrderAssociationModel;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.service.ClientService;
-import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
@@ -75,7 +77,7 @@ public class ProductorderController {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			Productorder productorder= new Productorder();
-			productorder.setClient(clientService.getClientById(productOrderAssociationModel.getClient()));
+			productorder.setClient(clientService.getEntityById(Client.class,productOrderAssociationModel.getClient()));
 			productorder.setCreateDate(new Date());
 			productorder.setDescription(productOrderAssociationModel.getDescription());
 			productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());

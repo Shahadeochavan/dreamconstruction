@@ -29,14 +29,15 @@ public class RawmaterialorderinvoiceassociationController {
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addRawmaterialorderinvoiceassociation(@Valid @RequestBody Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation,
+	public @ResponseBody UserStatus addRawmaterialorderinvoiceassociation(
+			@Valid @RequestBody Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			rawmaterialorderinvoiceassociationservice.addRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
+			rawmaterialorderinvoiceassociationservice
+					.addRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
 			return new UserStatus(1, "Rawmaterialorderinvoiceassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -54,53 +55,15 @@ public class RawmaterialorderinvoiceassociationController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialorderinvoiceassociation getRawmaterialorderinvoiceassociation(@PathVariable("id") long id) {
+	public @ResponseBody Rawmaterialorderinvoiceassociation getRawmaterialorderinvoiceassociation(
+			@PathVariable("id") long id) {
 		Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation = null;
 		try {
-			Rawmaterialorderinvoiceassociation = rawmaterialorderinvoiceassociationservice.getRawmaterialorderinvoiceassociationById(id);
+			Rawmaterialorderinvoiceassociation = rawmaterialorderinvoiceassociationservice
+					.getRawmaterialorderinvoiceassociationById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return Rawmaterialorderinvoiceassociation;
-	}
-
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialorderinvoiceassociation(@RequestBody Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation) {
-		try {
-			rawmaterialorderinvoiceassociationservice.updateRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
-			return new UserStatus(1, "Rawmaterialorderinvoiceassociation update Successfully !");
-		} catch (Exception e) {
-			// e.printStackTrace();
-			return new UserStatus(0, e.toString());
-		}
-	}
-
-	@CrossOrigin(origins = "http://localhost:8080")
-	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorderinvoiceassociation> getRawmaterialorderinvoiceassociation() {
-
-		List<Rawmaterialorderinvoiceassociation> RawmaterialorderinvoiceassociationList = null;
-		try {
-			RawmaterialorderinvoiceassociationList = rawmaterialorderinvoiceassociationservice.getRawmaterialorderinvoiceassociationList();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return RawmaterialorderinvoiceassociationList;
-	}
-
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialorderinvoiceassociation(@PathVariable("id") long id) {
-
-		try {
-			Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation = rawmaterialorderinvoiceassociationservice.getRawmaterialorderinvoiceassociationById(id);
-			Rawmaterialorderinvoiceassociation.setIsactive(false);
-			rawmaterialorderinvoiceassociationservice.updateRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
-			return new UserStatus(1, "Rawmaterialorderinvoiceassociation deleted Successfully !");
-		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
-		}
-
 	}
 }

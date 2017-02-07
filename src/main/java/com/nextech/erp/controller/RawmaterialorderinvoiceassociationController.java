@@ -17,37 +17,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.model.Client;
-import com.nextech.erp.service.ClientService;
+import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
+import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/client")
-public class ClientController {
+@RequestMapping("/rawmaterialorderinvoiceassociation")
+public class RawmaterialorderinvoiceassociationController {
 
-	
 	@Autowired
-	ClientService clientService;
+	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addClient(
-			@Valid @RequestBody Client client, BindingResult bindingResult) {
+	public @ResponseBody UserStatus addRawmaterialorderinvoiceassociation(@Valid @RequestBody Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
-
-			} else {
-				return new UserStatus(2, "CompanyName already exists !");
-			}
-			if (clientService.getClientByEmail(client.getEmailid()) == null) {
-			} else {
-				return new UserStatus(2, "Email already exists !");
-			}
-			clientService.addClient(client);
-			return new UserStatus(1, "client added Successfully !");
+			rawmaterialorderinvoiceassociationservice.addRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
+			return new UserStatus(1, "Rawmaterialorderinvoiceassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -64,50 +54,50 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Client getClient(@PathVariable("id") long id) {
-		Client client = null;
+	public @ResponseBody Rawmaterialorderinvoiceassociation getRawmaterialorderinvoiceassociation(@PathVariable("id") long id) {
+		Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation = null;
 		try {
-			client = clientService.getClientById(id);
+			Rawmaterialorderinvoiceassociation = rawmaterialorderinvoiceassociationservice.getRawmaterialorderinvoiceassociationById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return client;
+		return Rawmaterialorderinvoiceassociation;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client) {
+	public @ResponseBody UserStatus updateRawmaterialorderinvoiceassociation(@RequestBody Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation) {
 		try {
-			clientService.updateClient(client);
-			return new UserStatus(1, "Client update Successfully !");
+			rawmaterialorderinvoiceassociationservice.updateRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
+			return new UserStatus(1, "Rawmaterialorderinvoiceassociation update Successfully !");
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Client> getClient() {
+	public @ResponseBody List<Rawmaterialorderinvoiceassociation> getRawmaterialorderinvoiceassociation() {
 
-		List<Client> clientList = null;
+		List<Rawmaterialorderinvoiceassociation> RawmaterialorderinvoiceassociationList = null;
 		try {
-			clientList = clientService.getClientList();
+			RawmaterialorderinvoiceassociationList = rawmaterialorderinvoiceassociationservice.getRawmaterialorderinvoiceassociationList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return clientList;
+		return RawmaterialorderinvoiceassociationList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteRawmaterialorderinvoiceassociation(@PathVariable("id") long id) {
 
 		try {
-			Client client = clientService.getClientById(id);
-			client.setIsactive(false);
-			clientService.updateClient(client);
-			return new UserStatus(1, "Client deleted Successfully !");
+			Rawmaterialorderinvoiceassociation Rawmaterialorderinvoiceassociation = rawmaterialorderinvoiceassociationservice.getRawmaterialorderinvoiceassociationById(id);
+			Rawmaterialorderinvoiceassociation.setIsactive(false);
+			rawmaterialorderinvoiceassociationservice.updateRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation);
+			return new UserStatus(1, "Rawmaterialorderinvoiceassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

@@ -14,5 +14,9 @@ public interface RawmaterialorderDao {
 	public boolean deleteRawmaterialorder(long id) throws Exception;
 
 	public Rawmaterialorder updateRawmaterialorder(Rawmaterialorder Rawmaterialorder) throws Exception;
+	
+	public Rawmaterialorder getRawmaterialorderByIdName(long id ,String rmname) throws Exception;
+	
+	
 }
 

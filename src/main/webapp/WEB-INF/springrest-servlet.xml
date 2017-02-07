@@ -9,7 +9,8 @@
 	<bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://localhost:3306/erp?zeroDateTimeBehavior=convertToNull" />
+		<property name="url"
+			value="jdbc:mysql://localhost:3306/erp?zeroDateTimeBehavior=convertToNull" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 	</bean>
@@ -40,6 +41,10 @@
 				<value>com.nextech.erp.model.Client</value>
 				<value>com.nextech.erp.model.Productorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderassociation</value>
+				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
+				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
+				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
+				</value>
 
 			</list>
 		</property>
@@ -55,9 +60,16 @@
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
-<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
-    <property name="basename" value="messages" />
-</bean>
+	<bean id="messageSource"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>classpath:properties/common</value>
+				<value>classpath:properties/url</value>
+			</list>
+		</property>
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 	<bean id="userdao" class="com.nextech.erp.daoImpl.UserDaoImpl" />
 	<bean id="userservice" class="com.nextech.erp.serviceImpl.UserServiceImpl" />
 	<bean id="userTypeDao" class="com.nextech.erp.daoImpl.UsertypeDaoImpl" />
@@ -111,4 +123,16 @@
 		class="com.nextech.erp.daoImpl.RawmaterialorderassociationDaoImpl" />
 	<bean id="orderrawmaterialassociationService"
 		class="com.nextech.erp.serviceImpl.RawmaterialorderassociationServiceImpl" />
+		<bean id="rawmaterialorderinvoiceDao"
+		class="com.nextech.erp.daoImpl.RawmaterialorderinvoiceDaoImpl" />
+	<bean id="rawmaterialorderinvoiceService"
+		class="com.nextech.erp.serviceImpl.RawmaterialorderinvoiceServiceImpl" />
+		<bean id="rawmaterialorderinvoiceassociationDao"
+		class="com.nextech.erp.daoImpl.RawmaterialorderinvoiceassociationDaoImpl" />
+	<bean id="rawmaterialorderinvoiceassociationService"
+		class="com.nextech.erp.serviceImpl.RawmaterialorderinvoiceassociationServiceImpl" />
+		<bean id="rmorderinvoiceintakquantityDao"
+		class="com.nextech.erp.daoImpl.RmorderinvoiceintakquantityDaoImpl" />
+	<bean id="rmorderinvoiceintakquantityService"
+		class="com.nextech.erp.serviceImpl.RmorderinvoiceintakquantityServiceImpl" />
 </beans>

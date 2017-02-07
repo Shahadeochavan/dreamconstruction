@@ -72,4 +72,17 @@ public class RawmaterialorderDaoImpl implements RawmaterialorderDao{
 		session.close();
 		return rawmaterialorder;
 	}
+	@Override
+	public Rawmaterialorder getRawmaterialorderByIdName(long id,String rmname) throws Exception{
+		session = sessionFactory.openSession();
+		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("id", id));
+		criteria.add(Restrictions.eq("name", rmname));
+		Rawmaterialorder rawmaterialorder = criteria.list().size() > 0 ? (Rawmaterialorder) criteria.list()
+				.get(0) : null;
+		session.close();
+		return rawmaterialorder;
+	}
+	
 }

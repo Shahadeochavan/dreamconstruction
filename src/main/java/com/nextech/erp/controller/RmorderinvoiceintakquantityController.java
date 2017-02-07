@@ -16,38 +16,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.nextech.erp.model.Client;
-import com.nextech.erp.service.ClientService;
+import com.nextech.erp.model.Rmorderinvoiceintakquantity;
+import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.status.UserStatus;
-
 @Controller
-@RequestMapping("/client")
-public class ClientController {
+@RequestMapping("/rmorderinvoiceintakquantity")
+public class RmorderinvoiceintakquantityController {
 
-	
 	@Autowired
-	ClientService clientService;
+	RmorderinvoiceintakquantityService rmorderinvoiceintakquantityservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addClient(
-			@Valid @RequestBody Client client, BindingResult bindingResult) {
+	public @ResponseBody UserStatus addRmorderinvoiceintakquantity(@Valid @RequestBody Rmorderinvoiceintakquantity Rmorderinvoiceintakquantity,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
-
-			} else {
-				return new UserStatus(2, "CompanyName already exists !");
-			}
-			if (clientService.getClientByEmail(client.getEmailid()) == null) {
-			} else {
-				return new UserStatus(2, "Email already exists !");
-			}
-			clientService.addClient(client);
-			return new UserStatus(1, "client added Successfully !");
+			rmorderinvoiceintakquantityservice.addRmorderinvoiceintakquantity(Rmorderinvoiceintakquantity);
+			return new UserStatus(1, "Rmorderinvoiceintakquantity added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -64,53 +52,54 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Client getClient(@PathVariable("id") long id) {
-		Client client = null;
+	public @ResponseBody Rmorderinvoiceintakquantity getRmorderinvoiceintakquantity(@PathVariable("id") long id) {
+		Rmorderinvoiceintakquantity Rmorderinvoiceintakquantity = null;
 		try {
-			client = clientService.getClientById(id);
+			Rmorderinvoiceintakquantity = rmorderinvoiceintakquantityservice.getRmorderinvoiceintakquantityById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return client;
+		return Rmorderinvoiceintakquantity;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client) {
+	public @ResponseBody UserStatus updateRmorderinvoiceintakquantity(@RequestBody Rmorderinvoiceintakquantity Rmorderinvoiceintakquantity) {
 		try {
-			clientService.updateClient(client);
-			return new UserStatus(1, "Client update Successfully !");
+			rmorderinvoiceintakquantityservice.updateRmorderinvoiceintakquantity(Rmorderinvoiceintakquantity);
+			return new UserStatus(1, "Rmorderinvoiceintakquantity update Successfully !");
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Client> getClient() {
+	public @ResponseBody List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantity() {
 
-		List<Client> clientList = null;
+		List<Rmorderinvoiceintakquantity> RmorderinvoiceintakquantityList = null;
 		try {
-			clientList = clientService.getClientList();
+			RmorderinvoiceintakquantityList = rmorderinvoiceintakquantityservice.getRmorderinvoiceintakquantityList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return clientList;
+		return RmorderinvoiceintakquantityList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteRmorderinvoiceintakquantity(@PathVariable("id") long id) {
 
 		try {
-			Client client = clientService.getClientById(id);
-			client.setIsactive(false);
-			clientService.updateClient(client);
-			return new UserStatus(1, "Client deleted Successfully !");
+			Rmorderinvoiceintakquantity Rmorderinvoiceintakquantity = rmorderinvoiceintakquantityservice.getRmorderinvoiceintakquantityById(id);
+			Rmorderinvoiceintakquantity.setIsactive(false);
+			rmorderinvoiceintakquantityservice.updateRmorderinvoiceintakquantity(Rmorderinvoiceintakquantity);
+			return new UserStatus(1, "Rmorderinvoiceintakquantity deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
 
 	}
 }
+

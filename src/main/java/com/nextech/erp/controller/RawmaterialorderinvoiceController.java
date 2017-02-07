@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,38 +15,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
-import com.nextech.erp.model.Client;
-import com.nextech.erp.service.ClientService;
+import com.nextech.erp.model.Rawmaterialorderinvoice;
+import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
-@RequestMapping("/client")
-public class ClientController {
-
-	
+@RequestMapping("/rawmaterialorderinvoice")
+public class RawmaterialorderinvoiceController {
 	@Autowired
-	ClientService clientService;
+	RawmaterialorderinvoiceService rawmaterialorderinvoiceservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addClient(
-			@Valid @RequestBody Client client, BindingResult bindingResult) {
+	public @ResponseBody UserStatus addRawmaterialorderinvoice(@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
-
-			} else {
-				return new UserStatus(2, "CompanyName already exists !");
-			}
-			if (clientService.getClientByEmail(client.getEmailid()) == null) {
-			} else {
-				return new UserStatus(2, "Email already exists !");
-			}
-			clientService.addClient(client);
-			return new UserStatus(1, "client added Successfully !");
+			rawmaterialorderinvoiceservice.addRawmaterialorderinvoice(rawmaterialorderinvoice);
+			return new UserStatus(1, "Rawmaterialorderinvoice added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -64,53 +51,39 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Client getClient(@PathVariable("id") long id) {
-		Client client = null;
+	public @ResponseBody Rawmaterialorderinvoice getRawmaterialorderinvoice(@PathVariable("id") long id) {
+		Rawmaterialorderinvoice rawmaterialorderinvoice = null;
 		try {
-			client = clientService.getClientById(id);
+			rawmaterialorderinvoice = rawmaterialorderinvoiceservice.getRawmaterialorderinvoiceById(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return client;
+		return rawmaterialorderinvoice;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client) {
+	public @ResponseBody UserStatus updateRawmaterialorderinvoice(@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice) {
 		try {
-			clientService.updateClient(client);
-			return new UserStatus(1, "Client update Successfully !");
+			rawmaterialorderinvoiceservice.updateRawmaterialorderinvoice(rawmaterialorderinvoice);
+			return new UserStatus(1, "Rawmaterialorderinvoice update Successfully !");
 		} catch (Exception e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Client> getClient() {
+	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoice() {
 
-		List<Client> clientList = null;
+		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
-			clientList = clientService.getClientList();
+			rawmaterialorderinvoiceList = rawmaterialorderinvoiceservice.getRawmaterialorderinvoiceList();
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return clientList;
-	}
-
-	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
-
-		try {
-			Client client = clientService.getClientById(id);
-			client.setIsactive(false);
-			clientService.updateClient(client);
-			return new UserStatus(1, "Client deleted Successfully !");
-		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
-		}
-
+		return rawmaterialorderinvoiceList;
 	}
 }

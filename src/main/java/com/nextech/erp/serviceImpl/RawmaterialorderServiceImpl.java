@@ -40,6 +40,11 @@ public class RawmaterialorderServiceImpl implements RawmaterialorderService{
 		rawmaterialorder.setUpdatedDate(new Timestamp(new Date().getTime()));
 		return rawmaterialorderDao.updateRawmaterialorder(rawmaterialorder);
 	}
+	
+	@Override
+	public Rawmaterialorder getRawmaterialorderByIdName(long id,String rmname) throws Exception {
+		return rawmaterialorderDao.getRawmaterialorderByIdName(id,rmname);
+	}
 
 }
 

@@ -37,7 +37,7 @@ public class ProductinventoryhistoryController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productinventoryhistoryService.addProductinventoryhistory(productinventoryhistory);
+			productinventoryhistoryService.addEntity(productinventoryhistory);
 			return new UserStatus(1, "Productinventoryhistory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -58,7 +58,7 @@ public class ProductinventoryhistoryController {
 	public @ResponseBody Productinventoryhistory getProductinventoryhistory(@PathVariable("id") long id) {
 		Productinventoryhistory productinventoryhistory = null;
 		try {
-			productinventoryhistory = productinventoryhistoryService.getProductinventoryhistoryById(id);
+			productinventoryhistory = productinventoryhistoryService.getEntityById(Productinventoryhistory.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -68,7 +68,7 @@ public class ProductinventoryhistoryController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductinventoryhistory(@RequestBody Productinventoryhistory Productinventoryhistory) {
 		try {
-			productinventoryhistoryService.updateProductinventoryhistory(Productinventoryhistory);
+			productinventoryhistoryService.updateEntity(Productinventoryhistory);
 			return new UserStatus(1, "Productinventoryhistory update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,7 +82,7 @@ public class ProductinventoryhistoryController {
 
 		List<Productinventoryhistory> productinventoryhistoryList = null;
 		try {
-			productinventoryhistoryList = productinventoryhistoryService.getProductinventoryhistoryList();
+			productinventoryhistoryList = productinventoryhistoryService.getEntityList(Productinventoryhistory.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,9 +95,9 @@ public class ProductinventoryhistoryController {
 	public @ResponseBody UserStatus deleteProductinventoryhistory(@PathVariable("id") long id) {
 
 		try {
-			Productinventoryhistory productinventoryhistory = productinventoryhistoryService.getProductinventoryhistoryById(id);
+			Productinventoryhistory productinventoryhistory = productinventoryhistoryService.getEntityById(Productinventoryhistory.class,id);
 			productinventoryhistory.setIsactive(false);
-			productinventoryhistoryService.updateProductinventoryhistory(productinventoryhistory);
+			productinventoryhistoryService.updateEntity(productinventoryhistory);
 			return new UserStatus(1, "Productinventoryhistory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

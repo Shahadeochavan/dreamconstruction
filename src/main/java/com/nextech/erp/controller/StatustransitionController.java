@@ -40,7 +40,7 @@ public class StatustransitionController {
 			if (statustransitionService
 					.getStatustransitionByEmail(statustransition
 							.getIsNotificationEmail()) == null)
-				statustransitionService.addStatustransition(statustransition);
+				statustransitionService.addEntity(statustransition);
 			else
 				return new UserStatus(1, "Email  already exists !");
 			return new UserStatus(1, "Statustransition added Successfully !");
@@ -65,7 +65,7 @@ public class StatustransitionController {
 		Statustransition statustransition = null;
 		try {
 			statustransition = statustransitionService
-					.getStatustransitionById(id);
+					.getEntityById(Statustransition.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -76,7 +76,7 @@ public class StatustransitionController {
 	public @ResponseBody UserStatus updateStatustransition(
 			@RequestBody Statustransition statustransition) {
 		try {
-			statustransitionService.updateStatustransition(statustransition);
+			statustransitionService.updateEntity(statustransition);
 			return new UserStatus(1, "Statustransition update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,7 +91,7 @@ public class StatustransitionController {
 		List<Statustransition> statustransitionList = null;
 		try {
 			statustransitionList = statustransitionService
-					.getStatustransitionList();
+					.getEntityList(Statustransition.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,9 +106,9 @@ public class StatustransitionController {
 
 		try {
 			Statustransition statustransition = statustransitionService
-					.getStatustransitionById(id);
+					.getEntityById(Statustransition.class, id);
 			statustransition.setIsactive(false);
-			statustransitionService.updateStatustransition(statustransition);
+			statustransitionService.updateEntity(statustransition);
 			return new UserStatus(1, "Statustransition deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

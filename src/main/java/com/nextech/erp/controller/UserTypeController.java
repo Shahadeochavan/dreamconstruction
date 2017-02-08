@@ -33,7 +33,7 @@ public class UserTypeController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			userTypeService.addUsertype(usertype);
+			userTypeService.addEntity(usertype);
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -54,7 +54,7 @@ public class UserTypeController {
 	public @ResponseBody Usertype getUserType(@PathVariable("id") long id) {
 		Usertype userType = null;
 		try {
-			userType = userTypeService.getUsertypeById(id);
+			userType = userTypeService.getEntityById(Usertype.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -65,7 +65,7 @@ public class UserTypeController {
 	public @ResponseBody UserStatus updateUserType(
 			@RequestBody Usertype userType) {
 		try {
-			userTypeService.updateUsertype(userType);
+			userTypeService.updateEntity(userType);
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -78,7 +78,7 @@ public class UserTypeController {
 
 		List<Usertype> userList = null;
 		try {
-			userList = userTypeService.getUsertypeList();
+			userList = userTypeService.getEntityList(Usertype.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,9 +91,9 @@ public class UserTypeController {
 	public @ResponseBody UserStatus deleteUserType(@PathVariable("id") long id) {
 
 		try {
-			Usertype usertype = userTypeService.getUsertypeById(id);
+			Usertype usertype = userTypeService.getEntityById(Usertype.class,id);
 			usertype.setIsactive(false);
-			userTypeService.updateUsertype(usertype);
+			userTypeService.updateEntity(usertype);
 			return new UserStatus(1, "UserType deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

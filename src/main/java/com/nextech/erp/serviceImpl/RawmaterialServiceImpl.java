@@ -1,45 +1,33 @@
 package com.nextech.erp.serviceImpl;
 
-import java.sql.Timestamp;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RawmaterialDao;
+import com.nextech.erp.dao.RawmaterialorderassociationDao;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialService;
 
-public class RawmaterialServiceImpl implements RawmaterialService {
+public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> implements RawmaterialService {
+	
 	@Autowired
 	RawmaterialDao rawmaterialDao;
 
+	@Autowired
+	RawmaterialorderassociationDao rawmaterialorderassociationDao;
+	
 	@Override
-	public Long addRawmaterial(Rawmaterial rawmaterial) throws Exception {
-		rawmaterial.setCreatedDate(new Timestamp(new Date().getTime()));
-		return rawmaterialDao.addRawmaterial(rawmaterial);
+	public List<Rawmaterial> getRawMaterialByRMOrderId(Long id) throws Exception {
+		List<Rawmaterial> rawmaterials = new ArrayList<>();
+		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderId(id);
+		if(rawmaterialorderassociations != null && !rawmaterialorderassociations.isEmpty() && rawmaterialorderassociations.size()>0){
+			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+				rawmaterials.add(rawmaterialDao.getById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterial().getId()));
+			}
+		}
+		return rawmaterials;
 	}
-
-	@Override
-	public Rawmaterial getRawmaterialById(long id) throws Exception {
-		return rawmaterialDao.getRawmaterialById(id);
-	}
-
-	@Override
-	public List<Rawmaterial> getRawmaterialList() throws Exception {
-		return rawmaterialDao.getRawmaterialList();
-	}
-
-	@Override
-	public boolean deleteRawmaterial(long id) throws Exception {
-		return rawmaterialDao.deleteRawmaterial(id);
-	}
-
-	@Override
-	public Rawmaterial updateRawmaterial(Rawmaterial rawmaterial)
-			throws Exception {
-		rawmaterial.setUpdatedDate(new Timestamp(new Date().getTime()));
-		return rawmaterialDao.updateRawmaterial(rawmaterial);
-	}
-
 }

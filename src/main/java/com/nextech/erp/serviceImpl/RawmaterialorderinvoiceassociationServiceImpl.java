@@ -2,7 +2,6 @@ package com.nextech.erp.serviceImpl;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,12 +18,11 @@ public class RawmaterialorderinvoiceassociationServiceImpl implements Rawmateria
 	public Long addRawmaterialorderinvoiceassociation(
 			Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation) throws Exception {
 		rawmaterialorderinvoiceassociation.setCreatedDate(new Timestamp(new Date().getTime()));
-		return rawmaterialorderinvoiceassociationdao
-				.addRawmaterialorderinvoiceassociation(rawmaterialorderinvoiceassociation);
+		return rawmaterialorderinvoiceassociationdao.add(rawmaterialorderinvoiceassociation);
 	}
 
 	@Override
 	public Rawmaterialorderinvoiceassociation getRawmaterialorderinvoiceassociationById(long id) throws Exception {
-		return rawmaterialorderinvoiceassociationdao.getRawmaterialorderinvoiceassociationById(id);
+		return rawmaterialorderinvoiceassociationdao.getById(Rawmaterialorderinvoiceassociation.class,id);
 	}
 }

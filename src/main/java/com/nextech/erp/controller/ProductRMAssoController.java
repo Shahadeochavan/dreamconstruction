@@ -40,7 +40,7 @@ public class ProductRMAssoController {
 					productrawmaterialassociation.getProduct().getId(),
 					productrawmaterialassociation.getRawmaterial().getId()) == null)
 				productRMAssoService
-						.addProductrawmaterialassociation(productrawmaterialassociation);
+						.addEntity(productrawmaterialassociation);
 			else
 				return new UserStatus(1,
 						"Product raw materialassociation already exists !");
@@ -64,14 +64,14 @@ public class ProductRMAssoController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productrawmaterialassociation getProductrawmaterialassociation(
 			@PathVariable("id") long id) {
-		Productrawmaterialassociation Productrawmaterialassociation = null;
+		Productrawmaterialassociation productrawmaterialassociation = null;
 		try {
-			Productrawmaterialassociation = productRMAssoService
-					.getProductrawmaterialassociationById(id);
+			productrawmaterialassociation = productRMAssoService
+					.getEntityById(Productrawmaterialassociation.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return Productrawmaterialassociation;
+		return productrawmaterialassociation;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -79,7 +79,7 @@ public class ProductRMAssoController {
 			@RequestBody Productrawmaterialassociation productrawmaterialassociation) {
 		try {
 			productRMAssoService
-					.updateProductrawmaterialassociation(productrawmaterialassociation);
+					.updateEntity(productrawmaterialassociation);
 			return new UserStatus(1,
 					"Productrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
@@ -95,7 +95,7 @@ public class ProductRMAssoController {
 		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
 		try {
 			productrawmaterialassociationList = productRMAssoService
-					.getProductrawmaterialassociationList();
+					.getEntityList(Productrawmaterialassociation.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,10 +110,10 @@ public class ProductRMAssoController {
 
 		try {
 			Productrawmaterialassociation productrawmaterialassociation = productRMAssoService
-					.getProductrawmaterialassociationById(id);
+					.getEntityById(Productrawmaterialassociation.class, id);
 			productrawmaterialassociation.setIsactive(false);
 			productRMAssoService
-					.updateProductrawmaterialassociation(productrawmaterialassociation);
+					.updateEntity(productrawmaterialassociation);
 			return new UserStatus(1,
 					"Productrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {

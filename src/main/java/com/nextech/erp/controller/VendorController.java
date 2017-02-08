@@ -48,7 +48,7 @@ public class VendorController {
 			} else {
 				return new UserStatus(2, "Email already exists !");
 			}
-			vendorService.addVendor(vendor);
+			vendorService.addEntity(vendor);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -69,7 +69,7 @@ public class VendorController {
 	public @ResponseBody Vendor getVendor(@PathVariable("id") long id) {
 		Vendor vendor = null;
 		try {
-			vendor = vendorService.getVendorById(id);
+			vendor = vendorService.getEntityById(Vendor.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -79,7 +79,7 @@ public class VendorController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateVendor(@RequestBody Vendor vendor) {
 		try {
-			vendorService.updateVendor(vendor);
+			vendorService.updateEntity(vendor);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,7 +93,7 @@ public class VendorController {
 
 		List<Vendor> userList = null;
 		try {
-			userList = vendorService.getVendorList();
+			userList = vendorService.getEntityList(Vendor.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -106,9 +106,9 @@ public class VendorController {
 	public @ResponseBody UserStatus deleteVendor(@PathVariable("id") long id) {
 
 		try {
-			Vendor vendor = vendorService.getVendorById(id);
+			Vendor vendor = vendorService.getEntityById(Vendor.class, id);
 			vendor.setIsactive(false);
-			vendorService.updateVendor(vendor);
+			vendorService.updateEntity(vendor);
 			return new UserStatus(1, "Vendor deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

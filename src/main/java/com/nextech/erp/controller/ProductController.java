@@ -41,7 +41,7 @@ public class ProductController {
 			} else {
 				return new UserStatus(2, "part number already exists !");
 			}
-			productService.addProduct(product);
+			productService.addEntity(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -62,7 +62,7 @@ public class ProductController {
 	public @ResponseBody Product getProduct(@PathVariable("id") long id) {
 		Product product = null;
 		try {
-			product = productService.getProductById(id);
+			product = productService.getEntityById(Product.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,7 +72,7 @@ public class ProductController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProduct(@RequestBody Product product) {
 		try {
-			productService.updateProduct(product);
+			productService.updateEntity(product);
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -86,7 +86,7 @@ public class ProductController {
 
 		List<Product> ProductList = null;
 		try {
-			ProductList = productService.getProductist();
+			ProductList = productService.getEntityList(Product.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -99,9 +99,9 @@ public class ProductController {
 	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
 
 		try {
-			Product product = productService.getProductById(id);
+			Product product = productService.getEntityById(Product.class,id);
 			product.setIsactive(false);
-			productService.updateProduct(product);
+			productService.updateEntity(product);
 			return new UserStatus(1, "Product deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

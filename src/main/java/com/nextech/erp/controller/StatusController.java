@@ -36,7 +36,7 @@ public class StatusController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			statusService.addStatus(status);
+			statusService.addEntity(status);
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -57,7 +57,7 @@ public class StatusController {
 	public @ResponseBody Status getStatus(@PathVariable("id") long id) {
 		Status status = null;
 		try {
-			status = statusService.getStatusById(id);
+			status = statusService.getEntityById(Status.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +67,7 @@ public class StatusController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateStatus(@RequestBody Status status) {
 		try {
-			statusService.updateStatus(status);
+			statusService.updateEntity(status);
 			return new UserStatus(1, "Status update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -81,7 +81,7 @@ public class StatusController {
 
 		List<Status> statusList = null;
 		try {
-			statusList = statusService.getStatusist();
+			statusList = statusService.getEntityList(Status.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,9 +94,9 @@ public class StatusController {
 	public @ResponseBody UserStatus deleteStatus(@PathVariable("id") long id) {
 
 		try {
-			Status status = statusService.getStatusById(id);
+			Status status = statusService.getEntityById(Status.class,id);
 			status.setIsactive(false);
-			statusService.updateStatus(status);
+			statusService.updateEntity(status);
 			return new UserStatus(1, "Status deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

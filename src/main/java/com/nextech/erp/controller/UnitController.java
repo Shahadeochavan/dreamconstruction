@@ -36,7 +36,7 @@ public class UnitController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			unitservice.addUnit(unit);
+			unitservice.addEntity(unit);
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -57,7 +57,7 @@ public class UnitController {
 	public @ResponseBody Unit getUnit(@PathVariable("id") long id) {
 		Unit unit = null;
 		try {
-			unit = unitservice.getUnitById(id);
+			unit = unitservice.getEntityById(Unit.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +67,7 @@ public class UnitController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUnit(@RequestBody Unit Unit) {
 		try {
-			unitservice.updateUnit(Unit);
+			unitservice.updateEntity(Unit);
 			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -81,7 +81,7 @@ public class UnitController {
 
 		List<Unit> unitList = null;
 		try {
-			unitList = unitservice.getUnitist();
+			unitList = unitservice.getEntityList(Unit.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,9 +94,9 @@ public class UnitController {
 	public @ResponseBody UserStatus deleteUnit(@PathVariable("id") long id) {
 
 		try {
-			Unit unit = unitservice.getUnitById(id);
+			Unit unit = unitservice.getEntityById(Unit.class, id);
 			unit.setIsactive(false);
-			unitservice.updateUnit(unit);
+			unitservice.updateEntity(unit);
 			return new UserStatus(1, "Unit deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

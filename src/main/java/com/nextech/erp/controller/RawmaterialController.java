@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +34,7 @@ public class RawmaterialController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			rawmaterialService.addRawmaterial(rawmaterial);
+			rawmaterialService.addEntity(rawmaterial);
 			return new UserStatus(1, "Rawmaterial added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -56,7 +55,7 @@ public class RawmaterialController {
 	public @ResponseBody Rawmaterial getRawmaterial(@PathVariable("id") long id) {
 		Rawmaterial rawmaterial = null;
 		try {
-			rawmaterial = rawmaterialService.getRawmaterialById(id);
+			rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,7 +65,7 @@ public class RawmaterialController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterial(@RequestBody Rawmaterial rawmaterial) {
 		try {
-			rawmaterialService.updateRawmaterial(rawmaterial);
+			rawmaterialService.updateEntity(rawmaterial);
 			return new UserStatus(1, "Rawmaterial update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,13 +73,12 @@ public class RawmaterialController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterial> getRawmaterial() {
 
 		List<Rawmaterial> rawmaterialList = null;
 		try {
-			rawmaterialList = rawmaterialService.getRawmaterialList();
+			rawmaterialList = rawmaterialService.getEntityList(Rawmaterial.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,13 +91,27 @@ public class RawmaterialController {
 	public @ResponseBody UserStatus deleteRawmaterial(@PathVariable("id") long id) {
 
 		try {
-			Rawmaterial rawmaterial = rawmaterialService.getRawmaterialById(id);
+			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class,id);
 			rawmaterial.setIsactive(false);
-			rawmaterialService.updateRawmaterial(rawmaterial);
+			rawmaterialService.updateEntity(rawmaterial);
 			return new UserStatus(1, "Rawmaterial deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	
+	@RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterial> getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
+
+		List<Rawmaterial> rawmaterialList = null;
+		try {
+			rawmaterialList = rawmaterialService.getRawMaterialByRMOrderId(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return rawmaterialList;
 	}
 }

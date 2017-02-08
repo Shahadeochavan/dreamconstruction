@@ -72,7 +72,7 @@
 	</bean>
 	<bean id="superDao" class="com.nextech.erp.daoImpl.SuperDaoImpl" />
 	<bean id="CRUDServiceImpl" class="com.nextech.erp.serviceImpl.CRUDServiceImpl" />
-	
+
 	<bean id="userdao" class="com.nextech.erp.daoImpl.UserDaoImpl" />
 	<bean id="userservice" class="com.nextech.erp.serviceImpl.UserServiceImpl" />
 	<bean id="userTypeDao" class="com.nextech.erp.daoImpl.UsertypeDaoImpl" />
@@ -126,15 +126,14 @@
 		class="com.nextech.erp.daoImpl.RawmaterialorderassociationDaoImpl" />
 	<bean id="orderrawmaterialassociationService"
 		class="com.nextech.erp.serviceImpl.RawmaterialorderassociationServiceImpl" />
-		<bean id="rawmaterialorderinvoiceDao"
-		class="com.nextech.erp.daoImpl.RawmaterialorderinvoiceDaoImpl" />
+	<bean id="rawmaterialorderinvoiceDao" class="com.nextech.erp.daoImpl.RawmaterialorderinvoiceDaoImpl" />
 	<bean id="rawmaterialorderinvoiceService"
 		class="com.nextech.erp.serviceImpl.RawmaterialorderinvoiceServiceImpl" />
-		<bean id="rawmaterialorderinvoiceassociationDao"
+	<bean id="rawmaterialorderinvoiceassociationDao"
 		class="com.nextech.erp.daoImpl.RawmaterialorderinvoiceassociationDaoImpl" />
 	<bean id="rawmaterialorderinvoiceassociationService"
 		class="com.nextech.erp.serviceImpl.RawmaterialorderinvoiceassociationServiceImpl" />
-		<bean id="rmorderinvoiceintakquantityDao"
+	<bean id="rmorderinvoiceintakquantityDao"
 		class="com.nextech.erp.daoImpl.RmorderinvoiceintakquantityDaoImpl" />
 	<bean id="rmorderinvoiceintakquantityService"
 		class="com.nextech.erp.serviceImpl.RmorderinvoiceintakquantityServiceImpl" />

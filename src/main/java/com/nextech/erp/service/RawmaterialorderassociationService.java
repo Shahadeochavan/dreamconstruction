@@ -20,4 +20,5 @@ public interface RawmaterialorderassociationService {
 	public Rawmaterialorderassociation updateRawmaterialorderassociation(
 			Rawmaterialorderassociation Rawmaterialorderassociation)
 			throws Exception;
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociationByRMOId(long id) throws Exception;
 }

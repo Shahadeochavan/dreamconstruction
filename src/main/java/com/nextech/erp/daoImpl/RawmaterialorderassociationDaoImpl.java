@@ -82,4 +82,18 @@ public class RawmaterialorderassociationDaoImpl implements
 		session.close();
 		return Rawmaterialorderassociation;
 	}
+	@SuppressWarnings({ "deprecation", "unchecked" })
+	@Override
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociationByRMOId(long id)
+			throws Exception {
+		session = sessionFactory.openSession();
+		Criteria criteria = session
+				.createCriteria(Rawmaterialorderassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
+		List<Rawmaterialorderassociation> RawmaterialorderassociationList = criteria
+				.list();
+		session.close();
+		return RawmaterialorderassociationList;
+	}
 }

@@ -25,7 +25,7 @@ public class RawmaterialorderinvoiceController {
 	@Autowired
 	RawmaterialorderinvoiceService rawmaterialorderinvoiceservice;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
 			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice, BindingResult bindingResult) {
 		try {

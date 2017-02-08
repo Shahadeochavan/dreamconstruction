@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -16,7 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorderassociation;
+import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.status.UserStatus;
 
@@ -26,6 +30,9 @@ public class RawmaterialorderassociationController {
 
 	@Autowired
 	RawmaterialorderassociationService rawmaterialorderassociationService;
+
+	@Autowired
+	RawmaterialService rawmaterialService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderassociation(
@@ -96,6 +103,29 @@ public class RawmaterialorderassociationController {
 		}
 
 		return rawmaterialorderassociationList;
+	}
+
+	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterial> getRawmaterialorderassociationByRMOId(
+			@PathVariable("id") long id) {
+		List<Rawmaterial> rawmaterialList =null;
+		try {
+		List<Rawmaterialorderassociation> rawmaterialorderassociations=	rawmaterialorderassociationService.getRawmaterialorderassociationByRMOId(id);
+			 rawmaterialList = new ArrayList<Rawmaterial>();
+				System.out.println("list size "+rawmaterialorderassociations.size());
+			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+				System.out.println("value "+rawmaterialorderassociation
+								.getRawmaterial().getId());
+				Rawmaterial rawmaterial = rawmaterialService
+						.getRawmaterialById(rawmaterialorderassociation
+								.getRawmaterial().getId());
+				rawmaterialList.add(rawmaterial);
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return rawmaterialList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

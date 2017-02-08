@@ -56,4 +56,11 @@ public class RawmaterialorderassociationServiceImpl implements
 				.updateRawmaterialorderassociation(Rawmaterialorderassociation);
 	}
 
+	@Override
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociationByRMOId(
+			long id) throws Exception {
+		return RawmaterialorderassociationDao
+				.getRawmaterialorderassociationByRMOId(id);
+	}
+
 }

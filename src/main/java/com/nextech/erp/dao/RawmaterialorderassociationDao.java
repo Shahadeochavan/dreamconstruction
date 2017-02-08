@@ -20,4 +20,6 @@ public interface RawmaterialorderassociationDao {
 	public Rawmaterialorderassociation updateRawmaterialorderassociation(
 			Rawmaterialorderassociation rawmaterialorderassociationService)
 			throws Exception;
+
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociationByRMOId(long id) throws Exception;
 }

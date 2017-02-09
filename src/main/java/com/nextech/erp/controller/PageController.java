@@ -35,7 +35,7 @@ public class PageController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			pageservice.addPage(page);
+			pageservice.addEntity(page);
 			return new UserStatus(1, "Page added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -56,7 +56,7 @@ public class PageController {
 	public @ResponseBody Page getPage(@PathVariable("id") long id) {
 		Page page = null;
 		try {
-			page = pageservice.getPageById(id);
+			page = pageservice.getEntityById(Page.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,7 +66,7 @@ public class PageController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updatePage(@RequestBody Page page) {
 		try {
-			pageservice.updatePage(page);
+			pageservice.updateEntity(page);
 			return new UserStatus(1, "Page update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -80,7 +80,7 @@ public class PageController {
 
 		List<Page> PageList = null;
 		try {
-			PageList = pageservice.getPageList();
+			PageList = pageservice.getEntityList(Page.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,9 +93,9 @@ public class PageController {
 	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
 
 		try {
-			Page page = pageservice.getPageById(id);
+			Page page = pageservice.getEntityById(Page.class,id);
 			page.setIsactive(false);
-			pageservice.updatePage(page);
+			pageservice.updateEntity(page);
 			return new UserStatus(1, "Page deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

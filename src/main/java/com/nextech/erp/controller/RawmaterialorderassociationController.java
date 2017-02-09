@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialService;
@@ -44,7 +43,7 @@ public class RawmaterialorderassociationController {
 						.getDefaultMessage());
 			}
 			rawmaterialorderassociationService
-					.addRawmaterialorderassociation(rawmaterialorderassociation);
+					.addEntity(rawmaterialorderassociation);
 			return new UserStatus(1,
 					"Rawmaterialorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -68,7 +67,7 @@ public class RawmaterialorderassociationController {
 		Rawmaterialorderassociation rawmaterialorderassociation = null;
 		try {
 			rawmaterialorderassociation = rawmaterialorderassociationService
-					.getRawmaterialorderassociationById(id);
+					.getEntityById(Rawmaterialorderassociation.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -80,7 +79,7 @@ public class RawmaterialorderassociationController {
 			@RequestBody Rawmaterialorderassociation rawmaterialorderassociation) {
 		try {
 			rawmaterialorderassociationService
-					.updateRawmaterialorderassociation(rawmaterialorderassociation);
+					.updateEntity(rawmaterialorderassociation);
 			return new UserStatus(1,
 					"Rawmaterialorderassociation update Successfully !");
 		} catch (Exception e) {
@@ -96,7 +95,7 @@ public class RawmaterialorderassociationController {
 		List<Rawmaterialorderassociation> rawmaterialorderassociationList = null;
 		try {
 			rawmaterialorderassociationList = rawmaterialorderassociationService
-					.getRawmaterialorderassociationList();
+					.getEntityList(Rawmaterialorderassociation.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,21 +107,22 @@ public class RawmaterialorderassociationController {
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterial> getRawmaterialorderassociationByRMOId(
 			@PathVariable("id") long id) {
-		List<Rawmaterial> rawmaterialList =null;
+		List<Rawmaterial> rawmaterialList = null;
 		try {
-		List<Rawmaterialorderassociation> rawmaterialorderassociations=	rawmaterialorderassociationService.getRawmaterialorderassociationByRMOId(id);
-			 rawmaterialList = new ArrayList<Rawmaterial>();
-				System.out.println("list size "+rawmaterialorderassociations.size());
+			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationService
+					.getRMOrderRMAssociationByRMOrderId(id);
+			rawmaterialList = new ArrayList<Rawmaterial>();
+			System.out.println("list size "
+					+ rawmaterialorderassociations.size());
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
-				System.out.println("value "+rawmaterialorderassociation
-								.getRawmaterial().getId());
-				Rawmaterial rawmaterial = rawmaterialService
-						.getRawmaterialById(rawmaterialorderassociation
+				System.out.println("value "
+						+ rawmaterialorderassociation.getRawmaterial().getId());
+				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
+						Rawmaterial.class, rawmaterialorderassociation
 								.getRawmaterial().getId());
 				rawmaterialList.add(rawmaterial);
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return rawmaterialList;
@@ -134,10 +134,10 @@ public class RawmaterialorderassociationController {
 
 		try {
 			Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService
-					.getRawmaterialorderassociationById(id);
+					.getEntityById(Rawmaterialorderassociation.class, id);
 			rawmaterialorderassociation.setIsactive(false);
 			rawmaterialorderassociationService
-					.updateRawmaterialorderassociation(rawmaterialorderassociation);
+					.updateEntity(rawmaterialorderassociation);
 			return new UserStatus(1,
 					"Rawmaterialorderassociation deleted Successfully !");
 		} catch (Exception e) {

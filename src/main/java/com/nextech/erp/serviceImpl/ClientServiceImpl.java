@@ -11,33 +11,6 @@ public class ClientServiceImpl extends CRUDServiceImpl<Client> implements Client
 	@Autowired
 	ClientDao clientDao;
 
-//	@Override
-//	public Long addClient(Client client) throws Exception {
-//		client.setCreatedDate(new Timestamp(new Date().getTime()));
-//		return clientDao.addClient(client);
-//	}
-//
-//	@Override
-//	public Client getClientById(long id) throws Exception {
-//		return clientDao.getClientById(id);
-//	}
-//
-//	@Override
-//	public List<Client> getClientList() throws Exception {
-//		return clientDao.getClientList();
-//	}
-//
-//	@Override
-//	public boolean deleteClient(long id) throws Exception {
-//		return clientDao.deleteClient(id);
-//	}
-//
-//	@Override
-//	public Client updateClient(Client client) throws Exception {
-//		client.setUpdatedDate(new Timestamp(new Date().getTime()));
-//		return clientDao.updateClient(client);
-//	}
-
 	@Override
 	public Client getClientByCompanyName(String companyName) throws Exception {
 		return clientDao.getClientByCompanyName(companyName);

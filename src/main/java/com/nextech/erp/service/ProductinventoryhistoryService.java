@@ -4,19 +4,7 @@ import java.util.List;
 
 import com.nextech.erp.model.Productinventoryhistory;
 
-public interface ProductinventoryhistoryService {
-	public Long addProductinventoryhistory(
-			Productinventoryhistory productinventoryhistory) throws Exception;
+public interface ProductinventoryhistoryService extends CRUDService<Productinventoryhistory>{
 
-	public Productinventoryhistory getProductinventoryhistoryById(long id)
-			throws Exception;
-
-	public List<Productinventoryhistory> getProductinventoryhistoryList()
-			throws Exception;
-
-	public boolean deleteProductinventoryhistory(long id) throws Exception;
-
-	public Productinventoryhistory updateProductinventoryhistory(
-			Productinventoryhistory productinventoryhistory) throws Exception;
 }
 

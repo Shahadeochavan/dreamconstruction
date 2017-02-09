@@ -33,7 +33,7 @@ public class RMVAssoController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			rmvAssoService.addRawmaterialvendorassociation(rawmaterialvendorassociation);
+			rmvAssoService.addEntity(rawmaterialvendorassociation);
 			return new UserStatus(1, "Rawmaterialvendorassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -54,7 +54,7 @@ public class RMVAssoController {
 	public @ResponseBody Rawmaterialvendorassociation getRawmaterialvendorassociation(@PathVariable("id") long id) {
 		Rawmaterialvendorassociation rawmaterialvendorassociation = null;
 		try {
-			rawmaterialvendorassociation = rmvAssoService.getRawmaterialvendorassociationById(id);
+			rawmaterialvendorassociation = rmvAssoService.getEntityById(Rawmaterialvendorassociation.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -64,7 +64,7 @@ public class RMVAssoController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialvendorassociation(@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation) {
 		try {
-			rmvAssoService.updateRawmaterialvendorassociation(rawmaterialvendorassociation);
+			rmvAssoService.updateEntity(rawmaterialvendorassociation);
 			return new UserStatus(1, "Rawmaterialvendorassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -78,7 +78,7 @@ public class RMVAssoController {
 
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
 		try {
-			rawmaterialvendorassociationList = rmvAssoService.getRawmaterialvendorassociationList();
+			rawmaterialvendorassociationList = rmvAssoService.getEntityList(Rawmaterialvendorassociation.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,9 +91,9 @@ public class RMVAssoController {
 	public @ResponseBody UserStatus deleteRawmaterialvendorassociation(@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService.getRawmaterialvendorassociationById(id);
+			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService.getEntityById(Rawmaterialvendorassociation.class,id);
 			rawmaterialvendorassociation.setIsactive(false);
-			rmvAssoService.updateRawmaterialvendorassociation(rawmaterialvendorassociation);
+			rmvAssoService.updateEntity(rawmaterialvendorassociation);
 			return new UserStatus(1, "Rawmaterialvendorassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

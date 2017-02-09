@@ -36,7 +36,7 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			usertypepageassociationService.addPageAss(usertypepageassociation);
+			usertypepageassociationService.addEntity(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -60,7 +60,7 @@ public class UsertypepageassociationController {
 		Usertypepageassociation usertypepageassociation = null;
 		try {
 			usertypepageassociation = usertypepageassociationService
-					.getPageAssById(id);
+					.getEntityById(Usertypepageassociation.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -72,7 +72,7 @@ public class UsertypepageassociationController {
 			@RequestBody Usertypepageassociation usertypepageassociation) {
 		try {
 			usertypepageassociationService
-					.updatePageAss(usertypepageassociation);
+					.updateEntity(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation update Successfully !");
 		} catch (Exception e) {
@@ -88,7 +88,7 @@ public class UsertypepageassociationController {
 		List<Usertypepageassociation> UsertypepageassociationList = null;
 		try {
 			UsertypepageassociationList = usertypepageassociationService
-					.getPageAssList();
+					.getEntityList(Usertypepageassociation.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,10 +103,10 @@ public class UsertypepageassociationController {
 
 		try {
 			Usertypepageassociation usertypepageassociation = usertypepageassociationService
-					.getPageAssById(id);
+					.getEntityById(Usertypepageassociation.class, id);
 			usertypepageassociation.setIsactive(false);
 			usertypepageassociationService
-					.updatePageAss(usertypepageassociation);
+					.updateEntity(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation deleted Successfully !");
 		} catch (Exception e) {

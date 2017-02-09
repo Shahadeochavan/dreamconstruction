@@ -57,6 +57,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		Object o = session.load(z, id);
 		tx = session.getTransaction();
 		session.beginTransaction();
+		session.close();
 		session.delete(o);
 		tx.commit();
 		return true;

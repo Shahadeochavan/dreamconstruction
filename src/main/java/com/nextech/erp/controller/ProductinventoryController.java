@@ -36,7 +36,7 @@ public class ProductinventoryController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productinventoryService.addProductinventory(productinventory);
+			productinventoryService.addEntity(productinventory);
 			return new UserStatus(1, "Productinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -57,7 +57,7 @@ public class ProductinventoryController {
 	public @ResponseBody Productinventory getProductinventory(@PathVariable("id") long id) {
 		Productinventory productinventory = null;
 		try {
-			productinventory = productinventoryService.getProductinventoryById(id);
+			productinventory = productinventoryService.getEntityById(Productinventory.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -67,7 +67,7 @@ public class ProductinventoryController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductinventory(@RequestBody Productinventory productinventory) {
 		try {
-			productinventoryService.updateProductinventory(productinventory);
+			productinventoryService.updateEntity(productinventory);
 			return new UserStatus(1, "Productinventory update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,7 +81,7 @@ public class ProductinventoryController {
 
 		List<Productinventory> productinventoryList = null;
 		try {
-			productinventoryList = productinventoryService.getProductinventoryList();
+			productinventoryList = productinventoryService.getEntityList(Productinventory.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -94,9 +94,9 @@ public class ProductinventoryController {
 	public @ResponseBody UserStatus deleteProductinventory(@PathVariable("id") long id) {
 
 		try {
-			Productinventory productinventory = productinventoryService.getProductinventoryById(id);
+			Productinventory productinventory = productinventoryService.getEntityById(Productinventory.class,id);
 			productinventory.setIsactive(false);
-			productinventoryService.updateProductinventory(productinventory);
+			productinventoryService.updateEntity(productinventory);
 			return new UserStatus(1, "Productinventory deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

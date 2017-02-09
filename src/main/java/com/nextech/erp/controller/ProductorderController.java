@@ -22,6 +22,7 @@ import com.mysql.fabric.xmlrpc.Client;
 import com.nextech.erp.model.ProductOrderAssociationModel;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
@@ -52,7 +53,7 @@ public class ProductorderController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productorderService.addProductorder(productorder);
+			productorderService.addEntity(productorder);
 			return new UserStatus(1, "Productorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -82,14 +83,14 @@ public class ProductorderController {
 			productorder.setDescription(productOrderAssociationModel.getDescription());
 			productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());
 			productorder.setQuantity(productOrderAssociationModel.getOrderproductassociations().size());
-			productorder.setStatus(statusService.getStatusById(productOrderAssociationModel.getStatus()));
+			productorder.setStatus(statusService.getEntityById(Status.class,productOrderAssociationModel.getStatus()));
 			productorder.setIsactive(true);
-			Long orderId = productorderService.addProductorder(productorder);
+			Long orderId = productorderService.addEntity(productorder);
 			List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
 			if(productorderassociations !=null && !productorderassociations.isEmpty()){
 				for (Productorderassociation productorderassociation : productorderassociations) {
 					productorderassociation.setProductorder(productorder);
-					productorderassociationService.addProductorderassociation(productorderassociation);
+					productorderassociationService.addEntity(productorderassociation);
 				}
 			}
 			return new UserStatus(1, "Multiple Productorder added Successfully !");
@@ -112,7 +113,7 @@ public class ProductorderController {
 	public @ResponseBody Productorder getProductorder(@PathVariable("id") long id) {
 		Productorder productorder = null;
 		try {
-			productorder = productorderService.getProductorderById(id);
+			productorder = productorderService.getEntityById(Productorder.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,7 +123,7 @@ public class ProductorderController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorder(@RequestBody Productorder productorder) {
 		try {
-			productorderService.updateProductorder(productorder);
+			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Productorder update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,7 +137,7 @@ public class ProductorderController {
 
 		List<Productorder> productorderList = null;
 		try {
-			productorderList = productorderService.getProductorderList();
+			productorderList = productorderService.getEntityList(Productorder.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,9 +150,9 @@ public class ProductorderController {
 	public @ResponseBody UserStatus deleteProductorder(@PathVariable("id") long id) {
 
 		try {
-			Productorder productorder = productorderService.getProductorderById(id);
+			Productorder productorder = productorderService.getEntityById(Productorder.class,id);
 			productorder.setIsactive(false);
-			productorderService.updateProductorder(productorder);
+			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Productorder deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

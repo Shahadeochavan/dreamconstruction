@@ -5,20 +5,23 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.model.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
+import com.nextech.erp.model.Status;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.StatusService;
@@ -50,7 +53,7 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			rawmaterialorderService.addRawmaterialorder(rawmaterialorder);
+			rawmaterialorderService.addEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -79,15 +82,15 @@ public class RawmaterialorderController {
 			rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
 			rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
 			rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
-			rawmaterialorder.setStatus(statusService.getStatusById(rawmaterialOrderAssociationModel.getStatus()));
-			rawmaterialorder.setVendor(vendorService.getVendorById(rawmaterialOrderAssociationModel.getVendor()));
+			rawmaterialorder.setStatus(statusService.getEntityById(Status.class,rawmaterialOrderAssociationModel.getStatus()));
+			rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
 			rawmaterialorder.setIsactive(true);
-			Long orderId = rawmaterialorderService.addRawmaterialorder(rawmaterialorder);
+			rawmaterialorderService.addEntity(rawmaterialorder);
 			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
 			if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 				for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
 					rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
-					rawmaterialorderassociationService.addRawmaterialorderassociation(rawmaterialorderassociation);
+					rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
 				}
 			}
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
@@ -111,7 +114,7 @@ public class RawmaterialorderController {
 		Rawmaterialorder rawmaterialorder = null;
 		try {
 			rawmaterialorder = rawmaterialorderService
-					.getRawmaterialorderById(id);
+					.getEntityById(Rawmaterialorder.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -122,7 +125,7 @@ public class RawmaterialorderController {
 	public @ResponseBody UserStatus updateRawmaterialorder(
 			@RequestBody Rawmaterialorder rawmaterialorder) {
 		try {
-			rawmaterialorderService.updateRawmaterialorder(rawmaterialorder);
+			rawmaterialorderService.updateEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,14 +133,13 @@ public class RawmaterialorderController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorder> getRawmaterialorder() {
 
 		List<Rawmaterialorder> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService
-					.getRawmaterialorderList();
+					.getEntityList(Rawmaterialorder.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -152,9 +154,9 @@ public class RawmaterialorderController {
 
 		try {
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService
-					.getRawmaterialorderById(id);
+					.getEntityById(Rawmaterialorder.class,id);
 			rawmaterialorder.setIsactive(false);
-			rawmaterialorderService.updateRawmaterialorder(rawmaterialorder);
+			rawmaterialorderService.updateEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

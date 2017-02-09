@@ -35,7 +35,7 @@ public class ProductorderassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productorderassociationService.addProductorderassociation(productorderassociation);
+			productorderassociationService.addEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -56,7 +56,7 @@ public class ProductorderassociationController {
 	public @ResponseBody Productorderassociation getProductorderassociation(@PathVariable("id") long id) {
 		Productorderassociation productorderassociation = null;
 		try {
-			productorderassociation = productorderassociationService.getProductorderassociationById(id);
+			productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,7 +66,7 @@ public class ProductorderassociationController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation) {
 		try {
-			productorderassociationService.updateProductorderassociation(productorderassociation);
+			productorderassociationService.updateEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,7 +80,7 @@ public class ProductorderassociationController {
 
 		List<Productorderassociation> productorderassociationList = null;
 		try {
-			productorderassociationList = productorderassociationService.getProductorderassociationList();
+			productorderassociationList = productorderassociationService.getEntityList(Productorderassociation.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,9 +93,9 @@ public class ProductorderassociationController {
 	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {
 
 		try {
-			Productorderassociation productorderassociation = productorderassociationService.getProductorderassociationById(id);
+			Productorderassociation productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class,id);
 			productorderassociation.setIsactive(false);
-			productorderassociationService.updateProductorderassociation(productorderassociation);
+			productorderassociationService.updateEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());

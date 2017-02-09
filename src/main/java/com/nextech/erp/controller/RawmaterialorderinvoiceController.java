@@ -1,6 +1,5 @@
 package com.nextech.erp.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -11,33 +10,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
-import com.nextech.erp.model.Status;
-import com.nextech.erp.model.Vendor;
+import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
+import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
 @RequestMapping("/rawmaterialorderinvoice")
 public class RawmaterialorderinvoiceController {
-	private static final long id = 0;
 
 	@Autowired
 	RawmaterialorderinvoiceService rawmaterialorderinvoiceservice;
-	
+
 	@Autowired
 	RawmaterialorderService rawmaterialorderService;
+
+	@Autowired
+	RmorderinvoiceintakquantityService rmorderinvoiceintakquantityService;
 	
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
@@ -49,21 +48,21 @@ public class RawmaterialorderinvoiceController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			 rawmaterialorderinvoiceservice.addEntity(rawmaterialorderinvoice);
-			Rawmaterialorder rawmaterialorder=new Rawmaterialorder();
-		List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations = (List<Rawmaterialorderinvoiceassociation>) rawmaterialorderinvoiceservice.getEntityById(Rawmaterialorderinvoice.class, id);
-		rawmaterialorderinvoiceassociations =(List<Rawmaterialorderinvoiceassociation>) rawmaterialorderService.getEntityById(Rawmaterialorder.class, id);
-			if(rawmaterialorderinvoiceassociations !=null && !rawmaterialorderinvoiceassociations.isEmpty()){
-				for (Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation : rawmaterialorderinvoiceassociations) {
-					rawmaterialorderinvoiceassociation.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-					rawmaterialorderinvoiceassociation.setRawmaterialorder(rawmaterialorder);
-					rawmaterialorderinvoiceassociationService.addEntity(rawmaterialorderinvoiceassociation);
+			rawmaterialorderinvoiceservice.addEntity(rawmaterialorderinvoice);
+			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoice.getPo_No());
+			Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation = new Rawmaterialorderinvoiceassociation();
+			rawmaterialorderinvoiceassociation.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+			rawmaterialorderinvoiceassociation.setRawmaterialorder(rawmaterialorder);
+			rawmaterialorderinvoiceassociation.setIsactive(true);
+			rawmaterialorderinvoiceassociationService.addEntity(rawmaterialorderinvoiceassociation);
+			List<Rmorderinvoiceintakquantity> rawmaterialorderinvoiceassociations = rawmaterialorderinvoice.getRmorderinvoiceintakquantities();
+			if (rawmaterialorderinvoiceassociations != null && !rawmaterialorderinvoiceassociations.isEmpty()) {
+				for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rawmaterialorderinvoiceassociations) {
+					rmorderinvoiceintakquantity.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+					rmorderinvoiceintakquantityService.addEntity(rmorderinvoiceintakquantity);
 				}
 			}
-			
-		 
 			return new UserStatus(1, "Rawmaterialorderinvoice added Successfully !");
-			
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -78,18 +77,17 @@ public class RawmaterialorderinvoiceController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
+
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoice() {
 
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
-			rawmaterialorderinvoiceList = rawmaterialorderinvoiceservice
-					.getEntityList(Rawmaterialorderinvoice.class);
+			rawmaterialorderinvoiceList = rawmaterialorderinvoiceservice.getEntityList(Rawmaterialorderinvoice.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return rawmaterialorderinvoiceList;
 	}
 }

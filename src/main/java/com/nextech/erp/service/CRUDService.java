@@ -3,11 +3,11 @@ package com.nextech.erp.service;
 import java.util.List;
 
 public interface CRUDService<T> {
-	T getEntityById(Class<?> z, long id) throws Exception;
+	T getEntityById(Class<T> z, long id) throws Exception;
 
-	List<T> getEntityList(Class<?> z) throws Exception;
+	List<T> getEntityList(Class<T> z) throws Exception;
 
-	boolean deleteEntity(Class<?> z, long id) throws Exception;
+	boolean deleteEntity(Class<T> z, long id) throws Exception;
 
 	T updateEntity(T bean) throws Exception;
 

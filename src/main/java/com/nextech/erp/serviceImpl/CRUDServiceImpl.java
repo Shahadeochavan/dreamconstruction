@@ -15,17 +15,17 @@ public class CRUDServiceImpl<T> implements CRUDService<T> {
 	SuperDao<T> dao;
 
 	@Override
-	public T getEntityById(Class<?> z,long id) throws Exception {
+	public T getEntityById(Class<T> z,long id) throws Exception {
 		return dao.getById(z, id);
 	}
 
 	@Override
-	public List<T> getEntityList(Class<?> z) throws Exception {
+	public List<T> getEntityList(Class<T> z) throws Exception {
 		return dao.getList(z);
 	}
 
 	@Override
-	public boolean deleteEntity(Class<?> z,long id) throws Exception {
+	public boolean deleteEntity(Class<T> z,long id) throws Exception {
 		return dao.delete(z,id);
 	}
 

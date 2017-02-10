@@ -30,18 +30,20 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
-	public T getById(Class<?> z,long id) throws Exception {
+	public T getById(Class<T> z,long id) throws Exception {
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(z);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		return criteria.list().size() > 0 ? (T) criteria.list().get(0)
+		T t= criteria.list().size() > 0 ? (T) criteria.list().get(0)
 				: null;
+		session.close();
+		return t;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<T> getList(Class<?> z) throws Exception {
+	public List<T> getList(Class<T> z) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(z);
@@ -52,7 +54,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 	}
 
 	@Override
-	public boolean delete(Class<?> z,long id) throws Exception {
+	public boolean delete(Class<T> z,long id) throws Exception {
 		session = sessionFactory.openSession();
 		Object o = session.load(z, id);
 		tx = session.getTransaction();

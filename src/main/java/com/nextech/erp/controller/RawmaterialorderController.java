@@ -85,7 +85,8 @@ public class RawmaterialorderController {
 			rawmaterialorder.setStatus(statusService.getEntityById(Status.class,rawmaterialOrderAssociationModel.getStatus()));
 			rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
 			rawmaterialorder.setIsactive(true);
-			rawmaterialorderService.addEntity(rawmaterialorder);
+			long id=rawmaterialorderService.addEntity(rawmaterialorder);
+			System.out.println("id is"+id);
 			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
 			if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 				for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {

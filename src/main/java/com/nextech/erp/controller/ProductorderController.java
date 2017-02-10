@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mysql.fabric.xmlrpc.Client;
+import com.nextech.erp.model.Client;
 import com.nextech.erp.model.ProductOrderAssociationModel;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;

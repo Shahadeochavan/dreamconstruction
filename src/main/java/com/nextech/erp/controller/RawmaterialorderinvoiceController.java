@@ -1,6 +1,5 @@
 package com.nextech.erp.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -11,18 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
-import com.nextech.erp.model.Status;
-import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
@@ -49,10 +44,12 @@ public class RawmaterialorderinvoiceController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			 rawmaterialorderinvoiceservice.addEntity(rawmaterialorderinvoice);
+	long rmorderid = rawmaterialorderinvoiceservice.addEntity(rawmaterialorderinvoice);
 			Rawmaterialorder rawmaterialorder=new Rawmaterialorder();
-		List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations = (List<Rawmaterialorderinvoiceassociation>) rawmaterialorderinvoiceservice.getEntityById(Rawmaterialorderinvoice.class, id);
-		rawmaterialorderinvoiceassociations =(List<Rawmaterialorderinvoiceassociation>) rawmaterialorderService.getEntityById(Rawmaterialorder.class, id);
+		List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations = (List<Rawmaterialorderinvoiceassociation>) rawmaterialorderinvoiceservice.getEntityById(Rawmaterialorderinvoice.class, rmorderid);
+				
+/*				(List<Rawmaterialorderinvoiceassociation>) rawmaterialorderinvoiceservice.getEntityById(Rawmaterialorderinvoice.class, id);
+		rawmaterialorderinvoiceassociations =(List<Rawmaterialorderinvoiceassociation>) rawmaterialorderService.getEntityById(Rawmaterialorder.class, id);*/
 			if(rawmaterialorderinvoiceassociations !=null && !rawmaterialorderinvoiceassociations.isEmpty()){
 				for (Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation : rawmaterialorderinvoiceassociations) {
 					rawmaterialorderinvoiceassociation.setRawmaterialorderinvoice(rawmaterialorderinvoice);

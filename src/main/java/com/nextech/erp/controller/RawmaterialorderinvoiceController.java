@@ -9,12 +9,12 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
@@ -43,7 +43,7 @@ public class RawmaterialorderinvoiceController {
 
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
-			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice, BindingResult bindingResult) {
+			@Valid   @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice, BindingResult bindingResult,ModelMap map) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
@@ -52,13 +52,14 @@ public class RawmaterialorderinvoiceController {
 		
 		System.out.println("inid "+inid);
 		
-			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, Long.parseLong(rawmaterialorderinvoice.getPo_No()));
+			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoice.getPo_No());
 			Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation = new Rawmaterialorderinvoiceassociation();
 			rawmaterialorderinvoiceassociation.setRawmaterialorderinvoice(rawmaterialorderinvoice);
 			rawmaterialorderinvoiceassociation.setRawmaterialorder(rawmaterialorder);
 			rawmaterialorderinvoiceassociation.setIsactive(true);
 			rawmaterialorderinvoiceassociationService.addEntity(rawmaterialorderinvoiceassociation);
 			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice.getRmorderinvoiceintakquantities();
+			System.out.println("rmorderinvoicequntiets value is="+rawmaterialorderinvoice.getRmorderinvoiceintakquantities());
 			if (rmorderinvoiceintakquantities != null && !rmorderinvoiceintakquantities.isEmpty()) {
 				for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
 					rmorderinvoiceintakquantity.setRawmaterialorderinvoice(rawmaterialorderinvoice);

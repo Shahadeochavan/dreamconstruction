@@ -17,7 +17,7 @@ public class Rawmaterialorderinvoiceassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -34,15 +34,15 @@ public class Rawmaterialorderinvoiceassociation implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterialorderinvoice
-	@ManyToOne
-	@JoinColumn(name="rmorderinvoiceid")
-	private Rawmaterialorderinvoice rawmaterialorderinvoice;
-
 	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	@JoinColumn(name="rawmaterialorderid")
 	private Rawmaterialorder rawmaterialorder;
+
+	//bi-directional many-to-one association to Rawmaterialorderinvoice
+	@ManyToOne
+	@JoinColumn(name="rmorderinvoiceid")
+	private Rawmaterialorderinvoice rawmaterialorderinvoice;
 
 	public Rawmaterialorderinvoiceassociation() {
 	}
@@ -98,20 +98,20 @@ public class Rawmaterialorderinvoiceassociation implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
-		return this.rawmaterialorderinvoice;
-	}
-
-	public void setRawmaterialorderinvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) {
-		this.rawmaterialorderinvoice = rawmaterialorderinvoice;
-	}
-
 	public Rawmaterialorder getRawmaterialorder() {
 		return this.rawmaterialorder;
 	}
 
 	public void setRawmaterialorder(Rawmaterialorder rawmaterialorder) {
 		this.rawmaterialorder = rawmaterialorder;
+	}
+
+	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
+		return this.rawmaterialorderinvoice;
+	}
+
+	public void setRawmaterialorderinvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) {
+		this.rawmaterialorderinvoice = rawmaterialorderinvoice;
 	}
 
 }

@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -22,7 +20,7 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -47,7 +45,7 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private Time outtime;
 
 	@Column(name="`po.No`")
-	private String po_No;
+	private int po_No;
 
 	@Column(name="updated_by")
 	private int updatedBy;
@@ -66,13 +64,11 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private Status status;
 
 	//bi-directional many-to-one association to Rawmaterialorderinvoiceassociation
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
 
 	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
 
 	public Rawmaterialorderinvoice() {
@@ -161,11 +157,11 @@ public class Rawmaterialorderinvoice implements Serializable {
 		this.outtime = outtime;
 	}
 
-	public String getPo_No() {
+	public int getPo_No() {
 		return this.po_No;
 	}
 
-	public void setPo_No(String po_No) {
+	public void setPo_No(int po_No) {
 		this.po_No = po_No;
 	}
 

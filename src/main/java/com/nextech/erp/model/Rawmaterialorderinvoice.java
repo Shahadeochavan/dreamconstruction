@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -20,7 +22,7 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	@Column(name="created_by")
@@ -64,11 +66,14 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private Status status;
 
 	//bi-directional many-to-one association to Rawmaterialorderinvoiceassociation
-	@OneToMany(mappedBy="rawmaterialorderinvoice")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
 
 	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
-	@OneToMany(mappedBy="rawmaterialorderinvoice")
+//	@OneToMany(mappedBy="rawmaterialorderinvoice")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
 
 	public Rawmaterialorderinvoice() {
@@ -77,11 +82,12 @@ public class Rawmaterialorderinvoice implements Serializable {
 		this.id=id;
 	}
 
+
 	public long getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

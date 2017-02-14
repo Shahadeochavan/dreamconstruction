@@ -43,8 +43,8 @@
 				<value>com.nextech.erp.model.Rawmaterialorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
 				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
-				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
-				</value>
+				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation</value>
+				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
 
 			</list>
 		</property>
@@ -137,4 +137,8 @@
 		class="com.nextech.erp.daoImpl.RmorderinvoiceintakquantityDaoImpl" />
 	<bean id="rmorderinvoiceintakquantityService"
 		class="com.nextech.erp.serviceImpl.RmorderinvoiceintakquantityServiceImpl" />
+		<bean id="qualitycheckrawmaterialDao"
+		class="com.nextech.erp.daoImpl.QualitycheckrawmaterialDaoImpl" />
+	<bean id="qualitycheckrawmaterialService"
+		class="com.nextech.erp.serviceImpl.QualitycheckrawmaterialServiceImpl" />
 </beans>

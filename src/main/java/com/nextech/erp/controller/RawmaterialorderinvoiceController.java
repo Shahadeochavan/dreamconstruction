@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -48,7 +47,7 @@ public class RawmaterialorderinvoiceController {
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
 			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
-			BindingResult bindingResult, ModelMap map) {
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -115,12 +114,11 @@ public class RawmaterialorderinvoiceController {
 		return rawmaterialorderinvoiceList;
 	}
 
-	@RequestMapping(value = "liststatus/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId(
-			@PathVariable("id") long id) {
+	@RequestMapping(value = "security-in-invoices", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId() {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
-			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice.getRawmaterialorderinvoiceByStatusId(id);
+			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice.getRawmaterialorderinvoiceByStatusId(8l);
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null&& !rawmaterialorderinvoices.isEmpty()) {

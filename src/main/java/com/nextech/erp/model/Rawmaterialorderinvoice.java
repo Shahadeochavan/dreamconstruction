@@ -60,6 +60,11 @@ public class Rawmaterialorderinvoice implements Serializable {
 
 	private String vendorname;
 
+	//bi-directional many-to-one association to Qualitycheckrawmaterial
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
+	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
+
 	//bi-directional many-to-one association to Status
 	@ManyToOne
 	@JoinColumn(name="statusid")
@@ -71,7 +76,6 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
 
 	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
-//	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
@@ -82,12 +86,11 @@ public class Rawmaterialorderinvoice implements Serializable {
 		this.id=id;
 	}
 
-
 	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -201,6 +204,28 @@ public class Rawmaterialorderinvoice implements Serializable {
 
 	public void setVendorname(String vendorname) {
 		this.vendorname = vendorname;
+	}
+
+	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterials() {
+		return this.qualitycheckrawmaterials;
+	}
+
+	public void setQualitycheckrawmaterials(List<Qualitycheckrawmaterial> qualitycheckrawmaterials) {
+		this.qualitycheckrawmaterials = qualitycheckrawmaterials;
+	}
+
+	public Qualitycheckrawmaterial addQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
+		getQualitycheckrawmaterials().add(qualitycheckrawmaterial);
+		qualitycheckrawmaterial.setRawmaterialorderinvoice(this);
+
+		return qualitycheckrawmaterial;
+	}
+
+	public Qualitycheckrawmaterial removeQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
+		getQualitycheckrawmaterials().remove(qualitycheckrawmaterial);
+		qualitycheckrawmaterial.setRawmaterialorderinvoice(null);
+
+		return qualitycheckrawmaterial;
 	}
 
 	public Status getStatus() {

@@ -3,11 +3,6 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,7 +19,7 @@ import java.util.List;
 public class Rawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
+	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
@@ -34,23 +29,15 @@ public class Rawmaterial implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private boolean isactive;
 
-	@NotBlank(message="{name should not be blank}")
-	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
-	@NotBlank(message="{part number should not be blank}")
-	@Size(min = 2, max = 255, message = "{part number sholud be greater than 2 or less than 255 characters}")
 	@Column(name="part_number")
 	private String partNumber;
 
-/*	@DecimalMax(value = "100.00", message = "The pricePerUnit value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The pricePerUnit value can not be less than 1.00 digit ")*/
 	@Column(name="price_per_unit")
 	private float pricePerUnit;
 
@@ -65,6 +52,11 @@ public class Rawmaterial implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
 
+	//bi-directional many-to-one association to Qualitycheckrawmaterial
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
+	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
+
 	//bi-directional many-to-one association to Unit
 	@ManyToOne
 	private Unit unit;
@@ -74,20 +66,21 @@ public class Rawmaterial implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rawmaterialinventory> rawmaterialinventories;
 
-	//bi-directional many-to-one association to Rawmaterialorder
-/*	@JsonIgnore
+	//bi-directional many-to-one association to Rawmaterialorderassociation
+	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
-	private List<Rawmaterialorder> rawmaterialorders;*/
+	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
 
 	//bi-directional many-to-one association to Rawmaterialvendorassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rawmaterialvendorassociation> rawmaterialvendorassociations;
 
-	
+	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
-	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
+	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
+
 	public Rawmaterial() {
 	}
 	public Rawmaterial(int id) {
@@ -196,6 +189,28 @@ public class Rawmaterial implements Serializable {
 		return productrawmaterialassociation;
 	}
 
+	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterials() {
+		return this.qualitycheckrawmaterials;
+	}
+
+	public void setQualitycheckrawmaterials(List<Qualitycheckrawmaterial> qualitycheckrawmaterials) {
+		this.qualitycheckrawmaterials = qualitycheckrawmaterials;
+	}
+
+	public Qualitycheckrawmaterial addQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
+		getQualitycheckrawmaterials().add(qualitycheckrawmaterial);
+		qualitycheckrawmaterial.setRawmaterial(this);
+
+		return qualitycheckrawmaterial;
+	}
+
+	public Qualitycheckrawmaterial removeQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
+		getQualitycheckrawmaterials().remove(qualitycheckrawmaterial);
+		qualitycheckrawmaterial.setRawmaterial(null);
+
+		return qualitycheckrawmaterial;
+	}
+
 	public Unit getUnit() {
 		return this.unit;
 	}
@@ -226,27 +241,27 @@ public class Rawmaterial implements Serializable {
 		return rawmaterialinventory;
 	}
 
-/*	public List<Rawmaterialorder> getRawmaterialorders() {
-		return this.rawmaterialorders;
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociations() {
+		return this.rawmaterialorderassociations;
 	}
 
-	public void setRawmaterialorders(List<Rawmaterialorder> rawmaterialorders) {
-		this.rawmaterialorders = rawmaterialorders;
-	}
-*/
-/*	public Rawmaterialorder addRawmaterialorder(Rawmaterialorder rawmaterialorder) {
-		getRawmaterialorders().add(rawmaterialorder);
-		rawmaterialorder.setRawmaterial(this);
-
-		return rawmaterialorder;
+	public void setRawmaterialorderassociations(List<Rawmaterialorderassociation> rawmaterialorderassociations) {
+		this.rawmaterialorderassociations = rawmaterialorderassociations;
 	}
 
-	public Rawmaterialorder removeRawmaterialorder(Rawmaterialorder rawmaterialorder) {
-		getRawmaterialorders().remove(rawmaterialorder);
-		rawmaterialorder.setRawmaterial(null);
+	public Rawmaterialorderassociation addRawmaterialorderassociation(Rawmaterialorderassociation rawmaterialorderassociation) {
+		getRawmaterialorderassociations().add(rawmaterialorderassociation);
+		rawmaterialorderassociation.setRawmaterial(this);
 
-		return rawmaterialorder;
-	}*/
+		return rawmaterialorderassociation;
+	}
+
+	public Rawmaterialorderassociation removeRawmaterialorderassociation(Rawmaterialorderassociation rawmaterialorderassociation) {
+		getRawmaterialorderassociations().remove(rawmaterialorderassociation);
+		rawmaterialorderassociation.setRawmaterial(null);
+
+		return rawmaterialorderassociation;
+	}
 
 	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociations() {
 		return this.rawmaterialvendorassociations;
@@ -269,12 +284,27 @@ public class Rawmaterial implements Serializable {
 
 		return rawmaterialvendorassociation;
 	}
-	public List<Rawmaterialorderassociation> getRawmaterialorderassociations() {
-		return rawmaterialorderassociations;
+
+	public List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantities() {
+		return this.rmorderinvoiceintakquantities;
 	}
-	public void setRawmaterialorderassociations(
-			List<Rawmaterialorderassociation> rawmaterialorderassociations) {
-		this.rawmaterialorderassociations = rawmaterialorderassociations;
+
+	public void setRmorderinvoiceintakquantities(List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities) {
+		this.rmorderinvoiceintakquantities = rmorderinvoiceintakquantities;
+	}
+
+	public Rmorderinvoiceintakquantity addRmorderinvoiceintakquantity(Rmorderinvoiceintakquantity rmorderinvoiceintakquantity) {
+		getRmorderinvoiceintakquantities().add(rmorderinvoiceintakquantity);
+		rmorderinvoiceintakquantity.setRawmaterial(this);
+
+		return rmorderinvoiceintakquantity;
+	}
+
+	public Rmorderinvoiceintakquantity removeRmorderinvoiceintakquantity(Rmorderinvoiceintakquantity rmorderinvoiceintakquantity) {
+		getRmorderinvoiceintakquantities().remove(rmorderinvoiceintakquantity);
+		rmorderinvoiceintakquantity.setRawmaterial(null);
+
+		return rmorderinvoiceintakquantity;
 	}
 
 }

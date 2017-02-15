@@ -3,10 +3,6 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,8 +24,6 @@ public class Rawmaterialorder implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
-/*	@DecimalMax(value = "100.00", message = "The actualPrice value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The actualPrice value can not be less than 1.00 digit ")*/
 	@Column(name="actual_price")
 	private float actualPrice;
 
@@ -42,8 +36,6 @@ public class Rawmaterialorder implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	@Temporal(TemporalType.DATE)
@@ -52,25 +44,15 @@ public class Rawmaterialorder implements Serializable {
 
 	private boolean isactive;
 
-	//@NotBlank(message="{name should not be blank}")
-	//@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
-/*	@DecimalMax(value = "100.00", message = "The otherCharges value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The otherCharges value can not be less than 1.00 digit ")*/
 	@Column(name="other_charges")
 	private float otherCharges;
 
-	 //@Min(value = 0, message = "please enter quantity")
-	/* @Max(value = 100, message = "quantity should be maximum 100")*/
 	private int quantity;
 
-	/*@DecimalMax(value = "100.00", message = "The tax value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The tax value can not be less than 1.00 digit ")*/
 	private float tax;
 
-	/*@DecimalMax(value = "100.00", message = "The totalprice value can not be more than 100.00 ")
-	@DecimalMin(value = "1.00", message = "The totalprice value can not be less than 1.00 digit ")*/
 	private float totalprice;
 
 	@Column(name="updated_by")
@@ -78,10 +60,6 @@ public class Rawmaterialorder implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
-
-	//bi-directional many-to-one association to Rawmaterial
-/*	@ManyToOne
-	private Rawmaterial rawmaterial;*/
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
@@ -91,23 +69,26 @@ public class Rawmaterialorder implements Serializable {
 	@ManyToOne
 	private Vendor vendor;
 
-	//bi-directional many-to-one association to Rawmaterialorderhistory
-	
+	//bi-directional many-to-one association to Rawmaterialorderassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
 
+	//bi-directional many-to-one association to Rawmaterialorderinvoiceassociation
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
+	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
+
 	public Rawmaterialorder() {
 	}
-
 	public Rawmaterialorder(int id) {
 		this.id=id;
 	}
-
-
 	public long getId() {
 		return this.id;
 	}
@@ -227,14 +208,6 @@ public class Rawmaterialorder implements Serializable {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-/*
-	public Rawmaterial getRawmaterial() {
-		return this.rawmaterial;
-	}
-
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
-	}*/
 
 	public Status getStatus() {
 		return this.status;
@@ -250,6 +223,28 @@ public class Rawmaterialorder implements Serializable {
 
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
+	}
+
+	public List<Rawmaterialorderassociation> getRawmaterialorderassociations() {
+		return this.rawmaterialorderassociations;
+	}
+
+	public void setRawmaterialorderassociations(List<Rawmaterialorderassociation> rawmaterialorderassociations) {
+		this.rawmaterialorderassociations = rawmaterialorderassociations;
+	}
+
+	public Rawmaterialorderassociation addRawmaterialorderassociation(Rawmaterialorderassociation rawmaterialorderassociation) {
+		getRawmaterialorderassociations().add(rawmaterialorderassociation);
+		rawmaterialorderassociation.setRawmaterialorder(this);
+
+		return rawmaterialorderassociation;
+	}
+
+	public Rawmaterialorderassociation removeRawmaterialorderassociation(Rawmaterialorderassociation rawmaterialorderassociation) {
+		getRawmaterialorderassociations().remove(rawmaterialorderassociation);
+		rawmaterialorderassociation.setRawmaterialorder(null);
+
+		return rawmaterialorderassociation;
 	}
 
 	public List<Rawmaterialorderhistory> getRawmaterialorderhistories() {
@@ -274,13 +269,26 @@ public class Rawmaterialorder implements Serializable {
 		return rawmaterialorderhistory;
 	}
 
-	public List<Rawmaterialorderassociation> getRawmaterialorderassociations() {
-		return rawmaterialorderassociations;
+	public List<Rawmaterialorderinvoiceassociation> getRawmaterialorderinvoiceassociations() {
+		return this.rawmaterialorderinvoiceassociations;
 	}
 
-	public void setRawmaterialorderassociations(
-			List<Rawmaterialorderassociation> rawmaterialorderassociations) {
-		this.rawmaterialorderassociations = rawmaterialorderassociations;
+	public void setRawmaterialorderinvoiceassociations(List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations) {
+		this.rawmaterialorderinvoiceassociations = rawmaterialorderinvoiceassociations;
+	}
+
+	public Rawmaterialorderinvoiceassociation addRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation) {
+		getRawmaterialorderinvoiceassociations().add(rawmaterialorderinvoiceassociation);
+		rawmaterialorderinvoiceassociation.setRawmaterialorder(this);
+
+		return rawmaterialorderinvoiceassociation;
+	}
+
+	public Rawmaterialorderinvoiceassociation removeRawmaterialorderinvoiceassociation(Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation) {
+		getRawmaterialorderinvoiceassociations().remove(rawmaterialorderinvoiceassociation);
+		rawmaterialorderinvoiceassociation.setRawmaterialorder(null);
+
+		return rawmaterialorderinvoiceassociation;
 	}
 
 }

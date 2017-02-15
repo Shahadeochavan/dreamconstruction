@@ -16,8 +16,8 @@ import java.sql.Timestamp;
 public class Qualitycheckrawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	@Column(name="created_by")
@@ -32,7 +32,7 @@ public class Qualitycheckrawmaterial implements Serializable {
 
 	private boolean isactive;
 
-	private byte isReturnInvoiceInitated;
+	private boolean isReturnInvoiceInitated;
 
 	private String remark;
 
@@ -54,6 +54,7 @@ public class Qualitycheckrawmaterial implements Serializable {
 
 	public Qualitycheckrawmaterial() {
 	}
+
 	public Qualitycheckrawmaterial(int id) {
 		this.id=id;
 	}
@@ -107,11 +108,11 @@ public class Qualitycheckrawmaterial implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public byte getIsReturnInvoiceInitated() {
+	public boolean getIsReturnInvoiceInitated() {
 		return this.isReturnInvoiceInitated;
 	}
 
-	public void setIsReturnInvoiceInitated(byte isReturnInvoiceInitated) {
+	public void setIsReturnInvoiceInitated(boolean isReturnInvoiceInitated) {
 		this.isReturnInvoiceInitated = isReturnInvoiceInitated;
 	}
 

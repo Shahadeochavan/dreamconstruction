@@ -10,14 +10,12 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
@@ -45,24 +43,23 @@ public class QualitycheckrawmaterialController {
 
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
-			@Valid @RequestBody Qualitycheckrawmaterial qualitycheckrawmaterial,
-			BindingResult bindingResult, ModelMap map) {
+			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Rawmaterialorderinvoice rawmaterialorderinvoice = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,qualitycheckrawmaterial.getRawmaterialorderinvoice());
-			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice
-					.getRmorderinvoiceintakquantities();
-			if (rmorderinvoiceintakquantities != null&& !rmorderinvoiceintakquantities.isEmpty()) {
-				for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
-					rmorderinvoiceintakquantity
+			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
+			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
+				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
+					qualitycheckrawmaterial
 							.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-					qualitycheckrawmaterialService
-							.addEntity(qualitycheckrawmaterial);
+					qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
 				}
 			}
+			
+		
 			return new UserStatus(1,
 					"Qualitycheckrawmaterial added Successfully !");
 		} catch (ConstraintViolationException cve) {

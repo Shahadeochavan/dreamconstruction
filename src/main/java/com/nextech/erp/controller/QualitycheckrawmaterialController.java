@@ -53,8 +53,8 @@ public class QualitycheckrawmaterialController {
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
 			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-					qualitycheckrawmaterial
-							.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+					rawmaterialorderinvoice= rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,qualitycheckrawmaterial.getRawmaterialorderinvoice().getId());
+					qualitycheckrawmaterial.setRawmaterialorderinvoice(rawmaterialorderinvoice);
 					qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
 				}
 			}

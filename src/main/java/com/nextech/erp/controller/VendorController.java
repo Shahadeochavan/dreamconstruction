@@ -42,11 +42,11 @@ public class VendorController {
 			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 
 			} else {
-				return new UserStatus(2, "CompanyName already exists !");
+				return new UserStatus(1, "CompanyName already exists !");
 			}
 			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
 			} else {
-				return new UserStatus(2, "Email already exists !");
+				return new UserStatus(1, "Email already exists !");
 			}
 			vendorService.addEntity(vendor);
 			return new UserStatus(1, "vendor added Successfully !");

@@ -61,8 +61,9 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private String vendorname;
 
 	//bi-directional many-to-one association to Qualitycheckrawmaterial
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
+	/*@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)*/
+	@OneToMany( mappedBy = "rawmaterialorderinvoice")
 	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
 
 	//bi-directional many-to-one association to Status
@@ -76,8 +77,7 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
 
 	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
+	@OneToMany( mappedBy = "rawmaterialorderinvoice")
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
 
 	public Rawmaterialorderinvoice() {

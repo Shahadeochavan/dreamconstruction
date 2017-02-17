@@ -40,7 +40,6 @@ public class RawmaterialorderinvoiceController {
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
 
-
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
 			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
@@ -80,6 +79,7 @@ public class RawmaterialorderinvoiceController {
 							.addEntity(rmorderinvoiceintakquantity);
 				}
 			}
+			//TODO call to order history
 			return new UserStatus(1,
 					"Rawmaterialorderinvoice added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -115,10 +115,12 @@ public class RawmaterialorderinvoiceController {
 	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId() {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
-			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice.getRawmaterialorderinvoiceByStatusId(8l);
+			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
+					.getRawmaterialorderinvoiceByStatusId(8l);
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
-			if (rawmaterialorderinvoices != null&& !rawmaterialorderinvoices.isEmpty()) {
+			if (rawmaterialorderinvoices != null
+					&& !rawmaterialorderinvoices.isEmpty()) {
 				for (Rawmaterialorderinvoice rawmaterialorderinvoice : rawmaterialorderinvoices) {
 					rawmaterialorderinvoiceList.add(rawmaterialorderinvoice);
 				}

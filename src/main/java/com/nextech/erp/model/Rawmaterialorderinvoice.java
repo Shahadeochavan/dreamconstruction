@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -61,10 +59,12 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private String vendorname;
 
 	//bi-directional many-to-one association to Qualitycheckrawmaterial
-	/*@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)*/
-	@OneToMany( mappedBy = "rawmaterialorderinvoice")
+	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	@OneToMany(mappedBy="rawmaterialorderinvoice")
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
@@ -72,12 +72,11 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private Status status;
 
 	//bi-directional many-to-one association to Rawmaterialorderinvoiceassociation
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
 
 	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
-	@OneToMany( mappedBy = "rawmaterialorderinvoice")
+	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
 
 	public Rawmaterialorderinvoice() {
@@ -226,6 +225,28 @@ public class Rawmaterialorderinvoice implements Serializable {
 		qualitycheckrawmaterial.setRawmaterialorderinvoice(null);
 
 		return qualitycheckrawmaterial;
+	}
+
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories() {
+		return this.rawmaterialorderhistories;
+	}
+
+	public void setRawmaterialorderhistories(List<Rawmaterialorderhistory> rawmaterialorderhistories) {
+		this.rawmaterialorderhistories = rawmaterialorderhistories;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistory(Rawmaterialorderhistory rawmaterialorderhistory) {
+		getRawmaterialorderhistories().add(rawmaterialorderhistory);
+		rawmaterialorderhistory.setRawmaterialorderinvoice(this);
+
+		return rawmaterialorderhistory;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistory(Rawmaterialorderhistory rawmaterialorderhistory) {
+		getRawmaterialorderhistories().remove(rawmaterialorderhistory);
+		rawmaterialorderhistory.setRawmaterialorderinvoice(null);
+
+		return rawmaterialorderhistory;
 	}
 
 	public Status getStatus() {

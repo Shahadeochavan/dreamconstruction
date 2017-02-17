@@ -3,9 +3,6 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 import java.sql.Timestamp;
 
@@ -19,7 +16,7 @@ import java.sql.Timestamp;
 public class Rawmaterialorderhistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
+	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
@@ -31,8 +28,6 @@ public class Rawmaterialorderhistory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private boolean isactive;
@@ -43,9 +38,19 @@ public class Rawmaterialorderhistory implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
+	//bi-directional many-to-one association to Qualitycheckrawmaterial
+	@ManyToOne
+	@JoinColumn(name="rmqualitycheckid")
+	private Qualitycheckrawmaterial qualitycheckrawmaterial;
+
 	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	private Rawmaterialorder rawmaterialorder;
+
+	//bi-directional many-to-one association to Rawmaterialorderinvoice
+	@ManyToOne
+	@JoinColumn(name="rmorderinvoiceid")
+	private Rawmaterialorderinvoice rawmaterialorderinvoice;
 
 	//bi-directional many-to-one association to Statustransition
 	@ManyToOne
@@ -59,10 +64,10 @@ public class Rawmaterialorderhistory implements Serializable {
 
 	public Rawmaterialorderhistory() {
 	}
-
 	public Rawmaterialorderhistory(int id) {
 		this.id=id;
 	}
+
 	public long getId() {
 		return this.id;
 	}
@@ -127,12 +132,28 @@ public class Rawmaterialorderhistory implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
+	public Qualitycheckrawmaterial getQualitycheckrawmaterial() {
+		return this.qualitycheckrawmaterial;
+	}
+
+	public void setQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
+		this.qualitycheckrawmaterial = qualitycheckrawmaterial;
+	}
+
 	public Rawmaterialorder getRawmaterialorder() {
 		return this.rawmaterialorder;
 	}
 
 	public void setRawmaterialorder(Rawmaterialorder rawmaterialorder) {
 		this.rawmaterialorder = rawmaterialorder;
+	}
+
+	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
+		return this.rawmaterialorderinvoice;
+	}
+
+	public void setRawmaterialorderinvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) {
+		this.rawmaterialorderinvoice = rawmaterialorderinvoice;
 	}
 
 	public Statustransition getStatustransition1() {

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -42,23 +43,29 @@ public class Qualitycheckrawmaterial implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Rawmaterialorderinvoice
-	@ManyToOne
-	@JoinColumn(name="rmorderinvoiceid")
-	private Rawmaterialorderinvoice rawmaterialorderinvoice;
-
 	//bi-directional many-to-one association to Rawmaterial
 	@ManyToOne
 	@JoinColumn(name="rawmaterialid")
 	private Rawmaterial rawmaterial;
 
+	//bi-directional many-to-one association to Rawmaterialorderinvoice
+	@ManyToOne
+	@JoinColumn(name="rmorderinvoiceid")
+	private Rawmaterialorderinvoice rawmaterialorderinvoice;
+
+	//bi-directional many-to-one association to Rawmaterialinventoryhistory
+	@OneToMany(mappedBy="qualitycheckrawmaterial")
+	private List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	@OneToMany(mappedBy="qualitycheckrawmaterial")
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
+
 	public Qualitycheckrawmaterial() {
 	}
-
 	public Qualitycheckrawmaterial(int id) {
 		this.id=id;
 	}
-
 
 	public long getId() {
 		return this.id;
@@ -140,6 +147,14 @@ public class Qualitycheckrawmaterial implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
+	public Rawmaterial getRawmaterial() {
+		return this.rawmaterial;
+	}
+
+	public void setRawmaterial(Rawmaterial rawmaterial) {
+		this.rawmaterial = rawmaterial;
+	}
+
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;
 	}
@@ -148,12 +163,48 @@ public class Qualitycheckrawmaterial implements Serializable {
 		this.rawmaterialorderinvoice = rawmaterialorderinvoice;
 	}
 
-	public Rawmaterial getRawmaterial() {
-		return this.rawmaterial;
+	public List<Rawmaterialinventoryhistory> getRawmaterialinventoryhistories() {
+		return this.rawmaterialinventoryhistories;
 	}
 
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
+	public void setRawmaterialinventoryhistories(List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories) {
+		this.rawmaterialinventoryhistories = rawmaterialinventoryhistories;
+	}
+
+	public Rawmaterialinventoryhistory addRawmaterialinventoryhistory(Rawmaterialinventoryhistory rawmaterialinventoryhistory) {
+		getRawmaterialinventoryhistories().add(rawmaterialinventoryhistory);
+		rawmaterialinventoryhistory.setQualitycheckrawmaterial(this);
+
+		return rawmaterialinventoryhistory;
+	}
+
+	public Rawmaterialinventoryhistory removeRawmaterialinventoryhistory(Rawmaterialinventoryhistory rawmaterialinventoryhistory) {
+		getRawmaterialinventoryhistories().remove(rawmaterialinventoryhistory);
+		rawmaterialinventoryhistory.setQualitycheckrawmaterial(null);
+
+		return rawmaterialinventoryhistory;
+	}
+
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories() {
+		return this.rawmaterialorderhistories;
+	}
+
+	public void setRawmaterialorderhistories(List<Rawmaterialorderhistory> rawmaterialorderhistories) {
+		this.rawmaterialorderhistories = rawmaterialorderhistories;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistory(Rawmaterialorderhistory rawmaterialorderhistory) {
+		getRawmaterialorderhistories().add(rawmaterialorderhistory);
+		rawmaterialorderhistory.setQualitycheckrawmaterial(this);
+
+		return rawmaterialorderhistory;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistory(Rawmaterialorderhistory rawmaterialorderhistory) {
+		getRawmaterialorderhistories().remove(rawmaterialorderhistory);
+		rawmaterialorderhistory.setQualitycheckrawmaterial(null);
+
+		return rawmaterialorderhistory;
 	}
 
 }

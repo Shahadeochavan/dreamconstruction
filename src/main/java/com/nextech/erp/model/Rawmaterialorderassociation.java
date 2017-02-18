@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import java.sql.Timestamp;
 
 
@@ -42,6 +44,7 @@ public class Rawmaterialorderassociation implements Serializable {
 	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	@JoinColumn(name="order_id")
+	 @JsonBackReference
 	private Rawmaterialorder rawmaterialorder;
 
 	public Rawmaterialorderassociation() {

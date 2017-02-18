@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Rawmaterial.findAll", query="SELECT r FROM Rawmaterial r")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 

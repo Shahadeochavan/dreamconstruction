@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -14,6 +18,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Qualitycheckrawmaterial.findAll", query="SELECT q FROM Qualitycheckrawmaterial q")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Qualitycheckrawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -54,11 +59,14 @@ public class Qualitycheckrawmaterial implements Serializable {
 	private Rawmaterialorderinvoice rawmaterialorderinvoice;
 
 	//bi-directional many-to-one association to Rawmaterialinventoryhistory
-	@OneToMany(mappedBy="qualitycheckrawmaterial")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "qualitycheckrawmaterial", cascade = CascadeType.ALL)
 	private List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
 	@OneToMany(mappedBy="qualitycheckrawmaterial")
+/*	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "qualitycheckrawmaterial", cascade = CascadeType.ALL)*/
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
 
 	public Qualitycheckrawmaterial() {
@@ -154,7 +162,8 @@ public class Qualitycheckrawmaterial implements Serializable {
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
-
+	   @JsonIgnore
+	    @JsonProperty(value = "rmorderinvoiceid")
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;
 	}

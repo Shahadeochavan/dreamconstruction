@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -16,6 +19,7 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Rawmaterialorderinvoice.findAll", query="SELECT r FROM Rawmaterialorderinvoice r")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rawmaterialorderinvoice implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -59,11 +63,13 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private String vendorname;
 
 	//bi-directional many-to-one association to Qualitycheckrawmaterial
+	
 	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
-	@OneToMany(mappedBy="rawmaterialorderinvoice")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories;
 
 	//bi-directional many-to-one association to Status
@@ -72,11 +78,14 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private Status status;
 
 	//bi-directional many-to-one association to Rawmaterialorderinvoiceassociation
-	@OneToMany(mappedBy="rawmaterialorderinvoice")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderinvoiceassociation> rawmaterialorderinvoiceassociations;
 
 	//bi-directional many-to-one association to Rmorderinvoiceintakquantity
 	@OneToMany(mappedBy="rawmaterialorderinvoice")
+	//@JsonIgnore
+	//@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorderinvoice", cascade = CascadeType.ALL)
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
 
 	public Rawmaterialorderinvoice() {

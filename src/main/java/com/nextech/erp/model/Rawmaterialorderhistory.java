@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Timestamp;
 
 
@@ -13,6 +17,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @NamedQuery(name="Rawmaterialorderhistory.findAll", query="SELECT r FROM Rawmaterialorderhistory r")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rawmaterialorderhistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -131,7 +136,8 @@ public class Rawmaterialorderhistory implements Serializable {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-
+	 @JsonIgnore
+	 @JsonProperty(value = "rmqualitycheckid")
 	public Qualitycheckrawmaterial getQualitycheckrawmaterial() {
 		return this.qualitycheckrawmaterial;
 	}
@@ -147,7 +153,8 @@ public class Rawmaterialorderhistory implements Serializable {
 	public void setRawmaterialorder(Rawmaterialorder rawmaterialorder) {
 		this.rawmaterialorder = rawmaterialorder;
 	}
-
+	   @JsonIgnore
+	    @JsonProperty(value = "rmorderinvoiceid")
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;
 	}

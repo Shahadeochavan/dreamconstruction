@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -16,10 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Rawmaterialinventoryhistory;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
@@ -72,10 +69,10 @@ public class QualitycheckrawmaterialController {
 				}
 			}
 			// TODO  call to order history
-			Qualitycheckrawmaterial qualitycheckrawmaterial=new Qualitycheckrawmaterial();
-			List<Rawmaterialorderhistory> rawmaterialorderhistories = qualitycheckrawmaterial.getRawmaterialorderhistories();
+			Qualitycheckrawmaterial qualitycheckrawmaterial = new Qualitycheckrawmaterial();
+			List<Rawmaterialorderhistory> rawmaterialorderhistories = rawmaterialorderinvoice.getRawmaterialorderhistories();
 			for(Rawmaterialorderhistory rawmaterialorderhistory: rawmaterialorderhistories){
-				qualitycheckrawmaterial= qualitycheckrawmaterialService.getEntityById(Qualitycheckrawmaterial.class,rawmaterialorderhistory.getQualitycheckrawmaterial().getId());
+				rawmaterialorderinvoice= rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderhistory.getRawmaterialorderinvoice().getId());
 				rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 				rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 				

@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.sql.Timestamp;
 
 
@@ -13,6 +17,7 @@ import java.sql.Timestamp;
  */
 @Entity
 @NamedQuery(name="Rmorderinvoiceintakquantity.findAll", query="SELECT r FROM Rmorderinvoiceintakquantity r")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Rmorderinvoiceintakquantity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -45,7 +50,7 @@ public class Rmorderinvoiceintakquantity implements Serializable {
 
 	//bi-directional many-to-one association to Rawmaterialorderinvoice
 	@ManyToOne
-	@JoinColumn(name="rmorderinvoiceid")
+	@JoinColumn(name="rmorderinvoiceid")	
 	private Rawmaterialorderinvoice rawmaterialorderinvoice;
 
 	public Rmorderinvoiceintakquantity() {
@@ -125,7 +130,8 @@ public class Rmorderinvoiceintakquantity implements Serializable {
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
-
+	   @JsonIgnore
+	    @JsonProperty(value = "rmorderinvoiceid")
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;
 	}

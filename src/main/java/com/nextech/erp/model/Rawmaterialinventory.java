@@ -43,7 +43,7 @@ public class Rawmaterialinventory implements Serializable {
 	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
-	 @Min(value = 0, message = " please enter quantityavailabl")
+	// @Min(value = 0, message = " please enter quantityavailabl")
 	private int quantityAvailable;
 
 /*	@NotBlank(message="{rack number should not be blank}")

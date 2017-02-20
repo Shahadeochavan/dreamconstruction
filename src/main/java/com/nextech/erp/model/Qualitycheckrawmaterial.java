@@ -162,7 +162,7 @@ public class Qualitycheckrawmaterial implements Serializable {
 	public void setRawmaterial(Rawmaterial rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
-	   @JsonIgnore
+	  @JsonIgnore
 	    @JsonProperty(value = "rmorderinvoiceid")
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;

@@ -1,32 +1,45 @@
 package com.nextech.erp.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Rawmaterialinventoryhistory;
+import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
+import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.QualitycheckrawmaterialService;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.RawmaterialinventoryhistoryService;
+import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderhistoryService;
 import com.nextech.erp.service.RawmaterialorderinvoiceService;
+import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.service.RmorderinvoiceintakquantityService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -49,8 +62,21 @@ public class QualitycheckrawmaterialController {
 	
 	@Autowired
 	RawmaterialinventoryhistoryService rawmaterialinventoryhistoryService;
+	
+	@Autowired
+	RawmaterialorderService rawmaterialorderService; 
+	
+	@Autowired
+	RawmaterialinventoryService rawmaterialinventoryService; 
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
 
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
 			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
 			BindingResult bindingResult) {
@@ -59,33 +85,65 @@ public class QualitycheckrawmaterialController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
 			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-					rawmaterialorderinvoice= rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,qualitycheckrawmaterial.getRawmaterialorderinvoice().getId());
-					qualitycheckrawmaterial.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-				long inid=	qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
-				System.out.println("inid " + inid);	
+					qualitycheckrawmaterial.setRawmaterialorderinvoice(rawmaterialorderinvoiceNew);
+					qualitycheckrawmaterial.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId()));
+					qualitycheckrawmaterial.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
+					qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
+					long inid =	qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
+					System.out.println("inid " + inid);	
+					
+					
+					// TODO  call to order history
+					Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
+					Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
+					rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
+					rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
+					rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+					rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
+					rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
+					rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorderinvoiceNew.getStatus().getId()));
+					rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId()));
+					rawmaterialorderhistory.setCreatedBy(3);
+				//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
+					rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
+					
+					// TODO  update inventory
+					Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
+					rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
+					rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));
+					rawmaterialinventoryService.updateEntity(rawmaterialinventory);
+					
+					// TODO  call to inventory history
+					Rawmaterialinventoryhistory rawmaterialinventoryhistory = new Rawmaterialinventoryhistory();
+					rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
+					rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
+					rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
+					rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
 				}
 			}
-			// TODO  call to order history
-			Qualitycheckrawmaterial qualitycheckrawmaterial = new Qualitycheckrawmaterial();
-			List<Rawmaterialorderhistory> rawmaterialorderhistories = rawmaterialorderinvoice.getRawmaterialorderhistories();
-			for(Rawmaterialorderhistory rawmaterialorderhistory: rawmaterialorderhistories){
-				rawmaterialorderinvoice= rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderhistory.getRawmaterialorderinvoice().getId());
-				rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
-				rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
-				
-			}	
-			// TODO  update inventory
 			
-			// TODO  call to inventory history
-			List<Rawmaterialinventoryhistory> rawmaterialinventoryhistories = qualitycheckrawmaterial.getRawmaterialinventoryhistories();
-			for(Rawmaterialinventoryhistory rawmaterialinventoryhistory:rawmaterialinventoryhistories){
-				qualitycheckrawmaterial=qualitycheckrawmaterialService.getEntityById(Qualitycheckrawmaterial.class, rawmaterialinventoryhistory.getRawmaterialinventory().getId());
+			
+			/*for (Qualitycheckrawmaterial qualitycheckrawmaterial : rawmaterialorderinvoice.getQualitycheckrawmaterials()) {
+				// TODO  update inventory
+				Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
+				rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
+				rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));
+				rawmaterialinventoryService.updateEntity(rawmaterialinventory);
+				
+				// TODO  call to inventory history
+				Rawmaterialinventoryhistory rawmaterialinventoryhistory = new Rawmaterialinventoryhistory();
 				rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
+				rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
+				rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 				rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
-			}
+			}*/
+			
+			
+			
 			// TODO  call to trigger notification (will do it later )
 			return new UserStatus(1,
 					"Qualitycheckrawmaterial added Successfully !");
@@ -105,24 +163,23 @@ public class QualitycheckrawmaterialController {
 	}
 
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterial> getRmorderinvoiceintakquantityByRMOInvoiceId(
+	public @ResponseBody List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(
 			@PathVariable("id") long id) {
-		List<Rawmaterial> rawmaterialList = null;
+		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = null;
 		try {
-			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService
-					.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
-			rawmaterialList = new ArrayList<Rawmaterial>();
+			rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
+//			rawmaterialList = new ArrayList<Rawmaterial>();
 			System.out.println("list size "
 					+ rmorderinvoiceintakquantities.size());
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
 				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
 						Rawmaterial.class, rmorderinvoiceintakquantity
 								.getRawmaterial().getId());
-				rawmaterialList.add(rawmaterial);
+//				qualitycheckrawmaterials.add(rawmaterial);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialList;
+		return rmorderinvoiceintakquantities;
 	}
 }

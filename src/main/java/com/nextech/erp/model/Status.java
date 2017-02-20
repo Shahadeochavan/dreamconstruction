@@ -3,11 +3,10 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -19,11 +18,12 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Status.findAll", query="SELECT s FROM Status s")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Status implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -32,18 +32,12 @@ public class Status implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private boolean isactive;
 
-	@NotBlank(message="{name should not be blank}")
-	@Size(min = 2, max = 255, message = "{description sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
-	@NotBlank(message="{type should not be blank}")
-	@Size(min = 2, max = 255, message = "{type sholud be greater than 2 or less than 255 characters}")
 	private String type;
 
 	@Column(name="updated_by")
@@ -53,6 +47,7 @@ public class Status implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Productinventoryhistory
+	//@OneToMany(mappedBy="status")
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productinventoryhistory> productinventoryhistories;
@@ -72,11 +67,29 @@ public class Status implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Rawmaterialorder> rawmaterialorders;
 
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	//@OneToMany(mappedBy="status1")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status1", cascade = CascadeType.ALL)
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories1;
+
+	//bi-directional many-to-one association to Rawmaterialorderhistory
+	//@OneToMany(mappedBy="status2")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status2", cascade = CascadeType.ALL)
+	private List<Rawmaterialorderhistory> rawmaterialorderhistories2;
+
+	//bi-directional many-to-one association to Rawmaterialorderinvoice
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Rawmaterialorderinvoice> rawmaterialorderinvoices;
+
 	public Status() {
 	}
 	public Status(int id) {
 		this.id=id;
 	}
+
 	public long getId() {
 		return this.id;
 	}
@@ -235,6 +248,73 @@ public class Status implements Serializable {
 		rawmaterialorder.setStatus(null);
 
 		return rawmaterialorder;
+	}
+
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories1() {
+		return this.rawmaterialorderhistories1;
+	}
+
+	public void setRawmaterialorderhistories1(List<Rawmaterialorderhistory> rawmaterialorderhistories1) {
+		this.rawmaterialorderhistories1 = rawmaterialorderhistories1;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistories1(Rawmaterialorderhistory rawmaterialorderhistories1) {
+		getRawmaterialorderhistories1().add(rawmaterialorderhistories1);
+		rawmaterialorderhistories1.setStatus1(this);
+
+		return rawmaterialorderhistories1;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistories1(Rawmaterialorderhistory rawmaterialorderhistories1) {
+		getRawmaterialorderhistories1().remove(rawmaterialorderhistories1);
+		rawmaterialorderhistories1.setStatus1(null);
+
+		return rawmaterialorderhistories1;
+	}
+
+	public List<Rawmaterialorderhistory> getRawmaterialorderhistories2() {
+		return this.rawmaterialorderhistories2;
+	}
+
+	public void setRawmaterialorderhistories2(List<Rawmaterialorderhistory> rawmaterialorderhistories2) {
+		this.rawmaterialorderhistories2 = rawmaterialorderhistories2;
+	}
+
+	public Rawmaterialorderhistory addRawmaterialorderhistories2(Rawmaterialorderhistory rawmaterialorderhistories2) {
+		getRawmaterialorderhistories2().add(rawmaterialorderhistories2);
+		rawmaterialorderhistories2.setStatus2(this);
+
+		return rawmaterialorderhistories2;
+	}
+
+	public Rawmaterialorderhistory removeRawmaterialorderhistories2(Rawmaterialorderhistory rawmaterialorderhistories2) {
+		getRawmaterialorderhistories2().remove(rawmaterialorderhistories2);
+		rawmaterialorderhistories2.setStatus2(null);
+
+		return rawmaterialorderhistories2;
+	}
+	  @JsonIgnore
+	    @JsonProperty(value = "rmorderinvoiceid")
+	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoices() {
+		return this.rawmaterialorderinvoices;
+	}
+
+	public void setRawmaterialorderinvoices(List<Rawmaterialorderinvoice> rawmaterialorderinvoices) {
+		this.rawmaterialorderinvoices = rawmaterialorderinvoices;
+	}
+
+	public Rawmaterialorderinvoice addRawmaterialorderinvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) {
+		getRawmaterialorderinvoices().add(rawmaterialorderinvoice);
+		rawmaterialorderinvoice.setStatus(this);
+
+		return rawmaterialorderinvoice;
+	}
+
+	public Rawmaterialorderinvoice removeRawmaterialorderinvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) {
+		getRawmaterialorderinvoices().remove(rawmaterialorderinvoice);
+		rawmaterialorderinvoice.setStatus(null);
+
+		return rawmaterialorderinvoice;
 	}
 
 }

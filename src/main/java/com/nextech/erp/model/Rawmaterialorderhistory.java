@@ -43,36 +43,35 @@ public class Rawmaterialorderhistory implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Qualitycheckrawmaterial
-	@ManyToOne
-	@JoinColumn(name="rmqualitycheckid")
-	private Qualitycheckrawmaterial qualitycheckrawmaterial;
-
 	//bi-directional many-to-one association to Rawmaterialorder
 	@ManyToOne
 	private Rawmaterialorder rawmaterialorder;
+
+	//bi-directional many-to-one association to Status
+	@ManyToOne
+	@JoinColumn(name="status_id_from")
+	private Status status1;
+
+	//bi-directional many-to-one association to Status
+	@ManyToOne
+	@JoinColumn(name="status_id_to")
+	private Status status2;
 
 	//bi-directional many-to-one association to Rawmaterialorderinvoice
 	@ManyToOne
 	@JoinColumn(name="rmorderinvoiceid")
 	private Rawmaterialorderinvoice rawmaterialorderinvoice;
 
-	//bi-directional many-to-one association to Statustransition
+	//bi-directional many-to-one association to Qualitycheckrawmaterial
 	@ManyToOne
-	@JoinColumn(name="status_id_from")
-	private Statustransition statustransition1;
-
-	//bi-directional many-to-one association to Statustransition
-	@ManyToOne
-	@JoinColumn(name="status_id_to")
-	private Statustransition statustransition2;
+	@JoinColumn(name="rmqualitycheckid")
+	private Qualitycheckrawmaterial qualitycheckrawmaterial;
 
 	public Rawmaterialorderhistory() {
 	}
 	public Rawmaterialorderhistory(int id) {
 		this.id=id;
 	}
-
 	public long getId() {
 		return this.id;
 	}
@@ -136,15 +135,6 @@ public class Rawmaterialorderhistory implements Serializable {
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
 	}
-	 @JsonIgnore
-	 @JsonProperty(value = "rmqualitycheckid")
-	public Qualitycheckrawmaterial getQualitycheckrawmaterial() {
-		return this.qualitycheckrawmaterial;
-	}
-
-	public void setQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
-		this.qualitycheckrawmaterial = qualitycheckrawmaterial;
-	}
 
 	public Rawmaterialorder getRawmaterialorder() {
 		return this.rawmaterialorder;
@@ -153,7 +143,24 @@ public class Rawmaterialorderhistory implements Serializable {
 	public void setRawmaterialorder(Rawmaterialorder rawmaterialorder) {
 		this.rawmaterialorder = rawmaterialorder;
 	}
-	   @JsonIgnore
+
+	public Status getStatus1() {
+		return this.status1;
+	}
+
+	public void setStatus1(Status status1) {
+		this.status1 = status1;
+	}
+
+	public Status getStatus2() {
+		return this.status2;
+	}
+
+	public void setStatus2(Status status2) {
+		this.status2 = status2;
+	}
+
+	  @JsonIgnore
 	    @JsonProperty(value = "rmorderinvoiceid")
 	public Rawmaterialorderinvoice getRawmaterialorderinvoice() {
 		return this.rawmaterialorderinvoice;
@@ -163,20 +170,14 @@ public class Rawmaterialorderhistory implements Serializable {
 		this.rawmaterialorderinvoice = rawmaterialorderinvoice;
 	}
 
-	public Statustransition getStatustransition1() {
-		return this.statustransition1;
+	  @JsonIgnore
+	    @JsonProperty(value = "rmqualitycheckid")
+	public Qualitycheckrawmaterial getQualitycheckrawmaterial() {
+		return this.qualitycheckrawmaterial;
 	}
 
-	public void setStatustransition1(Statustransition statustransition1) {
-		this.statustransition1 = statustransition1;
-	}
-
-	public Statustransition getStatustransition2() {
-		return this.statustransition2;
-	}
-
-	public void setStatustransition2(Statustransition statustransition2) {
-		this.statustransition2 = statustransition2;
+	public void setQualitycheckrawmaterial(Qualitycheckrawmaterial qualitycheckrawmaterial) {
+		this.qualitycheckrawmaterial = qualitycheckrawmaterial;
 	}
 
 }

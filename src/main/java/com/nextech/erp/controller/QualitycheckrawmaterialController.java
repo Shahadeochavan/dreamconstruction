@@ -85,6 +85,8 @@ public class QualitycheckrawmaterialController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			String message = "";
+			
 			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
 			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
@@ -94,6 +96,8 @@ public class QualitycheckrawmaterialController {
 					qualitycheckrawmaterial.setRawmaterial(rawmaterial);
 					qualitycheckrawmaterial.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
 					qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
+					if(qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceIdAndRMId(qualitycheckrawmaterial.getRawmaterialorderinvoice().getId(), 
+							qualitycheckrawmaterial.getRawmaterial().getId())==null){
 					long inid =	qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
 					System.out.println("inid " + inid);	
 					
@@ -130,8 +134,15 @@ public class QualitycheckrawmaterialController {
 					rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 					rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,rawmaterialorderinvoiceNew.getStatus().getId()));
 					rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
+					message = "Qualitycheckrawmaterial added Successfully !";
+				}else {
+					message += " Invoice id = " + rawmaterialorderinvoice.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
+					//return new UserStatus(1, "Rawmaterialorderinvoice id and rawmaterialid already exists !");
 				}
+				
 			}
+			}
+			
 			
 			
 			/*for (Qualitycheckrawmaterial qualitycheckrawmaterial : rawmaterialorderinvoice.getQualitycheckrawmaterials()) {
@@ -153,7 +164,7 @@ public class QualitycheckrawmaterialController {
 			
 			// TODO  call to trigger notification (will do it later )
 			return new UserStatus(1,
-					"Qualitycheckrawmaterial added Successfully !");
+					message);
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

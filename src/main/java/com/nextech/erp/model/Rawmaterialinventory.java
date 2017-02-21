@@ -33,17 +33,8 @@ public class Rawmaterialinventory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
-	private String description;
-
 	private boolean isactive;
 
-	@NotBlank(message="{name should not be blank}")
-	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
-	private String name;
-
-	// @Min(value = 0, message = " please enter quantityavailabl")
 	private int quantityAvailable;
 
 /*	@NotBlank(message="{rack number should not be blank}")
@@ -95,28 +86,12 @@ public class Rawmaterialinventory implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public boolean getIsactive() {
 		return this.isactive;
 	}
 
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public int getQuantityAvailable() {

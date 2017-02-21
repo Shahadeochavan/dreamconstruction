@@ -8,8 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.RawmaterialorderinvoiceDao;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
+import com.nextech.erp.model.User;
 
 public class RawmaterialorderinvoiceDaoImpl extends
 		SuperDaoImpl<Rawmaterialorderinvoice> implements
@@ -28,5 +30,19 @@ public class RawmaterialorderinvoiceDaoImpl extends
 				.createCriteria(Rawmaterialorderinvoice.class);
 		criteria.add(Restrictions.eq("status.id", id));
 		return criteria.list();
+	}
+	@Override
+	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(long invoiceNo,String vendorName,int poNO) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialorderinvoice.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("invoice_No", (int)invoiceNo));
+		criteria.add(Restrictions.eq("vendorname", vendorName));
+		criteria.add(Restrictions.eq("po_No", poNO));
+		Rawmaterialorderinvoice rawmaterialorderinvoice = criteria.list().size() > 0 ? (Rawmaterialorderinvoice) criteria.list().get(0)
+				: null;
+		session.close();
+		return rawmaterialorderinvoice;
 	}
 }

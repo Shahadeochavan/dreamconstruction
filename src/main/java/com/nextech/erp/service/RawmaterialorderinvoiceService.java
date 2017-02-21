@@ -8,4 +8,6 @@ public interface RawmaterialorderinvoiceService extends
 		CRUDService<Rawmaterialorderinvoice> {
 	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId(
 			long id) throws Exception;
+	
+	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(long InVoiceNO,String VendorName,int poNo) throws Exception;
 }

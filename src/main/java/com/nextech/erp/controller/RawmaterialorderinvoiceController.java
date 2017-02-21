@@ -1,10 +1,13 @@
 package com.nextech.erp.controller;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,14 +17,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.RawmaterialorderService;
+import com.nextech.erp.service.RawmaterialorderhistoryService;
 import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.service.RmorderinvoiceintakquantityService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -39,6 +47,10 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
+	@Autowired
+	StatusService statusService;
+	@Autowired
+	RawmaterialorderhistoryService rawmaterialorderhistoryService;
 
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
@@ -49,10 +61,17 @@ public class RawmaterialorderinvoiceController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			long inid = rawmaterialorderinvoiceservice
-					.addEntity(rawmaterialorderinvoice);
+			if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
+					rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {
+				long inid = rawmaterialorderinvoiceservice
+						.addEntity(rawmaterialorderinvoice);
+				System.out.println("inid " + inid);
 
-			System.out.println("inid " + inid);
+			} else {
+				return new UserStatus(1, "Rawmaterialorderinvoice number already exists !");
+			}
+			
+
 
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService
 					.getEntityById(Rawmaterialorder.class,
@@ -80,6 +99,18 @@ public class RawmaterialorderinvoiceController {
 				}
 			}
 			//TODO call to order history
+			Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
+			rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
+			rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
+			rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+			rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
+			//rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
+			rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
+			//TODO To status is not set correctly
+			rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, 8));
+			rawmaterialorderhistory.setCreatedBy(3);
+		//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
+			rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 			return new UserStatus(1,
 					"Rawmaterialorderinvoice added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -109,6 +140,19 @@ public class RawmaterialorderinvoiceController {
 			e.printStackTrace();
 		}
 		return rawmaterialorderinvoiceList;
+	}
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateRawmaterialorderinvoice(
+			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice) {
+		try {
+			rawmaterialorderinvoiceservice
+					.updateEntity(rawmaterialorderinvoice);
+			return new UserStatus(1,
+					"Rawmaterialorderinvoice update Successfully !");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new UserStatus(0, e.toString());
+		}
 	}
 
 	@RequestMapping(value = "security-in-invoices", method = RequestMethod.GET, headers = "Accept=application/json")

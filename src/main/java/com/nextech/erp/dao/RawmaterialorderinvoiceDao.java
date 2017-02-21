@@ -8,4 +8,7 @@ public interface RawmaterialorderinvoiceDao extends
 		SuperDao<Rawmaterialorderinvoice> {
 	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId(
 			long id) throws Exception;
+	
+	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(long InVoiceNO,String VendorName,int poNo) throws Exception;
+
 }

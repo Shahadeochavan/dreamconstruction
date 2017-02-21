@@ -90,7 +90,8 @@ public class QualitycheckrawmaterialController {
 			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
 					qualitycheckrawmaterial.setRawmaterialorderinvoice(rawmaterialorderinvoiceNew);
-					qualitycheckrawmaterial.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId()));
+					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId());
+					qualitycheckrawmaterial.setRawmaterial(rawmaterial);
 					qualitycheckrawmaterial.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
 					qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
 					long inid =	qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
@@ -105,7 +106,8 @@ public class QualitycheckrawmaterialController {
 					rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
 					rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 					rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
-					rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorderinvoiceNew.getStatus().getId()));
+					rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
+					//TODO To status is not set correctly
 					rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId()));
 					rawmaterialorderhistory.setCreatedBy(3);
 				//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
@@ -113,6 +115,10 @@ public class QualitycheckrawmaterialController {
 					
 					// TODO  update inventory
 					Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
+					if(rawmaterialinventory == null){
+						rawmaterialinventory = new Rawmaterialinventory();
+						rawmaterialinventory.setRawmaterial(rawmaterial);
+					}
 					rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
 					rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));
 					rawmaterialinventoryService.updateEntity(rawmaterialinventory);
@@ -122,6 +128,7 @@ public class QualitycheckrawmaterialController {
 					rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 					rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
 					rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
+					rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,rawmaterialorderinvoiceNew.getStatus().getId()));
 					rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
 				}
 			}

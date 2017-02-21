@@ -69,7 +69,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 	public T update(T bean) throws Exception {
 		session = sessionFactory.openSession();
 		session.beginTransaction();
-		session.update(bean);
+		session.saveOrUpdate(bean);
 		session.getTransaction().commit();
 		session.close();
 		return bean;

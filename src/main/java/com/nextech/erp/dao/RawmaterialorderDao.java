@@ -8,6 +8,7 @@ public interface RawmaterialorderDao extends SuperDao<Rawmaterialorder>{
 	public Rawmaterialorder getRawmaterialorderByIdName(long id ,String rmname) throws Exception;
 	
 	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId) throws Exception;
+	public List<Rawmaterialorder> getRawmaterialorderByQualityCheckStatusId(long statusId) throws Exception;
 	
 }
 

@@ -17,8 +17,10 @@ import org.springframework.context.MessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.model.Page;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
+import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
@@ -38,6 +40,9 @@ public class AjaxLoginProcessingFilter implements Filter {
 	
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
+
+	@Autowired
+	 PageService pageservice;
 	
 	@Override
 	public void destroy() {
@@ -55,7 +60,8 @@ public class AjaxLoginProcessingFilter implements Filter {
 						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
 						String[] string = token.split("-");
 						User user = userService.getUserByUserId(string[0]);
-						if(user != null && user.getPassword().equals(string[1]) && usertypepageassociationService.checkPageAccess(userTypeService.getEntityById(Usertype.class, user.getUsertype().getId()).getId(), url)){
+						Page page = pageservice.getPageByUrl(url); 
+						if(user != null && user.getPassword().equals(string[1]) /*&& usertypepageassociationService.checkPageAccess(userTypeService.getEntityById(Usertype.class, user.getUsertype().getId()).getId(), page.getId())*/){
 							String str = string[string.length - 1];
 							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
 							if (new Date().getTime() - time * 1000 < new Long(str)) {
@@ -74,8 +80,14 @@ public class AjaxLoginProcessingFilter implements Filter {
 							HTTPresponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 						}
 					}else{
+						System.out.println("Header Access-Control-Request-Headers : " + ((HttpServletRequest) request).getHeader("Access-Control-Request-Headers"));
+						if(((HttpServletRequest) request).getHeader("Access-Control-Request-Headers")==null){
 						HttpServletResponse HTTPresponse = setResponse(request, response);
 						HTTPresponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+						}else{
+							request.setAttribute("auth_token", true);
+							chain.doFilter(request, response);
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -93,6 +105,7 @@ public class AjaxLoginProcessingFilter implements Filter {
 		messageSource = (MessageSource)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("messageSource");
 		userTypeService = (UserTypeService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("userTypeService");
 		usertypepageassociationService = (UsertypepageassociationService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("usertypepageassociationService");
+		pageservice = (PageService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("pageservice");
 	}
 	
 	
@@ -104,8 +117,8 @@ public class AjaxLoginProcessingFilter implements Filter {
 		HTTPresponse.setHeader("Access-Control-Allow-Credentials", "true");
 		HTTPresponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
 		HTTPresponse.setHeader("Access-Control-Max-Age", "3600");
-		HTTPresponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, auth_token");
-		HTTPresponse.setHeader("Access-Control-Expose-Headers", "auth_token");
+		HTTPresponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, auth_token, Origin");
+		HTTPresponse.setHeader("Access-Control-Expose-Headers", "auth_token, Origin");
 		return HTTPresponse;
 	}
 }

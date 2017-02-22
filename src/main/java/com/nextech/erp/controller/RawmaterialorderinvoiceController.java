@@ -173,7 +173,7 @@ public class RawmaterialorderinvoiceController {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
-					.getRawmaterialorderinvoiceByStatusId(8l);
+					.getRawmaterialorderinvoiceByStatusId(STATUS_SECURITY_CHECK_INVOICE_IN);
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null

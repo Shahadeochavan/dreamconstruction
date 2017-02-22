@@ -72,6 +72,8 @@ public class QualitycheckrawmaterialController {
 	
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
+	
+	private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
 
 	@RequestMapping(value = "/qualitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	@Transactional
@@ -86,6 +88,7 @@ public class QualitycheckrawmaterialController {
 			String message = "";
 			
 			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
+			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
 			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
@@ -100,19 +103,7 @@ public class QualitycheckrawmaterialController {
 					System.out.println("inid " + inid);	
 					
 					
-					// TODO  call to order history
-					Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
-					Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
-					rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
-					rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
-					rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-					rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
-					rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
-					rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
-					//TODO To status is not set correctly
-					rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId()));
-					rawmaterialorderhistory.setCreatedBy(3);
-					rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
+					
 					
 					// TODO  update inventory
 					Rawmaterialinventory rawmaterialinventory =  rawmaterialinventoryService.getByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
@@ -129,17 +120,37 @@ public class QualitycheckrawmaterialController {
 					rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 					rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
 					rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
-					rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,rawmaterialorderinvoiceNew.getStatus().getId()));
+					rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
 					rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
 					message = "Qualitycheckrawmaterial added Successfully !";
+					rawmaterialorder.setStatus(statusService.getEntityById(Status.class, STATUS_RAW_MATERIAL_INVENTORY_ADD));
+					rawmaterialorderService.updateEntity(rawmaterialorder);
+					rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, STATUS_RAW_MATERIAL_INVENTORY_ADD));
+					rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
 				}else {
 					message += " Invoice id = " + rawmaterialorderinvoice.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
 					//return new UserStatus(1, "Rawmaterialorderinvoice id and rawmaterialid already exists !");
 				}
 				
 			}
+			}else{
+				return new UserStatus(0,
+						"Please provide raw material information for quality check");
 			}
 			
+			// TODO  call to order history
+			Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
+			rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
+			rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
+			rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+			rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
+			//TODO Remove quality check column from raw material order history
+			rawmaterialorderhistory.setQualitycheckrawmaterial(null);
+			rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
+			//TODO To status is not set correctly
+			rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, STATUS_RAW_MATERIAL_INVENTORY_ADD));
+			rawmaterialorderhistory.setCreatedBy(3);
+			rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 			
 			
 			/*for (Qualitycheckrawmaterial qualitycheckrawmaterial : rawmaterialorderinvoice.getQualitycheckrawmaterials()) {

@@ -6,5 +6,5 @@ import com.nextech.erp.model.Usertypepageassociation;
 
 public interface UsertypepageassociationService extends CRUDService<Usertypepageassociation>{
 	public List<Usertypepageassociation> getPagesByUsertype(long usertypeId);
-	public boolean checkPageAccess(long usertypeId,String url);
+	public boolean checkPageAccess(long usertypeId,long pageId);
 }

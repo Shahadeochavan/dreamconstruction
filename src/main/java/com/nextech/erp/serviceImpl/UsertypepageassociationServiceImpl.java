@@ -20,8 +20,8 @@ public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertype
 	}
 
 	@Override
-	public boolean checkPageAccess(long usertypeId, String url) {
-		return usertypepageassociationDao.checkPageAccess(usertypeId, url);
+	public boolean checkPageAccess(long usertypeId, long pageId) {
+		return usertypepageassociationDao.checkPageAccess(usertypeId, pageId);
 	}
 
 }

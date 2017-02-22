@@ -33,15 +33,16 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 	}
 
 	@Override
-	public boolean checkPageAccess(long usertypeId, String url) {
+	public boolean checkPageAccess(long usertypeId, long pageId) {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Usertypepageassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("usertype.id", usertypeId));
-		criteria.add(Restrictions.eq("page.url", url));
+		criteria.add(Restrictions.eq("page.id", pageId));
+		boolean hasAccess = (criteria.list().size() > 0 ?  true: false);
 		session.close(); 
-		return (criteria.list().size() > 0 ?  true: false);
+		return hasAccess;
 	}
 	
 }

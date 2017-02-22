@@ -23,10 +23,10 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("userid", userid));
-		User User = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
 		session.close();
-		return User;
+		return user;
 	}
 
 	@Override
@@ -36,10 +36,10 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("email", email));
-		User User = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
 		session.close();
-		return User;
+		return user;
 	}
 
 	@Override
@@ -49,9 +49,9 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("mobile", mobile));
-		User User = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
 		session.close();
-		return User;
+		return user;
 	}
 }

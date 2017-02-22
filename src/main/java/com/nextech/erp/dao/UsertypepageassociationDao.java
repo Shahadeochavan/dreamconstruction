@@ -6,5 +6,5 @@ import com.nextech.erp.model.Usertypepageassociation;
 
 public interface UsertypepageassociationDao extends SuperDao<Usertypepageassociation>{
 	public List<Usertypepageassociation> getPagesByUsertype(long usertypeId);
-	public boolean checkPageAccess(long usertypeId,String url);
+	public boolean checkPageAccess(long usertypeId,long pageId);
 }

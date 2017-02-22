@@ -51,6 +51,8 @@ public class RawmaterialorderinvoiceController {
 	StatusService statusService;
 	@Autowired
 	RawmaterialorderhistoryService rawmaterialorderhistoryService;
+	
+	private static final int STATUS_SECURITY_CHECK_INVOICE_IN = 8;
 
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
@@ -61,11 +63,61 @@ public class RawmaterialorderinvoiceController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			
+			//Check for duplicate rows
 			if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
 					rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {
+				rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, STATUS_SECURITY_CHECK_INVOICE_IN));
 				long inid = rawmaterialorderinvoiceservice
 						.addEntity(rawmaterialorderinvoice);
 				System.out.println("inid " + inid);
+				
+				Rawmaterialorder rawmaterialorder = rawmaterialorderService
+						.getEntityById(Rawmaterialorder.class,
+								rawmaterialorderinvoice.getPo_No());
+				
+				
+				Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation = new Rawmaterialorderinvoiceassociation();
+				rawmaterialorderinvoiceassociation
+						.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+				rawmaterialorderinvoiceassociation
+						.setRawmaterialorder(rawmaterialorder);
+				rawmaterialorderinvoiceassociation.setIsactive(true);
+				rawmaterialorderinvoiceassociationService
+						.addEntity(rawmaterialorderinvoiceassociation);
+				List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice
+						.getRmorderinvoiceintakquantities();
+				System.out.println("rmorderinvoicequntiets value is="
+						+ rawmaterialorderinvoice
+								.getRmorderinvoiceintakquantities());
+				if (rmorderinvoiceintakquantities != null
+						&& !rmorderinvoiceintakquantities.isEmpty()) {
+					for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
+						rmorderinvoiceintakquantity
+								.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+						rmorderinvoiceintakquantityService
+								.addEntity(rmorderinvoiceintakquantity);
+					}
+				}
+				//TODO call to order history
+				Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
+				rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
+				rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
+				rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+				rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
+				//rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
+				rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
+				//TODO To status is not set correctly
+				rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, STATUS_SECURITY_CHECK_INVOICE_IN));
+				rawmaterialorderhistory.setCreatedBy(3);
+			//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
+				rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
+				
+				//change status to Quality Check
+				rawmaterialorder.setStatus(statusService.getEntityById(Status.class, STATUS_SECURITY_CHECK_INVOICE_IN));
+				rawmaterialorderService.updateEntity(rawmaterialorder);
+				return new UserStatus(1,
+						"Rawmaterialorderinvoice added Successfully !");
 
 			} else {
 				return new UserStatus(1, "Rawmaterialorderinvoice number already exists !");
@@ -73,46 +125,7 @@ public class RawmaterialorderinvoiceController {
 			
 
 
-			Rawmaterialorder rawmaterialorder = rawmaterialorderService
-					.getEntityById(Rawmaterialorder.class,
-							rawmaterialorderinvoice.getPo_No());
-			Rawmaterialorderinvoiceassociation rawmaterialorderinvoiceassociation = new Rawmaterialorderinvoiceassociation();
-			rawmaterialorderinvoiceassociation
-					.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-			rawmaterialorderinvoiceassociation
-					.setRawmaterialorder(rawmaterialorder);
-			rawmaterialorderinvoiceassociation.setIsactive(true);
-			rawmaterialorderinvoiceassociationService
-					.addEntity(rawmaterialorderinvoiceassociation);
-			List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice
-					.getRmorderinvoiceintakquantities();
-			System.out.println("rmorderinvoicequntiets value is="
-					+ rawmaterialorderinvoice
-							.getRmorderinvoiceintakquantities());
-			if (rmorderinvoiceintakquantities != null
-					&& !rmorderinvoiceintakquantities.isEmpty()) {
-				for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
-					rmorderinvoiceintakquantity
-							.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-					rmorderinvoiceintakquantityService
-							.addEntity(rmorderinvoiceintakquantity);
-				}
-			}
-			//TODO call to order history
-			Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
-			rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
-			rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
-			rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
-			rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
-			//rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
-			rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
-			//TODO To status is not set correctly
-			rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, 8));
-			rawmaterialorderhistory.setCreatedBy(3);
-		//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
-			rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
-			return new UserStatus(1,
-					"Rawmaterialorderinvoice added Successfully !");
+			
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

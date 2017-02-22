@@ -14,6 +14,11 @@ public class RawmaterialOrderAssociationModel implements Serializable {
 	private Date createDate;
 	private long Vendor;
 	private long status;
+	private String name;
+	private float otherCharges;
+	private float tax;
+	private float totalprice;
+	private float actualPrice;
 	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
 	public String getDescription() {
 		return description;
@@ -51,6 +56,36 @@ public class RawmaterialOrderAssociationModel implements Serializable {
 	}
 	public void setStatus(long status) {
 		this.status = status;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public float getOtherCharges() {
+		return otherCharges;
+	}
+	public void setOtherCharges(float otherCharges) {
+		this.otherCharges = otherCharges;
+	}
+	public float getTax() {
+		return tax;
+	}
+	public void setTax(float tax) {
+		this.tax = tax;
+	}
+	public float getTotalprice() {
+		return totalprice;
+	}
+	public void setTotalprice(float totalprice) {
+		this.totalprice = totalprice;
+	}
+	public float getActualPrice() {
+		return actualPrice;
+	}
+	public void setActualPrice(float actualPrice) {
+		this.actualPrice = actualPrice;
 	}
 
 }

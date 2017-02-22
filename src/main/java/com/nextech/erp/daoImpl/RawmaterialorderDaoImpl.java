@@ -1,5 +1,7 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -17,6 +19,17 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder> impl
 		criteria.add(Restrictions.eq("name", rmname));
 		Rawmaterialorder rawmaterialorder = criteria.list().size() > 0 ? (Rawmaterialorder) criteria.list()
 				.get(0) : null;
+		session.close();
+		return rawmaterialorder;
+	}
+	@Override
+	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId) throws Exception{
+		session = sessionFactory.openSession();
+		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("status.id", statusId));
+		@SuppressWarnings("unchecked")
+		List<Rawmaterialorder> rawmaterialorder =  criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list(): null;
 		session.close();
 		return rawmaterialorder;
 	}

@@ -1,7 +1,6 @@
 package com.nextech.erp.controller;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +26,6 @@ import com.nextech.erp.model.Rawmaterialinventoryhistory;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
-import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.service.QualitycheckrawmaterialService;
@@ -114,7 +112,6 @@ public class QualitycheckrawmaterialController {
 					//TODO To status is not set correctly
 					rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId()));
 					rawmaterialorderhistory.setCreatedBy(3);
-				//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
 					rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 					
 					// TODO  update inventory

@@ -18,7 +18,10 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.User;
+import com.nextech.erp.model.Usertype;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.service.UserTypeService;
+import com.nextech.erp.service.UsertypepageassociationService;
 public class AjaxLoginProcessingFilter implements Filter {
 
 	@Autowired
@@ -29,6 +32,12 @@ public class AjaxLoginProcessingFilter implements Filter {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	UserTypeService userTypeService;
+	
+	@Autowired
+	UsertypepageassociationService usertypepageassociationService;
 	
 	@Override
 	public void destroy() {
@@ -46,7 +55,7 @@ public class AjaxLoginProcessingFilter implements Filter {
 						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
 						String[] string = token.split("-");
 						User user = userService.getUserByUserId(string[0]);
-						if(user != null && user.getPassword().equals(string[1])){
+						if(user != null && user.getPassword().equals(string[1]) && usertypepageassociationService.checkPageAccess(userTypeService.getEntityById(Usertype.class, user.getUsertype().getId()).getId(), url)){
 							String str = string[string.length - 1];
 							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
 							if (new Date().getTime() - time * 1000 < new Long(str)) {
@@ -65,8 +74,8 @@ public class AjaxLoginProcessingFilter implements Filter {
 							HTTPresponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 						}
 					}else{
-						request.setAttribute("auth_token", false);
-						chain.doFilter(request, response);
+						HttpServletResponse HTTPresponse = setResponse(request, response);
+						HTTPresponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -82,6 +91,8 @@ public class AjaxLoginProcessingFilter implements Filter {
 	public void init(FilterConfig cfg) throws ServletException {
 		userService = (UserService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("userservice");
 		messageSource = (MessageSource)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("messageSource");
+		userTypeService = (UserTypeService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("userTypeService");
+		usertypepageassociationService = (UsertypepageassociationService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("usertypepageassociationService");
 	}
 	
 	

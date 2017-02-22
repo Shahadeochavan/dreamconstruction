@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -24,8 +26,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
+import com.nextech.erp.model.Page;
 import com.nextech.erp.model.User;
+import com.nextech.erp.model.Usertype;
+import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.UserService;
+import com.nextech.erp.service.UserTypeService;
+import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -40,7 +47,13 @@ public class UserController {
 
 	@Autowired
 	private MessageSource messageSource;
-
+	
+	@Autowired
+	UserTypeService userTypeService;
+	
+	@Autowired
+	UsertypepageassociationService usertypepageassociationService;
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
 			BindingResult bindingResult, HttpServletRequest request) {
@@ -102,7 +115,13 @@ public class UserController {
 				System.out.println(token);
 				authorization.setToken(token);
 				response.addHeader("auth_token", token);
-				return new UserStatus(1, "User logged in Successfully !");
+				Usertype usertype = userTypeService.getEntityById(Usertype.class, user2.getUsertype().getId());
+				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService.getPagesByUsertype(usertype.getId());
+				List<Page> pages = new ArrayList<Page>();
+				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
+					pages.add(usertypepageassociation.getPage());
+				}
+				return new UserStatus(1, "User logged in Successfully !",pages);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());

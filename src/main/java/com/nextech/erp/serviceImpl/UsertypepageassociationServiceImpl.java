@@ -1,9 +1,27 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.nextech.erp.dao.UsertypepageassociationDao;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.UsertypepageassociationService;
 
 public class UsertypepageassociationServiceImpl extends CRUDServiceImpl<Usertypepageassociation> implements
 		UsertypepageassociationService {
+
+	@Autowired
+	UsertypepageassociationDao usertypepageassociationDao;
+	
+	@Override
+	public List<Usertypepageassociation> getPagesByUsertype(long usertypeId) {
+		return usertypepageassociationDao.getPagesByUsertype(usertypeId);
+	}
+
+	@Override
+	public boolean checkPageAccess(long usertypeId, String url) {
+		return usertypepageassociationDao.checkPageAccess(usertypeId, url);
+	}
 
 }

@@ -43,6 +43,8 @@ public class RawmaterialorderController {
 	
 	@Autowired
 	VendorService vendorService;
+	
+	private static final int STATUS_INVOICE_IN=11;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
@@ -84,6 +86,11 @@ public class RawmaterialorderController {
 			rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
 			rawmaterialorder.setStatus(statusService.getEntityById(Status.class,rawmaterialOrderAssociationModel.getStatus()));
 			rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
+			rawmaterialorder.setName(rawmaterialOrderAssociationModel.getName());
+			rawmaterialorder.setActualPrice(rawmaterialOrderAssociationModel.getActualPrice());
+			rawmaterialorder.setOtherCharges(rawmaterialOrderAssociationModel.getOtherCharges());
+			rawmaterialorder.setTax(rawmaterialOrderAssociationModel.getTax());
+			rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
 			rawmaterialorder.setIsactive(true);
 			long id=rawmaterialorderService.addEntity(rawmaterialorder);
 			System.out.println("id is"+id);
@@ -141,6 +148,20 @@ public class RawmaterialorderController {
 		try {
 			rawmaterialorderList = rawmaterialorderService
 					.getEntityList(Rawmaterialorder.class);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return rawmaterialorderList;
+	}
+	@RequestMapping(value = "/list/securityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterialorder> getRMOrderForSecurityCheck() {
+
+		List<Rawmaterialorder> rawmaterialorderList = null;
+		try {
+			rawmaterialorderList = rawmaterialorderService
+					.getRawmaterialorderByStatusId(STATUS_INVOICE_IN);
 
 		} catch (Exception e) {
 			e.printStackTrace();

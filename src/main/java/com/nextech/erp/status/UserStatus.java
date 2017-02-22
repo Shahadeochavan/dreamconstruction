@@ -3,7 +3,7 @@ package com.nextech.erp.status;
 public class UserStatus {
 	private int code;
 	private String message;
-//	private Object data;
+	private Object data;
 
 	public UserStatus() {
 	}
@@ -11,6 +11,12 @@ public class UserStatus {
 	public UserStatus(int code, String message) {
 		this.code = code;
 		this.message = message;
+	}
+	
+	public UserStatus(int code, String message,Object data) {
+		this.code = code;
+		this.message = message;
+		this.data = data;
 	}
 
 //	public UserStatus(int code, Object data) {
@@ -34,11 +40,11 @@ public class UserStatus {
 		this.message = message;
 	}
 
-//	public Object getData() {
-//		return data;
-//	}
-//
-//	public void setData(Object data) {
-//		this.data = data;
-//	}
+	public Object getData() {
+		return data;
+	}
+
+	public void setData(Object data) {
+		this.data = data;
+	}
 }

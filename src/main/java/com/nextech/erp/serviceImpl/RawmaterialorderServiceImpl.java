@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
@@ -13,6 +15,13 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 	@Override
 	public Rawmaterialorder getRawmaterialorderByIdName(long id,String rmname) throws Exception {
 		return rawmaterialorderDao.getRawmaterialorderByIdName(id,rmname);
+	}
+
+	@Override
+	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return rawmaterialorderDao.getRawmaterialorderByStatusId(statusId);
 	}
 
 }

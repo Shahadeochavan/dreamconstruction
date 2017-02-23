@@ -28,4 +28,16 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		return criteria.list();
 	}
 
+	@Override
+	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(
+			long id, long rmId) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
+		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
+		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
+		Rawmaterialorderassociation rawmaterialorderassociation = (Rawmaterialorderassociation) (criteria.list().size()>0 ? criteria.list().get(0) : null);
+		return rawmaterialorderassociation;
+	}
+
 }

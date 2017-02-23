@@ -50,6 +50,8 @@ public class Rawmaterialorder implements Serializable {
 	private float otherCharges;
 
 	private int quantity;
+	
+	private int remainingQuantity;
 
 	private float tax;
 
@@ -289,6 +291,12 @@ public class Rawmaterialorder implements Serializable {
 		rawmaterialorderinvoiceassociation.setRawmaterialorder(null);
 
 		return rawmaterialorderinvoiceassociation;
+	}
+	public int getRemainingQuantity() {
+		return remainingQuantity;
+	}
+	public void setRemainingQuantity(int remainingQuantity) {
+		this.remainingQuantity = remainingQuantity;
 	}
 
 }

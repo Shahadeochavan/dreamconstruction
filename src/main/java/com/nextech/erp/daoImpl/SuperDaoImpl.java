@@ -48,6 +48,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(z);
 		criteria.add(Restrictions.eq("isactive", true));
+		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		List<T> list = criteria.list();
 		session.close();
 		return list;

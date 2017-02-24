@@ -35,19 +35,20 @@ public class ProductorderController {
 
 	@Autowired
 	ProductorderService productorderService;
-	
+
 	@Autowired
-	ProductorderassociationService productorderassociationService;  
+	ProductorderassociationService productorderassociationService;
 
 	@Autowired
 	ClientService clientService;
-	
+
 	@Autowired
-	StatusService statusService; 
-	
+	StatusService statusService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorder(
-			@Valid @RequestBody Productorder productorder, BindingResult bindingResult) {
+			@Valid @RequestBody Productorder productorder,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -69,31 +70,25 @@ public class ProductorderController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductorder(
-			@Valid @RequestBody ProductOrderAssociationModel productOrderAssociationModel, BindingResult bindingResult) {
+			@Valid @RequestBody ProductOrderAssociationModel productOrderAssociationModel,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError()
+						.getDefaultMessage());
 			}
-			Productorder productorder= new Productorder();
-			productorder.setClient(clientService.getEntityById(Client.class,productOrderAssociationModel.getClient()));
-			productorder.setCreateDate(new Date());
-			productorder.setDescription(productOrderAssociationModel.getDescription());
-			productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());
-			productorder.setQuantity(productOrderAssociationModel.getOrderproductassociations().size());
-			productorder.setStatus(statusService.getEntityById(Status.class,productOrderAssociationModel.getStatus()));
-			productorder.setIsactive(true);
-			Long orderId = productorderService.addEntity(productorder);
-			List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
-			if(productorderassociations !=null && !productorderassociations.isEmpty()){
-				for (Productorderassociation productorderassociation : productorderassociations) {
-					productorderassociation.setProductorder(productorder);
-					productorderassociationService.addEntity(productorderassociation);
-				}
-			}
-			return new UserStatus(1, "Multiple Productorder added Successfully !");
+
+			// TODO save call product order
+			Productorder productorder = saveProductOrder(productOrderAssociationModel);
+
+			// TODO add product order association
+			addProductOrderAsso(productOrderAssociationModel, productorder);
+
+			return new UserStatus(1,
+					"Multiple Productorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -110,10 +105,12 @@ public class ProductorderController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productorder getProductorder(@PathVariable("id") long id) {
+	public @ResponseBody Productorder getProductorder(
+			@PathVariable("id") long id) {
 		Productorder productorder = null;
 		try {
-			productorder = productorderService.getEntityById(Productorder.class,id);
+			productorder = productorderService.getEntityById(
+					Productorder.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -121,7 +118,8 @@ public class ProductorderController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductorder(@RequestBody Productorder productorder) {
+	public @ResponseBody UserStatus updateProductorder(
+			@RequestBody Productorder productorder) {
 		try {
 			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Productorder update Successfully !");
@@ -131,13 +129,49 @@ public class ProductorderController {
 		}
 	}
 
+	private Productorder saveProductOrder(
+			ProductOrderAssociationModel productOrderAssociationModel)
+			throws Exception {
+		Productorder productorder = new Productorder();
+		productorder.setClient(clientService.getEntityById(Client.class,
+				productOrderAssociationModel.getClient()));
+		productorder.setCreateDate(new Date());
+		productorder.setDescription(productOrderAssociationModel
+				.getDescription());
+		productorder.setExpecteddeliveryDate(productOrderAssociationModel
+				.getDeliveryDate());
+		productorder.setQuantity(productOrderAssociationModel
+				.getOrderproductassociations().size());
+		productorder.setStatus(statusService.getEntityById(Status.class,
+				productOrderAssociationModel.getStatus()));
+		productorder.setIsactive(true);
+		productorderService.addEntity(productorder);
+		return productorder;
+	}
+
+	private void addProductOrderAsso(
+			ProductOrderAssociationModel productOrderAssociationModel,
+			Productorder productorder) throws Exception {
+		List<Productorderassociation> productorderassociations = productOrderAssociationModel
+				.getOrderproductassociations();
+		if (productorderassociations != null
+				&& !productorderassociations.isEmpty()) {
+			for (Productorderassociation productorderassociation : productorderassociations) {
+				productorderassociation.setProductorder(productorder);
+				productorderassociationService
+						.addEntity(productorderassociation);
+			}
+		}
+	}
+
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorder> getProductorder() {
 
 		List<Productorder> productorderList = null;
 		try {
-			productorderList = productorderService.getEntityList(Productorder.class);
+			productorderList = productorderService
+					.getEntityList(Productorder.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -147,10 +181,12 @@ public class ProductorderController {
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteProductorder(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteProductorder(
+			@PathVariable("id") long id) {
 
 		try {
-			Productorder productorder = productorderService.getEntityById(Productorder.class,id);
+			Productorder productorder = productorderService.getEntityById(
+					Productorder.class, id);
 			productorder.setIsactive(false);
 			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Productorder deleted Successfully !");
@@ -160,4 +196,3 @@ public class ProductorderController {
 
 	}
 }
-

@@ -1,8 +1,10 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
@@ -27,13 +29,17 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 	}
 
 	@Override
-	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId)
+	public List<Rawmaterialorder> getRawmaterialorderByStatusId(long statusId,long statusId1,long statusId2)
 			throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("status.id", statusId));
+		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1,statusId2));
+		/*criteria.add(Restrictions.or(Restrictions.eq("status.id", statusId)));
+		criteria.add(Restrictions.eq("status.id", statusId1));
+		criteria.add(Restrictions.eq("status.id", statusId2));*/
+		criteria.add(Restrictions.and(criterion));
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria
 				.list() : null;
@@ -47,8 +53,13 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
+	/*	Criterion statusId1= Restrictions.eq("1", statusId);
+		Criterion statusId2=Restrictions.eq("2", statusId);
+		Criterion statusId3=Restrictions.eq("11", statusId);
+		Criterion statusId4=Restrictions.eq(propertyName, value)*/
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("status.id", statusId));
+		
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria
 				.list() : null;

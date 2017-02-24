@@ -211,7 +211,7 @@ public class QualitycheckrawmaterialController {
 	}
 	private void  updateRMOrderRemainingQuantity(Qualitycheckrawmaterial qualitycheckrawmaterial ,Rawmaterialorder rawmaterialorder) throws Exception{
 		Rawmaterialorderassociation rawmaterialorderassociation  =rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderIdandRMId(rawmaterialorder.getId(),qualitycheckrawmaterial.getRawmaterial().getId());
-		rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity()-qualitycheckrawmaterial.getGoodQuantity());
+		rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity()-qualitycheckrawmaterial.getGoodQuantity());
 		rawmaterialorderassociationService.updateEntity(rawmaterialorderassociation);
 	}
 	

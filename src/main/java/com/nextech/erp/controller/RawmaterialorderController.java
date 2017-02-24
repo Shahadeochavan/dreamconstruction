@@ -141,6 +141,7 @@ public class RawmaterialorderController {
 		rawmaterialorder.setOtherCharges(rawmaterialOrderAssociationModel.getOtherCharges());
 		rawmaterialorder.setTax(rawmaterialOrderAssociationModel.getTax());
 		rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
+		//rawmaterialorder.setRemainingQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations());
 		rawmaterialorder.setIsactive(true);
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
@@ -152,6 +153,7 @@ public class RawmaterialorderController {
 		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
 				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
+				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
 				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
 			}
 		}

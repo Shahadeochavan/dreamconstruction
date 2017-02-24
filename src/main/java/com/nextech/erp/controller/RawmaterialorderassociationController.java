@@ -104,28 +104,17 @@ public class RawmaterialorderassociationController {
 		return rawmaterialorderassociationList;
 	}
 
-	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterial> getRawmaterialorderassociationByRMOId(
-			@PathVariable("id") long id) {
-		List<Rawmaterial> rawmaterialList = null;
+	@RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterialorderassociation> getRawmaterialorderassociationByRMOId(
+			@PathVariable("RMOrderId") long id) {
+		List<Rawmaterialorderassociation> rawmaterialorderassociations = null;
 		try {
-			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationService
+			 rawmaterialorderassociations = rawmaterialorderassociationService
 					.getRMOrderRMAssociationByRMOrderId(id);
-			rawmaterialList = new ArrayList<Rawmaterial>();
-			System.out.println("list size "
-					+ rawmaterialorderassociations.size());
-			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
-				System.out.println("value "
-						+ rawmaterialorderassociation.getRawmaterial().getId());
-				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
-						Rawmaterial.class, rawmaterialorderassociation
-								.getRawmaterial().getId());
-				rawmaterialList.add(rawmaterial);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rawmaterialList;
+		return rawmaterialorderassociations;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

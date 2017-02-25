@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Statustransition;
 import com.nextech.erp.service.StatustransitionService;
 import com.nextech.erp.status.UserStatus;
@@ -27,6 +29,9 @@ public class StatustransitionController {
 
 	@Autowired
 	StatustransitionService statustransitionService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
@@ -42,7 +47,7 @@ public class StatustransitionController {
 							.getIsNotificationEmail()) == null)
 				statustransitionService.addEntity(statustransition);
 			else
-				return new UserStatus(1, "Email  already exists !");
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			return new UserStatus(1, "Statustransition added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

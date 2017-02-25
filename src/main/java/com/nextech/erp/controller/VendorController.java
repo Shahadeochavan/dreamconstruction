@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
@@ -30,6 +31,9 @@ public class VendorController {
 
 	@Autowired
 	VendorService vendorService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(
@@ -42,11 +46,11 @@ public class VendorController {
 			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 
 			} else {
-				return new UserStatus(1, "CompanyName already exists !");
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}
 			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
 			} else {
-				return new UserStatus(1, "Email already exists !");
+				return new UserStatus(1,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
 			vendorService.addEntity(vendor);
 			return new UserStatus(1, "vendor added Successfully !");

@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -65,15 +64,15 @@ public class UserController {
 			if ((Boolean) request.getAttribute("auth_token")) {
 				if (userservice.getUserByUserId(user.getUserid()) == null) {
 				} else {
-					return new UserStatus(1, "UserId already exists !");
+					return new UserStatus(1, messageSource.getMessage(ERPConstants.USER_ID, null, null));
 				}
 				if (userservice.getUserByEmail(user.getEmail()) == null) {
 				} else {
-					return new UserStatus(1, "Email already exists !");
+					return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 				if (userservice.getUserByMobile(user.getMobile()) == null) {
 				} else {
-					return new UserStatus(1, "Mobile number already exists !");
+					return new UserStatus(1, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 				userservice.addEntity(user);
 				return new UserStatus(1, "User added Successfully !");

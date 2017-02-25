@@ -24,6 +24,8 @@ import com.nextech.erp.status.UserStatus;
 public class UserTypeController {
 	@Autowired
 	UserTypeService userTypeService;
+	
+	
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUserType(@Valid @RequestBody Usertype usertype,

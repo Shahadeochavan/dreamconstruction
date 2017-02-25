@@ -46,7 +46,6 @@
 				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
 				</value>
 				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
-
 			</list>
 		</property>
 		<property name="hibernateProperties">

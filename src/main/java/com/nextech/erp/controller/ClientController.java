@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.status.UserStatus;
@@ -28,6 +30,9 @@ public class ClientController {
 	
 	@Autowired
 	ClientService clientService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
@@ -40,14 +45,15 @@ public class ClientController {
 			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
 
 			} else {
-				return new UserStatus(1, "CompanyName already exists !");
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				
 			}
 			if (clientService.getClientByEmail(client.getEmailid()) == null) {
 			} else {
-				return new UserStatus(1, "Email already exists !");
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
 			clientService.addEntity(client);
-			return new UserStatus(1, "client added Successfully !");
+			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -78,7 +84,7 @@ public class ClientController {
 	public @ResponseBody UserStatus updateClient(@RequestBody Client client) {
 		try {
 			clientService.updateEntity(client);
-			return new UserStatus(1, "Client update Successfully !");
+			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -107,7 +113,7 @@ public class ClientController {
 			Client client = clientService.getEntityById(Client.class,id);
 			client.setIsactive(false);
 			clientService.updateEntity(client);
-			return new UserStatus(1, "Client deleted Successfully !");
+			return new UserStatus(1,messageSource.getMessage(ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

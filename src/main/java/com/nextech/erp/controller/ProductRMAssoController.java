@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.status.UserStatus;
@@ -26,6 +29,8 @@ public class ProductRMAssoController {
 
 	@Autowired
 	ProductRMAssoService productRMAssoService;
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductrawmaterialassociation(
@@ -43,7 +48,7 @@ public class ProductRMAssoController {
 						.addEntity(productrawmaterialassociation);
 			else
 				return new UserStatus(1,
-						"Product raw materialassociation already exists !");
+						messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));
 			return new UserStatus(1,
 					"Productrawmaterialassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {

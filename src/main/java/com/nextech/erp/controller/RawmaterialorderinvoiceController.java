@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
@@ -52,7 +54,10 @@ public class RawmaterialorderinvoiceController {
 	@Autowired
 	RawmaterialorderhistoryService rawmaterialorderhistoryService;
 	
-	private static final int STATUS_SECURITY_CHECK_INVOICE_IN = 8;
+	@Autowired
+	private MessageSource messageSource;
+	
+	//private static final int STATUS_SECURITY_CHECK_INVOICE_IN = 8;
 
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
@@ -134,7 +139,7 @@ public class RawmaterialorderinvoiceController {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
-					.getRawmaterialorderinvoiceByStatusId(STATUS_SECURITY_CHECK_INVOICE_IN);
+					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null)));
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null
@@ -152,13 +157,13 @@ public class RawmaterialorderinvoiceController {
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
 				rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {
-			rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, STATUS_SECURITY_CHECK_INVOICE_IN));
+			rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
 			long inid = rawmaterialorderinvoiceservice
 					.addEntity(rawmaterialorderinvoice);
 			System.out.println("inid " + inid);
 
 		}else{
-			message = "Rawmaterialorderinvoice number already exists !";
+			message = messageSource.getMessage(ERPConstants.RM_ORDER_INVOICE_EXIT, null, null);
 		}
 		return message;
 	}
@@ -206,14 +211,14 @@ public class RawmaterialorderinvoiceController {
 		//rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 		rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
 		//TODO To status is not set correctly
-		rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, STATUS_SECURITY_CHECK_INVOICE_IN));
+		rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
 		rawmaterialorderhistory.setCreatedBy(3);
 	//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
 		rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 		
 	}
 	private void updateRawMaterialOrder(Rawmaterialorder rawmaterialorder) throws Exception{
-		rawmaterialorder.setStatus(statusService.getEntityById(Status.class, STATUS_SECURITY_CHECK_INVOICE_IN));
+		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 }

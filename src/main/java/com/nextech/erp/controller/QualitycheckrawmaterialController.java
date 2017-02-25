@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
@@ -80,10 +82,12 @@ public class QualitycheckrawmaterialController {
 	@Autowired
 	RawmaterialorderassociationService rawmaterialorderassociationService;
 	
+	@Autowired
+	private MessageSource messageSource;
 	
 	private HashMap<Long,Integer> rmIdQuantityMap;
 	
-	private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
+	//private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
 	private static final int STATUS_RAW_MATERIAL_ORDER_INCOMPLETE=2;
 	private static final int STATUS_RAW_MATERIAL_ORDER_COMPLETE=3;
 
@@ -123,13 +127,13 @@ public class QualitycheckrawmaterialController {
 						updateRMOrderRemainingQuantity(qualitycheckrawmaterial, rawmaterialorder);
 						
 						updateRMIdQuantityMap(qualitycheckrawmaterial.getRawmaterial().getId(), qualitycheckrawmaterial.getIntakeQuantity() - qualitycheckrawmaterial.getGoodQuantity());
-						message = "Raw Material Quality Check Completed Successfully!";
+						message = messageSource.getMessage(ERPConstants.RM_QUALITY_CHECK, null, null);
 					}else{
 						message += " Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
 					}
 			}
 			}else{
-				return new UserStatus(0, "Please provide raw material information for quality check");
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.INFO_QUALITY_CHECK, null, null));
 			}
 			// TODO  call to order history
 			addOrderHistory(rawmaterialorderinvoiceNew, rawmaterialorder);
@@ -180,7 +184,7 @@ public class QualitycheckrawmaterialController {
 	}
 	
 	private void updateRawMaterialInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) throws Exception{
-		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, STATUS_RAW_MATERIAL_INVENTORY_ADD));
+		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
 	}
 
@@ -220,7 +224,7 @@ public class QualitycheckrawmaterialController {
 		rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 		rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
 		rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
-		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
+		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
 		rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
 	}
 	

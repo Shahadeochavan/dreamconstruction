@@ -1,10 +1,13 @@
 package com.nextech.erp.controller;
 
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.status.UserStatus;
@@ -23,6 +28,8 @@ import com.nextech.erp.status.UserStatus;
 public class ProductController {
 	@Autowired
 	ProductService productService;
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
@@ -35,11 +42,11 @@ public class ProductController {
 			if (productService.getProductByName(product.getName()) == null) {
 
 			} else {
-				return new UserStatus(2, "product name  already exists !");
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
 			}
 			if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
 			} else {
-				return new UserStatus(2, "part number already exists !");
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
 			productService.addEntity(product);
 			return new UserStatus(1, "product added Successfully !");

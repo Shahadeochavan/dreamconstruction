@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.status.UserStatus;
@@ -25,6 +27,9 @@ public class RawmaterialController {
 
 	@Autowired
 	RawmaterialService rawmaterialService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterial(
@@ -35,7 +40,7 @@ public class RawmaterialController {
 						.getDefaultMessage());
 			}
 			rawmaterialService.addEntity(rawmaterial);
-			return new UserStatus(1, "Rawmaterial added Successfully !");
+			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -66,7 +71,7 @@ public class RawmaterialController {
 	public @ResponseBody UserStatus updateRawmaterial(@RequestBody Rawmaterial rawmaterial) {
 		try {
 			rawmaterialService.updateEntity(rawmaterial);
-			return new UserStatus(1, "Rawmaterial update Successfully !");
+			return new UserStatus(1,messageSource.getMessage(ERPConstants.RAW_MATERAIL_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -94,7 +99,7 @@ public class RawmaterialController {
 			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class,id);
 			rawmaterial.setIsactive(false);
 			rawmaterialService.updateEntity(rawmaterial);
-			return new UserStatus(1, "Rawmaterial deleted Successfully !");
+			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

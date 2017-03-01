@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RawmaterialorderinvoiceDao;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
-import com.nextech.erp.model.User;
 
 public class RawmaterialorderinvoiceDaoImpl extends
 		SuperDaoImpl<Rawmaterialorderinvoice> implements
@@ -42,7 +41,7 @@ public class RawmaterialorderinvoiceDaoImpl extends
 		criteria.add(Restrictions.eq("po_No", poNO));
 		Rawmaterialorderinvoice rawmaterialorderinvoice = criteria.list().size() > 0 ? (Rawmaterialorderinvoice) criteria.list().get(0)
 				: null;
-		session.close();
+		 session.close();
 		return rawmaterialorderinvoice;
 	}
 }

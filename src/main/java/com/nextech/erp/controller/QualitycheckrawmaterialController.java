@@ -87,7 +87,7 @@ public class QualitycheckrawmaterialController {
 	
 	private HashMap<Long,Integer> rmIdQuantityMap;
 	
-	//private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
+	private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
 	private static final int STATUS_RAW_MATERIAL_ORDER_INCOMPLETE=2;
 	private static final int STATUS_RAW_MATERIAL_ORDER_COMPLETE=3;
 
@@ -184,7 +184,7 @@ public class QualitycheckrawmaterialController {
 	}
 	
 	private void updateRawMaterialInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) throws Exception{
-		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
+		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
 	}
 
@@ -224,7 +224,7 @@ public class QualitycheckrawmaterialController {
 		rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 		rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
 		rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
-		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
+		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
 		rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
 	}
 	

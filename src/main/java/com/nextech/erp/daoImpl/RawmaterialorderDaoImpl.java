@@ -24,7 +24,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		criteria.add(Restrictions.eq("name", rmname));
 		Rawmaterialorder rawmaterialorder = criteria.list().size() > 0 ? (Rawmaterialorder) criteria
 				.list().get(0) : null;
-		session.close();
+		 //session.close();
 		return rawmaterialorder;
 	}
 
@@ -43,7 +43,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria
 				.list() : null;
-		session.close();
+		 session.close();
 		return rawmaterialorder;
 	}
 
@@ -63,7 +63,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria
 				.list() : null;
-		session.close();
+		 session.close();
 		return rawmaterialorder;
 
 	}

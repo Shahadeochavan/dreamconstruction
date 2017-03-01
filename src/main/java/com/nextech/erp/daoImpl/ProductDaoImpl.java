@@ -17,7 +17,7 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 		criteria.add(Restrictions.eq("name", productname));
 		Product product = criteria.list().size() > 0 ? (Product) criteria
 				.list().get(0) : null;
-		session.close();
+		 //session.close();
 		return product;
 	}
 
@@ -30,7 +30,7 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 		criteria.add(Restrictions.eq("partNumber", partNumber));
 		Product product = criteria.list().size() > 0 ? (Product) criteria
 				.list().get(0) : null;
-		session.close();
+		 //session.close();
 		return product;
 	}
 

@@ -28,7 +28,7 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("usertype.id", usertypeId));
 		List<Usertypepageassociation> usertypepageassociationList = criteria.list().size() > 0 ?  criteria.list(): null;
-		session.close();
+		 //session.close();
 		return usertypepageassociationList;
 	}
 
@@ -41,7 +41,7 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 		criteria.add(Restrictions.eq("usertype.id", usertypeId));
 		criteria.add(Restrictions.eq("page.id", pageId));
 		boolean hasAccess = (criteria.list().size() > 0 ?  true: false);
-		session.close(); 
+		 //session.close(); 
 		return hasAccess;
 	}
 	

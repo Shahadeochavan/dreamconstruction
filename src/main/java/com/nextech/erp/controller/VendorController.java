@@ -1,6 +1,7 @@
 package com.nextech.erp.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
@@ -37,12 +38,13 @@ public class VendorController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(
-			@Valid @RequestBody Vendor vendor, BindingResult bindingResult) {
+			@Valid @RequestBody Vendor vendor, BindingResult bindingResult,Map<String, Object> model) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			model.put("vendor", vendor);
 			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 
 			} else {

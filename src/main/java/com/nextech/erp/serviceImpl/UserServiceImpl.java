@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -31,5 +33,11 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	@Override
 	public User getUserByMobile(String mobile) throws Exception {
 		return userdao.getUserByMobile(mobile);
+	}
+
+	@Override
+	public List<User> getUserProfileByUserId(long id) throws Exception {
+		// TODO Auto-generated method stub
+		return userdao.getUserProfileByUserId(id);
 	}
 }

@@ -175,6 +175,19 @@ public class UserController {
 
 		return userList;
 	}
+	@RequestMapping(value = "userProfile/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<User> getUserProfile(@PathVariable("id") long id) {
+
+		List<User> userProfileList = null;
+		try {
+			userProfileList = userservice.getUserProfileByUserId(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return userProfileList;
+	}
 
 	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

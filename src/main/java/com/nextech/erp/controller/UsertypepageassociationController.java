@@ -7,6 +7,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
@@ -26,6 +29,9 @@ public class UsertypepageassociationController {
 
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPageAss(
@@ -36,6 +42,7 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			usertypepageassociation.setCreatedBy(messageSource.getMessage(ERPConstants.CREATED_BY, null, null));
 			usertypepageassociationService.addEntity(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");

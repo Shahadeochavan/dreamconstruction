@@ -24,4 +24,5 @@ public class ERPConstants {
     public static  String STATUS_RAW_MATERIAL_ORDER_INCOMPLETE = "statusRMOrderIncomplete";
     public static String STATUS_SECURITY_CHECK_INVOICE_IN ="statusSecurityCheck";
     public static String RM_ORDER_INVOICE_EXIT="rawMaterailOrderInvoiceExit";
+    public static String CREATED_BY="createdBy";
 }

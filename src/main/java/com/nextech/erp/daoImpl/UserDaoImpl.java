@@ -1,5 +1,7 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -8,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.UserDao;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.User;
 
 public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
@@ -54,5 +57,16 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 				: null;
 		 //session.close();
 		return user;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<User> getUserProfileByUserId(long id) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("id", id));
+		return criteria.list();
 	}
 }

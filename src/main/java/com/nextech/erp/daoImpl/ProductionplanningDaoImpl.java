@@ -1,6 +1,7 @@
 package com.nextech.erp.daoImpl;
 
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -8,28 +9,67 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.User;
 
-public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning> implements ProductionplanningDao  {
+public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
+		implements ProductionplanningDao {
 
 	@Autowired
 	SessionFactory sessionFactory;
 	Session session = null;
 	Transaction tx = null;
+
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
-			long pId,Date date) throws Exception {
+			long pId, Date date) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("product.id", pId));
-		criteria.add(Restrictions.eq("date",date));
-		Productionplanning productionplanning= criteria.list().size() > 0 ? (Productionplanning) criteria.list()
-				.get(0) : null;
-		 session.close();
+		criteria.add(Restrictions.eq("date", date));
+		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
+				.list().get(0) : null;
+		session.close();
 		return productionplanning;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productionplanning> getProductionplanningByCurrentMonth(
+			Date month) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("date", month));
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productionplanning> getProductionPlanByMonthYear(
+			String month_year) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("date", month_year));
+		return criteria.list();
+	}
+
+	@SuppressWarnings("unused")
+	@Override
+	public List<Productionplanning> updateProductionPlanByMonthYear(
+			String month_year) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("date", month_year));
+		return criteria.list();
 	}
 
 }

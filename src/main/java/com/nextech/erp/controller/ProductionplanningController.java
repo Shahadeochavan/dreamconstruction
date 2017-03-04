@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.status.UserStatus;
@@ -149,9 +150,9 @@ public class ProductionplanningController {
 	
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "productionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
+	public @ResponseBody List<ProductionPlan> getProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
 
-		List<Productionplanning> productionplanningList = null;
+		List<ProductionPlan> productionplanningList = null;
 		try {
 			productionplanningList = productionplanningService.getProductionPlanByMonthYear(month_year);
 

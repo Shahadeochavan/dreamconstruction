@@ -11,8 +11,11 @@ public interface ProductionplanningDao extends SuperDao<Productionplanning> {
 	
 	public List<Productionplanning> getProductionplanningByCurrentMonth(Date month) throws Exception;
 	
-	public List<Productionplanning> getProductionPlanByMonthYear(String month_year) throws Exception;
+	public List<Productionplanning> getProductionPlanByMonthYear(Date startDate,Date endDate) throws Exception;
 	
 	public List<Productionplanning> updateProductionPlanByMonthYear(String month_year) throws Exception;
+
+	public Productionplanning getProductionPlanningByDateAndProductId(Date productionDateStart,Date productionDateEnd,
+			long product_id);
 
 }

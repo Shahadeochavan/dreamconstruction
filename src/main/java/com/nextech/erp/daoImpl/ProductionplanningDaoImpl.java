@@ -52,11 +52,11 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productionplanning> getProductionPlanByMonthYear(
-			String month_year) throws Exception {
+			Date startDate, Date endDate) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
-		criteria.add(Restrictions.eq("date", month_year));
+		criteria.add(Restrictions.between("date", startDate, endDate));
 		return criteria.list();
 	}
 
@@ -70,6 +70,21 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("date", month_year));
 		return criteria.list();
+	}
+
+	@Override
+	public Productionplanning getProductionPlanningByDateAndProductId(Date productionDateStart,Date productionDateEnd,
+			long product_id) {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		//criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("product.id", product_id));
+		criteria.add(Restrictions.between("date", productionDateStart,productionDateEnd));
+		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
+				.list().get(0) : null;
+		session.close();
+		return productionplanning;
 	}
 
 }

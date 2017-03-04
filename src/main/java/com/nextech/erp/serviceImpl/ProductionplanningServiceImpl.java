@@ -1,6 +1,8 @@
 package com.nextech.erp.serviceImpl;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +14,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductionplanningDao;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.ProductProductionPlan;
 import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
@@ -32,17 +35,24 @@ public class ProductionplanningServiceImpl extends
 	}
 
 	@Override
-	public List<Productionplanning> getProductionplanningByCurrentMonth(
+	public List<Productionplanning> getProductionplanningByMonth(
 			Date month) throws Exception {
 		// TODO Auto-generated method stub
 		return productionplanningDao.getProductionplanningByCurrentMonth(month);
 	}
 
 	@Override
-	public List<ProductionPlan> getProductionPlanByMonthYear(
-			String month_year) throws Exception {
-		List<Productionplanning> productionplanningList = productionplanningDao.getProductionPlanByMonthYear(month_year);
-		return getProductionPlan(getProductProductPlanMap(productionplanningList), month_year);
+	public List<ProductionPlan> getProductionPlanForCurrentMonth(
+			) throws Exception {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date());
+		cal.set(Calendar.DAY_OF_MONTH, 1); 
+		int myMonth=cal.get(Calendar.MONTH);
+		Date startDate = cal.getTime();
+		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
+		Date endDate = cal.getTime();
+		List<Productionplanning> productionplanningList = productionplanningDao.getProductionPlanByMonthYear(startDate,endDate);
+		return getProductionPlan(getProductProductPlanMap(productionplanningList), new SimpleDateFormat("MM-yyyy").format(new Date()));
 		//return null;
 	}
 
@@ -97,6 +107,66 @@ public class ProductionplanningServiceImpl extends
 			String month_year) throws Exception {
 		// TODO Auto-generated method stub
 		return productionplanningDao.updateProductionPlanByMonthYear(month_year);
+	}
+
+	@Override
+	public List<Productionplanning> createProductionPlanMonthYear(
+			List<Product> productList,String month_year) throws Exception {
+		List<Productionplanning> productionPlanList = new ArrayList<Productionplanning>();
+		Productionplanning productionplanning = null;
+		Calendar cal = Calendar.getInstance();
+		
+		for (Iterator<Product> iterator = productList.iterator(); iterator.hasNext();) {
+			Product product = (Product) iterator.next();
+			cal.setTime(new Date());
+			cal.set(Calendar.DAY_OF_MONTH, 1); 
+			int myMonth=cal.get(Calendar.MONTH);
+
+			while (myMonth==cal.get(Calendar.MONTH)) {
+				productionplanning = new Productionplanning();
+				productionplanning.setProduct(product);
+				productionplanning.setDate(cal.getTime());
+				productionplanningDao.add(productionplanning);
+				productionPlanList.add(productionplanning);
+			  System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
+			  cal.add(Calendar.DAY_OF_MONTH, 1);
+			}
+			
+		}
+		
+		return productionPlanList;
+	}
+
+	@Override
+	public void updateProductionplanningForCurrentMonth(
+			List<ProductionPlan> productionplanningList) throws Exception {
+		Calendar cal = Calendar.getInstance();
+		for (Iterator<ProductionPlan> iterator = productionplanningList.iterator(); iterator
+				.hasNext();) {
+			ProductionPlan productionPlan = (ProductionPlan) iterator.next();
+			List<ProductProductionPlan> productProductionPlans = productionPlan.getProductProductionPlan();
+			for (Iterator<ProductProductionPlan> iterator2 = productProductionPlans.iterator(); iterator2
+					.hasNext();) {
+				ProductProductionPlan productProductionPlan = (ProductProductionPlan) iterator2
+						.next();
+				cal.setTime(productProductionPlan.getProductionDate());
+				cal.set(Calendar.HOUR, 0);
+				cal.set(Calendar.MINUTE, 0);
+				cal.set(Calendar.SECOND, 0);
+				Date productionDateStart = cal.getTime();
+				cal.set(Calendar.HOUR, 23);
+				cal.set(Calendar.MINUTE, 59);
+				cal.set(Calendar.SECOND, 59);
+				Date productionDateEnd = cal.getTime();
+				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProduct_id());
+				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
+				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
+				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
+				productionplanningDao.update(productionplanning);
+			}
+			
+			
+		}
 	}
 
 }

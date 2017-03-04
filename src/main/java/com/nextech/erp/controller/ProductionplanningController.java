@@ -20,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.status.UserStatus;
 
@@ -32,6 +34,10 @@ public class ProductionplanningController {
 
 	@Autowired
 	ProductionplanningService productionplanningService;
+	
+	@Autowired
+	ProductService productService;
+	
 	@Autowired
 	private MessageSource messageSource;
 
@@ -116,6 +122,18 @@ public class ProductionplanningController {
 			return new UserStatus(0, e.toString());
 		}
 	}
+	
+	
+	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList) {
+		try {
+			productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList);
+			return new UserStatus(1, "Productionplanning update Successfully !");
+		} catch (Exception e) {
+			 e.printStackTrace();
+			return new UserStatus(0, e.toString());
+		}
+	}
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -133,13 +151,13 @@ public class ProductionplanningController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:8080")
-	@RequestMapping(value = "productionPlanningForCurrentMonth/{month}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionplanningForCurrentMonth(@PathVariable("month") Date month) {
+	@RequestMapping(value = "getProductionplanningByMonth/{month}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> getProductionplanningByMonth(@PathVariable("month") Date month) {
 
 		List<Productionplanning> productionplanningList = null;
 		try {
 		//	productionplanningList = productionplanningService.getEntityList(Productionplanning.class);
-			productionplanningList = productionplanningService.getProductionplanningByCurrentMonth(month);
+			productionplanningList = productionplanningService.getProductionplanningByMonth(month);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,12 +167,12 @@ public class ProductionplanningController {
 	}
 	
 	@CrossOrigin(origins = "http://localhost:8080")
-	@RequestMapping(value = "productionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<ProductionPlan> getProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
+	@RequestMapping(value = "getProductionPlanForCurrentMonth", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<ProductionPlan> getProductionPlanMonthYear() {
 
 		List<ProductionPlan> productionplanningList = null;
 		try {
-			productionplanningList = productionplanningService.getProductionPlanByMonthYear(month_year);
+			productionplanningList = productionplanningService.getProductionPlanForCurrentMonth();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -169,6 +187,23 @@ public class ProductionplanningController {
 		List<Productionplanning> productionplanningList = null;
 		try {
 			productionplanningList = productionplanningService.updateProductionPlanByMonthYear(month_year);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productionplanningList;
+	}
+	
+	@CrossOrigin(origins = "http://localhost:8080")
+	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
+
+		List<Productionplanning> productionplanningList = null;
+		List<Product> productList = null;
+		try {
+			productList = productService.getEntityList(Product.class);
+			productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year);
 
 		} catch (Exception e) {
 			e.printStackTrace();

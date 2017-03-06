@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.User;
 
 public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		implements ProductionplanningDao {

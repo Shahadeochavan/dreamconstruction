@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.status.UserStatus;
 @Controller
@@ -30,7 +31,7 @@ public class RawmaterialController {
 	
 	@Autowired
 	private MessageSource messageSource;
-
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterial(
 			@Valid @RequestBody Rawmaterial rawmaterial, BindingResult bindingResult) {
@@ -39,6 +40,7 @@ public class RawmaterialController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			rawmaterial.setCreatedBy((int) Long.parseLong(messageSource.getMessage(ERPConstants.CREATED_BY, null, null)));
 			rawmaterialService.addEntity(rawmaterial);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
@@ -104,6 +106,19 @@ public class RawmaterialController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	@RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterialvendorassociation> getRawmaterialForVendor(@PathVariable("VendorId") long id) {
+
+		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
+		try {
+			rawmaterialvendorassociationList = rawmaterialService.getRawmaterialByVenodrId(id);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return rawmaterialvendorassociationList;
 	}
 	
 	@RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")

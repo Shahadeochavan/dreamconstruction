@@ -1,11 +1,8 @@
 package com.nextech.erp.controller;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderassociationService;

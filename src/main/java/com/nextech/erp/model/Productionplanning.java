@@ -30,7 +30,7 @@ public class Productionplanning implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date date;
 
 	@Column(name="dispatch_quantity")

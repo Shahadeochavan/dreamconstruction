@@ -9,6 +9,7 @@ import com.nextech.erp.dao.RawmaterialDao;
 import com.nextech.erp.dao.RawmaterialorderassociationDao;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorderassociation;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.service.RawmaterialService;
 
 public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> implements RawmaterialService {
@@ -29,5 +30,12 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 			}
 		}
 		return rawmaterials;
+	}
+
+	@Override
+	public List<Rawmaterialvendorassociation> getRawmaterialByVenodrId(long id)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return rawmaterialDao.getRawmaterialByVenodrId(id);
 	}
 }

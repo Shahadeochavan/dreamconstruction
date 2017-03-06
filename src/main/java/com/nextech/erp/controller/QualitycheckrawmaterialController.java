@@ -208,6 +208,9 @@ public class QualitycheckrawmaterialController {
 		if(rawmaterialinventory == null){
 			rawmaterialinventory = new Rawmaterialinventory();
 			rawmaterialinventory.setRawmaterial(rawmaterial);
+			rawmaterialinventory.setIsactive(true);
+			rawmaterialinventory.setCreatedBy((int) Long.parseLong(messageSource.getMessage(ERPConstants.CREATED_BY, null, null)));
+			rawmaterialinventoryService.addEntity(rawmaterialinventory);
 		}
 		rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
 		rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));

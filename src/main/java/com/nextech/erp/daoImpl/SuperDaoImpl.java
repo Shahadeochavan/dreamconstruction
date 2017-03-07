@@ -50,7 +50,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		criteria.add(Restrictions.eq("isactive", true));
 		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		List<T> list = criteria.list();
-		 session.close();
+	//	 session.close();
 		return list;
 	}
 
@@ -62,7 +62,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		session.beginTransaction();
 		session.delete(o);
 		tx.commit();
-		 session.close();
+		// session.close();
 		return true;
 	}
 
@@ -72,7 +72,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		session.beginTransaction();
 		session.update(bean);
 		session.getTransaction().commit();
-		 session.close();
+		// session.close();
 		return bean;
 	}
 

@@ -164,7 +164,6 @@ public class ProductorderController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorder> getProductorder() {
 

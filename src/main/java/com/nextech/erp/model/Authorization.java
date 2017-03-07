@@ -6,6 +6,7 @@ public class Authorization {
 	private String userid;
 	private String token;
 	private Date updatedDate;
+	private String password;
 	
 	public String getUserid() {
 		return userid;
@@ -24,5 +25,12 @@ public class Authorization {
 	}
 	public void setUpdatedDate(Date updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}	
+	
 }

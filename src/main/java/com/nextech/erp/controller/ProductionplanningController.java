@@ -226,5 +226,31 @@ public class ProductionplanningController {
 
 	}
 	
+	@RequestMapping(value = "getProductionPlanDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Productionplanning getProductionPlanDateAndProductId(@PathVariable("date") Date date,@PathVariable("pID")long pId) {
+
+		Productionplanning productionplanning = null;
+		try {
+			productionplanning = productionplanningService.getProductionplanByDateAndProductId(date,pId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productionplanning;
+	}
+	
+	@RequestMapping(value = "getProductionPlanDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") Date date) {
+
+		List<Productionplanning> productionplanning = null;
+		try {
+			productionplanning = productionplanningService.getProductionplanByDate(date);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productionplanning;
+	}
+	
 }
 

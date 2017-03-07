@@ -40,7 +40,11 @@ public class ProductionplanningServiceImpl extends
 		// TODO Auto-generated method stub
 		return productionplanningDao.getProductionplanningByCurrentMonth(month);
 	}
-
+	@Override
+	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId) throws Exception {
+		// TODO Auto-generated method stub
+		return productionplanningDao.getProductionplanByDateAndProductId(date,pId);
+	}
 	@Override
 	public List<ProductionPlan> getProductionPlanForCurrentMonth(
 			) throws Exception {
@@ -125,6 +129,7 @@ public class ProductionplanningServiceImpl extends
 			while (myMonth==cal.get(Calendar.MONTH)) {
 				productionplanning = new Productionplanning();
 				productionplanning.setProduct(product);
+				productionplanning.setIsactive(true);
 				productionplanning.setDate(cal.getTime());
 				productionplanningDao.add(productionplanning);
 				productionPlanList.add(productionplanning);
@@ -169,4 +174,10 @@ public class ProductionplanningServiceImpl extends
 		}
 	}
 
+	@Override
+	public List<Productionplanning> getProductionplanByDate(Date date)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return productionplanningDao.getProductionplanByDate(date);
+	}
 }

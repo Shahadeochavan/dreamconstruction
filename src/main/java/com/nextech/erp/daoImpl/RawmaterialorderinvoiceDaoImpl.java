@@ -41,7 +41,7 @@ public class RawmaterialorderinvoiceDaoImpl extends
 		criteria.add(Restrictions.eq("po_No", poNO));
 		Rawmaterialorderinvoice rawmaterialorderinvoice = criteria.list().size() > 0 ? (Rawmaterialorderinvoice) criteria.list().get(0)
 				: null;
-		 session.close();
+		// session.close();
 		return rawmaterialorderinvoice;
 	}
 }

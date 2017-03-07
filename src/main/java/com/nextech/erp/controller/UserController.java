@@ -46,13 +46,13 @@ public class UserController {
 
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	UserTypeService userTypeService;
-	
+
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
 			BindingResult bindingResult, HttpServletRequest request) {
@@ -63,16 +63,20 @@ public class UserController {
 			}
 			if ((Boolean) request.getAttribute("auth_token")) {
 				if (userservice.getUserByUserId(user.getUserid()) == null) {
+					
 				} else {
-					return new UserStatus(1, messageSource.getMessage(ERPConstants.USER_ID, null, null));
+					return new UserStatus(1, messageSource.getMessage(
+							ERPConstants.USER_ID, null, null));
 				}
 				if (userservice.getUserByEmail(user.getEmail()) == null) {
 				} else {
-					return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+					return new UserStatus(1, messageSource.getMessage(
+							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 				if (userservice.getUserByMobile(user.getMobile()) == null) {
 				} else {
-					return new UserStatus(1, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+					return new UserStatus(1, messageSource.getMessage(
+							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 				userservice.addEntity(user);
 				return new UserStatus(1, "User added Successfully !");
@@ -109,18 +113,21 @@ public class UserController {
 			if (user2 != null && authenticate(user, user2)) {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
+				authorization.setPassword(user.getPassword());
 				authorization.setUpdatedDate(new Date());
 				String token = TokenFactory.createAccessJwtToken(user2);
 				System.out.println(token);
 				authorization.setToken(token);
 				response.addHeader("auth_token", token);
-				Usertype usertype = userTypeService.getEntityById(Usertype.class, user2.getUsertype().getId());
-				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService.getPagesByUsertype(usertype.getId());
+				Usertype usertype = userTypeService.getEntityById(
+						Usertype.class, user2.getUsertype().getId());
+				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService
+						.getPagesByUsertype(usertype.getId());
 				List<Page> pages = new ArrayList<Page>();
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
-				return new UserStatus(1, "User logged in Successfully !",pages);
+				return new UserStatus(1, "User logged in Successfully !", pages);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());
@@ -134,14 +141,20 @@ public class UserController {
 	}
 
 	private boolean authenticate(User formUser, User dbUser) {
-		return true;
+		if (formUser.getUserid().equals(dbUser.getUserid())
+				&& formUser.getPassword().equals(dbUser.getPassword())) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody User getUser(@PathVariable("id") long id) {
 		User user = null;
 		try {
-			user = userservice.getEntityById(User.class,id);
+			user = userservice.getEntityById(User.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -175,6 +188,7 @@ public class UserController {
 
 		return userList;
 	}
+
 	@RequestMapping(value = "userProfile/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<User> getUserProfile(@PathVariable("id") long id) {
 
@@ -194,7 +208,7 @@ public class UserController {
 	public @ResponseBody UserStatus deleteEmployee(@PathVariable("id") long id) {
 
 		try {
-			User user = userservice.getEntityById(User.class,id);
+			User user = userservice.getEntityById(User.class, id);
 			user.setIsactive(false);
 			userservice.updateEntity(user);
 			return new UserStatus(1, "User deleted Successfully !");

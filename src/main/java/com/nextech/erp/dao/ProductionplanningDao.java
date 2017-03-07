@@ -17,5 +17,9 @@ public interface ProductionplanningDao extends SuperDao<Productionplanning> {
 
 	public Productionplanning getProductionPlanningByDateAndProductId(Date productionDateStart,Date productionDateEnd,
 			long product_id);
+	
+	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId)throws Exception;
+	
+	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception;
 
 }

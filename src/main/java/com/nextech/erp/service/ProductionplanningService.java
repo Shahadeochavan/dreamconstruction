@@ -20,5 +20,9 @@ public interface ProductionplanningService extends CRUDService<Productionplannin
 	public List<Productionplanning> createProductionPlanMonthYear(List<Product> productList,String month_year) throws Exception;
 	
 	public void updateProductionplanningForCurrentMonth(List<ProductionPlan> productionplanningList) throws Exception;
+	
+	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId)throws Exception;
+	
+	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception;
 
 }

@@ -14,7 +14,7 @@ public class RawmaterialinventoryDaoImpl extends SuperDaoImpl<Rawmaterialinvento
 		Criteria criteria = session.createCriteria(Rawmaterialinventory.class);
 		criteria.add(Restrictions.eq("rawmaterial.id",id));
 		Rawmaterialinventory rawmaterialinventory = criteria.list().size() > 0 ? (Rawmaterialinventory) criteria.list().get(0) : null;
-		 session.close();
+	//	 session.close();
 		return rawmaterialinventory;
 	}
 

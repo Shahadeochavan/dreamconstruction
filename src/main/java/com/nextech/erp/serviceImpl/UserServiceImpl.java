@@ -40,4 +40,10 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		// TODO Auto-generated method stub
 		return userdao.getUserProfileByUserId(id);
 	}
+
+	@Override
+	public User getUserByPassword(String password) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

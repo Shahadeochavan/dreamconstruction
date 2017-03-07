@@ -69,4 +69,18 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		criteria.add(Restrictions.eq("id", id));
 		return criteria.list();
 	}
+
+	@Override
+	public User getUserByPassword(String password) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("password", password));
+		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
+				: null;
+		 //session.close();
+		return user;
+	}
 }

@@ -12,4 +12,6 @@ public interface UserDao extends SuperDao<User>{
 	public User getUserByMobile(String mobile) throws Exception;
 	
 	public List<User> getUserProfileByUserId(long id) throws Exception;
+	
+	public User getUserByPassword(String password) throws Exception;
 }

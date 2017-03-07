@@ -15,11 +15,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Page;
 import com.nextech.erp.model.User;
-import com.nextech.erp.model.Usertype;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
@@ -60,6 +58,7 @@ public class AjaxLoginProcessingFilter implements Filter {
 						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
 						String[] string = token.split("-");
 						User user = userService.getUserByUserId(string[0]);
+				//		user = userService.getUserByPassword(string[0]);
 						Page page = pageservice.getPageByUrl(url); 
 						if(user != null && user.getPassword().equals(string[1]) /*&& usertypepageassociationService.checkPageAccess(userTypeService.getEntityById(Usertype.class, user.getUsertype().getId()).getId(), page.getId())*/){
 							String str = string[string.length - 1];

@@ -9,7 +9,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.model.Productionplanning;
 
@@ -59,7 +58,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		return criteria.list();
 	}
 
-	@SuppressWarnings("unused")
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productionplanning> updateProductionPlanByMonthYear(
 			String month_year) throws Exception {
@@ -72,18 +71,45 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	}
 
 	@Override
-	public Productionplanning getProductionPlanningByDateAndProductId(Date productionDateStart,Date productionDateEnd,
-			long product_id) {
+	public Productionplanning getProductionPlanningByDateAndProductId(
+			Date productionDateStart, Date productionDateEnd, long product_id) {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
-		//criteria.add(Restrictions.eq("isactive", true));
+		// criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("product.id", product_id));
-		criteria.add(Restrictions.between("date", productionDateStart,productionDateEnd));
+		criteria.add(Restrictions.between("date", productionDateStart,
+				productionDateEnd));
 		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
 				.list().get(0) : null;
 		session.close();
 		return productionplanning;
+	}
+
+	@Override
+	public Productionplanning getProductionplanByDateAndProductId(Date date,
+			long pId) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("product.id", pId));
+		criteria.add(Restrictions.eq("date", date));
+		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
+				.list().get(0) : null;
+		session.close();
+		return productionplanning;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productionplanning> getProductionplanByDate(Date date)
+			throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("date", date));
+		return criteria.list();
 	}
 
 }

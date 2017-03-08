@@ -24,7 +24,7 @@ public class RawmaterialorderinvoiceServiceImpl extends
 	}
 
 	@Override
-	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(long invoiceNo,String vendorName,int poNo) throws Exception {
+	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String invoiceNo,String vendorName,int poNo) throws Exception {
 		return rawmaterialorderinvoiceDao.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(invoiceNo,vendorName,poNo);
 	}
 }

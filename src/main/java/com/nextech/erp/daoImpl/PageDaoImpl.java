@@ -26,7 +26,7 @@ public class PageDaoImpl extends SuperDaoImpl<Page> implements PageDao{
 		criteria.add(Restrictions.eq("url", url));
 		Page page = criteria.list().size() > 0 ? (Page) criteria.list()
 				.get(0) : null;
-		 //session.close();
+		 // //session.close();
 		return page;
 	}
 

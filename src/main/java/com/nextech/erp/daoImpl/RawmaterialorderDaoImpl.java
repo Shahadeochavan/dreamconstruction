@@ -8,6 +8,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
+import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Rawmaterialorder;
 
 public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
@@ -24,7 +25,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		criteria.add(Restrictions.eq("name", rmname));
 		Rawmaterialorder rawmaterialorder = criteria.list().size() > 0 ? (Rawmaterialorder) criteria
 				.list().get(0) : null;
-		 //session.close();
+		 // //session.close();
 		return rawmaterialorder;
 	}
 
@@ -43,7 +44,7 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria
 				.list() : null;
-		// session.close();
+		//  //session.close();
 		return rawmaterialorder;
 	}
 
@@ -63,8 +64,18 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria
 				.list() : null;
-		// session.close();
+		//  //session.close();
 		return rawmaterialorder;
 
+	}
+
+	@Override
+	public List<Rawmaterialorder> getRawmaterialorderByVendor(long vendorId)
+			throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
+		criteria.add(Restrictions.eq("vendor.id", vendorId));
+		return criteria.list();
 	}
 }

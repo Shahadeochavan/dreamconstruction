@@ -40,8 +40,8 @@ public class Productinventory implements Serializable {
 
 	private boolean isactive;
 
-	@NotBlank(message="{name should not be blank}")
-	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")
+	/*@NotBlank(message="{name should not be blank}")
+	@Size(min = 2, max = 255, message = "{name sholud be greater than 2 or less than 255 characters}")*/
 	private String name;
 
 

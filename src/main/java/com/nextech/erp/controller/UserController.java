@@ -114,7 +114,10 @@ public class UserController {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
 				authorization.setPassword(user.getPassword());
+				authorization.setFirstName(user2.getFirstName());
+				authorization.setLastName(user2.getLastName());
 				authorization.setUpdatedDate(new Date());
+				System.out.println("user is"+user2.getFirstName());
 				String token = TokenFactory.createAccessJwtToken(user2);
 				System.out.println(token);
 				authorization.setToken(token);
@@ -143,6 +146,9 @@ public class UserController {
 	private boolean authenticate(User formUser, User dbUser) {
 		if (formUser.getUserid().equals(dbUser.getUserid())
 				&& formUser.getPassword().equals(dbUser.getPassword())) {
+			dbUser.getFirstName();
+			dbUser.getLastName();
+			System.out.println("First name is :"+dbUser.getFirstName()+"Last name is :"+dbUser.getLastName());
 			return true;
 		} else {
 			return false;

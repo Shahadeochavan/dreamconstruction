@@ -28,7 +28,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 		criteria.add(Restrictions.eq("rawmaterial.id",rmid));
 		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list()
 				.get(0) : null;
-		 //session.close();
+		 // //session.close();
 		return Productrawmaterialassociation;
 	}
 }

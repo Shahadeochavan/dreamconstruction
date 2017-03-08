@@ -24,7 +24,7 @@ public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("companyName", companyName));
 		Vendor vendor = criteria.list().size() > 0 ? (Vendor) criteria.list().get(0) : null;
-		 //session.close();
+		 // //session.close();
 		return vendor;
 	}
 
@@ -36,7 +36,7 @@ public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("email", email));
 		Vendor vendor = criteria.list().size() > 0 ? (Vendor) criteria.list().get(0) : null;
-		 //session.close();
+		 // //session.close();
 		return vendor;
 	}
 }

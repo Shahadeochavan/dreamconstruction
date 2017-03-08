@@ -31,17 +31,17 @@ public class RawmaterialorderinvoiceDaoImpl extends
 		return criteria.list();
 	}
 	@Override
-	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(long invoiceNo,String vendorName,int poNO) throws Exception {
+	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String invoiceNo,String vendorName,int poNO) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorderinvoice.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("invoice_No", (int)invoiceNo));
+		criteria.add(Restrictions.eq("invoice_No", invoiceNo));
 		criteria.add(Restrictions.eq("vendorname", vendorName));
 		criteria.add(Restrictions.eq("po_No", poNO));
 		Rawmaterialorderinvoice rawmaterialorderinvoice = criteria.list().size() > 0 ? (Rawmaterialorderinvoice) criteria.list().get(0)
 				: null;
-		// session.close();
+		//  //session.close();
 		return rawmaterialorderinvoice;
 	}
 }

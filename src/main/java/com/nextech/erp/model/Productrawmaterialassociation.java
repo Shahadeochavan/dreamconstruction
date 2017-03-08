@@ -30,8 +30,8 @@ public class Productrawmaterialassociation implements Serializable {
 
 	private boolean isactive;
 
-	 @Min(value = 0, message = "please enter quantity")
-	 @Max(value = 100, message = "quantity should be maximum 100")
+/*	 @Min(value = 0, message = "please enter quantity")
+	 @Max(value = 100, message = "quantity should be maximum 100")*/
 	private int quantity;
 
 	@Column(name="updated_by")

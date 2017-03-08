@@ -31,7 +31,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		criteria.add(Restrictions.eq("date", date));
 		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
 				.list().get(0) : null;
-		session.close();
+		 //session.close();
 		return productionplanning;
 	}
 
@@ -82,7 +82,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 				productionDateEnd));
 		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
 				.list().get(0) : null;
-		session.close();
+		 //session.close();
 		return productionplanning;
 	}
 
@@ -97,7 +97,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		criteria.add(Restrictions.eq("date", date));
 		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
 				.list().get(0) : null;
-		session.close();
+		 //session.close();
 		return productionplanning;
 	}
 

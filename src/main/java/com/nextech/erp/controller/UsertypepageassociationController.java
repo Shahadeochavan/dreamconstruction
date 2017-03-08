@@ -42,6 +42,7 @@ public class UsertypepageassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			usertypepageassociation.setIsactive(true);
 			usertypepageassociation.setCreatedBy(messageSource.getMessage(ERPConstants.CREATED_BY, null, null));
 			usertypepageassociationService.addEntity(usertypepageassociation);
 			return new UserStatus(1,

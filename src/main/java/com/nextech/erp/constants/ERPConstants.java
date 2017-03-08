@@ -17,6 +17,9 @@ public class ERPConstants {
     public static String RM_QUALITY_CHECK="rawMaterilQualityCheck";
     public static String INFO_QUALITY_CHECK="infoProvideForQualityCheck";
     public static String PRODUCT_RM_ASSO_EXIT="productRMExit";
+    public static String VENDOR_RM_ASSO_EXIT="vendorRMExit";
+    public static String PRODUCT_INVENTORY_ASSO_EXIT="productInventoryExit";
+    public static String RAW_MATERIAL_INVENTORY="rawMaterialInventoryExit";
     public static String PRODUCT_DATE_EXIT="productDateExit";
     public static String RAW_MATERAIL_ADD="rawMaterilAdd";
     public static String RAW_MATERAIL_UPDATE="rawMaterilUpdate";

@@ -58,7 +58,6 @@ public class AjaxLoginProcessingFilter implements Filter {
 						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
 						String[] string = token.split("-");
 						User user = userService.getUserByUserId(string[0]);
-				//		user = userService.getUserByPassword(string[0]);
 						Page page = pageservice.getPageByUrl(url); 
 						if(user != null && user.getPassword().equals(string[1]) /*&& usertypepageassociationService.checkPageAccess(userTypeService.getEntityById(Usertype.class, user.getUsertype().getId()).getId(), page.getId())*/){
 							String str = string[string.length - 1];
@@ -93,6 +92,7 @@ public class AjaxLoginProcessingFilter implements Filter {
 				}
 			} else {
 				request.setAttribute("auth_token", true);
+				request.setAttribute("current_token", true);
 				chain.doFilter(request, response);
 			}
 		}

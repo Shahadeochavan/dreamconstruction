@@ -1,10 +1,13 @@
 package com.nextech.erp.controller;
 
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.status.UserStatus;
@@ -24,6 +28,8 @@ public class ProductinventoryController {
 
 	@Autowired
 	ProductinventoryService productinventoryService;
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventory(
@@ -33,7 +39,13 @@ public class ProductinventoryController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			productinventoryService.addEntity(productinventory);
+			if (productinventoryService.getProductinventoryByProductId(
+					productinventory.getProduct().getId()) == null){
+				productinventoryService.addEntity(productinventory);
+			}	
+			else
+				return new UserStatus(1, messageSource.getMessage(
+						ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
 			return new UserStatus(1, "Productinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

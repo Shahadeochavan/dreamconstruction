@@ -43,9 +43,11 @@ public class ProductRMAssoController {
 			}
 			if (productRMAssoService.getPRMAssociationByPidRmid(
 					productrawmaterialassociation.getProduct().getId(),
-					productrawmaterialassociation.getRawmaterial().getId()) == null)
+					productrawmaterialassociation.getRawmaterial().getId()) == null){
+				productrawmaterialassociation.setIsactive(true);
 				productRMAssoService
 						.addEntity(productrawmaterialassociation);
+			}
 			else
 				return new UserStatus(1,
 						messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));

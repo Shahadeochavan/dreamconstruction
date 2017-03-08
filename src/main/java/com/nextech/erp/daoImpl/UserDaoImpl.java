@@ -29,7 +29,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
-		 //session.close();
+		 // //session.close();
 		return user;
 	}
 
@@ -42,7 +42,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		criteria.add(Restrictions.eq("email", email));
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
-		 //session.close();
+		 // //session.close();
 		return user;
 	}
 
@@ -55,7 +55,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		criteria.add(Restrictions.eq("mobile", mobile));
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
-		 //session.close();
+		 // //session.close();
 		return user;
 	}
 
@@ -80,7 +80,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
 				: null;
-		 //session.close();
+		 // //session.close();
 		return user;
 	}
 }

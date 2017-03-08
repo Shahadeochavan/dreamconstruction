@@ -7,6 +7,8 @@ public class Authorization {
 	private String token;
 	private Date updatedDate;
 	private String password;
+	private String firstName;
+	private String lastName;
 	
 	public String getUserid() {
 		return userid;
@@ -31,6 +33,18 @@ public class Authorization {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}	
 	
 }

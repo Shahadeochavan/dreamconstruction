@@ -9,6 +9,6 @@ public interface RawmaterialorderinvoiceDao extends
 	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByStatusId(
 			long id) throws Exception;
 	
-	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(long InVoiceNO,String VendorName,int poNo) throws Exception;
+	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String InVoiceNO,String VendorName,int poNo) throws Exception;
 
 }

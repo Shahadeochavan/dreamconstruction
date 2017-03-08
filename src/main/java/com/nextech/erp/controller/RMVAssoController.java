@@ -5,15 +5,16 @@ import javax.persistence.PersistenceException;
 import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.status.UserStatus;
@@ -24,16 +25,28 @@ public class RMVAssoController {
 	@Autowired
 	RMVAssoService rmvAssoService;
 
+	@Autowired
+	private MessageSource messageSource;
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialvendorassociation(
-			@Valid @RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation, BindingResult bindingResult) {
+			@Valid @RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			rmvAssoService.addEntity(rawmaterialvendorassociation);
-			return new UserStatus(1, "Rawmaterialvendorassociation added Successfully !");
+			if (rmvAssoService.getRMVAssoByVendorIdRMId(
+					rawmaterialvendorassociation.getVendor().getId(),
+					rawmaterialvendorassociation.getRawmaterial().getId()) == null){
+				rmvAssoService.addEntity(rawmaterialvendorassociation);
+			}	
+			else
+				return new UserStatus(1, messageSource.getMessage(
+						ERPConstants.VENDOR_RM_ASSO_EXIT, null, null));
+			return new UserStatus(1,
+					"Rawmaterialvendorassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -50,10 +63,12 @@ public class RMVAssoController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Rawmaterialvendorassociation getRawmaterialvendorassociation(@PathVariable("id") long id) {
+	public @ResponseBody Rawmaterialvendorassociation getRawmaterialvendorassociation(
+			@PathVariable("id") long id) {
 		Rawmaterialvendorassociation rawmaterialvendorassociation = null;
 		try {
-			rawmaterialvendorassociation = rmvAssoService.getEntityById(Rawmaterialvendorassociation.class,id);
+			rawmaterialvendorassociation = rmvAssoService.getEntityById(
+					Rawmaterialvendorassociation.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -61,10 +76,12 @@ public class RMVAssoController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialvendorassociation(@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation) {
+	public @ResponseBody UserStatus updateRawmaterialvendorassociation(
+			@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation) {
 		try {
 			rmvAssoService.updateEntity(rawmaterialvendorassociation);
-			return new UserStatus(1, "Rawmaterialvendorassociation update Successfully !");
+			return new UserStatus(1,
+					"Rawmaterialvendorassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -76,7 +93,8 @@ public class RMVAssoController {
 
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
 		try {
-			rawmaterialvendorassociationList = rmvAssoService.getEntityList(Rawmaterialvendorassociation.class);
+			rawmaterialvendorassociationList = rmvAssoService
+					.getEntityList(Rawmaterialvendorassociation.class);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -84,15 +102,17 @@ public class RMVAssoController {
 
 		return rawmaterialvendorassociationList;
 	}
-
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deleteRawmaterialvendorassociation(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteRawmaterialvendorassociation(
+			@PathVariable("id") long id) {
 
 		try {
-			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService.getEntityById(Rawmaterialvendorassociation.class,id);
+			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService
+					.getEntityById(Rawmaterialvendorassociation.class, id);
 			rawmaterialvendorassociation.setIsactive(false);
 			rmvAssoService.updateEntity(rawmaterialvendorassociation);
-			return new UserStatus(1, "Rawmaterialvendorassociation deleted Successfully !");
+			return new UserStatus(1,
+					"Rawmaterialvendorassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

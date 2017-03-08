@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
@@ -58,6 +59,7 @@ public class RawmaterialorderController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			rawmaterialorder.setIsactive(true);
 			rawmaterialorderService.addEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -153,6 +155,7 @@ public class RawmaterialorderController {
 		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
 				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
+				rawmaterialorderassociation.setIsactive(true);
 				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
 				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
 			}
@@ -217,6 +220,18 @@ public class RawmaterialorderController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	@RequestMapping(value = "getVendorOrder/{VENDOR-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterialorder> getRawmaterialorderVendor(@PathVariable("VENDOR-ID") long vendorId) {
+
+		List<Rawmaterialorder> rawmaterialorderList = null;
+		try {
+			rawmaterialorderList = rawmaterialorderService.getRawmaterialorderByVendor(vendorId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return rawmaterialorderList;
 	}
 	
 }

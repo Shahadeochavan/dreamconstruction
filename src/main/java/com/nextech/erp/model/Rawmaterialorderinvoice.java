@@ -43,7 +43,7 @@ public class Rawmaterialorderinvoice implements Serializable {
 
 	private Time intime;
 
-	private int invoice_No;
+	private String invoice_No;
 
 	private boolean isactive;
 
@@ -151,11 +151,11 @@ public class Rawmaterialorderinvoice implements Serializable {
 		this.intime = intime;
 	}
 
-	public int getInvoice_No() {
+	public String getInvoice_No() {
 		return this.invoice_No;
 	}
 
-	public void setInvoice_No(int invoice_No) {
+	public void setInvoice_No(String invoice_No) {
 		this.invoice_No = invoice_No;
 	}
 

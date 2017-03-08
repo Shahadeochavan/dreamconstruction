@@ -72,7 +72,7 @@ public class Rawmaterialorder implements Serializable {
 
 	//bi-directional many-to-one association to Rawmaterialorderassociation
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterialorder")
 	private List<Rawmaterialorderassociation> rawmaterialorderassociations;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory

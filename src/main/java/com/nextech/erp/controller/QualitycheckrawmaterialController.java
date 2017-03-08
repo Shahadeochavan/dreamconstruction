@@ -226,6 +226,7 @@ public class QualitycheckrawmaterialController {
 		Rawmaterialinventoryhistory rawmaterialinventoryhistory = new Rawmaterialinventoryhistory();
 		rawmaterialinventoryhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 		rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
+		rawmaterialinventoryhistory.setIsactive(true);
 		rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
 		rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);

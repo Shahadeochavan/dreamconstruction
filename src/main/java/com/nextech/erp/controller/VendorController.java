@@ -39,7 +39,7 @@ public class VendorController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			model.put("vendor", vendor);
+		
 			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 
 			} else {
@@ -114,5 +114,8 @@ public class VendorController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	private void saveVendor(){
+		
 	}
 }

@@ -25,7 +25,7 @@ public class StatustransitionDaoImpl extends SuperDaoImpl<Statustransition> impl
 		criteria.add(Restrictions.eq("isNotificationEmail", email));
 		Statustransition statustransition= criteria.list().size() > 0 ? (Statustransition) criteria.list()
 				.get(0) : null;
-				 session.close();
+				  //session.close();
 				return statustransition;
 	}
 }

@@ -1,12 +1,7 @@
 package com.nextech.erp.filter;
 
-import java.io.IOException;
 import java.util.Date;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
-import org.springframework.web.context.support.WebApplicationContextUtils;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Page;
 import com.nextech.erp.model.User;
@@ -22,7 +19,7 @@ import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
-public class AjaxLoginProcessingFilter implements Filter {
+public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 
 	@Autowired
 	UserService userService;
@@ -40,16 +37,12 @@ public class AjaxLoginProcessingFilter implements Filter {
 	UsertypepageassociationService usertypepageassociationService;
 
 	@Autowired
-	 PageService pageservice;
+	PageService pageservice;
+	
 	
 	@Override
-	public void destroy() {
-
-	}
-
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response,
-			FilterChain chain) throws IOException, ServletException {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
 		if (request instanceof HttpServletRequest) {
 			String url = ((HttpServletRequest) request).getRequestURL().toString();
 			if (!url.contains("login")) {
@@ -67,24 +60,24 @@ public class AjaxLoginProcessingFilter implements Filter {
 								System.out.println(generatedToken);
 								((HttpServletResponse) response).addHeader("auth_token", generatedToken);
 								request.setAttribute("auth_token", true);
-								chain.doFilter(request, response);
+								return true;
 							} else {
-								HttpServletResponse HTTPresponse = setResponse(request, response);
-								HTTPresponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+								HttpServletResponse httpServletResponse = setResponse(request, response);
+								httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 							}
 						}
 						else{
-							HttpServletResponse HTTPresponse = setResponse(request, response);
-							HTTPresponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+							HttpServletResponse httpServletResponse = setResponse(request, response);
+							httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 						}
 					}else{
 						System.out.println("Header Access-Control-Request-Headers : " + ((HttpServletRequest) request).getHeader("Access-Control-Request-Headers"));
 						if(((HttpServletRequest) request).getHeader("Access-Control-Request-Headers")==null){
-						HttpServletResponse HTTPresponse = setResponse(request, response);
-						HTTPresponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+						HttpServletResponse httpServletResponse = setResponse(request, response);
+						httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 						}else{
 							request.setAttribute("auth_token", true);
-							chain.doFilter(request, response);
+							return true;
 						}
 					}
 				} catch (Exception e) {
@@ -93,31 +86,40 @@ public class AjaxLoginProcessingFilter implements Filter {
 			} else {
 				request.setAttribute("auth_token", true);
 				request.setAttribute("current_token", true);
-				chain.doFilter(request, response);
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@Override
-	public void init(FilterConfig cfg) throws ServletException {
-		userService = (UserService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("userservice");
-		messageSource = (MessageSource)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("messageSource");
-		userTypeService = (UserTypeService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("userTypeService");
-		usertypepageassociationService = (UsertypepageassociationService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("usertypepageassociationService");
-		pageservice = (PageService)WebApplicationContextUtils. getRequiredWebApplicationContext(cfg.getServletContext()).getBean("pageservice");
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		super.postHandle(request, response, handler, modelAndView);
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+			throws Exception {
+		super.afterCompletion(request, response, handler, ex);
+	}
+
+	@Override
+	public void afterConcurrentHandlingStarted(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		super.afterConcurrentHandlingStarted(request, response, handler);
 	}
 	
-	
 	private HttpServletResponse setResponse(ServletRequest request,ServletResponse response){
-		HttpServletResponse HTTPresponse = (HttpServletResponse) response;
-		HTTPresponse.reset();
-		HTTPresponse.setHeader("Content-Type", "application/json;charset=UTF-8");
-		HTTPresponse.setHeader("Access-Control-Allow-Origin", ((HttpServletRequest) request).getHeader("Origin"));
-		HTTPresponse.setHeader("Access-Control-Allow-Credentials", "true");
-		HTTPresponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-		HTTPresponse.setHeader("Access-Control-Max-Age", "3600");
-		HTTPresponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, auth_token, Origin");
-		HTTPresponse.setHeader("Access-Control-Expose-Headers", "auth_token, Origin");
-		return HTTPresponse;
+		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+		httpServletResponse.reset();
+		httpServletResponse.setHeader("Content-Type", "application/json;charset=UTF-8");
+		httpServletResponse.setHeader("Access-Control-Allow-Origin", "*");
+		httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
+		httpServletResponse.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+		httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
+		httpServletResponse.setHeader("Access-Control-Allow-Headers", "Content-Type, Accept, X-Requested-With, remember-me, auth_token, Origin");
+		httpServletResponse.setHeader("Access-Control-Expose-Headers", "auth_token, Origin");
+		return httpServletResponse;
 	}
 }

@@ -65,17 +65,17 @@ public class UserController {
 				if (userservice.getUserByUserId(user.getUserid()) == null) {
 					
 				} else {
-					return new UserStatus(1, messageSource.getMessage(
+					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.USER_ID, null, null));
 				}
 				if (userservice.getUserByEmail(user.getEmail()) == null) {
 				} else {
-					return new UserStatus(1, messageSource.getMessage(
+					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 				if (userservice.getUserByMobile(user.getMobile()) == null) {
 				} else {
-					return new UserStatus(1, messageSource.getMessage(
+					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 				userservice.addEntity(user);
@@ -114,8 +114,6 @@ public class UserController {
 				Authorization authorization = new Authorization();
 				authorization.setUserid(user.getUserid());
 				authorization.setPassword(user.getPassword());
-				authorization.setFirstName(user2.getFirstName());
-				authorization.setLastName(user2.getLastName());
 				authorization.setUpdatedDate(new Date());
 				System.out.println("user is"+user2.getFirstName());
 				String token = TokenFactory.createAccessJwtToken(user2);
@@ -130,7 +128,7 @@ public class UserController {
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
-				return new UserStatus(1, "User logged in Successfully !", pages);
+				return new UserStatus(1, "User logged in Successfully !", pages,user2);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());

@@ -41,6 +41,7 @@ public class ProductinventoryController {
 			}
 			if (productinventoryService.getProductinventoryByProductId(
 					productinventory.getProduct().getId()) == null){
+				productinventory.setIsactive(true);
 				productinventoryService.addEntity(productinventory);
 			}	
 			else
@@ -111,4 +112,8 @@ public class ProductinventoryController {
 		}
 
 	}
+	private void saveProductInventory(){
+		
+	}
+
 }

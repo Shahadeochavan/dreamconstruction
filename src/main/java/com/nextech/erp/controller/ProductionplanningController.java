@@ -1,6 +1,7 @@
 package com.nextech.erp.controller;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -23,9 +24,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productinventoryhistory;
 import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Qualitycheckrawmaterial;
+import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialinventory;
+import com.nextech.erp.model.Rawmaterialinventoryhistory;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.status.UserStatus;
 
@@ -42,6 +52,12 @@ public class ProductionplanningController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	ProductinventoryService productinventoryService;
+	
+	@Autowired
+	ProductinventoryhistoryService productinventoryhistoryService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductionplanning(@Valid @RequestBody Productionplanning productionplanning,
@@ -255,5 +271,26 @@ public class ProductionplanningController {
 		return productionplanning;
 	}
 	
+	private Productinventory updateProductInventory(Productionplanning productionplanning,Product product) throws Exception{
+		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productionplanning.getProduct().getId());
+		if(productinventory == null){
+			productinventory = new Productinventory();
+			productinventory.setProduct(product);
+			productinventory.setIsactive(true);
+			productinventory.setCreatedBy((int) Long.parseLong(messageSource.getMessage(ERPConstants.CREATED_BY, null, null)));
+			productinventoryService.addEntity(productinventory);
+		}
+		productinventory.setQuantityavailable(productionplanning.getAchivedQuantity());
+		productinventory.setUpdatedDate(new Timestamp(new Date(0).getTime()));
+		return productinventoryService.updateEntity(productinventory);
+	}
+	private void addProductInventoryHistory(Productinventory productinventory) throws Exception{
+		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
+		productinventoryhistory.setProductinventory(productinventory);
+		productinventoryhistory.setIsactive(true);
+		productinventoryhistory.setCreatedDate(new Timestamp(new Date(0).getTime()));
+		productinventoryhistoryService.addEntity(productinventoryhistory);
+		
+	}
 }
 

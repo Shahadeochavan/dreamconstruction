@@ -42,8 +42,8 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	}
 
 	@Override
-	public User getUserByPassword(String password) throws Exception {
+	public User getUserByFirstNamLastName(String firstName,String lastName) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return userdao.getUserByFirstNamLastName(firstName, lastName);
 	}
 }

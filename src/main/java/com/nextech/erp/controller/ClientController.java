@@ -50,6 +50,7 @@ public class ClientController {
 			} else {
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
+			client.setIsactive(true);
 			clientService.addEntity(client);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {

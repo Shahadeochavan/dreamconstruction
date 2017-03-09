@@ -115,7 +115,5 @@ public class VendorController {
 		}
 
 	}
-	private void saveVendor(){
-		
-	}
+
 }

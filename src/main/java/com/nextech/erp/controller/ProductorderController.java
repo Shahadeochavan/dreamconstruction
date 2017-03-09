@@ -54,6 +54,7 @@ public class ProductorderController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			productorder.setIsactive(true);
 			productorderService.addEntity(productorder);
 			return new UserStatus(1, "Productorder added Successfully !");
 		} catch (ConstraintViolationException cve) {

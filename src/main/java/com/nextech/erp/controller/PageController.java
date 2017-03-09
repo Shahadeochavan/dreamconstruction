@@ -39,6 +39,7 @@ public class PageController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			page.setIsactive(true);
 			page.setCreatedBy(messageSource.getMessage(ERPConstants.CREATED_BY, null, null));
 			pageservice.addEntity(page);
 			return new UserStatus(1, "Page added Successfully !");

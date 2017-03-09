@@ -46,6 +46,7 @@ public class ProductController {
 			} else {
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
+			product.setIsactive(true);
 			productService.addEntity(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {

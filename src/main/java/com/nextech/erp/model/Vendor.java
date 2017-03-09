@@ -8,9 +8,6 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.MessageSourceAccessor;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.sql.Timestamp;
@@ -55,7 +52,7 @@ public class Vendor implements Serializable {
 	private String contactNumberOffice;
 
 	@Column(name="created_by")
-	private int createdBy;
+	private long createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
@@ -90,7 +87,7 @@ public class Vendor implements Serializable {
 	private String state;
 
 	@Column(name="updated_by")
-	private int updatedBy;
+	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
@@ -159,11 +156,11 @@ public class Vendor implements Serializable {
 		this.contactNumberOffice = contactNumberOffice;
 	}
 
-	public int getCreatedBy() {
+	public long getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -231,11 +228,11 @@ public class Vendor implements Serializable {
 		this.state = state;
 	}
 
-	public int getUpdatedBy() {
+	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 

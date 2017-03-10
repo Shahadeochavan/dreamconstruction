@@ -36,6 +36,7 @@ public class UnitController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			unit.setIsactive(true);
 		long id=	unitservice.addEntity(unit);
 			System.out.println("id is"+id);
 			return new UserStatus(1, "Unit added Successfully !");

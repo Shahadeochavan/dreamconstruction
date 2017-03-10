@@ -79,6 +79,10 @@ public class Product implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productionplanning> productionplannings;
 	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Productquality> productqualities;
+	
 	public Product() {
 	}
 	public Product(int id) {
@@ -244,6 +248,28 @@ public class Product implements Serializable {
 		productionplanning.setProduct(null);
 
 		return productionplanning;
+	}
+	
+	public List<Productquality> getProductqualities() {
+		return this.productqualities;
+	}
+
+	public void setProductqualities(List<Productquality> productqualities) {
+		this.productqualities = productqualities;
+	}
+
+	public Productquality addProductquality(Productquality productquality) {
+		getProductqualities().add(productquality);
+		productquality.setProduct(this);
+
+		return productquality;
+	}
+
+	public Productquality removeProductquality(Productquality productquality) {
+		getProductqualities().remove(productquality);
+		productquality.setProduct(null);
+
+		return productquality;
 	}
 
 

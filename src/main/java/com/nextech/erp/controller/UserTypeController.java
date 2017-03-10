@@ -36,6 +36,7 @@ public class UserTypeController {
 						.getDefaultMessage());
 			}
 			usertype.setCreatedBy("10");
+			usertype.setIsactive(true);
 			userTypeService.addEntity(usertype);
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {

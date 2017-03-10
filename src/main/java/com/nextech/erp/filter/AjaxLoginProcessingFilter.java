@@ -13,7 +13,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.model.Page;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.PageService;
 import com.nextech.erp.service.UserService;
@@ -51,13 +50,13 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
 						String[] string = token.split("-");
 						User user = userService.getUserByUserId(string[0]);
-						Page page = pageservice.getPageByUrl(url); 
-						if(user != null && user.getPassword().equals(string[1]) /*&& usertypepageassociationService.checkPageAccess(userTypeService.getEntityById(Usertype.class, user.getUsertype().getId()).getId(), page.getId())*/){
+//						Page page = pageservice.getPageByUrl(url); 
+						if(user != null && user.getPassword().equals(string[1])){
 							String str = string[string.length - 1];
 							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
 							if (new Date().getTime() - time * 1000 < new Long(str)) {
 								String generatedToken = TokenFactory.createAccessJwtToken(user);
-								System.out.println(generatedToken);
+								request.setAttribute("current_user", user.getId());
 								((HttpServletResponse) response).addHeader("auth_token", generatedToken);
 								request.setAttribute("auth_token", true);
 								return true;
@@ -71,13 +70,9 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 							httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 						}
 					}else{
-						System.out.println("Header Access-Control-Request-Headers : " + ((HttpServletRequest) request).getHeader("Access-Control-Request-Headers"));
 						if(((HttpServletRequest) request).getHeader("Access-Control-Request-Headers")==null){
-						HttpServletResponse httpServletResponse = setResponse(request, response);
-						httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
-						}else{
-							request.setAttribute("auth_token", true);
-							return true;
+							HttpServletResponse httpServletResponse = setResponse(request, response);
+							httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 						}
 					}
 				} catch (Exception e) {

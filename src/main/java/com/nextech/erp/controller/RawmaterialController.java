@@ -41,6 +41,7 @@ public class RawmaterialController {
 						.getDefaultMessage());
 			}
 			rawmaterial.setCreatedBy((int) Long.parseLong(messageSource.getMessage(ERPConstants.CREATED_BY, null, null)));
+			rawmaterial.setIsactive(true);
 			rawmaterialService.addEntity(rawmaterial);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {

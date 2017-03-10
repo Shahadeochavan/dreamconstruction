@@ -158,6 +158,7 @@ public class RawmaterialorderinvoiceController {
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
 				rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {
 			rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
+			rawmaterialorderinvoice.setIsactive(true);
 			long inid = rawmaterialorderinvoiceservice
 					.addEntity(rawmaterialorderinvoice);
 			System.out.println("inid " + inid);

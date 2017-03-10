@@ -172,7 +172,7 @@ public class QualitycheckrawmaterialController {
 				.hasNext();) {
 			Rawmaterialorderassociation rawmaterialorderassociation = (Rawmaterialorderassociation) iterator
 					.next();
-			if(rawmaterialorderassociation.getRemainingQuantity() ==0 ){
+			if(rawmaterialorderassociation.getRemainingQuantity() == 0 ){
 				isOrderComplete = true;
 			}else{
 				isOrderComplete = false;
@@ -196,6 +196,7 @@ public class QualitycheckrawmaterialController {
 		qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
 		if(qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceIdAndRMId(qualitycheckrawmaterial.getRawmaterialorderinvoice().getId(), 
 				qualitycheckrawmaterial.getRawmaterial().getId())==null){
+			qualitycheckrawmaterial.setIsactive(true);
 			qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
 		}else {
 			message += " Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";

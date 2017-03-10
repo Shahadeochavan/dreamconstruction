@@ -36,6 +36,7 @@ public class StatusController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			status.setIsactive(true);
 			statusService.addEntity(status);
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {

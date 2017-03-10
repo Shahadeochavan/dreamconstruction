@@ -4,7 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.VendorService;
@@ -33,7 +37,7 @@ public class VendorController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(
-			@Valid @RequestBody Vendor vendor, BindingResult bindingResult,Map<String, Object> model) {
+			@Valid @RequestBody Vendor vendor, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -49,6 +53,8 @@ public class VendorController {
 			} else {
 				return new UserStatus(1,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
+			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			vendor.setIsactive(true);
 			vendorService.addEntity(vendor);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {

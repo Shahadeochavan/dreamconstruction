@@ -24,10 +24,10 @@ public class Productinventoryhistory implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
-	 @Min(value = 0, message = " please enter after quantity")
+	// @Min(value = 0, message = " please enter after quantity")
 	private int afterquantity;
 
-	 @Min(value = 0, message = " please enter before quantity")
+	// @Min(value = 0, message = " please enter before quantity")
 	private int beforequantity;
 
 	@Column(name="created_by")
@@ -36,7 +36,7 @@ public class Productinventoryhistory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
+	//@NotBlank(message="{description should not be blank}")
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 

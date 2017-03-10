@@ -3,6 +3,8 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -33,7 +35,7 @@ public class ProductinventoryController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventory(
-			@Valid @RequestBody Productinventory productinventory, BindingResult bindingResult) {
+			@Valid @RequestBody Productinventory productinventory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -41,6 +43,7 @@ public class ProductinventoryController {
 			}
 			if (productinventoryService.getProductinventoryByProductId(
 					productinventory.getProduct().getId()) == null){
+				productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productinventory.setIsactive(true);
 				productinventoryService.addEntity(productinventory);
 			}	

@@ -38,6 +38,7 @@ public class RawmaterialorderassociationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			rawmaterialorderassociation.setIsactive(true);
 			rawmaterialorderassociationService
 					.addEntity(rawmaterialorderassociation);
 			return new UserStatus(1,

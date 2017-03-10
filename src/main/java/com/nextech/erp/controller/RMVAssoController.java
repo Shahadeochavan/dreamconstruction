@@ -40,6 +40,7 @@ public class RMVAssoController {
 			if (rmvAssoService.getRMVAssoByVendorIdRMId(
 					rawmaterialvendorassociation.getVendor().getId(),
 					rawmaterialvendorassociation.getRawmaterial().getId()) == null){
+				rawmaterialvendorassociation.setIsactive(true);
 				rmvAssoService.addEntity(rawmaterialvendorassociation);
 			}	
 			else

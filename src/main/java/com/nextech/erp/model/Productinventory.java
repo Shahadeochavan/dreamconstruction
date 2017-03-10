@@ -29,13 +29,13 @@ public class Productinventory implements Serializable {
 	private long id;
 
 	@Column(name="created_by")
-	private int createdBy;
+	private long createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
+/*	@NotBlank(message="{description should not be blank}")
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")*/
 	private String description;
 
 	private boolean isactive;
@@ -45,15 +45,15 @@ public class Productinventory implements Serializable {
 	private String name;
 
 
-    @Min(value = 0, message = " please enter quantityavailabl")
-	private int quantityavailable;
+   // @Min(value = 0, message = " please enter quantityavailabl")
+	private long quantityavailable;
     
 /*    @Min(value = 1, message = "racknumber should be greater than 1 digit")
 	 @Max(value = 100, message = "racknumber should be less than 100 digit")*/
-	private int racknumber;
+	private long racknumber;
 
 	@Column(name="updated_by")
-	private int updatedBy;
+	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
@@ -83,11 +83,11 @@ public class Productinventory implements Serializable {
 		this.id = id;
 	}
 
-	public int getCreatedBy() {
+	public long getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -123,27 +123,27 @@ public class Productinventory implements Serializable {
 		this.name = name;
 	}
 
-	public int getQuantityavailable() {
+	public long getQuantityavailable() {
 		return this.quantityavailable;
 	}
 
-	public void setQuantityavailable(int quantityavailable) {
+	public void setQuantityavailable(long quantityavailable) {
 		this.quantityavailable = quantityavailable;
 	}
 
-	public int getRacknumber() {
+	public long getRacknumber() {
 		return this.racknumber;
 	}
 
-	public void setRacknumber(int racknumber) {
+	public void setRacknumber(long racknumber) {
 		this.racknumber = racknumber;
 	}
 
-	public int getUpdatedBy() {
+	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 

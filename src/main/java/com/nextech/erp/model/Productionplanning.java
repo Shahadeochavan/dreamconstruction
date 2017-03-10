@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
+import java.util.List;
 import java.sql.Timestamp;
 
 
@@ -25,7 +28,7 @@ public class Productionplanning implements Serializable {
 	private int achivedQuantity;
 
 	@Column(name="created_by")
-	private int createdBy;
+	private long createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
@@ -57,6 +60,11 @@ public class Productionplanning implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
+	private List<Productquality> productqualities;
+
 
 	public Productionplanning() {
 	}
@@ -80,11 +88,11 @@ public class Productionplanning implements Serializable {
 		this.achivedQuantity = achivedQuantity;
 	}
 
-	public int getCreatedBy() {
+	public long getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -167,5 +175,25 @@ public class Productionplanning implements Serializable {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+	public List<Productquality> getProductqualities() {
+		return this.productqualities;
+	}
 
+	public void setProductqualities(List<Productquality> productqualities) {
+		this.productqualities = productqualities;
+	}
+
+	public Productquality addProductquality(Productquality productquality) {
+		getProductqualities().add(productquality);
+		productquality.setProductionplanning(this);
+
+		return productquality;
+	}
+
+	public Productquality removeProductquality(Productquality productquality) {
+		getProductqualities().remove(productquality);
+		productquality.setProductionplanning(null);
+
+		return productquality;
+	}
 }

@@ -3,36 +3,27 @@ package com.nextech.erp.controller;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productinventoryhistory;
 import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.Qualitycheckrawmaterial;
-import com.nextech.erp.model.Rawmaterial;
-import com.nextech.erp.model.Rawmaterialinventory;
-import com.nextech.erp.model.Rawmaterialinventoryhistory;
-import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
@@ -86,7 +77,7 @@ public class ProductionplanningController {
 	}
 	@RequestMapping(value = "/createProductionForCurrentMonth", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus createProductionPlanningForCurrentMonth(@Valid @RequestBody Productionplanning productionplanning,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -95,9 +86,8 @@ public class ProductionplanningController {
 			if (productionplanningService.getProductionPlanningforCurrentMonthByProductIdAndDate(
 					productionplanning.getProduct().getId(),
 					productionplanning.getDate())== null){
-				productionplanning.setCreatedBy((int) Long.parseLong(messageSource.getMessage(ERPConstants.CREATED_BY, null, null)));
-				productionplanningService
-						.addEntity(productionplanning);
+				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productionplanningService.addEntity(productionplanning);
 			}
 			else{
 				return new UserStatus(1,
@@ -154,7 +144,6 @@ public class ProductionplanningController {
 		}
 	}
 
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionplanning() {
 
@@ -169,7 +158,6 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "getProductionplanningByMonth/{month}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionplanningByMonth(@PathVariable("month") Date month) {
 
@@ -185,7 +173,6 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "getProductionPlanForCurrentMonth", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductionPlan> getProductionPlanMonthYear() {
 
@@ -199,7 +186,6 @@ public class ProductionplanningController {
 
 		return productionplanningList;
 	}
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "updateProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> updateProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
 
@@ -214,7 +200,6 @@ public class ProductionplanningController {
 		return productionplanningList;
 	}
 	
-	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
 
@@ -245,7 +230,7 @@ public class ProductionplanningController {
 
 	}
 	
-	@RequestMapping(value = "getProductionPlanDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "getProductionPlanByDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productionplanning getProductionPlanDateAndProductId(@PathVariable("date") Date date,@PathVariable("pID")long pId) {
 
 		Productionplanning productionplanning = null;
@@ -258,7 +243,7 @@ public class ProductionplanningController {
 		return productionplanning;
 	}
 	
-	@RequestMapping(value = "getProductionPlanDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") Date date) {
 
 		List<Productionplanning> productionplanning = null;

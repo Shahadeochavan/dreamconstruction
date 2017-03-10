@@ -78,6 +78,7 @@ public class UserController {
 					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
+				user.setIsactive(true);
 				userservice.addEntity(user);
 				return new UserStatus(1, "User added Successfully !");
 			} else {

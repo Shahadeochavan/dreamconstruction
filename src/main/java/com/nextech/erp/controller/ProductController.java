@@ -3,7 +3,10 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -31,7 +34,7 @@ public class ProductController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
-			@Valid @RequestBody Product product, BindingResult bindingResult) {
+			@Valid @RequestBody Product product, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -47,6 +50,7 @@ public class ProductController {
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
 			product.setIsactive(true);
+			product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productService.addEntity(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {

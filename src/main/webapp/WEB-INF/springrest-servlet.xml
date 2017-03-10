@@ -52,6 +52,7 @@
 				</value>
 				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
 				<value>com.nextech.erp.model.Productionplanning</value>
+					<value>com.nextech.erp.model.Productquality</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">
@@ -153,4 +154,7 @@
 	<bean id="productionplanningDao" class="com.nextech.erp.daoImpl.ProductionplanningDaoImpl" />
 	<bean id="productionplanningService"
 		class="com.nextech.erp.serviceImpl.ProductionplanningServiceImpl" />
+	<bean id="productqualityDao" class="com.nextech.erp.daoImpl.ProductqualityDaoImpl" />
+	<bean id="productqualityService"
+		class="com.nextech.erp.serviceImpl.ProductqualityServiceImpl" />
 </beans>

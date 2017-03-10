@@ -40,6 +40,7 @@ public class RawmaterialinventoryController {
 						.getDefaultMessage());
 			}
 			if(rawmaterialinventoryService.getByRMId(rawmaterialinventory.getRawmaterial().getId())==null){
+				rawmaterialinventory.setIsactive(true);
 				rawmaterialinventoryService.addEntity(rawmaterialinventory);
 			}
 			else

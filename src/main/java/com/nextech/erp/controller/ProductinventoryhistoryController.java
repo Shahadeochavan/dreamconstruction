@@ -3,6 +3,8 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -30,13 +32,17 @@ public class ProductinventoryhistoryController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventoryhistory(
-			@Valid @RequestBody Productinventoryhistory productinventoryhistory, BindingResult bindingResult) {
+			@Valid @RequestBody Productinventoryhistory productinventoryhistory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			productinventoryhistory.setIsactive(true);
+			productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventoryhistoryService.addEntity(productinventoryhistory);
+
 			return new UserStatus(1, "Productinventoryhistory added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

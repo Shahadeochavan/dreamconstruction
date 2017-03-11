@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -11,15 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.model.Client;
-import com.nextech.erp.model.ProductOrderAssociationModel;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
@@ -48,13 +49,16 @@ public class ProductorderController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorder(
 			@Valid @RequestBody Productorder productorder,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			// TODO afterwards you need to change it from properties. 
+			productorder.setStatus(statusService.getEntityById(Status.class, 14));
 			productorder.setIsactive(true);
+			productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderService.addEntity(productorder);
 			return new UserStatus(1, "Productorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -75,7 +79,7 @@ public class ProductorderController {
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductorder(
 			@Valid @RequestBody ProductOrderAssociationModel productOrderAssociationModel,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -83,10 +87,10 @@ public class ProductorderController {
 			}
 
 			// TODO save call product order
-			Productorder productorder = saveProductOrder(productOrderAssociationModel);
+			Productorder productorder = saveProductOrder(productOrderAssociationModel, request, response);
 
 			// TODO add product order association
-			addProductOrderAsso(productOrderAssociationModel, productorder);
+			addProductOrderAsso(productOrderAssociationModel, productorder, request, response);
 
 			return new UserStatus(1,
 					"Multiple Productorder added Successfully !");
@@ -117,6 +121,17 @@ public class ProductorderController {
 		}
 		return productorder;
 	}
+	@RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productorderassociation> getProductOrder(
+			@PathVariable("orderId") long id) {
+		List<Productorderassociation> productorderassociations = null;
+		try {
+			productorderassociations = productorderassociationService.getProductorderassociationByOrderId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return productorderassociations;
+	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorder(
@@ -131,7 +146,7 @@ public class ProductorderController {
 	}
 
 	private Productorder saveProductOrder(
-			ProductOrderAssociationModel productOrderAssociationModel)
+			ProductOrderAssociationModel productOrderAssociationModel,HttpServletRequest request,HttpServletResponse response)
 			throws Exception {
 		Productorder productorder = new Productorder();
 		productorder.setClient(clientService.getEntityById(Client.class,
@@ -146,19 +161,25 @@ public class ProductorderController {
 		productorder.setStatus(statusService.getEntityById(Status.class,
 				productOrderAssociationModel.getStatus()));
 		productorder.setIsactive(true);
+		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderService.addEntity(productorder);
 		return productorder;
 	}
 
 	private void addProductOrderAsso(
 			ProductOrderAssociationModel productOrderAssociationModel,
-			Productorder productorder) throws Exception {
+			Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<Productorderassociation> productorderassociations = productOrderAssociationModel
 				.getOrderproductassociations();
 		if (productorderassociations != null
 				&& !productorderassociations.isEmpty()) {
 			for (Productorderassociation productorderassociation : productorderassociations) {
 				productorderassociation.setProductorder(productorder);
+				productorderassociation.setRemainingQuantity(productorderassociation.getQuantity());
+				productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productorderassociation.setIsactive(true);
 				productorderassociationService
 						.addEntity(productorderassociation);
 			}
@@ -180,6 +201,21 @@ public class ProductorderController {
 		return productorderList;
 	}
 
+	@RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productorder> getPendingsProductorders() {
+
+		List<Productorder> productorderList = null;
+		try {
+			// TODO afterwards you need to change it from properties. 
+			productorderList = productorderService.getPendingProductOrders(14);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productorderList;
+	}
+	
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorder(
 			@PathVariable("id") long id) {

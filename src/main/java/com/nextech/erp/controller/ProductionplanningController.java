@@ -1,12 +1,13 @@
 package com.nextech.erp.controller;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -18,11 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productinventoryhistory;
-import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
@@ -256,26 +256,5 @@ public class ProductionplanningController {
 		return productionplanning;
 	}
 	
-	private Productinventory updateProductInventory(Productionplanning productionplanning,Product product) throws Exception{
-		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productionplanning.getProduct().getId());
-		if(productinventory == null){
-			productinventory = new Productinventory();
-			productinventory.setProduct(product);
-			productinventory.setIsactive(true);
-			productinventory.setCreatedBy((int) Long.parseLong(messageSource.getMessage(ERPConstants.CREATED_BY, null, null)));
-			productinventoryService.addEntity(productinventory);
-		}
-		productinventory.setQuantityavailable(productionplanning.getAchivedQuantity());
-		productinventory.setUpdatedDate(new Timestamp(new Date(0).getTime()));
-		return productinventoryService.updateEntity(productinventory);
-	}
-	private void addProductInventoryHistory(Productinventory productinventory) throws Exception{
-		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
-		productinventoryhistory.setProductinventory(productinventory);
-		productinventoryhistory.setIsactive(true);
-		productinventoryhistory.setCreatedDate(new Timestamp(new Date(0).getTime()));
-		productinventoryhistoryService.addEntity(productinventoryhistory);
-		
-	}
 }
 

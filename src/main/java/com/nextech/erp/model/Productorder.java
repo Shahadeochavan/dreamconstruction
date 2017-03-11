@@ -25,7 +25,7 @@ public class Productorder implements Serializable {
 	private long id;
 
 	@Column(name="created_by")
-	private int createdBy;
+	private long createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
@@ -40,13 +40,15 @@ public class Productorder implements Serializable {
 
 	private boolean isactive;
 
-	private int quantity;
+	private long quantity;
 
 	@Column(name="updated_by")
-	private int updatedBy;
+	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
+	
+	private String invoiceNo;
 
 	//bi-directional many-to-one association to Orderproductassociation
 	@JsonIgnore
@@ -77,11 +79,11 @@ public class Productorder implements Serializable {
 		this.id = id;
 	}
 
-	public int getCreatedBy() {
+	public long getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -125,19 +127,19 @@ public class Productorder implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public int getQuantity() {
+	public long getQuantity() {
 		return this.quantity;
 	}
 
-	public void setQuantity(int quantity) {
+	public void setQuantity(long quantity) {
 		this.quantity = quantity;
 	}
 
-	public int getUpdatedBy() {
+	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
@@ -185,6 +187,12 @@ public class Productorder implements Serializable {
 
 	public void setClient(Client client) {
 		this.client = client;
+	}
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
 	}
 
 }

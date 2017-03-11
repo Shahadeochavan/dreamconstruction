@@ -1,16 +1,11 @@
-package com.nextech.erp.model;
+package com.nextech.erp.dto;
 
-import java.io.Serializable;
 import java.util.Date;
 
 
 
-public class ProductProductionPlan implements Serializable {
+public class ProductProductionPlan {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -414777841690722226L;
 	private Date productionDate;
 	private int target_quantity;
 	private int achived_quantity;

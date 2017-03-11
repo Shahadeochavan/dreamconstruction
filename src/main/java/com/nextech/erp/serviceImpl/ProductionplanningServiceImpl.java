@@ -14,11 +14,17 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductionplanningDao;
+import com.nextech.erp.dto.ProductProductionPlan;
+import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
-import com.nextech.erp.model.ProductProductionPlan;
-import com.nextech.erp.model.ProductionPlan;
+import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.ProductorderassociationService;
 
 public class ProductionplanningServiceImpl extends
 		CRUDServiceImpl<Productionplanning> implements
@@ -27,6 +33,18 @@ public class ProductionplanningServiceImpl extends
 	@Autowired
 	ProductionplanningDao productionplanningDao;
 
+	@Autowired
+	ProductinventoryService productinventoryService; 
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService; 
+	
+	@Autowired
+	ProductorderService productorderService;
+	
+	@Autowired
+	ProductService productService;
+	
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
 			long pId,Date date) throws Exception {
@@ -51,7 +69,7 @@ public class ProductionplanningServiceImpl extends
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
 		cal.set(Calendar.DAY_OF_MONTH, 1); 
-		int myMonth=cal.get(Calendar.MONTH);
+//		int myMonth=cal.get(Calendar.MONTH);
 		Date startDate = cal.getTime();
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
 		Date endDate = cal.getTime();
@@ -61,16 +79,25 @@ public class ProductionplanningServiceImpl extends
 	}
 
 	private List<ProductionPlan> getProductionPlan(
-			Map<Long, List<ProductProductionPlan>> productProductPlanMap, String month_year) {
+			Map<Long, List<ProductProductionPlan>> productProductPlanMap, String month_year) throws Exception {
 		Set<Entry<Long, List<ProductProductionPlan>>> productionPlanEntries = productProductPlanMap.entrySet();
 		List<ProductionPlan> productionPlans = new ArrayList<>();
-		for (Iterator<Entry<Long, List<ProductProductionPlan>>> iterator = productionPlanEntries.iterator(); iterator
-				.hasNext();) {
-			Entry<Long, List<ProductProductionPlan>> entry = (Entry<Long, List<ProductProductionPlan>>) iterator
-					.next();
+		for (Iterator<Entry<Long, List<ProductProductionPlan>>> iterator = productionPlanEntries.iterator(); iterator.hasNext();) {
+			Entry<Long, List<ProductProductionPlan>> entry = (Entry<Long, List<ProductProductionPlan>>) iterator.next();
+			Productinventory productinventory = productinventoryService.getProductinventoryByProductId(entry.getKey());
+			List<Productorderassociation> productorderassociations = productorderassociationService.getProductorderassociationByProdcutId(entry.getKey());
+			long remainingAmt = 0;
+			if(productorderassociations != null){
+				for (Productorderassociation productorderassociation : productorderassociations) {
+					remainingAmt = remainingAmt+ productorderassociation.getRemainingQuantity();
+				}
+			}
 			ProductionPlan productionPlan = new ProductionPlan();
-			productionPlan.setProduct_id(entry.getKey());
+			productionPlan.setProductId(entry.getKey());
+			productionPlan.setProductBalanceQty(productinventory.getQuantityavailable());
+			productionPlan.setProductTargetQty(remainingAmt);
 			productionPlan.setProductProductionPlan(entry.getValue());
+			productionPlan.setProductName(productService.getEntityById(Product.class, entry.getKey()).getPartNumber());
 			productionPlan.setMonth_year(month_year);
 			productionPlans.add(productionPlan);
 		}
@@ -163,7 +190,7 @@ public class ProductionplanningServiceImpl extends
 				cal.set(Calendar.MINUTE, 59);
 				cal.set(Calendar.SECOND, 59);
 				Date productionDateEnd = cal.getTime();
-				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProduct_id());
+				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
 				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
 				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
@@ -177,7 +204,6 @@ public class ProductionplanningServiceImpl extends
 	@Override
 	public List<Productionplanning> getProductionplanByDate(Date date)
 			throws Exception {
-		// TODO Auto-generated method stub
 		return productionplanningDao.getProductionplanByDate(date);
 	}
 }

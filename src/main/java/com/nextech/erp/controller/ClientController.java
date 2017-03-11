@@ -54,6 +54,7 @@ public class ClientController {
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
 			client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			client.setIsactive(true);
 			clientService.addEntity(client);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));

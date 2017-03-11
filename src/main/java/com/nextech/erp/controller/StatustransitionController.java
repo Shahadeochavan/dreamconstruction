@@ -3,6 +3,8 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -36,7 +38,7 @@ public class StatustransitionController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
 			@Valid @RequestBody Statustransition statustransition,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -44,8 +46,11 @@ public class StatustransitionController {
 			}
 			if (statustransitionService
 					.getStatustransitionByEmail(statustransition
-							.getIsNotificationEmail()) == null)
+							.getIsNotificationEmail()) == null){
+				statustransition.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				statustransition.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				statustransitionService.addEntity(statustransition);
+			}
 			else
 				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			return new UserStatus(1, "Statustransition added Successfully !");

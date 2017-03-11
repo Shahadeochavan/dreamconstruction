@@ -44,6 +44,7 @@ public class ProductinventoryController {
 			if (productinventoryService.getProductinventoryByProductId(
 					productinventory.getProduct().getId()) == null){
 				productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productinventory.setIsactive(true);
 				productinventoryService.addEntity(productinventory);
 			}	
@@ -115,8 +116,6 @@ public class ProductinventoryController {
 		}
 
 	}
-	private void saveProductInventory(){
-		
-	}
+
 
 }

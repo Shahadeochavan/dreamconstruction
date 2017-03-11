@@ -51,6 +51,7 @@ public class ProductController {
 			}
 			product.setIsactive(true);
 			product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productService.addEntity(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {

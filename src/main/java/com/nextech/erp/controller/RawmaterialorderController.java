@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -17,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.RawmaterialOrderAssociationModel;
+import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Status;
@@ -53,13 +54,15 @@ public class RawmaterialorderController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
 			@Valid @RequestBody Rawmaterialorder rawmaterialorder,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 			rawmaterialorder.setIsactive(true);
+			rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderService.addEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -79,16 +82,16 @@ public class RawmaterialorderController {
 
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
-			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult) {
+			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel);
+			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
 			
 			//TODO add raw material association
-			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel);
+			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
 	
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -130,7 +133,7 @@ public class RawmaterialorderController {
 		}
 	}
 	
-	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel) throws Exception{
+	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
 		rawmaterialorder.setCreateDate(new Date());
 		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
@@ -144,19 +147,23 @@ public class RawmaterialorderController {
 		rawmaterialorder.setTax(rawmaterialOrderAssociationModel.getTax());
 		rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
 		//rawmaterialorder.setRemainingQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations());
+		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setIsactive(true);
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
 		return rawmaterialorder;
 	}
 	
-	private void addRMOrderAsso(Rawmaterialorder rawmaterialorder,RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel) throws Exception{
+	private void addRMOrderAsso(Rawmaterialorder rawmaterialorder,RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
 		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
 				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
 				rawmaterialorderassociation.setIsactive(true);
 				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
+				rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
 			}
 		}

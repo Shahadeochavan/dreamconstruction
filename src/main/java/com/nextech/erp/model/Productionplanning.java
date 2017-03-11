@@ -61,6 +61,8 @@ public class Productionplanning implements Serializable {
 	@JoinColumn(name="productid")
 	private Product product;
 	
+	private String remark;
+	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
 	private List<Productquality> productqualities;
@@ -196,4 +198,13 @@ public class Productionplanning implements Serializable {
 
 		return productquality;
 	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+	
 }

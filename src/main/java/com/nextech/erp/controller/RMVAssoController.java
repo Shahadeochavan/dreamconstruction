@@ -1,8 +1,12 @@
 package com.nextech.erp.controller;
 
 import java.util.List;
+
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.service.RMVAssoService;
@@ -31,7 +36,7 @@ public class RMVAssoController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialvendorassociation(
 			@Valid @RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -40,6 +45,8 @@ public class RMVAssoController {
 			if (rmvAssoService.getRMVAssoByVendorIdRMId(
 					rawmaterialvendorassociation.getVendor().getId(),
 					rawmaterialvendorassociation.getRawmaterial().getId()) == null){
+				rawmaterialvendorassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				rawmaterialvendorassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rawmaterialvendorassociation.setIsactive(true);
 				rmvAssoService.addEntity(rawmaterialvendorassociation);
 			}	

@@ -3,8 +3,8 @@ package com.nextech.erp.service;
 import java.util.Date;
 import java.util.List;
 
+import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
-import com.nextech.erp.model.ProductionPlan;
 import com.nextech.erp.model.Productionplanning;
 
 public interface ProductionplanningService extends CRUDService<Productionplanning>{

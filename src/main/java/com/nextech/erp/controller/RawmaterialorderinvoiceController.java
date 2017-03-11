@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -62,7 +64,7 @@ public class RawmaterialorderinvoiceController {
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
 			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -71,22 +73,22 @@ public class RawmaterialorderinvoiceController {
 		//	String message = "";
 			//Check for duplicate rows
 			//TODO save raw material invoice
-			saveRMOrderInvoice(rawmaterialorderinvoice);	
+			saveRMOrderInvoice(rawmaterialorderinvoice, request, response);	
 				Rawmaterialorder rawmaterialorder = rawmaterialorderService
 						.getEntityById(Rawmaterialorder.class,
 								rawmaterialorderinvoice.getPo_No());
 				
 				//TODO call to RM Invoice Association
-				addRMOrderInvoiceAsso(rawmaterialorderinvoice,rawmaterialorder);
+				addRMOrderInvoiceAsso(rawmaterialorderinvoice,rawmaterialorder, request, response);
 				
 				//TODO call to RM Invoice quantities
-				addRMInvoiceQuantity(rawmaterialorderinvoice);
+				addRMInvoiceQuantity(rawmaterialorderinvoice, request, response);
 				//TODO call to order history
-				addOrderHistory(rawmaterialorderinvoice, rawmaterialorder);
+				addOrderHistory(rawmaterialorderinvoice, rawmaterialorder, request, response);
 				
 				//change status to Quality Check
 				//TODO update raw materail order
-				updateRawMaterialOrder(rawmaterialorder);
+				updateRawMaterialOrder(rawmaterialorder, request, response);
 	
 				return new UserStatus(1,
 						"Rawmaterialorderinvoice added Successfully !");
@@ -153,12 +155,14 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
-	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) throws Exception{
+	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
 				rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {
 			rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
 			rawmaterialorderinvoice.setIsactive(true);
+			rawmaterialorderinvoice.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			long inid = rawmaterialorderinvoiceservice
 					.addEntity(rawmaterialorderinvoice);
 			System.out.println("inid " + inid);
@@ -169,7 +173,7 @@ public class RawmaterialorderinvoiceController {
 		return message;
 	}
 
-	private void addRMOrderInvoiceAsso(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder) throws Exception{
+	private void addRMOrderInvoiceAsso(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		
 		 rawmaterialorder = rawmaterialorderService
 				.getEntityById(Rawmaterialorder.class,
@@ -180,11 +184,13 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderinvoiceassociation
 				.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderinvoiceassociation.setIsactive(true);
+		rawmaterialorderinvoice.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceassociationService
 				.addEntity(rawmaterialorderinvoiceassociation);
 	}
 	
-	private void addRMInvoiceQuantity(Rawmaterialorderinvoice rawmaterialorderinvoice) throws Exception{
+	private void addRMInvoiceQuantity(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 
 		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice
 				.getRmorderinvoiceintakquantities();
@@ -196,19 +202,23 @@ public class RawmaterialorderinvoiceController {
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
 				rmorderinvoiceintakquantity
 						.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+				rmorderinvoiceintakquantity.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				rmorderinvoiceintakquantity.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rmorderinvoiceintakquantityService
 						.addEntity(rmorderinvoiceintakquantity);
 			}
 		}
 	}
 	
-	private void addOrderHistory(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder) throws Exception{
+	private void addOrderHistory(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
 		rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
 		rawmaterialorderhistory.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderhistory.setRawmaterialorderinvoice(rawmaterialorderinvoice);
 		rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 		rawmaterialorderhistory.setIsactive(true);
+		rawmaterialorderhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorderhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		//rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 		rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
 		//TODO To status is not set correctly
@@ -218,8 +228,10 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
 		
 	}
-	private void updateRawMaterialOrder(Rawmaterialorder rawmaterialorder) throws Exception{
+	private void updateRawMaterialOrder(Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
+		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 }

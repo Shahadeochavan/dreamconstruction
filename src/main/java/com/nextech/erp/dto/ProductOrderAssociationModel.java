@@ -1,14 +1,12 @@
-package com.nextech.erp.model;
+package com.nextech.erp.dto;
 
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.List;
 
-public class ProductOrderAssociationModel implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 2264984414287739733L;
+import com.nextech.erp.model.Productorderassociation;
+
+public class ProductOrderAssociationModel {
+	
 	private String description;
 	private long client;
 	private long status;

@@ -28,7 +28,7 @@ public class Rawmaterialorder implements Serializable {
 	private float actualPrice;
 
 	@Column(name="created_by")
-	private String createdBy;
+	private long createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
@@ -57,7 +57,7 @@ public class Rawmaterialorder implements Serializable {
 	private float totalprice;
 
 	@Column(name="updated_by")
-	private String updatedBy;
+	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
@@ -106,11 +106,11 @@ public class Rawmaterialorder implements Serializable {
 		this.actualPrice = actualPrice;
 	}
 
-	public String getCreatedBy() {
+	public long getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(String createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -194,11 +194,11 @@ public class Rawmaterialorder implements Serializable {
 		this.totalprice = totalprice;
 	}
 
-	public String getUpdatedBy() {
+	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(String updatedBy) {
+	public void setUpdatedBy(long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 

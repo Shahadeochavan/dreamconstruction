@@ -38,7 +38,8 @@ public class ProductorderassociationController {
 						.getDefaultMessage());
 			}
 			productorderassociation.setIsactive(true);
-			
+			productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderassociationService.addEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {

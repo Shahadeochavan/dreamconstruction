@@ -8,16 +8,16 @@ import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the productorderassociation database table.
+ * The persistent class for the dispatch database table.
  * 
  */
 @Entity
-@NamedQuery(name="Productorderassociation.findAll", query="SELECT p FROM Productorderassociation p")
-public class Productorderassociation implements Serializable {
+@NamedQuery(name="Dispatch.findAll", query="SELECT d FROM Dispatch d")
+public class Dispatch implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -26,28 +26,31 @@ public class Productorderassociation implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	private boolean isactive;
-
+	private String description;
+	
 	private long quantity;
+
+	private String invoiceNo;
+
+	private boolean isactive;
 
 	@Column(name="updated_by")
 	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
-	
-	private long remainingQuantity;
 
 	//bi-directional many-to-one association to Product
 	@ManyToOne
+	@JoinColumn(name="productid")
 	private Product product;
 
 	//bi-directional many-to-one association to Productorder
 	@ManyToOne
-	@JoinColumn(name="order_id")
+	@JoinColumn(name="product_orderid")
 	private Productorder productorder;
 
-	public Productorderassociation() {
+	public Dispatch() {
 	}
 
 	public long getId() {
@@ -74,20 +77,28 @@ public class Productorderassociation implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getInvoiceNo() {
+		return this.invoiceNo;
+	}
+
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
+	}
+
 	public boolean getIsactive() {
 		return this.isactive;
 	}
 
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
-	}
-
-	public long getQuantity() {
-		return this.quantity;
-	}
-
-	public void setQuantity(long quantity) {
-		this.quantity = quantity;
 	}
 
 	public long getUpdatedBy() {
@@ -122,12 +133,12 @@ public class Productorderassociation implements Serializable {
 		this.productorder = productorder;
 	}
 
-	public long getRemainingQuantity() {
-		return remainingQuantity;
+	public long getQuantity() {
+		return quantity;
 	}
 
-	public void setRemainingQuantity(long remainingQuantity) {
-		this.remainingQuantity = remainingQuantity;
+	public void setQuantity(long quantity) {
+		this.quantity = quantity;
 	}
 
 }

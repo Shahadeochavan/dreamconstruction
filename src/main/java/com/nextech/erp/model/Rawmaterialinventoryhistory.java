@@ -26,7 +26,7 @@ public class Rawmaterialinventoryhistory implements Serializable {
 	private long id;
 
 	@Column(name="created_by")
-	private int createdBy;
+	private long createdBy;
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
@@ -36,7 +36,7 @@ public class Rawmaterialinventoryhistory implements Serializable {
 	private boolean isactive;
 
 	@Column(name="updated_by")
-	private int updatedBy;
+	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
@@ -68,11 +68,11 @@ public class Rawmaterialinventoryhistory implements Serializable {
 		this.id = id;
 	}
 
-	public int getCreatedBy() {
+	public long getCreatedBy() {
 		return this.createdBy;
 	}
 
-	public void setCreatedBy(int createdBy) {
+	public void setCreatedBy(long createdBy) {
 		this.createdBy = createdBy;
 	}
 
@@ -100,11 +100,11 @@ public class Rawmaterialinventoryhistory implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public int getUpdatedBy() {
+	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 

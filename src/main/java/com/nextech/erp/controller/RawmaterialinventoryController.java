@@ -3,6 +3,8 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -33,7 +35,7 @@ public class RawmaterialinventoryController {
 	private MessageSource messageSource;
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialinventory(
-			@Valid @RequestBody Rawmaterialinventory rawmaterialinventory, BindingResult bindingResult) {
+			@Valid @RequestBody Rawmaterialinventory rawmaterialinventory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -41,6 +43,8 @@ public class RawmaterialinventoryController {
 			}
 			if(rawmaterialinventoryService.getByRMId(rawmaterialinventory.getRawmaterial().getId())==null){
 				rawmaterialinventory.setIsactive(true);
+				rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rawmaterialinventoryService.addEntity(rawmaterialinventory);
 			}
 			else

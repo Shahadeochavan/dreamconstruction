@@ -23,12 +23,14 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productinventoryhistory;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Productquality;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.ProductqualityService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
@@ -57,6 +59,10 @@ public class ProductqualityController {
 	@Autowired
 	StatusService statusService;
 	
+	@Autowired
+	ProductorderassociationService productorderassociationService;
+	
+	
 	private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
 	
 	@RequestMapping(value = "/productQualityCheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -75,6 +81,7 @@ public class ProductqualityController {
 				productquality.setGoodQuantity(productqualityInput.getGoodQuantity());
 				productquality.setRejectedQuantity(productqualityInput.getRejectedQuantity());
 				productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productquality.setRemark(productqualityInput.getRemark());
 				productquality.setProduct(product);
 				productquality.setIsactive(true);
@@ -151,6 +158,10 @@ public class ProductqualityController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	private void updateProductOrderRemainingQuantity(){
+//		Productorderassociation productorderassociation 
+		
 	}
 	private Productinventory updateProductInventory(Productquality productquality,Product product) throws Exception{
 		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productquality.getProduct().getId());

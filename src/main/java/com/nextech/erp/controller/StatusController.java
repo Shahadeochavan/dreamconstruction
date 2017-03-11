@@ -3,13 +3,14 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,12 +31,14 @@ public class StatusController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
-			@Valid @RequestBody Status status, BindingResult bindingResult) {
+			@Valid @RequestBody Status status, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			status.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			status.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			status.setIsactive(true);
 			statusService.addEntity(status);
 			return new UserStatus(1, "Status added Successfully !");

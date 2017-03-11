@@ -81,6 +81,8 @@ public class DispatchController {
 				Dispatch dispatch = setPart(part);
 				dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
 				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
+				dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dispatchservice.addEntity(dispatch);
 			}
 			return new UserStatus(1, "Dispatch added Successfully !");

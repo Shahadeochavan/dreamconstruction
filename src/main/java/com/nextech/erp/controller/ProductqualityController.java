@@ -23,13 +23,14 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productinventoryhistory;
 import com.nextech.erp.model.Productionplanning;
-import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productquality;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.ProductqualityService;
 import com.nextech.erp.service.StatusService;
@@ -62,6 +63,9 @@ public class ProductqualityController {
 	@Autowired
 	ProductorderassociationService productorderassociationService;
 	
+	@Autowired
+	ProductorderService productorderService;
+	
 	
 	private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
 	
@@ -90,6 +94,9 @@ public class ProductqualityController {
 				addProductInventoryHistory(productquality.getGoodQuantity(), product);
 			//TODO update product inventory
 			Productinventory productinventory = updateProductInventory(productquality, product);
+			
+
+		//	updateProductOrder(productorder);
 			
 			
 			
@@ -159,10 +166,6 @@ public class ProductqualityController {
 		}
 
 	}
-	private void updateProductOrderRemainingQuantity(){
-//		Productorderassociation productorderassociation 
-		
-	}
 	private Productinventory updateProductInventory(Productquality productquality,Product product) throws Exception{
 		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productquality.getProduct().getId());
 		if(productinventory == null){
@@ -195,5 +198,10 @@ public class ProductqualityController {
 		productinventoryhistoryService.addEntity(productinventoryhistory);
 		
 	}
+	private void updateProductOrder(Productorder productorder) throws Exception{
+		productorder.setStatus(statusService.getEntityById(Status.class, 12));
+			productorderService.updateEntity(productorder);
+		}
+
 }
 

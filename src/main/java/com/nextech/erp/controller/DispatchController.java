@@ -18,15 +18,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.Part;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productinventoryhistory;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.DispatchService;
 import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -44,6 +51,22 @@ public class DispatchController {
 	
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService;
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	ProductinventoryService productinventoryService;
+	
+	@Autowired
+	ProductinventoryhistoryService productinventoryhistoryService;
+	
+
+	private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
+	
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addDispatch(@Valid @RequestBody Dispatch dispatch,
@@ -79,12 +102,28 @@ public class DispatchController {
 			}
 			for (Part part : dispatchDTO.getParts()) {
 				Dispatch dispatch = setPart(part);
+		
 				dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
 				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
 				dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dispatchservice.addEntity(dispatch);
+				Productorder productorder = productorderService.getEntityById(Productorder.class, dispatch.getProductorder().getId());
+				Product product = productService.getEntityById(Product.class, dispatch.getProduct().getId());
+				
+				//TODO update product order association
+				updateProductOrderAssoRemainingQuantity(productorder, dispatch, request, response);
+				
+				//TODO add product Inventroy history
+				addProductInventoryHistory(dispatch.getQuantity(), product, dispatch);
+				
+				//TODO update product Inventory
+				updateProductInventory(dispatch, product);
+				
+				//TODO update product order
+				updateProductOrder(productorder);
 			}
+			
 			return new UserStatus(1, "Dispatch added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -157,4 +196,50 @@ public class DispatchController {
 		}
 
 	}
+	private void  updateProductOrderAssoRemainingQuantity(Productorder productorder,Dispatch dispatch ,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		Productorderassociation productorderassociation  =productorderassociationService.getProductorderassociationByProdcutOrderIdandProdcutId(productorder.getId(),dispatch.getProduct().getId());
+		productorderassociation.setRemainingQuantity(productorderassociation.getRemainingQuantity()-dispatch.getQuantity());
+		productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productorderassociationService.updateEntity(productorderassociation);
+	}
+private void updateProductOrder(Productorder productorder) throws Exception{
+		
+	productorder.setStatus(statusService.getEntityById(Status.class, 12));
+		productorderService.updateEntity(productorder);
+	}
+
+private Productinventory updateProductInventory(Dispatch dispatch,Product product) throws Exception{
+	Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(dispatch.getProduct().getId());
+	if(productinventory == null){
+		productinventory = new Productinventory();
+		productinventory.setProduct(product);
+		productinventory.setQuantityavailable(productinventory.getQuantityavailable()-dispatch.getQuantity());
+		productinventory.setIsactive(true);
+		productinventoryService.addEntity(productinventory);
+	}else{
+		productinventory.setQuantityavailable(productinventory.getQuantityavailable() - dispatch.getQuantity());
+		productinventoryService.updateEntity(productinventory);
+	}
+	return productinventory;
+}
+private void addProductInventoryHistory(long goodQuantity,Product product,Dispatch dispatch) throws Exception{
+	Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(product.getId());
+	if(productinventory == null){
+		productinventory = new Productinventory();
+		productinventory.setProduct(product);
+		productinventory.setQuantityavailable(0);
+		productinventory.setIsactive(true);
+		productinventoryService.addEntity(productinventory);
+	}
+	Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
+	productinventoryhistory.setProductinventory(productinventory);
+	productinventoryhistory.setIsactive(true);
+	productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable()-dispatch.getQuantity());
+	productinventoryhistory.setAfterquantity((goodQuantity+productinventory.getQuantityavailable()-dispatch.getQuantity()));
+	productinventoryhistory.setStatus(statusService.getEntityById(Status.class, STATUS_PRODUCT__INVENTORY_ADD));
+	productinventoryhistoryService.addEntity(productinventoryhistory);
+	
+}
+	
 }

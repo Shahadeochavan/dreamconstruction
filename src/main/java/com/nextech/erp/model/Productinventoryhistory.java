@@ -25,10 +25,10 @@ public class Productinventoryhistory implements Serializable {
 	private long id;
 
 	// @Min(value = 0, message = " please enter after quantity")
-	private int afterquantity;
+	private long afterquantity;
 
 	// @Min(value = 0, message = " please enter before quantity")
-	private int beforequantity;
+	private long beforequantity;
 
 	@Column(name="created_by")
 	private long createdBy;
@@ -73,19 +73,19 @@ public class Productinventoryhistory implements Serializable {
 		this.id = id;
 	}
 
-	public int getAfterquantity() {
+	public long getAfterquantity() {
 		return this.afterquantity;
 	}
 
-	public void setAfterquantity(int afterquantity) {
+	public void setAfterquantity(long afterquantity) {
 		this.afterquantity = afterquantity;
 	}
 
-	public int getBeforequantity() {
+	public long getBeforequantity() {
 		return this.beforequantity;
 	}
 
-	public void setBeforequantity(int beforequantity) {
+	public void setBeforequantity(long beforequantity) {
 		this.beforequantity = beforequantity;
 	}
 

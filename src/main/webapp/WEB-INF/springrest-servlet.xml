@@ -71,7 +71,9 @@
 		class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basename" value="messages" />
 	</bean>
-
+	<bean id="multipartResolver"
+      class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
+</bean>
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">

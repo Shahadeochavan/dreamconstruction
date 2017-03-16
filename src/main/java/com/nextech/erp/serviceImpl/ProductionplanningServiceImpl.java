@@ -94,7 +94,7 @@ public class ProductionplanningServiceImpl extends
 			}
 			ProductionPlan productionPlan = new ProductionPlan();
 			productionPlan.setProductId(entry.getKey());
-			productionPlan.setProductBalanceQty(productinventory.getQuantityavailable());
+		//	productionPlan.setProductBalanceQty(productinventory.getQuantityavailable());
 			productionPlan.setProductTargetQty(remainingAmt);
 			productionPlan.setProductProductionPlan(entry.getValue());
 			productionPlan.setProductName(productService.getEntityById(Product.class, entry.getKey()).getPartNumber());

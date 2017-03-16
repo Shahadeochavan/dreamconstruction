@@ -134,7 +134,7 @@ public class ProductqualityController {
 			productqualityService.updateEntity(Productquality);
 			return new UserStatus(1, "Productquality update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}

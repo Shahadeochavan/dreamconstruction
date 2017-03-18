@@ -30,9 +30,8 @@ public class FileuploadController {
 		if (!inputFile.isEmpty()) {
 			try {
 				String originalFilename = inputFile.getOriginalFilename();
-				File destinationFile = new File(
-						context.getRealPath("/WEB-INF")
-								+ File.separator + originalFilename);
+				File destinationFile = new File(context.getRealPath("/WEB-INF")
+						+ File.separator + originalFilename);
 				inputFile.transferTo(destinationFile);
 				fileInfo.setFileName(destinationFile.getPath());
 				fileInfo.setFileSize(inputFile.getSize());

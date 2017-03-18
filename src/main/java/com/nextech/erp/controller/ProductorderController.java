@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
@@ -45,6 +47,9 @@ public class ProductorderController {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorder(
@@ -159,7 +164,7 @@ public class ProductorderController {
 		productorder.setQuantity(productOrderAssociationModel
 				.getOrderproductassociations().size());
 		productorder.setStatus(statusService.getEntityById(Status.class,
-				productOrderAssociationModel.getStatus()));
+				Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorder.setIsactive(true);
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -207,7 +212,7 @@ public class ProductorderController {
 		List<Productorder> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties. 
-			productorderList = productorderService.getPendingProductOrders(14);
+			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)));
 
 		} catch (Exception e) {
 			e.printStackTrace();

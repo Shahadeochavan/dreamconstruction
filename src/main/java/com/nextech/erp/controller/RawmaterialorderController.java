@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
@@ -45,6 +47,9 @@ public class RawmaterialorderController {
 	
 	@Autowired
 	VendorService vendorService;
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	private static final int STATUS_INVOICE_IN=11;
 	private static final int STATUS_QUALITY_CHECK=8;
@@ -139,7 +144,7 @@ public class RawmaterialorderController {
 		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
 		rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
 		rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
-		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,rawmaterialOrderAssociationModel.getStatus()));
+		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 		rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
 		rawmaterialorder.setName(rawmaterialOrderAssociationModel.getName());
 		rawmaterialorder.setActualPrice(rawmaterialOrderAssociationModel.getActualPrice());

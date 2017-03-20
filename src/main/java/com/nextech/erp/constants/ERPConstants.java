@@ -6,6 +6,7 @@ public class ERPConstants {
 	public static String FIRSTNAME="firstName";
     public static String STATUS_RAW_MATERIAL_INVENTORY_ADD="statusRMInventoryAdd";
     public static String STATUS_NEW_PRODUCT_ORDER="newProductOrder";
+    public static String STATUS_NEW_RM_ORDER="newRMOrder";
     public static String EMAIL_ALREADY_EXIT="emailExit";
     public static String COMPANY_NAME_EXIT="companyName";
     public static String CLIENT_ADDED="clientAdded";

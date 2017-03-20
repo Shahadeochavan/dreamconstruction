@@ -35,6 +35,7 @@ public class ProductorderassociationDaoImpl extends
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("product.id", pId));
+		criteria.add(Restrictions.ge("remainingQuantity", new Long(0)));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (criteria.list().size() > 0 ? (List<Productorderassociation>)criteria.list() : null);
 	}

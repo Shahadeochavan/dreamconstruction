@@ -89,12 +89,12 @@ public class ProductionplanningServiceImpl extends
 			long remainingAmt = 0;
 			if(productorderassociations != null){
 				for (Productorderassociation productorderassociation : productorderassociations) {
-					remainingAmt = remainingAmt+ productorderassociation.getRemainingQuantity();
+					remainingAmt = remainingAmt + productorderassociation.getRemainingQuantity();
 				}
 			}
 			ProductionPlan productionPlan = new ProductionPlan();
 			productionPlan.setProductId(entry.getKey());
-		//	productionPlan.setProductBalanceQty(productinventory.getQuantityavailable());
+			productionPlan.setProductBalanceQty(productinventory == null ? 0 : productinventory.getQuantityavailable());
 			productionPlan.setProductTargetQty(remainingAmt);
 			productionPlan.setProductProductionPlan(entry.getValue());
 			productionPlan.setProductName(productService.getEntityById(Product.class, entry.getKey()).getPartNumber());
@@ -107,10 +107,8 @@ public class ProductionplanningServiceImpl extends
 	private Map<Long,List<ProductProductionPlan>> getProductProductPlanMap(
 			List<Productionplanning> productionplanningList) {
 		Map<Long,List<ProductProductionPlan>> productionPlanMap = new HashMap<Long, List<ProductProductionPlan>>();
-		for (Iterator<Productionplanning> iterator = productionplanningList.iterator(); iterator
-				.hasNext();) {
-			Productionplanning productionplanning = (Productionplanning) iterator
-					.next();
+		for (Iterator<Productionplanning> iterator = productionplanningList.iterator(); iterator.hasNext();) {
+			Productionplanning productionplanning = (Productionplanning) iterator.next();
 			List<ProductProductionPlan> productProductionPlans = null;
 			if(productionPlanMap.get(productionplanning.getProduct().getId()) == null){
 				productProductionPlans = new ArrayList<ProductProductionPlan>();

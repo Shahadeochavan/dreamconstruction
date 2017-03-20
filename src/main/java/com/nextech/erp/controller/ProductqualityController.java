@@ -91,12 +91,12 @@ public class ProductqualityController {
 				productquality.setIsactive(true);
 				productqualityService.addEntity(productquality);
 				//TODO add product inventory history
-				addProductInventoryHistory(productquality.getGoodQuantity(), product);
+				addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
 			//TODO update product inventory
-			Productinventory productinventory = updateProductInventory(productquality, product);
+			updateProductInventory(productquality, product, request, response);
 			
-
-		//	updateProductOrder(productorder);
+//			productionplanningNew.
+//			updateProductOrder(productorder);
 			
 			
 			
@@ -166,12 +166,14 @@ public class ProductqualityController {
 		}
 
 	}
-	private Productinventory updateProductInventory(Productquality productquality,Product product) throws Exception{
+	private Productinventory updateProductInventory(Productquality productquality,Product product,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productquality.getProduct().getId());
 		if(productinventory == null){
 			productinventory = new Productinventory();
 			productinventory.setProduct(product);
 			productinventory.setQuantityavailable(productquality.getGoodQuantity());
+			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setIsactive(true);
 			productinventoryService.addEntity(productinventory);
 		}else{
@@ -180,7 +182,7 @@ public class ProductqualityController {
 		}
 		return productinventory;
 	}
-	private void addProductInventoryHistory(long goodQuantity,Product product) throws Exception{
+	private void addProductInventoryHistory(long goodQuantity,Product product,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(product.getId());
 		if(productinventory == null){
 			productinventory = new Productinventory();
@@ -191,6 +193,8 @@ public class ProductqualityController {
 		}
 		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
 		productinventoryhistory.setProductinventory(productinventory);
+		productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setBeforequantity((int)productinventory.getQuantityavailable());
 		productinventoryhistory.setAfterquantity((int)(goodQuantity+productinventory.getQuantityavailable()));

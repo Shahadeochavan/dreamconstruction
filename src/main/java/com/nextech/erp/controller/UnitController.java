@@ -3,13 +3,14 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,13 +30,15 @@ public class UnitController {
 	UnitService unitservice;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Unit unit,
+	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			unit.setIsactive(true);
 		long id=	unitservice.addEntity(unit);
 			System.out.println("id is"+id);
@@ -67,9 +70,12 @@ public class UnitController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUnit(@RequestBody Unit Unit) {
+	public @ResponseBody UserStatus updateUnit(@RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			unitservice.updateEntity(Unit);
+			unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			unit.setIsactive(true);
+			unitservice.updateEntity(unit);
 			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

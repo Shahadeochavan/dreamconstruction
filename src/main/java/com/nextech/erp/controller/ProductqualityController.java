@@ -121,6 +121,7 @@ public class ProductqualityController {
 	public @ResponseBody Productquality getProductquality(@PathVariable("id") long id) {
 		Productquality productquality = null;
 		try {
+			
 			productquality = productqualityService.getEntityById(Productquality.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -129,9 +130,12 @@ public class ProductqualityController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductquality(@RequestBody Productquality Productquality) {
+	public @ResponseBody UserStatus updateProductquality(@RequestBody Productquality productquality,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productqualityService.updateEntity(Productquality);
+			productquality.setIsactive(true);
+			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productqualityService.updateEntity(productquality);
 			return new UserStatus(1, "Productquality update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();

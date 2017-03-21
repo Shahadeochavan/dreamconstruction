@@ -1,17 +1,10 @@
 package com.nextech.erp.controller;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -22,10 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.service.ClientService;
@@ -81,29 +71,7 @@ public class ClientController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-    @RequestMapping("uploadform")  
-    public UserStatus uploadForm(){  
-        return new UserStatus();    
-    }  
-	  @RequestMapping(value="/savefile",method=RequestMethod.POST)  
-	    public @ResponseBody UserStatus saveimage( @RequestParam CommonsMultipartFile file,  
-	           HttpSession session) throws Exception{  
-	  
-	    ServletContext context = session.getServletContext();  
-	    String path = context.getRealPath(UPLOAD_DIRECTORY);  
-	    String filename = file.getOriginalFilename();  
-	  
-	    System.out.println(path+" "+filename);        
-	  
-	    byte[] bytes = file.getBytes();  
-	    BufferedOutputStream stream =new BufferedOutputStream(new FileOutputStream(  
-	         new File(path + File.separator + filename)));  
-	    stream.write(bytes);  
-	    stream.flush();  
-	    stream.close();  
-	           
-	    return new UserStatus();  
-	    }  
+
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Client getClient(@PathVariable("id") long id) {
@@ -117,8 +85,11 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client) {
+	public @ResponseBody UserStatus updateClient(@RequestBody Client client,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			client.setIsactive(true);
 			clientService.updateEntity(client);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {

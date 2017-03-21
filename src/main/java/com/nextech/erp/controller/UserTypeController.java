@@ -3,6 +3,8 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.status.UserStatus;
@@ -29,14 +32,15 @@ public class UserTypeController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUserType(@Valid @RequestBody Usertype usertype,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			usertype.setCreatedBy("10");
 			usertype.setIsactive(true);
+			usertype.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			usertype.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userTypeService.addEntity(usertype);
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -67,12 +71,15 @@ public class UserTypeController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUserType(
-			@RequestBody Usertype userType) {
+			@RequestBody Usertype userType,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			userType.setIsactive(true);
+			userType.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			userType.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userTypeService.updateEntity(userType);
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}

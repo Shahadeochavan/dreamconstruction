@@ -3,6 +3,8 @@ package com.nextech.erp.controller;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
@@ -11,14 +13,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.UsertypepageassociationService;
 import com.nextech.erp.status.UserStatus;
@@ -36,14 +36,15 @@ public class UsertypepageassociationController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPageAss(
 			@Valid @RequestBody Usertypepageassociation usertypepageassociation,
-			BindingResult bindingResult) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 			usertypepageassociation.setIsactive(true);
-			usertypepageassociation.setCreatedBy(messageSource.getMessage(ERPConstants.CREATED_BY, null, null));
+			usertypepageassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			usertypepageassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			usertypepageassociationService.addEntity(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
@@ -77,8 +78,11 @@ public class UsertypepageassociationController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updatePageAss(
-			@RequestBody Usertypepageassociation usertypepageassociation) {
+			@RequestBody Usertypepageassociation usertypepageassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			usertypepageassociation.setIsactive(true);
+			usertypepageassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			usertypepageassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			usertypepageassociationService
 					.updateEntity(usertypepageassociation);
 			return new UserStatus(1,

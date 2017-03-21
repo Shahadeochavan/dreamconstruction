@@ -122,8 +122,11 @@ public class ProductionplanningController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning) {
+	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productionplanning.setIsactive(true);
 			productionplanningService.updateEntity(productionplanning);
 			return new UserStatus(1, "Productionplanning update Successfully !");
 		} catch (Exception e) {
@@ -191,6 +194,7 @@ public class ProductionplanningController {
 
 		List<Productionplanning> productionplanningList = null;
 		try {
+			
 			productionplanningList = productionplanningService.updateProductionPlanByMonthYear(month_year);
 
 		} catch (Exception e) {
@@ -201,13 +205,13 @@ public class ProductionplanningController {
 	}
 	
 	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year) {
+	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
 
 		List<Productionplanning> productionplanningList = null;
 		List<Product> productList = null;
 		try {
 			productList = productService.getEntityList(Product.class);
-			productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year);
+			productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -249,6 +253,7 @@ public class ProductionplanningController {
 		List<Productionplanning> productionplanning = null;
 		try {
 			productionplanning = productionplanningService.getProductionplanByDate(date);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

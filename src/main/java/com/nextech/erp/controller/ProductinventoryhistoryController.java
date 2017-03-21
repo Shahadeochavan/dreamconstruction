@@ -71,9 +71,12 @@ public class ProductinventoryhistoryController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductinventoryhistory(@RequestBody Productinventoryhistory Productinventoryhistory) {
+	public @ResponseBody UserStatus updateProductinventoryhistory(@RequestBody Productinventoryhistory productinventoryhistory,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productinventoryhistoryService.updateEntity(Productinventoryhistory);
+			productinventoryhistory.setIsactive(true);
+			productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventoryhistoryService.updateEntity(productinventoryhistory);
 			return new UserStatus(1, "Productinventoryhistory update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();

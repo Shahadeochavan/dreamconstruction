@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -55,7 +56,7 @@ public class UserController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
-			BindingResult bindingResult, HttpServletRequest request) {
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -79,6 +80,8 @@ public class UserController {
 							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
 				}
 				user.setIsactive(true);
+				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				userservice.addEntity(user);
 				return new UserStatus(1, "User added Successfully !");
 			} else {
@@ -168,8 +171,11 @@ public class UserController {
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUser(@RequestBody User user) {
+	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			user.setIsactive(true);
+			user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.updateEntity(user);
 			return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {

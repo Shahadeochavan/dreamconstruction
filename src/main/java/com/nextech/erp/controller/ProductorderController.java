@@ -140,8 +140,11 @@ public class ProductorderController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorder(
-			@RequestBody Productorder productorder) {
+			@RequestBody Productorder productorder,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productorder.setIsactive(true);
 			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Productorder update Successfully !");
 		} catch (Exception e) {

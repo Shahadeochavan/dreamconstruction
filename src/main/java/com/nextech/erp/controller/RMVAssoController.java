@@ -85,8 +85,11 @@ public class RMVAssoController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialvendorassociation(
-			@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation) {
+			@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			rawmaterialvendorassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialvendorassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialvendorassociation.setIsactive(true);
 			rmvAssoService.updateEntity(rawmaterialvendorassociation);
 			return new UserStatus(1,
 					"Rawmaterialvendorassociation update Successfully !");

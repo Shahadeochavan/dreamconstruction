@@ -124,8 +124,11 @@ public class RawmaterialorderinvoiceController {
 	}
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorderinvoice(
-			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice) {
+			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			rawmaterialorderinvoice.setIsactive(true);
+			rawmaterialorderinvoice.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderinvoiceservice
 					.updateEntity(rawmaterialorderinvoice);
 			return new UserStatus(1,
@@ -184,8 +187,8 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderinvoiceassociation
 				.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderinvoiceassociation.setIsactive(true);
-		rawmaterialorderinvoice.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorderinvoiceassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorderinvoiceassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceassociationService
 				.addEntity(rawmaterialorderinvoiceassociation);
 	}
@@ -202,6 +205,7 @@ public class RawmaterialorderinvoiceController {
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
 				rmorderinvoiceintakquantity
 						.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+				rmorderinvoiceintakquantity.setIsactive(true);
 				rmorderinvoiceintakquantity.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rmorderinvoiceintakquantity.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rmorderinvoiceintakquantityService

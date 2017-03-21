@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.Part;
 import com.nextech.erp.model.Dispatch;
@@ -105,6 +106,7 @@ public class DispatchController {
 			for (Part part : dispatchDTO.getParts()) {
 				Dispatch dispatch = setPart(part);
 
+				dispatch.setDescription(dispatchDTO.getDescription());
 				dispatch.setProductorder(productorderService.getEntityById(
 						Productorder.class, dispatchDTO.getOrderId()));
 				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
@@ -124,10 +126,10 @@ public class DispatchController {
 
 				// TODO add product Inventroy history
 				addProductInventoryHistory(dispatch.getQuantity(), product,
-						dispatch);
+						dispatch, request, response);
 
 				// TODO update product Inventory
-				updateProductInventory(dispatch, product);
+				updateProductInventory(dispatch, product, request, response);
 
 				// TODO update product order
 				updateProductOrder(productorder);
@@ -171,8 +173,14 @@ public class DispatchController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateDispatch(
-			@RequestBody Dispatch dispatch) {
+			@RequestBody Dispatch dispatch,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
+			dispatch.setIsactive(true);
+			dispatch.setCreatedBy(Long.parseLong(request.getAttribute(
+					"current_user").toString()));
+			dispatch.setUpdatedBy(Long.parseLong(request.getAttribute(
+					"current_user").toString()));
 			dispatchservice.updateEntity(dispatch);
 			return new UserStatus(1, "Dispatch update Successfully !");
 		} catch (Exception e) {
@@ -233,12 +241,14 @@ public class DispatchController {
 	}
 
 	private Productinventory updateProductInventory(Dispatch dispatch,
-			Product product) throws Exception {
+			Product product,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		Productinventory productinventory = productinventoryService
 				.getProductinventoryByProductId(dispatch.getProduct().getId());
 		if (productinventory == null) {
 			productinventory = new Productinventory();
 			productinventory.setProduct(product);
+			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setQuantityavailable(productinventory
 					.getQuantityavailable() - dispatch.getQuantity());
 			productinventory.setIsactive(true);
@@ -252,7 +262,7 @@ public class DispatchController {
 	}
 
 	private void addProductInventoryHistory(long goodQuantity, Product product,
-			Dispatch dispatch) throws Exception {
+			Dispatch dispatch,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		Productinventory productinventory = productinventoryService
 				.getProductinventoryByProductId(product.getId());
 		if (productinventory == null) {
@@ -265,6 +275,8 @@ public class DispatchController {
 		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
 		productinventoryhistory.setProductinventory(productinventory);
 		productinventoryhistory.setIsactive(true);
+		productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productinventoryhistory.setBeforequantity(productinventory
 				.getQuantityavailable() - dispatch.getQuantity());
 		productinventoryhistory.setAfterquantity((goodQuantity

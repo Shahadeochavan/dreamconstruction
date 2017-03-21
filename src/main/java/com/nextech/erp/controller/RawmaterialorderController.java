@@ -128,8 +128,11 @@ public class RawmaterialorderController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorder(
-			@RequestBody Rawmaterialorder rawmaterialorder) {
+			@RequestBody Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorder.setIsactive(true);
 			rawmaterialorderService.updateEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder update Successfully !");
 		} catch (Exception e) {

@@ -11,6 +11,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductionplanningDao;
@@ -140,7 +143,7 @@ public class ProductionplanningServiceImpl extends
 
 	@Override
 	public List<Productionplanning> createProductionPlanMonthYear(
-			List<Product> productList,String month_year) throws Exception {
+			List<Product> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<Productionplanning> productionPlanList = new ArrayList<Productionplanning>();
 		Productionplanning productionplanning = null;
 		Calendar cal = Calendar.getInstance();
@@ -154,6 +157,8 @@ public class ProductionplanningServiceImpl extends
 			while (myMonth==cal.get(Calendar.MONTH)) {
 				productionplanning = new Productionplanning();
 				productionplanning.setProduct(product);
+				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanning.setIsactive(true);
 				productionplanning.setDate(cal.getTime());
 				productionplanningDao.add(productionplanning);

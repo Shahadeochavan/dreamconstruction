@@ -6,6 +6,7 @@ public class DispatchDTO {
 	private long orderId;
 	private String invoiceNo;
 	private List<Part> parts;
+	private String description;
 	
 	public long getOrderId() {
 		return orderId;
@@ -25,4 +26,11 @@ public class DispatchDTO {
 	public void setParts(List<Part> parts) {
 		this.parts = parts;
 	}
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
 }

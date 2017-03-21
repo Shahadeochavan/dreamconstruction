@@ -79,8 +79,11 @@ public class RawmaterialorderassociationController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorderassociation(
-			@RequestBody Rawmaterialorderassociation rawmaterialorderassociation) {
+			@RequestBody Rawmaterialorderassociation rawmaterialorderassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			rawmaterialorderassociation.setIsactive(true);
+			rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderassociationService
 					.updateEntity(rawmaterialorderassociation);
 			return new UserStatus(1,

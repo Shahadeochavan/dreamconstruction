@@ -3,6 +3,9 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -37,12 +40,16 @@ public class Rawmaterialorderinvoice implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
+	@NotBlank(message="{description should not be blank}")
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private String driver_Name;
 
 	private Time intime;
 
+	@NotBlank(message="{Invoice number should not be blank}")
+	@Size(min = 1, max = 255, message = "{Invoice number sholud be greater than 1 or less than 255 characters or digits}")
 	private String invoice_No;
 
 	private boolean isactive;

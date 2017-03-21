@@ -51,7 +51,7 @@ public class Productionplanning implements Serializable {
 	private int targetQuantity;
 
 	@Column(name="updated_by")
-	private int updatedBy;
+	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
@@ -154,11 +154,11 @@ public class Productionplanning implements Serializable {
 		this.targetQuantity = targetQuantity;
 	}
 
-	public int getUpdatedBy() {
+	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(int updatedBy) {
+	public void setUpdatedBy(long updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 

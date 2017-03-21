@@ -13,7 +13,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -87,8 +86,11 @@ public class ProductRMAssoController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductrawmaterialassociation(
-			@RequestBody Productrawmaterialassociation productrawmaterialassociation) {
+			@RequestBody Productrawmaterialassociation productrawmaterialassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productrawmaterialassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productrawmaterialassociation.setIsactive(true);
 			productRMAssoService
 					.updateEntity(productrawmaterialassociation);
 			return new UserStatus(1,

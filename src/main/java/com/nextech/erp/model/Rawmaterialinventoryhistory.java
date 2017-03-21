@@ -31,6 +31,7 @@ public class Rawmaterialinventoryhistory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+	
 	private String description;
 
 	private boolean isactive;

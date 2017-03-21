@@ -74,8 +74,11 @@ public class RawmaterialController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterial(@RequestBody Rawmaterial rawmaterial) {
+	public @ResponseBody UserStatus updateRawmaterial(@RequestBody Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			rawmaterial.setIsactive(true);
+			rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialService.updateEntity(rawmaterial);
 			return new UserStatus(1,messageSource.getMessage(ERPConstants.RAW_MATERAIL_UPDATE, null, null));
 		} catch (Exception e) {

@@ -196,8 +196,8 @@ public class QualitycheckrawmaterialController {
 		qualitycheckrawmaterial.setRawmaterial(rawmaterial);
 		qualitycheckrawmaterial.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
 		qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
-		rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		qualitycheckrawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		qualitycheckrawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		if(qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceIdAndRMId(qualitycheckrawmaterial.getRawmaterialorderinvoice().getId(), 
 				qualitycheckrawmaterial.getRawmaterial().getId())==null){
 			qualitycheckrawmaterial.setIsactive(true);
@@ -214,8 +214,8 @@ public class QualitycheckrawmaterialController {
 			rawmaterialinventory = new Rawmaterialinventory();
 			rawmaterialinventory.setRawmaterial(rawmaterial);
 			rawmaterialinventory.setIsactive(true);
-			rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventoryService.addEntity(rawmaterialinventory);
 		}else{
 			rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());

@@ -78,8 +78,11 @@ public class RawmaterialinventoryController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateRawmaterialinventory(@RequestBody Rawmaterialinventory rawmaterialinventory) {
+	public @ResponseBody UserStatus updateRawmaterialinventory(@RequestBody Rawmaterialinventory rawmaterialinventory,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			rawmaterialinventory.setIsactive(true);
+			rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventoryService.updateEntity(rawmaterialinventory);
 			return new UserStatus(1, "Rawmaterialinventory update Successfully !");
 		} catch (Exception e) {

@@ -69,8 +69,11 @@ public class StatusController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateStatus(@RequestBody Status status) {
+	public @ResponseBody UserStatus updateStatus(@RequestBody Status status,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			status.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			status.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			status.setIsactive(true);
 			statusService.updateEntity(status);
 			return new UserStatus(1, "Status update Successfully !");
 		} catch (Exception e) {

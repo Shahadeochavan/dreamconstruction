@@ -69,8 +69,11 @@ public class ProductorderassociationController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation) {
+	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			productorderassociation.setIsactive(true);
+			productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderassociationService.updateEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation update Successfully !");
 		} catch (Exception e) {

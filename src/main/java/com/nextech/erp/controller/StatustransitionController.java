@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +46,7 @@ public class StatustransitionController {
 			if (statustransitionService
 					.getStatustransitionByEmail(statustransition
 							.getIsNotificationEmail()) == null){
+				statustransition.setIsactive(true);
 				statustransition.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				statustransition.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				statustransitionService.addEntity(statustransition);
@@ -84,8 +84,11 @@ public class StatustransitionController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateStatustransition(
-			@RequestBody Statustransition statustransition) {
+			@RequestBody Statustransition statustransition,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			statustransition.setIsactive(true);
+			statustransition.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			statustransition.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			statustransitionService.updateEntity(statustransition);
 			return new UserStatus(1, "Statustransition update Successfully !");
 		} catch (Exception e) {

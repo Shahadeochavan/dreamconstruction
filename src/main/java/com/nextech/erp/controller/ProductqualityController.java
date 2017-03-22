@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productinventoryhistory;
@@ -67,7 +68,7 @@ public class ProductqualityController {
 	ProductorderService productorderService;
 	
 	
-	private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
+	//private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
 	
 	@RequestMapping(value = "/productQualityCheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductquality(@Valid @RequestBody Productquality productqualityInput,
@@ -181,6 +182,8 @@ public class ProductqualityController {
 			productinventory.setIsactive(true);
 			productinventoryService.addEntity(productinventory);
 		}else{
+			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setQuantityavailable(productinventory.getQuantityavailable() + productquality.getRejectedQuantity());
 			productinventoryService.updateEntity(productinventory);
 		}
@@ -202,7 +205,7 @@ public class ProductqualityController {
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setBeforequantity((int)productinventory.getQuantityavailable());
 		productinventoryhistory.setAfterquantity((int)(goodQuantity+productinventory.getQuantityavailable()));
-		productinventoryhistory.setStatus(statusService.getEntityById(Status.class, STATUS_PRODUCT__INVENTORY_ADD));
+		productinventoryhistory.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
 		productinventoryhistoryService.addEntity(productinventoryhistory);
 		
 	}

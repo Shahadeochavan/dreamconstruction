@@ -31,7 +31,7 @@ public class Rawmaterialorderassociation implements Serializable {
 
 	private int quantity;
 	
-	private int remainingQuantity;
+	private long remainingQuantity;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -126,10 +126,10 @@ public class Rawmaterialorderassociation implements Serializable {
 	public void setRawmaterialorder(Rawmaterialorder rawmaterialorder) {
 		this.rawmaterialorder = rawmaterialorder;
 	}
-	public int getRemainingQuantity() {
+	public long getRemainingQuantity() {
 		return remainingQuantity;
 	}
-	public void setRemainingQuantity(int remainingQuantity) {
+	public void setRemainingQuantity(long remainingQuantity) {
 		this.remainingQuantity = remainingQuantity;
 	}
 

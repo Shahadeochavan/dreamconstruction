@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RawmaterialorderassociationDao;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 
 public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterialorderassociation> implements
@@ -25,7 +26,10 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		session = sessionFactory.openSession();
 		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
-		return criteria.list();
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
+		//return criteria.list();
+		return (criteria.list().size() > 0 ? (List<Rawmaterialorderassociation>)criteria.list() : null);
 	}
 
 	@Override

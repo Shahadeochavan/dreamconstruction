@@ -161,7 +161,14 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanning.setIsactive(true);
 				productionplanning.setDate(cal.getTime());
-				productionplanningDao.add(productionplanning);
+				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
+						productionplanning.getProduct().getId(),
+						productionplanning.getDate())== null){
+					productionplanningDao.add(productionplanning);
+				}else{
+					System.out.println("production plan already exit");
+				}
+				
 				productionPlanList.add(productionplanning);
 			  System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
 			  cal.add(Calendar.DAY_OF_MONTH, 1);

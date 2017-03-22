@@ -162,6 +162,7 @@ public class ProductorderController {
 		productorder.setCreateDate(new Date());
 		productorder.setDescription(productOrderAssociationModel
 				.getDescription());
+		productorder.setInvoiceNo(productOrderAssociationModel.getInvoiceNo());
 		productorder.setExpecteddeliveryDate(productOrderAssociationModel
 				.getDeliveryDate());
 		productorder.setQuantity(productOrderAssociationModel

@@ -51,10 +51,9 @@ public class RawmaterialorderController {
 	@Autowired
 	private MessageSource messageSource;
 	
-	private static final int STATUS_INVOICE_IN=11;
-	private static final int STATUS_QUALITY_CHECK=8;
+/*	private static final int STATUS_INVOICE_IN=11;
 	private static final int STATUS_RAW_MATERIAL_INPROCESS=1;
-	private static final int STATUS_RAW_MATERIAL_INCOMPLETE=2;
+	private static final int STATUS_RAW_MATERIAL_INCOMPLETE=2;*/
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
@@ -197,7 +196,9 @@ public class RawmaterialorderController {
 		List<Rawmaterialorder> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService
-					.getRawmaterialorderByStatusId(STATUS_INVOICE_IN,STATUS_RAW_MATERIAL_INPROCESS,STATUS_RAW_MATERIAL_INCOMPLETE);
+					.getRawmaterialorderByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_INVOICE_IN, null, null)),
+							Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INPROCESS, null, null))
+							,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INCOMPLETE, null, null)));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -212,7 +213,7 @@ public class RawmaterialorderController {
 		List<Rawmaterialorder> rawmaterialorderList = null;
 		try {
 			rawmaterialorderList = rawmaterialorderService
-					.getRawmaterialorderByQualityCheckStatusId(STATUS_QUALITY_CHECK);
+					.getRawmaterialorderByQualityCheckStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK, null, null)));
 
 		} catch (Exception e) {
 			e.printStackTrace();

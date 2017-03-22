@@ -30,4 +30,9 @@ public class ERPConstants {
     public static String STATUS_SECURITY_CHECK_INVOICE_IN ="statusSecurityCheck";
     public static String RM_ORDER_INVOICE_EXIT="rawMaterailOrderInvoiceExit";
     public static String CREATED_BY="createdBy";
+    public static String STATUS_INVOICE_IN="invoiceIn";
+    public static String STATUS_QUALITY_CHECK="qualityCheck";
+    public static String STATUS_RAW_MATERIAL_INPROCESS="rmInProcess";
+    public static String STATUS_RAW_MATERIAL_INCOMPLETE="rmInComplete";
+    public static String STATUS_PRODUCT__INVENTORY_ADD="productInventoryAdd";
 }

@@ -32,7 +32,6 @@ public class VendorController {
 	@Autowired
 	private MessageSource messageSource;
 	
-	 private static final String UPLOAD_DIRECTORY ="/images";  
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(

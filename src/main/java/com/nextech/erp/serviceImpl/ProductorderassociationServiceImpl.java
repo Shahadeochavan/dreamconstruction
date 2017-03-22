@@ -1,10 +1,12 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductorderassociationDao;
+import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.service.ProductorderassociationService;
 
@@ -36,6 +38,13 @@ ProductorderassociationDao productorderassociationDao;
 			throws Exception {
 		// TODO Auto-generated method stub
 		return productorderassociationDao.getProductOrderAssoByProdutId(productId);
+	}
+
+	@Override
+	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
+			long pId, Date date) throws Exception {
+		// TODO Auto-generated method stub
+		return productorderassociationDao.getProductionPlanningforCurrentMonthByProductIdAndDate(pId, date);
 	}
 
 }

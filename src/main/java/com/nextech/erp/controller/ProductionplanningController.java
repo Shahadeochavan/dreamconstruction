@@ -24,6 +24,7 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.User;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
@@ -86,7 +87,6 @@ public class ProductionplanningController {
 			if (productionplanningService.getProductionPlanningforCurrentMonthByProductIdAndDate(
 					productionplanning.getProduct().getId(),
 					productionplanning.getDate())== null){
-				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningService.addEntity(productionplanning);
 			}
 			else{
@@ -250,15 +250,26 @@ public class ProductionplanningController {
 	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") Date date) {
 
-		List<Productionplanning> productionplanning = null;
+		List<Productionplanning> productionplanningList = null;
 		try {
-			productionplanning = productionplanningService.getProductionplanByDate(date);
-			
+		
+			productionplanningList = productionplanningService.getProductionplanByDate(date);
+		
+					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productionplanning;
+		return productionplanningList;
+	}
+	
+	private boolean productFilter(Productionplanning productionplanning) {
+		if (productionplanning.getTargetQuantity()>=productionplanning.getAchivedQuantity()) {
+			return true;
+		} else {
+			return false;
+		}
+
 	}
 	
 }

@@ -11,7 +11,8 @@ public class ProductOrderAssociationModel {
 	private long client;
 	private long status;
 	private Date deliveryDate;	
-	private Date createDate;	
+	private Date createDate;
+	private String invoiceNo;
 	private List<Productorderassociation> orderproductassociations;
 	public String getDescription() {
 		return description;
@@ -49,6 +50,12 @@ public class ProductOrderAssociationModel {
 	}
 	public void setStatus(long status) {
 		this.status = status;
+	}
+	public String getInvoiceNo() {
+		return invoiceNo;
+	}
+	public void setInvoiceNo(String invoiceNo) {
+		this.invoiceNo = invoiceNo;
 	}	
 	
 }

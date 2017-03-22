@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.Part;
 import com.nextech.erp.model.Dispatch;
@@ -65,7 +66,7 @@ public class DispatchController {
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
 
-	private static final int STATUS_PRODUCT__INVENTORY_ADD = 25;
+	//private static final int STATUS_PRODUCT__INVENTORY_ADD = 25;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addDispatch(
@@ -283,7 +284,7 @@ public class DispatchController {
 				+ productinventory.getQuantityavailable() - dispatch
 				.getQuantity()));
 		productinventoryhistory.setStatus(statusService.getEntityById(
-				Status.class, STATUS_PRODUCT__INVENTORY_ADD));
+				Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT__INVENTORY_ADD, null, null))));
 		productinventoryhistoryService.addEntity(productinventoryhistory);
 
 	}

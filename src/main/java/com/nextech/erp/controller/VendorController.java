@@ -1,7 +1,6 @@
 package com.nextech.erp.controller;
 
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +51,6 @@ public class VendorController {
 				return new UserStatus(1,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
 			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.addEntity(vendor);
 			return new UserStatus(1, "vendor added Successfully !");
@@ -85,7 +83,6 @@ public class VendorController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateVendor(@RequestBody Vendor vendor,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.updateEntity(vendor);

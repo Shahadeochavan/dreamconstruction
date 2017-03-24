@@ -22,7 +22,7 @@ public interface ProductionplanningService extends CRUDService<Productionplannin
 	
 	public List<Productionplanning> createProductionPlanMonthYear(List<Product> productList,String month_year,HttpServletRequest request,HttpServletResponse response) throws Exception;
 	
-	public void updateProductionplanningForCurrentMonth(List<ProductionPlan> productionplanningList) throws Exception;
+	public void updateProductionplanningForCurrentMonth(List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) throws Exception;
 	
 	public Productionplanning getProductionplanByDateAndProductId(Date date,long pId)throws Exception;
 	

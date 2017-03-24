@@ -34,10 +34,10 @@ ProductorderassociationDao productorderassociationDao;
 	}
 
 	@Override
-	public Productorderassociation getProductOrderAssoByProdutId(long productId)
+	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId)
 			throws Exception {
 		// TODO Auto-generated method stub
-		return productorderassociationDao.getProductOrderAssoByProdutId(productId);
+		return productorderassociationDao.getIncompleteProductOrderAssoByProdutId(productId);
 	}
 
 	@Override

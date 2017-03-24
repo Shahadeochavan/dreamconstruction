@@ -81,18 +81,18 @@ public class ProductqualityController {
 			Productionplanning productionplanningNew = productionplanningService.getEntityById(Productionplanning.class,productqualityInput.getProductionplanning().getId());
 			Product product =  productService.getEntityById(Product.class, productionplanningNew.getProduct().getId());
 			Productquality productquality = new Productquality();
-				productquality.setProductionplanning(productionplanningNew);
-				productquality.setCheckQuantity(productqualityInput.getCheckQuantity());
-				productquality.setGoodQuantity(productqualityInput.getGoodQuantity());
-				productquality.setRejectedQuantity(productqualityInput.getRejectedQuantity());
-				productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productquality.setRemark(productqualityInput.getRemark());
-				productquality.setProduct(product);
-				productquality.setIsactive(true);
-				productqualityService.addEntity(productquality);
-				//TODO add product inventory history
-				addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
+			productquality.setProductionplanning(productionplanningNew);
+			productquality.setCheckQuantity(productqualityInput.getCheckQuantity());
+			productquality.setGoodQuantity(productqualityInput.getGoodQuantity());
+			productquality.setRejectedQuantity(productqualityInput.getRejectedQuantity());
+			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productquality.setRemark(productqualityInput.getRemark());
+			productquality.setProduct(product);
+			productquality.setIsactive(true);
+			productqualityService.addEntity(productquality);
+			//TODO add product inventory history
+			addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
 			//TODO update product inventory
 			updateProductInventory(productquality, product, request, response);
 			

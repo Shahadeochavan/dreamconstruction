@@ -40,7 +40,6 @@ public class Rawmaterialorderinvoice implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
-	@NotBlank(message="{description should not be blank}")
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
@@ -48,8 +47,6 @@ public class Rawmaterialorderinvoice implements Serializable {
 
 	private Time intime;
 
-	@NotBlank(message="{Invoice number should not be blank}")
-	@Size(min = 1, max = 255, message = "{Invoice number sholud be greater than 1 or less than 255 characters or digits}")
 	private String invoice_No;
 
 	private boolean isactive;

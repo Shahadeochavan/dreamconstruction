@@ -25,18 +25,16 @@ import com.nextech.erp.status.UserStatus;
 @RequestMapping("/client")
 public class ClientController {
 
-	
-	private static final String UPLOAD_DIRECTORY ="/images";  
-
 	@Autowired
 	ClientService clientService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
-			@Valid @RequestBody Client client, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody Client client, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
@@ -45,18 +43,23 @@ public class ClientController {
 			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
 
 			} else {
-				return new UserStatus(1, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
-				
+				return new UserStatus(1, messageSource.getMessage(
+						ERPConstants.COMPANY_NAME_EXIT, null, null));
+
 			}
 			if (clientService.getClientByEmail(client.getEmailid()) == null) {
 			} else {
-				return new UserStatus(1, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(1, messageSource.getMessage(
+						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-			client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			client.setCreatedBy(Long.parseLong(request.getAttribute(
+					"current_user").toString()));
+			client.setUpdatedBy(Long.parseLong(request.getAttribute(
+					"current_user").toString()));
 			client.setIsactive(true);
 			clientService.addEntity(client);
-			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
+			return new UserStatus(1, messageSource.getMessage(
+					ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -72,12 +75,11 @@ public class ClientController {
 		}
 	}
 
-
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Client getClient(@PathVariable("id") long id) {
 		Client client = null;
 		try {
-			client = clientService.getEntityById(Client.class,id);
+			client = clientService.getEntityById(Client.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,13 +87,17 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateClient(@RequestBody Client client,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			client.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			client.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			client.setCreatedBy(Long.parseLong(request.getAttribute(
+					"current_user").toString()));
+			client.setUpdatedBy(Long.parseLong(request.getAttribute(
+					"current_user").toString()));
 			client.setIsactive(true);
 			clientService.updateEntity(client);
-			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
+			return new UserStatus(1, messageSource.getMessage(
+					ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -116,10 +122,11 @@ public class ClientController {
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {
 
 		try {
-			Client client = clientService.getEntityById(Client.class,id);
+			Client client = clientService.getEntityById(Client.class, id);
 			client.setIsactive(false);
 			clientService.updateEntity(client);
-			return new UserStatus(1,messageSource.getMessage(ERPConstants.CLIENT_DELETE, null, null));
+			return new UserStatus(1, messageSource.getMessage(
+					ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

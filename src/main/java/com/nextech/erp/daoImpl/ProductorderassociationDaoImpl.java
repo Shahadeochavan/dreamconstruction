@@ -56,7 +56,7 @@ public class ProductorderassociationDaoImpl extends
 	}
 
 	@Override
-	public Productorderassociation getProductOrderAssoByProdutId(long productId)
+	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId)
 			throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
@@ -64,9 +64,8 @@ public class ProductorderassociationDaoImpl extends
 				.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("product.id", productId));
 		criteria.add(Restrictions.eq("isactive", true));
-		Productorderassociation productorderassociation = (Productorderassociation) (criteria
-				.list().size() > 0 ? criteria.list().get(0) : null);
-		return productorderassociation;
+		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
+		return  (criteria.list().size() > 0 ? criteria.list() : null);
 	}
 
 	@Override

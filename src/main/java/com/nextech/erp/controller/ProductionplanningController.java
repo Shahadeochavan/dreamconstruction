@@ -1,6 +1,7 @@
 package com.nextech.erp.controller;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -24,11 +25,13 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -50,6 +53,9 @@ public class ProductionplanningController {
 	
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService; 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductionplanning(@Valid @RequestBody Productionplanning productionplanning,
@@ -124,7 +130,6 @@ public class ProductionplanningController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productionplanning.setIsactive(true);
 			productionplanningService.updateEntity(productionplanning);
@@ -137,9 +142,9 @@ public class ProductionplanningController {
 	
 	
 	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList) {
+	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList);
+			productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList, request, response);
 			return new UserStatus(1, "Productionplanning update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -250,27 +255,32 @@ public class ProductionplanningController {
 	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") Date date) {
 
-		List<Productionplanning> productionplanningList = null;
+		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
 		try {
 		
-			productionplanningList = productionplanningService.getProductionplanByDate(date);
-		
+			List<Productionplanning> productionplanningList = productionplanningService.getProductionplanByDate(date);
+			for (Productionplanning productionplanning : productionplanningList) {
+				boolean isProductRemaining = false;
+				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+				if(productorderassociations !=null && !productorderassociations.isEmpty()){
+					for (Productorderassociation productorderassociation : productorderassociations) {
+						if(productorderassociation.getRemainingQuantity() > 0){
+							isProductRemaining = true;
+							break;
+						}
+					}
+				}
+				if(isProductRemaining)
+					productionplanningFinalList.add(productionplanning);
+			}
 					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productionplanningList;
+		return productionplanningFinalList;
 	}
 	
-	private boolean productFilter(Productionplanning productionplanning) {
-		if (productionplanning.getTargetQuantity()>=productionplanning.getAchivedQuantity()) {
-			return true;
-		} else {
-			return false;
-		}
-
-	}
 	
 }
 

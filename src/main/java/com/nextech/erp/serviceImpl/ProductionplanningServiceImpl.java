@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductionplanningDao;
+import com.nextech.erp.dao.ProductorderassociationDao;
 import com.nextech.erp.dto.ProductProductionPlan;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
@@ -47,6 +48,9 @@ public class ProductionplanningServiceImpl extends
 	
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	ProductorderassociationDao productorderassociationDao;
 	
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
@@ -181,7 +185,7 @@ public class ProductionplanningServiceImpl extends
 
 	@Override
 	public void updateProductionplanningForCurrentMonth(
-			List<ProductionPlan> productionplanningList) throws Exception {
+			List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		Calendar cal = Calendar.getInstance();
 		for (Iterator<ProductionPlan> iterator = productionplanningList.iterator(); iterator
 				.hasNext();) {
@@ -194,16 +198,17 @@ public class ProductionplanningServiceImpl extends
 				cal.setTime(productProductionPlan.getProductionDate());
 				cal.set(Calendar.HOUR, 0);
 				cal.set(Calendar.MINUTE, 0);
-				cal.set(Calendar.SECOND, 0);
 				Date productionDateStart = cal.getTime();
+				cal.set(Calendar.SECOND, 0);
 				cal.set(Calendar.HOUR, 23);
 				cal.set(Calendar.MINUTE, 59);
 				cal.set(Calendar.SECOND, 59);
-				Date productionDateEnd = cal.getTime();
+				Date productionDateEnd = cal.getTime(); 
 				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
 				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
 				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
+				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningDao.update(productionplanning);
 			}
 			

@@ -257,6 +257,9 @@ public class DispatchController {
 		} else {
 			productinventory.setQuantityavailable(productinventory
 					.getQuantityavailable() - dispatch.getQuantity());
+			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventory.setIsactive(true);
 			productinventoryService.updateEntity(productinventory);
 		}
 		return productinventory;
@@ -270,6 +273,8 @@ public class DispatchController {
 			productinventory = new Productinventory();
 			productinventory.setProduct(product);
 			productinventory.setQuantityavailable(0);
+			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setIsactive(true);
 			productinventoryService.addEntity(productinventory);
 		}

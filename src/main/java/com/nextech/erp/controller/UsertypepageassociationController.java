@@ -44,7 +44,6 @@ public class UsertypepageassociationController {
 			}
 			usertypepageassociation.setIsactive(true);
 			usertypepageassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			usertypepageassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			usertypepageassociationService.addEntity(usertypepageassociation);
 			return new UserStatus(1,
 					"Usertypepageassociation added Successfully !");
@@ -81,7 +80,6 @@ public class UsertypepageassociationController {
 			@RequestBody Usertypepageassociation usertypepageassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			usertypepageassociation.setIsactive(true);
-			usertypepageassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			usertypepageassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			usertypepageassociationService
 					.updateEntity(usertypepageassociation);

@@ -86,7 +86,6 @@ public class ProductqualityController {
 			productquality.setGoodQuantity(productqualityInput.getGoodQuantity());
 			productquality.setRejectedQuantity(productqualityInput.getRejectedQuantity());
 			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productquality.setRemark(productqualityInput.getRemark());
 			productquality.setProduct(product);
 			productquality.setIsactive(true);
@@ -134,7 +133,6 @@ public class ProductqualityController {
 	public @ResponseBody UserStatus updateProductquality(@RequestBody Productquality productquality,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productquality.setIsactive(true);
-			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productquality.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productqualityService.updateEntity(productquality);
 			return new UserStatus(1, "Productquality update Successfully !");

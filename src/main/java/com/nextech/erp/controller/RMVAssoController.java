@@ -46,7 +46,6 @@ public class RMVAssoController {
 					rawmaterialvendorassociation.getVendor().getId(),
 					rawmaterialvendorassociation.getRawmaterial().getId()) == null){
 				rawmaterialvendorassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rawmaterialvendorassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rawmaterialvendorassociation.setIsactive(true);
 				rmvAssoService.addEntity(rawmaterialvendorassociation);
 			}	
@@ -87,7 +86,6 @@ public class RMVAssoController {
 	public @ResponseBody UserStatus updateRawmaterialvendorassociation(
 			@RequestBody Rawmaterialvendorassociation rawmaterialvendorassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			rawmaterialvendorassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialvendorassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialvendorassociation.setIsactive(true);
 			rmvAssoService.updateEntity(rawmaterialvendorassociation);

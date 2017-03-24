@@ -74,7 +74,6 @@ public class ProductinventoryhistoryController {
 	public @ResponseBody UserStatus updateProductinventoryhistory(@RequestBody Productinventoryhistory productinventoryhistory,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productinventoryhistory.setIsactive(true);
-			productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventoryhistoryService.updateEntity(productinventoryhistory);
 			return new UserStatus(1, "Productinventoryhistory update Successfully !");

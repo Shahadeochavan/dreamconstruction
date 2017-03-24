@@ -39,7 +39,6 @@ public class Rawmaterialorder implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
-	@NotBlank(message="{description should not be blank}")
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 

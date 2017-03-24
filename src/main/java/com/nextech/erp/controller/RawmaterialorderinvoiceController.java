@@ -127,7 +127,6 @@ public class RawmaterialorderinvoiceController {
 			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rawmaterialorderinvoice.setIsactive(true);
-			rawmaterialorderinvoice.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderinvoiceservice
 					.updateEntity(rawmaterialorderinvoice);
@@ -165,7 +164,6 @@ public class RawmaterialorderinvoiceController {
 			rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
 			rawmaterialorderinvoice.setIsactive(true);
 			rawmaterialorderinvoice.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			long inid = rawmaterialorderinvoiceservice
 					.addEntity(rawmaterialorderinvoice);
 			System.out.println("inid " + inid);

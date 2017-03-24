@@ -142,9 +142,10 @@ public class ProductorderController {
 	public @ResponseBody UserStatus updateProductorder(
 			@RequestBody Productorder productorder,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorder.setIsactive(true);
+			productorder.setStatus(statusService.getEntityById(Status.class,
+					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Productorder update Successfully !");
 		} catch (Exception e) {
@@ -171,7 +172,6 @@ public class ProductorderController {
 				Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorder.setIsactive(true);
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderService.addEntity(productorder);
 		return productorder;
 	}

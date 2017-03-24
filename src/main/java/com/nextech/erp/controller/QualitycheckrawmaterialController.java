@@ -197,7 +197,6 @@ public class QualitycheckrawmaterialController {
 		qualitycheckrawmaterial.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
 		qualitycheckrawmaterial.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
 		qualitycheckrawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		qualitycheckrawmaterial.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		if(qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceIdAndRMId(qualitycheckrawmaterial.getRawmaterialorderinvoice().getId(), 
 				qualitycheckrawmaterial.getRawmaterial().getId())==null){
 			qualitycheckrawmaterial.setIsactive(true);
@@ -215,9 +214,10 @@ public class QualitycheckrawmaterialController {
 			rawmaterialinventory.setRawmaterial(rawmaterial);
 			rawmaterialinventory.setIsactive(true);
 			rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventoryService.addEntity(rawmaterialinventory);
 		}else{
+			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialinventory.setIsactive(true);
 			rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()+qualitycheckrawmaterial.getGoodQuantity());
 			rawmaterialinventory.setUpdatedDate(new Timestamp(new Date().getTime()));
 			 rawmaterialinventoryService.updateEntity(rawmaterialinventory);
@@ -227,7 +227,6 @@ public class QualitycheckrawmaterialController {
 	private void  updateRMOrderRemainingQuantity(Qualitycheckrawmaterial qualitycheckrawmaterial ,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorderassociation rawmaterialorderassociation  =rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderIdandRMId(rawmaterialorder.getId(),qualitycheckrawmaterial.getRawmaterial().getId());
 		rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getRemainingQuantity()-qualitycheckrawmaterial.getGoodQuantity());
-		rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderassociationService.updateEntity(rawmaterialorderassociation);
 	}
@@ -238,7 +237,6 @@ public class QualitycheckrawmaterialController {
 		rawmaterialinventoryhistory.setRawmaterialinventory(rawmaterialinventory);
 		rawmaterialinventoryhistory.setIsactive(true);
 		rawmaterialinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
 		rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
@@ -252,7 +250,6 @@ public class QualitycheckrawmaterialController {
 		rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 		rawmaterialorderhistory.setIsactive(true);
 		rawmaterialorderhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorderhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderhistory.setQualitycheckrawmaterial(null);
 		rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
 		rawmaterialorderhistory.setStatus2(statusService.getEntityById(Status.class, getOrderStatus(rawmaterialorder)));

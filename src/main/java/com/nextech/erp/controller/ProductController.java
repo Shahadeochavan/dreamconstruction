@@ -51,7 +51,6 @@ public class ProductController {
 			}
 			product.setIsactive(true);
 			product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productService.addEntity(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -84,7 +83,6 @@ public class ProductController {
 	public @ResponseBody UserStatus updateProduct(@RequestBody Product product,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			product.setIsactive(true);
-			product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productService.updateEntity(product);
 			return new UserStatus(1, "Product update Successfully !");

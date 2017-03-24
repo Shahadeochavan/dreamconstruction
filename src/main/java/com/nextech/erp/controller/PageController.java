@@ -40,7 +40,6 @@ public class PageController {
 						.getDefaultMessage());
 			}
 			page.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			page.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			page.setIsactive(true);
 			pageservice.addEntity(page);
 			return new UserStatus(1, "Page added Successfully !");
@@ -73,7 +72,6 @@ public class PageController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updatePage(@RequestBody Page page,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			page.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			page.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			page.setIsactive(true);
 			pageservice.updateEntity(page);

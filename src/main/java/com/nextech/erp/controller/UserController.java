@@ -81,7 +81,6 @@ public class UserController {
 				}
 				user.setIsactive(true);
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				userservice.addEntity(user);
 				return new UserStatus(1, "User added Successfully !");
 			} else {
@@ -174,7 +173,6 @@ public class UserController {
 	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			user.setIsactive(true);
-			user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.updateEntity(user);
 			return new UserStatus(1, "User update Successfully !");

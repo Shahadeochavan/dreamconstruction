@@ -44,7 +44,6 @@ public class RawmaterialinventoryController {
 			if(rawmaterialinventoryService.getByRMId(rawmaterialinventory.getRawmaterial().getId())==null){
 				rawmaterialinventory.setIsactive(true);
 				rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rawmaterialinventoryService.addEntity(rawmaterialinventory);
 			}
 			else
@@ -81,7 +80,6 @@ public class RawmaterialinventoryController {
 	public @ResponseBody UserStatus updateRawmaterialinventory(@RequestBody Rawmaterialinventory rawmaterialinventory,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rawmaterialinventory.setIsactive(true);
-			rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialinventoryService.updateEntity(rawmaterialinventory);
 			return new UserStatus(1, "Rawmaterialinventory update Successfully !");

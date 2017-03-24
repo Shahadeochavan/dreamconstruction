@@ -39,7 +39,6 @@ public class ProductorderassociationController {
 			}
 			productorderassociation.setIsactive(true);
 			productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderassociationService.addEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -72,7 +71,6 @@ public class ProductorderassociationController {
 	public @ResponseBody UserStatus updateProductorderassociation(@RequestBody Productorderassociation productorderassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			productorderassociation.setIsactive(true);
-			productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderassociationService.updateEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation update Successfully !");

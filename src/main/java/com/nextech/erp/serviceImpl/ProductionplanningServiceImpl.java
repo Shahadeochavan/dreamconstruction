@@ -162,7 +162,6 @@ public class ProductionplanningServiceImpl extends
 				productionplanning = new Productionplanning();
 				productionplanning.setProduct(product);
 				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanning.setIsactive(true);
 				productionplanning.setDate(cal.getTime());
 				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
@@ -208,6 +207,8 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
 				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
+				Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, productionplanning.getProduct().getId());
+				System.out.println("productorderassociation quantity is"+productorderassociation.getQuantity());
 				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningDao.update(productionplanning);
 			}

@@ -34,8 +34,7 @@ public class Dispatch implements Serializable {
 	private String description;
 	
 	private long quantity;
-
-	@NotBlank(message="{Invoice number should not be blank}")
+	
 	@Size(min = 1, max = 255, message = "{Invoice number sholud be greater than 1 or less than 255 characters or digits}")
 	private String invoiceNo;
 

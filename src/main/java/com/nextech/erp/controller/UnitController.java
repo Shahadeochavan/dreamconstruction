@@ -38,7 +38,6 @@ public class UnitController {
 						.getDefaultMessage());
 			}
 			unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			unit.setIsactive(true);
 		long id=	unitservice.addEntity(unit);
 			System.out.println("id is"+id);
@@ -72,7 +71,6 @@ public class UnitController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUnit(@RequestBody Unit unit,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			unit.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			unit.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			unit.setIsactive(true);
 			unitservice.updateEntity(unit);

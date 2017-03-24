@@ -40,7 +40,6 @@ public class UserTypeController {
 			}
 			usertype.setIsactive(true);
 			usertype.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			usertype.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userTypeService.addEntity(usertype);
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -74,7 +73,6 @@ public class UserTypeController {
 			@RequestBody Usertype userType,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			userType.setIsactive(true);
-			userType.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userType.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userTypeService.updateEntity(userType);
 			return new UserStatus(1, "UserType update Successfully !");

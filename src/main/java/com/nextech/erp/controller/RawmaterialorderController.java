@@ -66,7 +66,6 @@ public class RawmaterialorderController {
 			}
 			rawmaterialorder.setIsactive(true);
 			rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderService.addEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -129,7 +128,7 @@ public class RawmaterialorderController {
 	public @ResponseBody UserStatus updateRawmaterialorder(
 			@RequestBody Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 			rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorder.setIsactive(true);
 			rawmaterialorderService.updateEntity(rawmaterialorder);
@@ -155,7 +154,6 @@ public class RawmaterialorderController {
 		rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
 		//rawmaterialorder.setRemainingQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations());
 		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setIsactive(true);
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
@@ -170,7 +168,6 @@ public class RawmaterialorderController {
 				rawmaterialorderassociation.setIsactive(true);
 				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
 				rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
 			}
 		}

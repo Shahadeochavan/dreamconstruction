@@ -44,7 +44,6 @@ public class RawmaterialorderassociationController {
 			}
 			rawmaterialorderassociation.setIsactive(true);
 			rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderassociationService
 					.addEntity(rawmaterialorderassociation);
 			return new UserStatus(1,
@@ -82,7 +81,6 @@ public class RawmaterialorderassociationController {
 			@RequestBody Rawmaterialorderassociation rawmaterialorderassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			rawmaterialorderassociation.setIsactive(true);
-			rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderassociationService
 					.updateEntity(rawmaterialorderassociation);

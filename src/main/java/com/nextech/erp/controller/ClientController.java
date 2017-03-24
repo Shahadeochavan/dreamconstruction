@@ -54,8 +54,6 @@ public class ClientController {
 			}
 			client.setCreatedBy(Long.parseLong(request.getAttribute(
 					"current_user").toString()));
-			client.setUpdatedBy(Long.parseLong(request.getAttribute(
-					"current_user").toString()));
 			client.setIsactive(true);
 			clientService.addEntity(client);
 			return new UserStatus(1, messageSource.getMessage(
@@ -90,8 +88,6 @@ public class ClientController {
 	public @ResponseBody UserStatus updateClient(@RequestBody Client client,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			client.setCreatedBy(Long.parseLong(request.getAttribute(
-					"current_user").toString()));
 			client.setUpdatedBy(Long.parseLong(request.getAttribute(
 					"current_user").toString()));
 			client.setIsactive(true);

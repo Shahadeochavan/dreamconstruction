@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 @Controller
 @RequestMapping("/productinventory")
@@ -44,7 +45,6 @@ public class ProductinventoryController {
 			if (productinventoryService.getProductinventoryByProductId(
 					productinventory.getProduct().getId()) == null){
 				productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productinventory.setIsactive(true);
 				productinventoryService.addEntity(productinventory);
 			}	
@@ -81,7 +81,6 @@ public class ProductinventoryController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductinventory(@RequestBody Productinventory productinventory,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setIsactive(true);
 			productinventoryService.updateEntity(productinventory);
@@ -93,17 +92,22 @@ public class ProductinventoryController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productinventory> getProductinventory() {
+	public  @ResponseBody Response getProductinventory() {
 
 		List<Productinventory> productinventoryList = null;
 		try {
+			
 			productinventoryList = productinventoryService.getEntityList(Productinventory.class);
+			if(productinventoryList.isEmpty()){
+				System.out.println("Please add product inventory");
+				return new Response(1, "Product Inventory is empty",productinventoryList);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productinventoryList;
+		 return new Response(1,productinventoryList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

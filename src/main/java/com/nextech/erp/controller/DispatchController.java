@@ -108,7 +108,8 @@ public class DispatchController {
 				Dispatch dispatch = setPart(part);
 				Productinventory productinventory = productinventoryService
 						.getProductinventoryByProductId(dispatch.getProduct().getId());
-				if(productinventory.getQuantityavailable()>=dispatch.getQuantity()){
+				Productorderassociation productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class, dispatchDTO.getOrderId());
+				if(productinventory.getQuantityavailable()>=dispatch.getQuantity()&&productorderassociation.getRemainingQuantity()>=dispatch.getQuantity()){
 					dispatch.setDescription(dispatchDTO.getDescription());
 					dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
 					dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());

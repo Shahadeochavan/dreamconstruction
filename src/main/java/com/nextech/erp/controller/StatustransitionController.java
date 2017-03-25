@@ -48,7 +48,6 @@ public class StatustransitionController {
 							.getIsNotificationEmail()) == null){
 				statustransition.setIsactive(true);
 				statustransition.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				statustransition.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				statustransitionService.addEntity(statustransition);
 			}
 			else
@@ -87,7 +86,6 @@ public class StatustransitionController {
 			@RequestBody Statustransition statustransition,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			statustransition.setIsactive(true);
-			statustransition.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			statustransition.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			statustransitionService.updateEntity(statustransition);
 			return new UserStatus(1, "Statustransition update Successfully !");

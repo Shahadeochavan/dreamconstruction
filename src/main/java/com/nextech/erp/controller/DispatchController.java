@@ -179,8 +179,6 @@ public class DispatchController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			dispatch.setIsactive(true);
-			dispatch.setCreatedBy(Long.parseLong(request.getAttribute(
-					"current_user").toString()));
 			dispatch.setUpdatedBy(Long.parseLong(request.getAttribute(
 					"current_user").toString()));
 			dispatchservice.updateEntity(dispatch);

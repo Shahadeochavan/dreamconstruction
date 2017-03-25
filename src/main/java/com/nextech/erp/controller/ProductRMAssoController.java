@@ -46,7 +46,6 @@ public class ProductRMAssoController {
 					productrawmaterialassociation.getProduct().getId(),
 					productrawmaterialassociation.getRawmaterial().getId()) == null){
 				productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productrawmaterialassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productrawmaterialassociation.setIsactive(true);
 				productRMAssoService
 						.addEntity(productrawmaterialassociation);
@@ -88,7 +87,6 @@ public class ProductRMAssoController {
 	public @ResponseBody UserStatus updateProductrawmaterialassociation(
 			@RequestBody Productrawmaterialassociation productrawmaterialassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productrawmaterialassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productrawmaterialassociation.setIsactive(true);
 			productRMAssoService

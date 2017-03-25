@@ -89,7 +89,7 @@ public class QualitycheckrawmaterialController {
 	
 	private HashMap<Long,Integer> rmIdQuantityMap;
 	
-	private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
+	//private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
 	private static final int STATUS_RAW_MATERIAL_ORDER_INCOMPLETE=2;
 	private static final int STATUS_RAW_MATERIAL_ORDER_COMPLETE=3;
 
@@ -123,7 +123,7 @@ public class QualitycheckrawmaterialController {
 						
 						
 						//TODO update raw material invoice
-						updateRawMaterialInvoice(rawmaterialorderinvoiceNew);
+						updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
 						
 						//TODO update raw material order
 						updateRMOrderRemainingQuantity(qualitycheckrawmaterial, rawmaterialorder, request, response);
@@ -185,8 +185,9 @@ public class QualitycheckrawmaterialController {
 		return isOrderComplete ? STATUS_RAW_MATERIAL_ORDER_COMPLETE : STATUS_RAW_MATERIAL_ORDER_INCOMPLETE;
 	}
 	
-	private void updateRawMaterialInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice) throws Exception{
-		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
+	private void updateRawMaterialInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
+		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
 	}
 
@@ -238,7 +239,7 @@ public class QualitycheckrawmaterialController {
 		rawmaterialinventoryhistory.setIsactive(true);
 		rawmaterialinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialinventoryhistory.setCreatedDate(new Timestamp(new Date().getTime()));
-		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,STATUS_RAW_MATERIAL_INVENTORY_ADD));
+		rawmaterialinventoryhistory.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
 		rawmaterialinventoryhistoryService.addEntity(rawmaterialinventoryhistory);
 	}
 	

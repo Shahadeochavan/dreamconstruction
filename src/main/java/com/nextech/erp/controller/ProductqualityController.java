@@ -176,11 +176,9 @@ public class ProductqualityController {
 			productinventory.setProduct(product);
 			productinventory.setQuantityavailable(productquality.getGoodQuantity());
 			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setIsactive(true);
 			productinventoryService.addEntity(productinventory);
 		}else{
-			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setQuantityavailable(productinventory.getQuantityavailable() + productquality.getRejectedQuantity());
 			productinventoryService.updateEntity(productinventory);
@@ -199,7 +197,6 @@ public class ProductqualityController {
 		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
 		productinventoryhistory.setProductinventory(productinventory);
 		productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setBeforequantity((int)productinventory.getQuantityavailable());
 		productinventoryhistory.setAfterquantity((int)(goodQuantity+productinventory.getQuantityavailable()));

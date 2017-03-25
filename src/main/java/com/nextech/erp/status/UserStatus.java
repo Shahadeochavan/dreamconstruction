@@ -30,6 +30,10 @@ public class UserStatus {
 		this.message = message;
 		this.data = data;
 	}
+	public UserStatus(int code,Object data){
+		this.code=code;
+		this.data=data;
+	}
 	
 
 

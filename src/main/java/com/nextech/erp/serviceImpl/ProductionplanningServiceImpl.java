@@ -170,6 +170,7 @@ public class ProductionplanningServiceImpl extends
 					productionplanningDao.add(productionplanning);
 				}else{
 					System.out.println("production plan already exit");
+					
 				}
 				
 				productionPlanList.add(productionplanning);

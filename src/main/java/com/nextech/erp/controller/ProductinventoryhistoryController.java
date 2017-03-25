@@ -39,7 +39,6 @@ public class ProductinventoryhistoryController {
 						.getDefaultMessage());
 			}
 			productinventoryhistory.setIsactive(true);
-			productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventoryhistoryService.addEntity(productinventoryhistory);
 

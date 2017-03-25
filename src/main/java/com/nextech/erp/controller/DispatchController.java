@@ -133,7 +133,7 @@ public class DispatchController {
 					updateProductOrder(productorder);
 				}
 				else{
-					return new UserStatus(1,"Please enter Dispatch Quantity less than Productinventory Quantityavailable");
+					return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
 				}
 			
 			}

@@ -87,7 +87,7 @@ public class ProductController {
 			productService.updateEntity(product);
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}

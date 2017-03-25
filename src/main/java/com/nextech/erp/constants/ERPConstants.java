@@ -9,6 +9,7 @@ public class ERPConstants {
     public static String STATUS_NEW_RM_ORDER="newRMOrder";
     public static String EMAIL_ALREADY_EXIT="emailExit";
     public static String COMPANY_NAME_EXIT="companyName";
+    public static String STATUS_RAW_MATERIAL_ORDER_COMPLETE="rmOrderComplete";
     public static String CLIENT_ADDED="clientAdded";
     public static String USER_ID="userId";
     public static String CONTACT_NUMBER_EXIT="contactNumberXit";

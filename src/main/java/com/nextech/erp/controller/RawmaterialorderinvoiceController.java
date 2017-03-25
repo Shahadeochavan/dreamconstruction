@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.service.RawmaterialorderService;
+import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.RawmaterialorderhistoryService;
 import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
@@ -58,6 +60,12 @@ public class RawmaterialorderinvoiceController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	RawmaterialorderassociationService rawmaterialorderassociationService;
+
+	
+	
 	
 	//private static final int STATUS_SECURITY_CHECK_INVOICE_IN = 8;
 
@@ -186,7 +194,6 @@ public class RawmaterialorderinvoiceController {
 				.setRawmaterialorder(rawmaterialorder);
 		rawmaterialorderinvoiceassociation.setIsactive(true);
 		rawmaterialorderinvoiceassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorderinvoiceassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceassociationService
 				.addEntity(rawmaterialorderinvoiceassociation);
 	}
@@ -198,6 +205,7 @@ public class RawmaterialorderinvoiceController {
 		System.out.println("rmorderinvoicequntiets value is="
 				+ rawmaterialorderinvoice
 						.getRmorderinvoiceintakquantities());
+		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService.getEntityById(Rawmaterialorderassociation.class,rawmaterialorderinvoice.getPo_No());
 		if (rmorderinvoiceintakquantities != null
 				&& !rmorderinvoiceintakquantities.isEmpty()) {
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
@@ -205,7 +213,6 @@ public class RawmaterialorderinvoiceController {
 						.setRawmaterialorderinvoice(rawmaterialorderinvoice);
 				rmorderinvoiceintakquantity.setIsactive(true);
 				rmorderinvoiceintakquantity.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rmorderinvoiceintakquantity.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				rmorderinvoiceintakquantityService
 						.addEntity(rmorderinvoiceintakquantity);
 			}
@@ -220,7 +227,6 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderhistory.setCreatedDate(new Timestamp(new Date().getTime()));
 		rawmaterialorderhistory.setIsactive(true);
 		rawmaterialorderhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorderhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		//rawmaterialorderhistory.setQualitycheckrawmaterial(qualitycheckrawmaterial);
 		rawmaterialorderhistory.setStatus1(statusService.getEntityById(Status.class,rawmaterialorder.getStatus().getId()));
 		//TODO To status is not set correctly
@@ -232,8 +238,8 @@ public class RawmaterialorderinvoiceController {
 	}
 	private void updateRawMaterialOrder(Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));
-		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorder.setIsactive(true);
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 }

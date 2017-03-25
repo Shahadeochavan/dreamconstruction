@@ -143,7 +143,7 @@ public class RawmaterialorderController {
 		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
 		rawmaterialorder.setCreateDate(new Date());
 		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
-		rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
+//		rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
 		rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
 		rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));

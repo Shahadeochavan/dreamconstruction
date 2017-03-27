@@ -3,12 +3,10 @@ package com.nextech.erp.controller;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -20,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
@@ -250,6 +247,20 @@ public class ProductionplanningController {
 
 		return productionplanning;
 	}
+	@RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") Date date) {
+
+		List<Productionplanning> productionplanningsList = null;
+		try {
+			productionplanningsList = productionplanningService.getProductionplanByDate(date);
+					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productionplanningsList;
+	}
+	
 	
 	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") Date date) {

@@ -1,8 +1,6 @@
 package com.nextech.erp.status;
 
-import java.util.List;
 
-import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.User;
 
 public class UserStatus {

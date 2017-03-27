@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -67,6 +68,8 @@ public class DispatchController {
 	ProductinventoryhistoryService productinventoryhistoryService;
 
 	//private static final int STATUS_PRODUCT__INVENTORY_ADD = 25;
+	private static final int STATUS_PRODUCT_ORDER_INCOMPLETE=32;
+	private static final int STATUS_PRODUCT_ORDER_COMPLETE=31;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addDispatch(
@@ -108,7 +111,8 @@ public class DispatchController {
 				Dispatch dispatch = setPart(part);
 				Productinventory productinventory = productinventoryService
 						.getProductinventoryByProductId(dispatch.getProduct().getId());
-				Productorderassociation productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class, dispatchDTO.getOrderId());
+				System.out.println("dispatchDTO"+dispatchDTO.getOrderId());
+				Productorderassociation productorderassociation = productorderassociationService.getProductOrderAssoByOrderId(dispatchDTO.getOrderId());
 				if(productinventory.getQuantityavailable()>=dispatch.getQuantity()&&productorderassociation.getRemainingQuantity()>=dispatch.getQuantity()){
 					dispatch.setDescription(dispatchDTO.getDescription());
 					dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
@@ -130,7 +134,7 @@ public class DispatchController {
 					updateProductInventory(dispatch, product, request, response);
 
 					// TODO update product order
-					updateProductOrder(productorder);
+					updateProductOrder(productorder, request, response);
 				}
 				else{
 					return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
@@ -232,10 +236,25 @@ public class DispatchController {
 				.getAttribute("current_user").toString()));
 		productorderassociationService.updateEntity(productorderassociation);
 	}
+	private int getProductOrderStatus(Productorder productorder) throws Exception{
+		boolean isOrderComplete = false;
+		List<Productorderassociation> productorderassociationsList  =productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
+		for (Iterator<Productorderassociation> iterator = productorderassociationsList.iterator(); iterator.hasNext();) {
+			Productorderassociation productorderassociation = (Productorderassociation) iterator.next();
+			if(productorderassociation.getRemainingQuantity() == 0 ){
+				isOrderComplete = true;
+			}else{
+				isOrderComplete = false;
+				break;
+			}
+			
+		}
+		return isOrderComplete ? STATUS_PRODUCT_ORDER_COMPLETE : STATUS_PRODUCT_ORDER_INCOMPLETE;
+	}
+	private void updateProductOrder(Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
 
-	private void updateProductOrder(Productorder productorder) throws Exception {
-
-		productorder.setStatus(statusService.getEntityById(Status.class, 12));
+		productorder.setStatus(statusService.getEntityById(Status.class, getProductOrderStatus(productorder)));
+		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderService.updateEntity(productorder);
 	}
 
@@ -278,7 +297,7 @@ public class DispatchController {
 		productinventoryhistory.setProductinventory(productinventory);
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productinventoryhistory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+
 			productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable() - dispatch.getQuantity());
 			productinventoryhistory.setAfterquantity((goodQuantity+ productinventory.getQuantityavailable() - dispatch.getQuantity()));
 			productinventoryhistory.setStatus(statusService.getEntityById(

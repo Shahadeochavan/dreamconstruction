@@ -47,4 +47,11 @@ ProductorderassociationDao productorderassociationDao;
 		return productorderassociationDao.getProductionPlanningforCurrentMonthByProductIdAndDate(pId, date);
 	}
 
+	@Override
+	public Productorderassociation getProductOrderAssoByOrderId(
+			long orderId) throws Exception {
+		// TODO Auto-generated method stub
+		return productorderassociationDao.getProductOrderAssoByOrderId(orderId);
+	}
+
 }

@@ -196,7 +196,7 @@ public class ProductqualityController {
 		}
 		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
 		productinventoryhistory.setProductinventory(productinventory);
-		productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setBeforequantity((int)productinventory.getQuantityavailable());
 		productinventoryhistory.setAfterquantity((int)(goodQuantity+productinventory.getQuantityavailable()));

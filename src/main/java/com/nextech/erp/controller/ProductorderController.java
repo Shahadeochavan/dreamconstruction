@@ -187,7 +187,6 @@ public class ProductorderController {
 				productorderassociation.setProductorder(productorder);
 				productorderassociation.setRemainingQuantity(productorderassociation.getQuantity());
 				productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productorderassociation.setIsactive(true);
 				productorderassociationService
 						.addEntity(productorderassociation);

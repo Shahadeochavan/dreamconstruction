@@ -16,4 +16,6 @@ public interface ProductorderassociationDao extends SuperDao<Productorderassocia
 	public List<Productorderassociation> getIncompleteProductOrderAssoByProdutId(long productId) throws Exception;
 	
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId,Date date)throws Exception;
+	
+	public Productorderassociation getProductOrderAssoByOrderId(long orderId) throws Exception;
 }

@@ -93,6 +93,19 @@ public class ProductorderassociationController {
 
 		return productorderassociationList;
 	}
+	@RequestMapping(value = "list/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Productorderassociation getProductorderassociationList(@PathVariable("orderId") long orderId) {
+
+		Productorderassociation productorderassociationList = null;
+		try {
+			productorderassociationList = productorderassociationService.getProductOrderAssoByOrderId(orderId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productorderassociationList;
+	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorderassociation(@PathVariable("id") long id) {

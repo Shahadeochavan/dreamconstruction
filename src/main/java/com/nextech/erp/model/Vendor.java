@@ -68,7 +68,7 @@ public class Vendor implements Serializable {
 
 	 @NotEmpty
 	//@NotBlank(message="{first Name should not be blank}")
-	@Size(min = 2, max = 255)
+	@Size(min = 2, max = 255,message = "{Size.vendor.firstName}")
 	@Column(name="first_name")
 	private String firstName;
 

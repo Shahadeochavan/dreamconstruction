@@ -19,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductinPlanCurrentDateList;
 import com.nextech.erp.dto.ProductionPlan;
+import com.nextech.erp.dto.ProductionPlanCurrentDate;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
@@ -124,19 +126,36 @@ public class ProductionplanningController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProductionplanning(@RequestBody ProductionPlanCurrentDate productionPlanCurrentDate, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productionplanning.setIsactive(true);
-			productionplanningService.updateEntity(productionplanning);
-			return new UserStatus(1, "Productionplanning update Successfully !");
+			for(ProductinPlanCurrentDateList productinPlanCurrentDateList : productionPlanCurrentDate.getProductinPlanCurrentDateLists()){
+				Productionplanning productionplanning = setProductinPlanCurrentDate(productinPlanCurrentDateList);
+						productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+						productionplanning.setDate(productionPlanCurrentDate.getCreateDate());
+				productionplanning.setIsactive(true);
+				productionplanningService.updateEntity(productionplanning);
+				
+			}
+		
 		} catch (Exception e) {
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
+		return new UserStatus(1, "Productionplanning update Successfully !");
 	}
 	
-	
+
+	private Productionplanning setProductinPlanCurrentDate(ProductinPlanCurrentDateList productinPlanCurrentDateList) throws Exception {
+		Productionplanning productionplanning = new Productionplanning();
+		productionplanning = productionplanningService.getEntityById(Productionplanning.class, productinPlanCurrentDateList.getProductionPlanId());
+		productionplanning.setProduct(productService.getEntityById(Product.class, productinPlanCurrentDateList.getProductId()));
+		productionplanning.setTargetQuantity(productinPlanCurrentDateList.getTargetQuantity());
+		productionplanning.setAchivedQuantity(productinPlanCurrentDateList.getAchivedQuantity());
+		productionplanning.setRemark(productinPlanCurrentDateList.getRemark());
+		productionplanning.setIsactive(true);
+		return productionplanning;
+	}
 	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
 		try {

@@ -217,7 +217,42 @@ public class ProductionplanningServiceImpl extends
 			
 		}
 	}
-
+/*	
+	@Override
+	public void updateProductionplanningForCurrentDate(
+			List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		Calendar cal = Calendar.getInstance();
+		for (Iterator<ProductionPlan> iterator = productionplanningList.iterator(); iterator
+				.hasNext();) {
+			ProductionPlan productionPlan = (ProductionPlan) iterator.next();
+			List<ProductProductionPlan> productProductionPlans = productionPlan.getProductProductionPlan();
+			for (Iterator<ProductProductionPlan> iterator2 = productProductionPlans.iterator(); iterator2
+					.hasNext();) {
+				ProductProductionPlan productProductionPlan = (ProductProductionPlan) iterator2
+						.next();
+				cal.setTime(productProductionPlan.getProductionDate());
+				cal.set(Calendar.HOUR, 0);
+				cal.set(Calendar.MINUTE, 0);
+				Date productionDateStart = cal.getTime();
+				cal.set(Calendar.SECOND, 0);
+				cal.set(Calendar.HOUR, 23);
+				cal.set(Calendar.MINUTE, 59);
+				cal.set(Calendar.SECOND, 59);
+				Date productionDateEnd = cal.getTime(); 
+				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
+				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
+				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
+				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
+				Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, productionplanning.getProduct().getId());
+				System.out.println("productorderassociation quantity is"+productorderassociation.getQuantity());
+				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productionplanningDao.update(productionplanning);
+			}
+			
+			
+		}
+	}
+*/
 	@Override
 	public List<Productionplanning> getProductionplanByDate(Date date)
 			throws Exception {

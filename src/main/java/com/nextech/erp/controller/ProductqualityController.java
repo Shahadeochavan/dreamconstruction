@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductQualityDTO;
+import com.nextech.erp.dto.ProductQualityPart;
+import com.nextech.erp.dto.ProductinPlanCurrentDateList;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productinventoryhistory;
@@ -71,24 +74,19 @@ public class ProductqualityController {
 	//private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
 	
 	@RequestMapping(value = "/productQualityCheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addProductquality(@Valid @RequestBody Productquality productqualityInput,
+	public @ResponseBody UserStatus addProductquality(@Valid @RequestBody ProductQualityDTO productQualityDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Productionplanning productionplanningNew = productionplanningService.getEntityById(Productionplanning.class,productqualityInput.getProductionplanning().getId());
-			Product product =  productService.getEntityById(Product.class, productionplanningNew.getProduct().getId());
-			Productquality productquality = new Productquality();
-			productquality.setProductionplanning(productionplanningNew);
-			productquality.setCheckQuantity(productqualityInput.getCheckQuantity());
-			productquality.setGoodQuantity(productqualityInput.getGoodQuantity());
-			productquality.setRejectedQuantity(productqualityInput.getRejectedQuantity());
-			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productquality.setRemark(productqualityInput.getRemark());
-			productquality.setProduct(product);
+			for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
+				Productquality productquality = setProductquality(productQualityPart);
+
+			Product product =  productService.getEntityById(Product.class, productquality.getProduct().getId());
 			productquality.setIsactive(true);
+			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productqualityService.addEntity(productquality);
 			//TODO add product inventory history
 			addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
@@ -99,7 +97,7 @@ public class ProductqualityController {
 //			updateProductOrder(productorder);
 			
 			
-			
+			}
 			
 			return new UserStatus(1, "Productquality added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -116,7 +114,17 @@ public class ProductqualityController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-
+	private Productquality setProductquality(ProductQualityPart productQualityPart) throws Exception {
+		Productquality productquality = new Productquality();
+		productquality.setProduct(productService.getEntityById(Product.class, productQualityPart.getProductId()));
+		productquality.setCheckQuantity(productQualityPart.getProductQuantity());
+		productquality.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, productQualityPart.getProductionPlanId()));
+		productquality.setGoodQuantity(productQualityPart.getPassQuantity());
+		productquality.setRejectedQuantity(productQualityPart.getFailQuantity());
+		productquality.setRemark(productQualityPart.getRemark());
+		productquality.setIsactive(true);
+		return productquality;
+	}
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productquality getProductquality(@PathVariable("id") long id) {
 		Productquality productquality = null;

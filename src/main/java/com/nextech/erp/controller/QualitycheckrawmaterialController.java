@@ -160,6 +160,75 @@ public class QualitycheckrawmaterialController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
+	
+	@RequestMapping(value = "/qualityCheckInReadyStore", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@Transactional
+	public @ResponseBody UserStatus addRawmaterialorderinvoiceReadyStore(
+			@Valid @RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+			}
+			String message = "";
+			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
+			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
+			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
+			if (qualitycheckrawmaterials != null&& !qualitycheckrawmaterials.isEmpty()) {
+				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
+					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId());
+					
+					//TODO save Quality check
+					long qualityCheckId = saveQualityCheck(qualitycheckrawmaterial, rawmaterialorderinvoiceNew,rawmaterial, request, response);
+					//if qualityCheckId value is 0 that means this is duplicate entry
+					if(qualityCheckId != 0 ){
+						// TODO  update inventory
+						Rawmaterialinventory rawmaterialinventory = updateInventory(qualitycheckrawmaterial, rawmaterial, request, response);
+	
+						// TODO  call to inventory history
+						addRMInventoryHistory(qualitycheckrawmaterial, rawmaterialinventory, request, response);
+						
+						
+						
+						//TODO update raw material invoice
+						updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
+						
+						//TODO update raw material order
+						updateRMOrderRemainingQuantity(qualitycheckrawmaterial, rawmaterialorder, request, response);
+						
+						updateRMIdQuantityMap(qualitycheckrawmaterial.getRawmaterial().getId(), qualitycheckrawmaterial.getIntakeQuantity() - qualitycheckrawmaterial.getGoodQuantity());
+						message = messageSource.getMessage(ERPConstants.RM_QUALITY_CHECK, null, null);
+					}else{
+						message += " Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
+					}
+			}
+			}else{
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.INFO_QUALITY_CHECK, null, null));
+			}
+			// TODO  call to order history
+			addOrderHistory(rawmaterialorderinvoiceNew, rawmaterialorder, request, response);
+			//TODO update raw material order
+			updateRawMaterialOrder(rawmaterialorder);
+			
+
+			// TODO  call to trigger notification (will do it later )
+			return new UserStatus(1,
+					message);
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
+
 
 	private void updateRawMaterialOrder(Rawmaterialorder rawmaterialorder) throws Exception{
 		

@@ -1,13 +1,13 @@
 package com.nextech.erp.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.Part;
@@ -113,7 +112,7 @@ public class DispatchController {
 						.getProductinventoryByProductId(dispatch.getProduct().getId());
 				System.out.println("dispatchDTO"+dispatchDTO.getOrderId());
 				Productorderassociation productorderassociation = productorderassociationService.getProductOrderAssoByOrderId(dispatchDTO.getOrderId());
-				if(productinventory.getQuantityavailable()>=dispatch.getQuantity()&&productorderassociation.getRemainingQuantity()>=dispatch.getQuantity()){
+				if(productinventory.getQuantityavailable()>=dispatch.getQuantity()&&productorderassociation.getQuantity()>=dispatch.getQuantity()){
 					dispatch.setDescription(dispatchDTO.getDescription());
 					dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
 					dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
@@ -223,17 +222,12 @@ public class DispatchController {
 
 	}
 
-	private void updateProductOrderAssoRemainingQuantity(
-			Productorder productorder, Dispatch dispatch,
+	private void updateProductOrderAssoRemainingQuantity(Productorder productorder, Dispatch dispatch,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		Productorderassociation productorderassociation = productorderassociationService
-				.getProductorderassociationByProdcutOrderIdandProdcutId(
-						productorder.getId(), dispatch.getProduct().getId());
-		productorderassociation.setRemainingQuantity(productorderassociation
-				.getRemainingQuantity() - dispatch.getQuantity());
-		productorderassociation.setCreatedBy(Long.parseLong(request
-				.getAttribute("current_user").toString()));
+		Productorderassociation productorderassociation = productorderassociationService.getProductorderassociationByProdcutOrderIdandProdcutId(productorder.getId(), dispatch.getProduct().getId());
+		productorderassociation.setRemainingQuantity(productorderassociation.getRemainingQuantity() - dispatch.getQuantity());
+		productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderassociationService.updateEntity(productorderassociation);
 	}
 	private int getProductOrderStatus(Productorder productorder) throws Exception{
@@ -255,6 +249,7 @@ public class DispatchController {
 
 		productorder.setStatus(statusService.getEntityById(Status.class, getProductOrderStatus(productorder)));
 		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productorder.setCreatedDate(new Timestamp(new Date().getTime()));
 		productorderService.updateEntity(productorder);
 	}
 

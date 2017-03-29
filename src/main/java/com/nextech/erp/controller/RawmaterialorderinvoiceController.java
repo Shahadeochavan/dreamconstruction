@@ -165,6 +165,26 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
+	
+	@RequestMapping(value = "quality-check-invoices", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceQualityCheckByStatusId() {
+		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
+		try {
+			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
+					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null)));
+			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
+			System.out.println("list size " + rawmaterialorderinvoices.size());
+			if (rawmaterialorderinvoices != null
+					&& !rawmaterialorderinvoices.isEmpty()) {
+				for (Rawmaterialorderinvoice rawmaterialorderinvoice : rawmaterialorderinvoices) {
+					rawmaterialorderinvoiceList.add(rawmaterialorderinvoice);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rawmaterialorderinvoiceList;
+	}
 	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),

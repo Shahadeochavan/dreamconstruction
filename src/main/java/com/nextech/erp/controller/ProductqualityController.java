@@ -89,13 +89,52 @@ public class ProductqualityController {
 			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productqualityService.addEntity(productquality);
 			//TODO add product inventory history
-			addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
+			//addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
 			//TODO update product inventory
-			updateProductInventory(productquality, product, request, response);
+			//updateProductInventory(productquality, product, request, response);
 			
 //			productionplanningNew.
 //			updateProductOrder(productorder);
 			
+			
+			}
+			
+			return new UserStatus(1, "Productquality added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
+	
+	@RequestMapping(value = "/productQualityCheckStore", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addProductqualityStore(@Valid @RequestBody ProductQualityDTO productQualityDTO,
+			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError()
+						.getDefaultMessage());
+			}
+			for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
+				Productquality productquality = setProductquality(productQualityPart);
+
+			Product product =  productService.getEntityById(Product.class, productquality.getProduct().getId());
+			productquality.setIsactive(true);
+			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			//productqualityService.addEntity(productquality);
+			//TODO add product inventory history
+			addProductInventoryHistory(productquality.getGoodQuantity(), product, request, response);
+			//TODO update product inventory
+			updateProductInventory(productquality, product, request, response);
+	
 			
 			}
 			

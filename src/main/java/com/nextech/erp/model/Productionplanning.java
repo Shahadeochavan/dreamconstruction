@@ -7,8 +7,8 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
-import java.util.List;
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -47,6 +47,8 @@ public class Productionplanning implements Serializable {
 	@Column(name="lag_quantity")
 	private int lagQuantity;
 
+	private String remark;
+
 	@Column(name="target_quantity")
 	private int targetQuantity;
 
@@ -60,20 +62,24 @@ public class Productionplanning implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
-	
-	private String remark;
-	
+
+	//bi-directional many-to-one association to Status
+	@ManyToOne
+	private Status status;
+
+	//bi-directional many-to-one association to Productquality
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
 	private List<Productquality> productqualities;
 
+	//bi-directional many-to-one association to Dailyproduction
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
+	private List<Dailyproduction> dailyproductions;
 
 	public Productionplanning() {
 	}
 
-	public Productionplanning(int id) {
-		this.id=id;
-	}
 	public long getId() {
 		return this.id;
 	}
@@ -146,6 +152,14 @@ public class Productionplanning implements Serializable {
 		this.lagQuantity = lagQuantity;
 	}
 
+	public String getRemark() {
+		return this.remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
+	}
+
 	public int getTargetQuantity() {
 		return this.targetQuantity;
 	}
@@ -177,6 +191,15 @@ public class Productionplanning implements Serializable {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	public Status getStatus() {
+		return this.status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	public List<Productquality> getProductqualities() {
 		return this.productqualities;
 	}
@@ -199,12 +222,26 @@ public class Productionplanning implements Serializable {
 		return productquality;
 	}
 
-	public String getRemark() {
-		return remark;
+	public List<Dailyproduction> getDailyproductions() {
+		return this.dailyproductions;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
+	public void setDailyproductions(List<Dailyproduction> dailyproductions) {
+		this.dailyproductions = dailyproductions;
 	}
-	
+
+	public Dailyproduction addDailyproduction(Dailyproduction dailyproduction) {
+		getDailyproductions().add(dailyproduction);
+		dailyproduction.setProductionplanning(this);
+
+		return dailyproduction;
+	}
+
+	public Dailyproduction removeDailyproduction(Dailyproduction dailyproduction) {
+		getDailyproductions().remove(dailyproduction);
+		dailyproduction.setProductionplanning(null);
+
+		return dailyproduction;
+	}
+
 }

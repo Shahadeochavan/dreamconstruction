@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.status.UserStatus;
 
@@ -28,6 +30,8 @@ public class ProductorderassociationController {
 
 	@Autowired
 	ProductorderassociationService productorderassociationService;
+	@Autowired
+	ProductinventoryService productinventoryService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorderassociation(
@@ -86,7 +90,7 @@ public class ProductorderassociationController {
 		List<Productorderassociation> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getEntityList(Productorderassociation.class);
-
+  
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

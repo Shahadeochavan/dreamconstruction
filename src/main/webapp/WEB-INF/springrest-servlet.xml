@@ -44,6 +44,7 @@
 				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
 				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
 				<value>com.nextech.erp.model.Client</value>
+					<value>com.nextech.erp.model.Dailyproduction</value>
 				<value>com.nextech.erp.model.Productorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
@@ -202,4 +203,7 @@
 	<bean id="dispatchDao" class="com.nextech.erp.daoImpl.DispatchDaoImpl" />
 	<bean id="dispatchService"
 		class="com.nextech.erp.serviceImpl.DispatchServiceImpl" />
+		<bean id="dailyproductionDao" class="com.nextech.erp.daoImpl.DailyproductionDaoImpl" />
+	<bean id="dailyproductionService"
+		class="com.nextech.erp.serviceImpl.DailyproductionServiceImpl" />
 </beans>

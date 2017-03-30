@@ -15,7 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.dao.ProductorderassociationDao;
 import com.nextech.erp.dto.ProductProductionPlan;
@@ -24,11 +26,13 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.service.StatusService;
 
 public class ProductionplanningServiceImpl extends
 		CRUDServiceImpl<Productionplanning> implements
@@ -48,9 +52,14 @@ public class ProductionplanningServiceImpl extends
 	
 	@Autowired
 	ProductService productService;
+	@Autowired 
+	StatusService statusService;
 	
 	@Autowired
 	ProductorderassociationDao productorderassociationDao;
+	
+	@Autowired
+	private MessageSource messageSource;
 	
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
@@ -163,6 +172,7 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setProduct(product);
 				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanning.setIsactive(true);
+				productionplanning.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCTION_PLAN, null, null))));
 				productionplanning.setDate(cal.getTime());
 				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
 						productionplanning.getProduct().getId(),

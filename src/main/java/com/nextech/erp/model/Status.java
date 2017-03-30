@@ -5,8 +5,6 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -18,12 +16,11 @@ import java.util.List;
  */
 @Entity
 @NamedQuery(name="Status.findAll", query="SELECT s FROM Status s")
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Status implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
 	@Column(name="created_by")
@@ -47,10 +44,14 @@ public class Status implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Productinventoryhistory
-	//@OneToMany(mappedBy="status")
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productinventoryhistory> productinventoryhistories;
+
+	//bi-directional many-to-one association to Productionplanning
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Productionplanning> productionplannings;
 
 	//bi-directional many-to-one association to Productorder
 	@JsonIgnore
@@ -68,13 +69,11 @@ public class Status implements Serializable {
 	private List<Rawmaterialorder> rawmaterialorders;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
-	//@OneToMany(mappedBy="status1")
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status1", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories1;
 
 	//bi-directional many-to-one association to Rawmaterialorderhistory
-	//@OneToMany(mappedBy="status2")
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status2", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderhistory> rawmaterialorderhistories2;
@@ -83,6 +82,12 @@ public class Status implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderinvoice> rawmaterialorderinvoices;
+
+	//bi-directional many-to-one association to Dailyproduction
+//	@OneToMany(mappedBy="status")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Dailyproduction> dailyproductions;
 
 	public Status() {
 	}
@@ -182,6 +187,28 @@ public class Status implements Serializable {
 		productinventoryhistory.setStatus(null);
 
 		return productinventoryhistory;
+	}
+
+	public List<Productionplanning> getProductionplannings() {
+		return this.productionplannings;
+	}
+
+	public void setProductionplannings(List<Productionplanning> productionplannings) {
+		this.productionplannings = productionplannings;
+	}
+
+	public Productionplanning addProductionplanning(Productionplanning productionplanning) {
+		getProductionplannings().add(productionplanning);
+		productionplanning.setStatus(this);
+
+		return productionplanning;
+	}
+
+	public Productionplanning removeProductionplanning(Productionplanning productionplanning) {
+		getProductionplannings().remove(productionplanning);
+		productionplanning.setStatus(null);
+
+		return productionplanning;
 	}
 
 	public List<Productorder> getProductorders() {
@@ -293,8 +320,7 @@ public class Status implements Serializable {
 
 		return rawmaterialorderhistories2;
 	}
-	  @JsonIgnore
-	    @JsonProperty(value = "rmorderinvoiceid")
+
 	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoices() {
 		return this.rawmaterialorderinvoices;
 	}
@@ -315,6 +341,28 @@ public class Status implements Serializable {
 		rawmaterialorderinvoice.setStatus(null);
 
 		return rawmaterialorderinvoice;
+	}
+
+	public List<Dailyproduction> getDailyproductions() {
+		return this.dailyproductions;
+	}
+
+	public void setDailyproductions(List<Dailyproduction> dailyproductions) {
+		this.dailyproductions = dailyproductions;
+	}
+
+	public Dailyproduction addDailyproduction(Dailyproduction dailyproduction) {
+		getDailyproductions().add(dailyproduction);
+		dailyproduction.setStatus(this);
+
+		return dailyproduction;
+	}
+
+	public Dailyproduction removeDailyproduction(Dailyproduction dailyproduction) {
+		getDailyproductions().remove(dailyproduction);
+		dailyproduction.setStatus(null);
+
+		return dailyproduction;
 	}
 
 }

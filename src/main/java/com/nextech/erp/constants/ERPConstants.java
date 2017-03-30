@@ -28,6 +28,9 @@ public class ERPConstants {
     public static String RAW_MATERAIL_UPDATE="rawMaterilUpdate";
     public static String RAW_MATERAIL_DELETE="rawMaterilDelete";
     public static  String STATUS_RAW_MATERIAL_ORDER_INCOMPLETE = "statusRMOrderIncomplete";
+    public static  String STATUS_NEW_PRODUCTION_PLAN = "statusNewProductionPlan";
+    public static  String STATUS_QUALITY_CHECK_PENDING = "statusQualityCheckPending";
+    public static String STATUS_QUALITY_CHECK_INPROGRESS="statusQualityCheckInprogess";
     public static String STATUS_SECURITY_CHECK_INVOICE_IN ="statusSecurityCheck";
     public static String STATUS_QUALITY_CHECK_INVOICE_IN ="statuQualityCheckInvoices";
     public static String RM_ORDER_INVOICE_EXIT="rawMaterailOrderInvoiceExit";

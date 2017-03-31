@@ -57,17 +57,14 @@ public class DailyproductionController {
 			for(ProductinPlanCurrentDateList productinPlanCurrentDateList : productionPlanCurrentDate.getProductinPlanCurrentDateLists()){
 				Dailyproduction dailyproduction = setProductinPlanCurrentDate(productinPlanCurrentDateList);
 				dailyproduction.setIsactive(true);	
+				dailyproduction.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dailyproduction.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_PENDING, null, null))));
 		       	dailyproductionservice.addEntity(dailyproduction);
-	/*	Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, dailyproduction.getProductionplanning().getId());
-			productionplanning.setTargetQuantity(dailyproduction.getTargetQuantity());
-			productionplanning.setAchivedQuantity(productionplanning.getAchivedQuantity()+dailyproduction.getAchivedQuantity());
-			productionplanning.setDate(productionPlanCurrentDate.getCreateDate());
-			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			productionplanningService.updateEntity(productionplanning);
-			updateDailyproduction(dailyproduction, request, response);*/
+		       	
 		       	//TODO update production plan daily
-		       	updateProductionPlan(dailyproduction, productionPlanCurrentDate, request, response);
+		       	//need not to change status every time. once it is changed don't execute below method.
+		       	//we will be marking production plan complete from store's call.
+		      //	updateProductionPlan(dailyproduction, productionPlanCurrentDate, request, response);
 			
 			}
 			

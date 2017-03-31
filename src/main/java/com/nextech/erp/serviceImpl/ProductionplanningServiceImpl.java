@@ -219,7 +219,7 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
 				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
 				Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, productionplanning.getProduct().getId());
-				System.out.println("productorderassociation quantity is"+productorderassociation.getQuantity());
+				//System.out.println("productorderassociation quantity is"+productorderassociation.getQuantity());
 				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningDao.update(productionplanning);
 			}

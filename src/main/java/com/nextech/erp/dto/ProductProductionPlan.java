@@ -8,7 +8,7 @@ public class ProductProductionPlan {
 
 	private Date productionDate;
 	private int target_quantity;
-	private int achived_quantity;
+	private long achived_quantity;
 	private int dispatch_quantity;
 
 	public Date getProductionDate() {
@@ -27,11 +27,11 @@ public class ProductProductionPlan {
 		this.target_quantity = target_quantity;
 	}
 
-	public int getAchived_quantity() {
+	public long getAchived_quantity() {
 		return achived_quantity;
 	}
 
-	public void setAchived_quantity(int achived_quantity) {
+	public void setAchived_quantity(long achived_quantity) {
 		this.achived_quantity = achived_quantity;
 	}
 

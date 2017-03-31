@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductQualityDTO;
 import com.nextech.erp.dto.ProductQualityPart;
-import com.nextech.erp.dto.ProductinPlanCurrentDateList;
+import com.nextech.erp.model.Dailyproduction;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productinventoryhistory;
@@ -30,6 +31,7 @@ import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productquality;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.service.DailyproductionService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
@@ -70,8 +72,33 @@ public class ProductqualityController {
 	@Autowired
 	ProductorderService productorderService;
 	
+	@Autowired
+	DailyproductionService dailyproductionService;
 	
-	//private static final int STATUS_PRODUCT__INVENTORY_ADD=25;
+	@RequestMapping(value = "getQualityPendingListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") Date date) {
+		List<Productionplanning> productionplanningsList = null;
+		try {
+			productionplanningsList = productionplanningService.getProductionplanByDate(date);
+			for (Productionplanning productionplanning : productionplanningsList) {
+				List<Dailyproduction> dailyproductions = dailyproductionService.getDailyProdPendingForQualityCheckByPlanningId(productionplanning.getId());
+				long totalAchivedQuantity=0;
+				for (Dailyproduction dailyproduction : dailyproductions) {
+		           	productionplanning.setAchivedQuantity(totalAchivedQuantity+dailyproduction.getAchivedQuantity());
+		            productionplanning.setStatus(dailyproduction.getStatus());
+		           	productionplanningService.updateEntity(productionplanning);
+	
+				}
+				
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productionplanningsList;
+	}
+	
 	
 	@RequestMapping(value = "/productQualityCheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductquality(@Valid @RequestBody ProductQualityDTO productQualityDTO,
@@ -84,7 +111,7 @@ public class ProductqualityController {
 			for(ProductQualityPart productQualityPart : productQualityDTO.getProductQualityParts()){
 				Productquality productquality = setProductquality(productQualityPart);
 
-			Product product =  productService.getEntityById(Product.class, productquality.getProduct().getId());
+			//Product product =  productService.getEntityById(Product.class, productquality.getProduct().getId());
 			productquality.setIsactive(true);
 			productquality.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productqualityService.addEntity(productquality);
@@ -95,6 +122,11 @@ public class ProductqualityController {
 			
 //			productionplanningNew.
 //			updateProductOrder(productorder);
+			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
+			productionplanning.setIsactive(true);
+			productionplanning.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_COMPLETE, null, null))));
+			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productionplanningService.updateEntity(productionplanning);
 			
 			
 			}
@@ -138,7 +170,7 @@ public class ProductqualityController {
 			
 			}
 			
-			return new UserStatus(1, "Productquality added Successfully !");
+			return new UserStatus(1, "Productquality Store added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

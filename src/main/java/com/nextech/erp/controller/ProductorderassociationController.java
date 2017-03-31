@@ -90,6 +90,9 @@ public class ProductorderassociationController {
 		List<Productorderassociation> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getEntityList(Productorderassociation.class);
+			for(Productorderassociation productorderassociation : productorderassociationList){
+				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productorderassociation.getProduct().getId());
+			}
   
 		} catch (Exception e) {
 			e.printStackTrace();

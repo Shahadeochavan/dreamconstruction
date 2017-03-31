@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductinPlanCurrentDateList;
 import com.nextech.erp.dto.ProductionPlan;
-import com.nextech.erp.dto.ProductionPlanCurrentDate;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
@@ -125,7 +124,7 @@ public class ProductionplanningController {
 		return productionplanning;
 	}
 
-	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+/*	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanning(@RequestBody ProductionPlanCurrentDate productionPlanCurrentDate, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -143,6 +142,18 @@ public class ProductionplanningController {
 			return new UserStatus(0, e.toString());
 		}
 		return new UserStatus(1, "Productionplanning update Successfully !");
+	}*/
+	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			productionplanning.setIsactive(true);
+			productionplanningService.updateEntity(productionplanning);
+			return new UserStatus(1, "Productionplanning update Successfully !");
+		} catch (Exception e) {
+			 e.printStackTrace();
+			return new UserStatus(0, e.toString());
+		}
 	}
 	
 

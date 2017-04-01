@@ -172,7 +172,7 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setProduct(product);
 				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanning.setIsactive(true);
-				productionplanning.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCTION_PLAN, null, null))));
+				productionplanning.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_NEW, null, null))));
 				productionplanning.setDate(cal.getTime());
 				if (productorderassociationService.getProductionPlanningforCurrentMonthByProductIdAndDate(
 						productionplanning.getProduct().getId(),

@@ -126,6 +126,7 @@ public class ProductorderController {
 		}
 		return productorder;
 	}
+	
 	@RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorderassociation> getProductOrder(
 			@PathVariable("orderId") long id) {
@@ -151,46 +152,6 @@ public class ProductorderController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
-		}
-	}
-
-	private Productorder saveProductOrder(
-			ProductOrderAssociationModel productOrderAssociationModel,HttpServletRequest request,HttpServletResponse response)
-			throws Exception {
-		Productorder productorder = new Productorder();
-		productorder.setClient(clientService.getEntityById(Client.class,
-				productOrderAssociationModel.getClient()));
-		productorder.setCreateDate(new Date());
-		productorder.setDescription(productOrderAssociationModel
-				.getDescription());
-		productorder.setInvoiceNo(productOrderAssociationModel.getInvoiceNo());
-		productorder.setExpecteddeliveryDate(productOrderAssociationModel
-				.getDeliveryDate());
-		productorder.setQuantity(productOrderAssociationModel
-				.getOrderproductassociations().size());
-		productorder.setStatus(statusService.getEntityById(Status.class,
-				Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
-		productorder.setIsactive(true);
-		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productorderService.addEntity(productorder);
-		return productorder;
-	}
-
-	private void addProductOrderAsso(
-			ProductOrderAssociationModel productOrderAssociationModel,
-			Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		List<Productorderassociation> productorderassociations = productOrderAssociationModel
-				.getOrderproductassociations();
-		if (productorderassociations != null
-				&& !productorderassociations.isEmpty()) {
-			for (Productorderassociation productorderassociation : productorderassociations) {
-				productorderassociation.setProductorder(productorder);
-				productorderassociation.setRemainingQuantity(productorderassociation.getQuantity());
-				productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productorderassociation.setIsactive(true);
-				productorderassociationService
-						.addEntity(productorderassociation);
-			}
 		}
 	}
 
@@ -238,5 +199,35 @@ public class ProductorderController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	private Productorder saveProductOrder(ProductOrderAssociationModel productOrderAssociationModel,HttpServletRequest request,HttpServletResponse response)
+			throws Exception {
+		Productorder productorder = new Productorder();
+		productorder.setClient(clientService.getEntityById(Client.class,productOrderAssociationModel.getClient()));
+		productorder.setCreateDate(new Date());
+		productorder.setDescription(productOrderAssociationModel.getDescription());
+		productorder.setInvoiceNo(productOrderAssociationModel.getInvoiceNo());
+		productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());
+		productorder.setQuantity(productOrderAssociationModel.getOrderproductassociations().size());
+		productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+		productorder.setIsactive(true);
+		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productorderService.addEntity(productorder);
+		return productorder;
+	}
+
+	private void addProductOrderAsso(ProductOrderAssociationModel productOrderAssociationModel,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
+		if (productorderassociations != null
+				&& !productorderassociations.isEmpty()) {
+			for (Productorderassociation productorderassociation : productorderassociations) {
+				productorderassociation.setProductorder(productorder);
+				productorderassociation.setRemainingQuantity(productorderassociation.getQuantity());
+				productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				productorderassociation.setIsactive(true);
+				productorderassociationService
+						.addEntity(productorderassociation);
+			}
+		}
 	}
 }

@@ -30,6 +30,7 @@ public class ProductRMAssoController {
 
 	@Autowired
 	ProductRMAssoService productRMAssoService;
+	
 	@Autowired
 	private MessageSource messageSource;
 

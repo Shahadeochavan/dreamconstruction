@@ -3,21 +3,11 @@ package com.nextech.erp.daoImpl;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.UserDao;
-import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.User;
 
 public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
-	/*@Autowired
-	SessionFactory sessionFactory;
-	Session session = null;
-	Transaction tx = null;*/
 
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
@@ -27,9 +17,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("userid", userid));
 		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
-				: null;
-		 // //session.close();
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 	}
 
@@ -40,9 +28,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("email", email));
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
-				: null;
-		 // //session.close();
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 	}
 
@@ -53,9 +39,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("mobile", mobile));
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
-				: null;
-		 // //session.close();
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 	}
 
@@ -72,8 +56,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
 
 	@Override
-	public User getUserByFirstNamLastName(String firstName, String lastName)
-			throws Exception {
+	public User getUserByFirstNamLastName(String firstName, String lastName)throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(User.class);
@@ -81,9 +64,7 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		criteria.add(Restrictions.eq("firstName", firstName));
 		criteria.add(Restrictions.eq("lastName", lastName));
 		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0)
-				: null;
-		 // //session.close();
+		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 	}
 }

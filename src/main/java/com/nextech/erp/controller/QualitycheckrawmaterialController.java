@@ -89,7 +89,6 @@ public class QualitycheckrawmaterialController {
 	
 	private HashMap<Long,Integer> rmIdQuantityMap;
 	
-	//private static final int STATUS_RAW_MATERIAL_INVENTORY_ADD=12;
 	private static final int STATUS_RAW_MATERIAL_ORDER_INCOMPLETE=2;
 	private static final int STATUS_RAW_MATERIAL_ORDER_COMPLETE=3;
 

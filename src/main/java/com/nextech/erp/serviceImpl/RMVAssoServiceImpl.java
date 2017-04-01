@@ -10,6 +10,7 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 
 	@Autowired
 	RMVAssoDao rMVAssoDao;
+	
 	@Override
 	public Rawmaterialvendorassociation getRMVAssoByVendorIdRMId(
 			long vendorId, long rmId) throws Exception {

@@ -7,9 +7,9 @@ import java.util.Date;
 public class ProductProductionPlan {
 
 	private Date productionDate;
-	private int target_quantity;
+	private long target_quantity;
 	private long achived_quantity;
-	private int dispatch_quantity;
+	private long dispatch_quantity;
 
 	public Date getProductionDate() {
 		return productionDate;
@@ -19,11 +19,11 @@ public class ProductProductionPlan {
 		this.productionDate = productionDate;
 	}
 
-	public int getTarget_quantity() {
+	public long getTarget_quantity() {
 		return target_quantity;
 	}
 
-	public void setTarget_quantity(int target_quantity) {
+	public void setTarget_quantity(long target_quantity) {
 		this.target_quantity = target_quantity;
 	}
 
@@ -35,11 +35,11 @@ public class ProductProductionPlan {
 		this.achived_quantity = achived_quantity;
 	}
 
-	public int getDispatch_quantity() {
+	public long getDispatch_quantity() {
 		return dispatch_quantity;
 	}
 
-	public void setDispatch_quantity(int dispatch_quantity) {
+	public void setDispatch_quantity(long dispatch_quantity) {
 		this.dispatch_quantity = dispatch_quantity;
 	}
 

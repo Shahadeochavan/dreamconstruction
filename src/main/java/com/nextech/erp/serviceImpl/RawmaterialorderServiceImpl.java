@@ -9,6 +9,7 @@ import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.service.RawmaterialorderService;
 
 public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorder> implements RawmaterialorderService{
+	
 	@Autowired
 	RawmaterialorderDao rawmaterialorderDao;
 	

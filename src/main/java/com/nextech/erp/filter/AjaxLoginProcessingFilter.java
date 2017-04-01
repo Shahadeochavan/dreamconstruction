@@ -54,7 +54,10 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 						if(user != null && user.getPassword().equals(string[1])){
 							String str = string[string.length - 1];
 							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
-							if (new Date().getTime() - time * 1000 < new Long(str)) {
+							System.out.println(new Long(str) + time > new Date().getTime());
+							System.out.println(new Long(str) + time );
+							System.out.println(new Date().getTime());
+							if (new Long(str) > new Date().getTime() - time) {
 								String generatedToken = TokenFactory.createAccessJwtToken(user);
 								request.setAttribute("current_user", user.getId());
 								((HttpServletResponse) response).addHeader("auth_token", generatedToken);
@@ -67,7 +70,7 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 						}
 						else{
 							HttpServletResponse httpServletResponse = setResponse(request, response);
-							httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+							httpServletResponse.sendError(599,ERPConstants.SESSION_EXPIRED);
 						}
 					}else{
 						if(((HttpServletRequest) request).getHeader("Access-Control-Request-Headers")==null){

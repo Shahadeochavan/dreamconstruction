@@ -66,7 +66,6 @@ public class DispatchController {
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
 
-	//private static final int STATUS_PRODUCT__INVENTORY_ADD = 25;
 	private static final int STATUS_PRODUCT_ORDER_INCOMPLETE=32;
 	private static final int STATUS_PRODUCT_ORDER_COMPLETE=31;
 
@@ -103,42 +102,37 @@ public class DispatchController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			for (Part part : dispatchDTO.getParts()) {
 				Dispatch dispatch = setPart(part);
-				Productinventory productinventory = productinventoryService
-						.getProductinventoryByProductId(dispatch.getProduct().getId());
+				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(dispatch.getProduct().getId());
 				System.out.println("dispatchDTO"+dispatchDTO.getOrderId());
 				Productorderassociation productorderassociation = productorderassociationService.getProductOrderAssoByOrderId(dispatchDTO.getOrderId());
-				if(productinventory.getQuantityavailable()>=dispatch.getQuantity()&&productorderassociation.getQuantity()>=dispatch.getQuantity()){
-					dispatch.setDescription(dispatchDTO.getDescription());
-					dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
-					dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
-					dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-					dispatchservice.addEntity(dispatch);
-					Productorder productorder = productorderService.getEntityById(Productorder.class, dispatch.getProductorder().getId());
-					Product product = productService.getEntityById(Product.class,dispatch.getProduct().getId());
-
-					// TODO update product order association
-					updateProductOrderAssoRemainingQuantity(productorder, dispatch,
-							request, response);
-
-					// TODO add product Inventroy history
-					addProductInventoryHistory(dispatch.getQuantity(), product,
-							dispatch, request, response);
-
-					// TODO update product Inventory
-					updateProductInventory(dispatch, product, request, response);
-
-					// TODO update product order
-					updateProductOrder(productorder, request, response);
-				}
-				else{
+				
+				if(productinventory.getQuantityavailable() < dispatch.getQuantity() || productorderassociation.getQuantity() < dispatch.getQuantity()){
 					return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
 				}
-			
+				
+				dispatch.setDescription(dispatchDTO.getDescription());
+				dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
+				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
+				dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				dispatchservice.addEntity(dispatch);
+				Productorder productorder = productorderService.getEntityById(Productorder.class, dispatch.getProductorder().getId());
+				Product product = productService.getEntityById(Product.class,dispatch.getProduct().getId());
+
+				// TODO update product order association
+				updateProductOrderAssoRemainingQuantity(productorder, dispatch, request, response);
+
+				// TODO add product Inventroy history
+				addProductInventoryHistory(dispatch.getQuantity(), product, dispatch, request, response);
+
+				// TODO update product Inventory
+				updateProductInventory(dispatch, product, request, response);
+
+				// TODO update product order
+				updateProductOrder(productorder, request, response);
 			}
 
 			return new UserStatus(1, "Dispatch added Successfully !");
@@ -157,14 +151,7 @@ public class DispatchController {
 		}
 	}
 
-	private Dispatch setPart(Part part) throws Exception {
-		Dispatch dispatch = new Dispatch();
-		dispatch.setProduct(productService.getEntityById(Product.class,
-				part.getProductId()));
-		dispatch.setQuantity(part.getQuantity());
-		dispatch.setIsactive(true);
-		return dispatch;
-	}
+
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Dispatch getDispatch(@PathVariable("id") long id) {
@@ -183,8 +170,7 @@ public class DispatchController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			dispatch.setIsactive(true);
-			dispatch.setUpdatedBy(Long.parseLong(request.getAttribute(
-					"current_user").toString()));
+			dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			dispatchservice.updateEntity(dispatch);
 			return new UserStatus(1, "Dispatch update Successfully !");
 		} catch (Exception e) {
@@ -211,8 +197,7 @@ public class DispatchController {
 	public @ResponseBody UserStatus deleteDispatch(@PathVariable("id") long id) {
 
 		try {
-			Dispatch dispatch = dispatchservice.getEntityById(Dispatch.class,
-					id);
+			Dispatch dispatch = dispatchservice.getEntityById(Dispatch.class,id);
 			dispatch.setIsactive(false);
 			dispatchservice.updateEntity(dispatch);
 			return new UserStatus(1, "Dispatch deleted Successfully !");
@@ -230,6 +215,7 @@ public class DispatchController {
 		productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderassociationService.updateEntity(productorderassociation);
 	}
+	
 	private int getProductOrderStatus(Productorder productorder) throws Exception{
 		boolean isOrderComplete = false;
 		List<Productorderassociation> productorderassociationsList  =productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
@@ -245,8 +231,8 @@ public class DispatchController {
 		}
 		return isOrderComplete ? STATUS_PRODUCT_ORDER_COMPLETE : STATUS_PRODUCT_ORDER_INCOMPLETE;
 	}
+	
 	private void updateProductOrder(Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
-
 		productorder.setStatus(statusService.getEntityById(Status.class, getProductOrderStatus(productorder)));
 		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setCreatedDate(new Timestamp(new Date().getTime()));
@@ -297,9 +283,14 @@ public class DispatchController {
 			productinventoryhistory.setAfterquantity((goodQuantity+ productinventory.getQuantityavailable() - dispatch.getQuantity()));
 			productinventoryhistory.setStatus(statusService.getEntityById(
 					Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT__INVENTORY_ADD, null, null))));
-			productinventoryhistoryService.addEntity(productinventoryhistory);
-	
-
+			productinventoryhistoryService.addEntity(productinventoryhistory);		
 	}
-
+	
+	private Dispatch setPart(Part part) throws Exception {
+		Dispatch dispatch = new Dispatch();
+		dispatch.setProduct(productService.getEntityById(Product.class,	part.getProductId()));
+		dispatch.setQuantity(part.getQuantity());
+		dispatch.setIsactive(true);
+		return dispatch;
+	}
 }

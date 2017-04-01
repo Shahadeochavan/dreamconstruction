@@ -13,10 +13,12 @@ import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 
 public class RawmaterialDaoImpl extends SuperDaoImpl<Rawmaterial> implements RawmaterialDao{
+	
 	@Autowired
 	SessionFactory sessionFactory;
 	Session session = null;
 	Transaction tx = null;
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Rawmaterialvendorassociation> getRawmaterialByVenodrId(long id)

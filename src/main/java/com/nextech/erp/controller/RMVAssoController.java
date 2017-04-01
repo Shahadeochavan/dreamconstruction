@@ -111,6 +111,7 @@ public class RMVAssoController {
 
 		return rawmaterialvendorassociationList;
 	}
+	
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteRawmaterialvendorassociation(
 			@PathVariable("id") long id) {

@@ -14,15 +14,13 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 	RawmaterialorderassociationDao rawmaterialorderassociationDao;
 
 	@Override
-	public List<Rawmaterialorderassociation> getRMOrderRMAssociationByRMOrderId(
-			long id) throws Exception {
-		return rawmaterialorderassociationDao
-				.getRMOrderRMAssociationByRMOrderId(id);
+	public List<Rawmaterialorderassociation> getRMOrderRMAssociationByRMOrderId(long id) throws Exception {
+		
+		return rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderId(id);
 	}
 
 	@Override
-	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(
-			long id, long rmId) throws Exception {
+	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(long id, long rmId) throws Exception {
 		// TODO Auto-generated method stub
 		return rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderIdandRMId(id, rmId);
 	}

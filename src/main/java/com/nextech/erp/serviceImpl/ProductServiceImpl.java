@@ -3,7 +3,10 @@ package com.nextech.erp.serviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductDao;
+import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.service.ProductService;
 
 public class ProductServiceImpl extends CRUDServiceImpl<Product> implements ProductService {
@@ -11,6 +14,9 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	@Autowired
 	ProductDao productDao;
 
+	@Autowired
+	ProductorderDao productorderDao; 
+	
 	@Override
 	public Product getProductByName(String name) throws Exception {
 		return productDao.getProductByName(name);
@@ -19,5 +25,18 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	@Override
 	public Product getProductByPartNumber(String partnumber) throws Exception {
 		return productDao.getProductByPartNumber(partnumber);
+	}
+
+	@Override
+	public boolean isOrderPartiallyDispatched(long orderId) throws Exception {
+		boolean isDispatched = false;
+		Productorder productorder = productorderDao.getProductorderByProductOrderId(orderId);
+		for (Productorderassociation productorderassociation : productorder.getOrderproductassociations()) {
+			if(productorderassociation.getRemainingQuantity() >= 0){
+				isDispatched = true;
+				break;
+			}
+		}
+		return isDispatched;
 	}
 }

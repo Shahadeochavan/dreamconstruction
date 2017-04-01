@@ -21,17 +21,14 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 	Transaction tx = null;
 
 	@Override
-	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
-			long pId, Date date) throws Exception {
+	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(long pId, Date date) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("product.id", pId));
 		criteria.add(Restrictions.eq("date", date));
-		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria
-				.list().get(0) : null;
-		 //session.close();
+		Productionplanning productionplanning = criteria.list().size() > 0 ? (Productionplanning) criteria.list().get(0) : null;
 		return productionplanning;
 	}
 
@@ -103,8 +100,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Productionplanning> getProductionplanByDate(Date date)
-			throws Exception {
+	public List<Productionplanning> getProductionplanByDate(Date date)throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);

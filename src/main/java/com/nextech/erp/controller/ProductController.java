@@ -21,17 +21,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
+	
 	@Autowired
 	ProductService productService;
+	
 	@Autowired
 	private MessageSource messageSource;
 
+	@Autowired
+	ProductinventoryService productinventoryService;
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
 			@Valid @RequestBody Product product, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -52,6 +59,7 @@ public class ProductController {
 			product.setIsactive(true);
 			product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productService.addEntity(product);
+			addProductInventory(product, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -118,5 +126,14 @@ public class ProductController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	
+	private void addProductInventory(Product product,long userId) throws Exception{
+		Productinventory productinventory = new Productinventory();
+		productinventory.setProduct(product);
+		productinventory.setQuantityavailable(0);
+		productinventory.setCreatedBy(userId);
+		productinventory.setIsactive(true);
+		productinventoryService.addEntity(productinventory);
 	}
 }

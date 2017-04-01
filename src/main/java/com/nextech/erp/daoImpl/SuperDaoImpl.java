@@ -24,7 +24,6 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		tx = session.beginTransaction();
 		Long id = (Long) session.save(bean);
 		tx.commit();
-		  //session.close();
 		return id;
 	}
 
@@ -35,12 +34,10 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		Criteria criteria = session.createCriteria(z);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		T t= criteria.list().size() > 0 ? (T) criteria.list().get(0)
-				: null;
-	  //session.close();
+		T t= criteria.list().size() > 0 ? (T) criteria.list().get(0): null;
 		return t;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<T> getList(Class<T> z) throws Exception {
@@ -48,9 +45,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(z);
 		criteria.add(Restrictions.eq("isactive", true));
-		//System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		List<T> list = criteria.list();
-		  //session.close();
 		return list;
 	}
 
@@ -62,7 +57,6 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		session.beginTransaction();
 		session.delete(o);
 		tx.commit();
-		 //session.close();
 		return true;
 	}
 
@@ -71,9 +65,7 @@ public class SuperDaoImpl<T> implements SuperDao<T>{
 		session = sessionFactory.openSession();
 		tx = session.beginTransaction();
 		session.merge(bean);
-//		session.update(bean);
 		tx.commit();
-		 //session.close();
 		return bean;
 	}
 

@@ -62,7 +62,7 @@ public class PageController {
 	public @ResponseBody Page getPage(@PathVariable("id") long id) {
 		Page page = null;
 		try {
-			page = pageservice.getEntityById(Page.class,id);
+			page = pageservice.getEntityById(Page.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -70,7 +70,8 @@ public class PageController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updatePage(@RequestBody Page page,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updatePage(@RequestBody Page page,
+			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			page.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			page.setIsactive(true);

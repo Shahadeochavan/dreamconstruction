@@ -17,7 +17,6 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	Session session = null;
 	Transaction tx = null;
 
-
 	@Override
 	public Productrawmaterialassociation getPRMAssociationByPidRmid(long pid, long rmid) throws Exception{
  		session = sessionFactory.openSession();
@@ -26,9 +25,7 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("product.id", pid));
 		criteria.add(Restrictions.eq("rawmaterial.id",rmid));
-		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list()
-				.get(0) : null;
-		 // //session.close();
+		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list().get(0) : null;
 		return Productrawmaterialassociation;
 	}
 }

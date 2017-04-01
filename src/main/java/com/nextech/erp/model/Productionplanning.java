@@ -37,7 +37,7 @@ public class Productionplanning implements Serializable {
 	private Date date;
 
 	@Column(name="dispatch_quantity")
-	private int dispatchQuantity;
+	private long dispatchQuantity;
 
 	@Column(name="excess_quantity")
 	private int excessQuantity;
@@ -45,12 +45,18 @@ public class Productionplanning implements Serializable {
 	private boolean isactive;
 
 	@Column(name="lag_quantity")
-	private int lagQuantity;
+	private long lagQuantity;
 
+	@Column(name="quality_pending_quantity")
+	private long qualityPendingQuantity;
+	
+	@Column(name="quality_checked_quantity")
+	private long qualityCheckedQuantity;
+	
 	private String remark;
 
 	@Column(name="target_quantity")
-	private int targetQuantity;
+	private long targetQuantity;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -120,11 +126,11 @@ public class Productionplanning implements Serializable {
 		this.date = date;
 	}
 
-	public int getDispatchQuantity() {
+	public long getDispatchQuantity() {
 		return this.dispatchQuantity;
 	}
 
-	public void setDispatchQuantity(int dispatchQuantity) {
+	public void setDispatchQuantity(long dispatchQuantity) {
 		this.dispatchQuantity = dispatchQuantity;
 	}
 
@@ -144,11 +150,11 @@ public class Productionplanning implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public int getLagQuantity() {
+	public long getLagQuantity() {
 		return this.lagQuantity;
 	}
 
-	public void setLagQuantity(int lagQuantity) {
+	public void setLagQuantity(long lagQuantity) {
 		this.lagQuantity = lagQuantity;
 	}
 
@@ -160,11 +166,11 @@ public class Productionplanning implements Serializable {
 		this.remark = remark;
 	}
 
-	public int getTargetQuantity() {
+	public long getTargetQuantity() {
 		return this.targetQuantity;
 	}
 
-	public void setTargetQuantity(int targetQuantity) {
+	public void setTargetQuantity(long targetQuantity) {
 		this.targetQuantity = targetQuantity;
 	}
 
@@ -200,6 +206,14 @@ public class Productionplanning implements Serializable {
 		this.status = status;
 	}
 
+	public long getQualityPendingQuantity() {
+		return qualityPendingQuantity;
+	}
+
+	public void setQualityPendingQuantity(long qualityPendingQuantity) {
+		this.qualityPendingQuantity = qualityPendingQuantity;
+	}
+
 	public List<Productquality> getProductqualities() {
 		return this.productqualities;
 	}
@@ -228,6 +242,14 @@ public class Productionplanning implements Serializable {
 
 	public void setDailyproductions(List<Dailyproduction> dailyproductions) {
 		this.dailyproductions = dailyproductions;
+	}
+
+	public long getQualityCheckedQuantity() {
+		return qualityCheckedQuantity;
+	}
+
+	public void setQualityCheckedQuantity(long qualityCheckedQuantity) {
+		this.qualityCheckedQuantity = qualityCheckedQuantity;
 	}
 
 	public Dailyproduction addDailyproduction(Dailyproduction dailyproduction) {

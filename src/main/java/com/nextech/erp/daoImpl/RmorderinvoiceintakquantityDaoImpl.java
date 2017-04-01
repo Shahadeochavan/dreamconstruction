@@ -22,11 +22,9 @@ public class RmorderinvoiceintakquantityDaoImpl extends
 
 	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
-	public List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(
-			long id) throws Exception {
+	public List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(long id) throws Exception {
 		session = sessionFactory.openSession();
-		Criteria criteria = session
-				.createCriteria(Rmorderinvoiceintakquantity.class);
+		Criteria criteria = session.createCriteria(Rmorderinvoiceintakquantity.class);
 		criteria.add(Restrictions.eq("rawmaterialorderinvoice.id", id));
 		return criteria.list();
 	}

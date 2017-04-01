@@ -15,6 +15,7 @@ public class DailyproductionDaoImpl extends SuperDaoImpl<Dailyproduction> implem
 
 	@Autowired
 	private MessageSource messageSource;
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dailyproduction> getDailyProdPendingForQualityCheckByPlanningId(long planningId) {
 		session = sessionFactory.openSession();

@@ -49,7 +49,8 @@ public class Product implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Dispatch
-	@OneToMany(mappedBy="product")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Dispatch> dispatches;
 
 	//bi-directional many-to-one association to Productinventory

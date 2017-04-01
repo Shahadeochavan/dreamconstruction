@@ -4,12 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.sql.Timestamp;
 import java.util.List;
 

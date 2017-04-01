@@ -53,8 +53,10 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
+	
 	@Autowired
 	StatusService statusService;
+	
 	@Autowired
 	RawmaterialorderhistoryService rawmaterialorderhistoryService;
 	
@@ -63,11 +65,6 @@ public class RawmaterialorderinvoiceController {
 	
 	@Autowired
 	RawmaterialorderassociationService rawmaterialorderassociationService;
-
-	
-	
-	
-	//private static final int STATUS_SECURITY_CHECK_INVOICE_IN = 8;
 
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
@@ -78,13 +75,9 @@ public class RawmaterialorderinvoiceController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		//	String message = "";
-			//Check for duplicate rows
 			//TODO save raw material invoice
-			saveRMOrderInvoice(rawmaterialorderinvoice, request, response);	
-				Rawmaterialorder rawmaterialorder = rawmaterialorderService
-						.getEntityById(Rawmaterialorder.class,
-								rawmaterialorderinvoice.getPo_No());
+			    saveRMOrderInvoice(rawmaterialorderinvoice, request, response);	
+				Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class,rawmaterialorderinvoice.getPo_No());
 				
 				//TODO call to RM Invoice Association
 				addRMOrderInvoiceAsso(rawmaterialorderinvoice,rawmaterialorder, request, response);
@@ -130,6 +123,7 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
+	
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorderinvoice(
 			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) {
@@ -185,6 +179,7 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
+	
 	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),

@@ -11,6 +11,7 @@ public class RawmaterialinventoryServiceImpl extends CRUDServiceImpl<Rawmaterial
 
 	@Autowired
 	RawmaterialinventoryDao rawmaterialinventoryDao; 
+	
 	@Override
 	public Rawmaterialinventory getByRMId(long id) throws Exception {
 		return rawmaterialinventoryDao.getByRMId(id);

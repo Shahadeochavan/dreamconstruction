@@ -44,10 +44,8 @@ public class RawmaterialorderassociationController {
 			}
 			rawmaterialorderassociation.setIsactive(true);
 			rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorderassociationService
-					.addEntity(rawmaterialorderassociation);
-			return new UserStatus(1,
-					"Rawmaterialorderassociation added Successfully !");
+			rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
+			return new UserStatus(1,"Rawmaterialorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -84,8 +82,7 @@ public class RawmaterialorderassociationController {
 			rawmaterialorderassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorderassociationService
 					.updateEntity(rawmaterialorderassociation);
-			return new UserStatus(1,
-					"Rawmaterialorderassociation update Successfully !");
+			return new UserStatus(1,"Rawmaterialorderassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());

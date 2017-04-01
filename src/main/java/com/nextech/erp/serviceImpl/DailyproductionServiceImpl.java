@@ -12,6 +12,7 @@ public class DailyproductionServiceImpl extends CRUDServiceImpl<Dailyproduction>
 
 	@Autowired
 	DailyproductionDao dailyproductionDao; 
+	
 	@Override
 	public List<Dailyproduction> getDailyProdPendingForQualityCheckByPlanningId(long planningId) {
 		return dailyproductionDao.getDailyProdPendingForQualityCheckByPlanningId(planningId);

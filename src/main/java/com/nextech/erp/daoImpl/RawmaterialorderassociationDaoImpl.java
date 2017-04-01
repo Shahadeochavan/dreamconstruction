@@ -8,9 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import com.nextech.erp.dao.RawmaterialorderassociationDao;
-import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 
 public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterialorderassociation> implements
@@ -28,18 +26,17 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
-		//return criteria.list();
 		return (criteria.list().size() > 0 ? (List<Rawmaterialorderassociation>)criteria.list() : null);
 	}
 
 	@Override
-	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(
-			long id, long rmId) throws Exception {
+	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(long id, long rmId) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
 		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
+		criteria.add(Restrictions.eq("isactive", true));
 		Rawmaterialorderassociation rawmaterialorderassociation = (Rawmaterialorderassociation) (criteria.list().size()>0 ? criteria.list().get(0) : null);
 		return rawmaterialorderassociation;
 	}

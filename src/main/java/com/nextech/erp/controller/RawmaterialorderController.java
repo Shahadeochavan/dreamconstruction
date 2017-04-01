@@ -50,10 +50,6 @@ public class RawmaterialorderController {
 	
 	@Autowired
 	private MessageSource messageSource;
-	
-/*	private static final int STATUS_INVOICE_IN=11;
-	private static final int STATUS_RAW_MATERIAL_INPROCESS=1;
-	private static final int STATUS_RAW_MATERIAL_INCOMPLETE=2;*/
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
@@ -111,6 +107,7 @@ public class RawmaterialorderController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Rawmaterialorder getRawmaterialorder(
 			@PathVariable("id") long id) {
@@ -136,40 +133,6 @@ public class RawmaterialorderController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
-		}
-	}
-	
-	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
-		rawmaterialorder.setCreateDate(new Date());
-		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
-//		rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
-		rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
-		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
-		rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
-		rawmaterialorder.setName(rawmaterialOrderAssociationModel.getName());
-		rawmaterialorder.setActualPrice(rawmaterialOrderAssociationModel.getActualPrice());
-		rawmaterialorder.setOtherCharges(rawmaterialOrderAssociationModel.getOtherCharges());
-		rawmaterialorder.setTax(rawmaterialOrderAssociationModel.getTax());
-		rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
-		//rawmaterialorder.setRemainingQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations());
-		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		rawmaterialorder.setIsactive(true);
-		long id=rawmaterialorderService.addEntity(rawmaterialorder);
-		System.out.println("id is"+id);
-		return rawmaterialorder;
-	}
-	
-	private void addRMOrderAsso(Rawmaterialorder rawmaterialorder,RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
-		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
-			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
-				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
-				rawmaterialorderassociation.setIsactive(true);
-				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
-				rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
-			}
 		}
 	}
 
@@ -247,4 +210,38 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 	
+	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
+		rawmaterialorder.setCreateDate(new Date());
+		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
+//		rawmaterialorder.setExpectedDeliveryDate(rawmaterialOrderAssociationModel.getDeliveryDate());
+		rawmaterialorder.setQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations().size());
+		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_RM_ORDER, null, null))));
+		rawmaterialorder.setVendor(vendorService.getEntityById(Vendor.class,rawmaterialOrderAssociationModel.getVendor()));
+		rawmaterialorder.setName(rawmaterialOrderAssociationModel.getName());
+		rawmaterialorder.setActualPrice(rawmaterialOrderAssociationModel.getActualPrice());
+		rawmaterialorder.setOtherCharges(rawmaterialOrderAssociationModel.getOtherCharges());
+		rawmaterialorder.setTax(rawmaterialOrderAssociationModel.getTax());
+		rawmaterialorder.setTotalprice(rawmaterialOrderAssociationModel.getTotalprice());
+		//rawmaterialorder.setRemainingQuantity(rawmaterialOrderAssociationModel.getRawmaterialorderassociations());
+		rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		rawmaterialorder.setIsactive(true);
+		long id=rawmaterialorderService.addEntity(rawmaterialorder);
+		System.out.println("id is"+id);
+		return rawmaterialorder;
+	}
+	
+	private void addRMOrderAsso(Rawmaterialorder rawmaterialorder,RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
+		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
+			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
+				rawmaterialorderassociation.setIsactive(true);
+				rawmaterialorderassociation.setRemainingQuantity(rawmaterialorderassociation.getQuantity());
+				rawmaterialorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
+			}
+		}
+	}
+
 }

@@ -112,17 +112,16 @@ public class RawmaterialController {
 		}
 
 	}
+	
 	@RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialvendorassociation> getRawmaterialForVendor(@PathVariable("VendorId") long id) {
 
 		List<Rawmaterialvendorassociation> rawmaterialvendorassociationList = null;
 		try {
 			rawmaterialvendorassociationList = rawmaterialService.getRawmaterialByVenodrId(id);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return rawmaterialvendorassociationList;
 	}
 	
@@ -132,11 +131,9 @@ public class RawmaterialController {
 		List<Rawmaterial> rawmaterialList = null;
 		try {
 			rawmaterialList = rawmaterialService.getRawMaterialByRMOrderId(id);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return rawmaterialList;
 	}
 }

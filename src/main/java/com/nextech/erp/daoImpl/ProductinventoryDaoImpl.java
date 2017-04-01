@@ -16,8 +16,7 @@ public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		Criteria criteria = session.createCriteria(Productinventory.class);
 		criteria.add(Restrictions.eq("product.id", productId));
 		criteria.add(Restrictions.eq("isactive", true));
-		Productinventory productinventory = (Productinventory) (criteria.list()
-				.size() > 0 ? criteria.list().get(0) : null);
+		Productinventory productinventory = (Productinventory) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
 		return productinventory;
 	}
 }

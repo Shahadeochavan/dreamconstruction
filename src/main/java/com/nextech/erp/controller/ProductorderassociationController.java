@@ -30,6 +30,7 @@ public class ProductorderassociationController {
 
 	@Autowired
 	ProductorderassociationService productorderassociationService;
+	
 	@Autowired
 	ProductinventoryService productinventoryService;
 
@@ -106,7 +107,8 @@ public class ProductorderassociationController {
 		Productorderassociation productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getProductOrderAssoByOrderId(orderId);
-
+			Productinventory productinventory = productinventoryService.getProductinventoryByProductId(orderId);
+            System.out.println(productinventory);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

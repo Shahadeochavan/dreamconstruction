@@ -1,5 +1,7 @@
 package com.nextech.erp.controller;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -34,15 +36,19 @@ import com.nextech.erp.status.UserStatus;
 @RestController
 @RequestMapping("/dailyproduction")
 public class DailyproductionController {
+	
 	@Autowired
 	DailyproductionService dailyproductionservice;
 	
 	@Autowired 
 	ProductService productService;
+	
 	@Autowired
 	StatusService statusService;
+	
 	@Autowired
 	private MessageSource messageSource;
+	
 	@Autowired
 	ProductionplanningService productionplanningService;
 
@@ -51,8 +57,7 @@ public class DailyproductionController {
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
-				return new UserStatus(0, bindingResult.getFieldError()
-						.getDefaultMessage());
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			for(ProductinPlanCurrentDateList productinPlanCurrentDateList : productionPlanCurrentDate.getProductinPlanCurrentDateLists()){
 				Dailyproduction dailyproduction = setProductinPlanCurrentDate(productinPlanCurrentDateList);
@@ -64,10 +69,8 @@ public class DailyproductionController {
 		       	//TODO update production plan daily
 		       	//need not to change status every time. once it is changed don't execute below method.
 		       	//we will be marking production plan complete from store's call.
-		      //	updateProductionPlan(dailyproduction, productionPlanCurrentDate, request, response);
-			
+		      	updateProductionPlan(dailyproduction, request, response);
 			}
-			
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -84,24 +87,6 @@ public class DailyproductionController {
 		}
 	}
 
-	private Dailyproduction setProductinPlanCurrentDate(ProductinPlanCurrentDateList productinPlanCurrentDateList) throws Exception {
-		Dailyproduction dailyproduction = new Dailyproduction();
-		dailyproduction.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, productinPlanCurrentDateList.getProductionPlanId()));
-		dailyproduction.setTargetQuantity(productinPlanCurrentDateList.getTargetQuantity());
-		dailyproduction.setAchivedQuantity(productinPlanCurrentDateList.getAchivedQuantity());
-		dailyproduction.setRemark(productinPlanCurrentDateList.getRemark());
-		dailyproduction.setIsactive(true);
-		return dailyproduction;
-	}
-	private void updateProductionPlan(Dailyproduction dailyproduction,ProductionPlanCurrentDate productionPlanCurrentDate,HttpServletRequest request, HttpServletResponse response) throws Exception{
-		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, dailyproduction.getProductionplanning().getId());
-		productionplanning.setTargetQuantity(dailyproduction.getTargetQuantity());
-		productionplanning.setAchivedQuantity(productionplanning.getAchivedQuantity()+dailyproduction.getAchivedQuantity());
-		productionplanning.setDate(productionPlanCurrentDate.getCreateDate());
-		productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-		productionplanning.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_INPROGRESS, null, null))));
-		productionplanningService.updateEntity(productionplanning);
-	}
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Dailyproduction getDailyproduction(@PathVariable("id") long id) {
 		Dailyproduction Dailyproduction = null;
@@ -136,7 +121,6 @@ public class DailyproductionController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return DailyproductionList;
 	}
 
@@ -151,7 +135,23 @@ public class DailyproductionController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
+	}
+	
+	private Dailyproduction setProductinPlanCurrentDate(ProductinPlanCurrentDateList productinPlanCurrentDateList) throws Exception {
+		Dailyproduction dailyproduction = new Dailyproduction();
+		dailyproduction.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, productinPlanCurrentDateList.getProductionPlanId()));
+		dailyproduction.setTargetQuantity(productinPlanCurrentDateList.getTargetQuantity());
+		dailyproduction.setAchivedQuantity(productinPlanCurrentDateList.getAchivedQuantity());
+		dailyproduction.setRemark(productinPlanCurrentDateList.getRemark());
+		dailyproduction.setIsactive(true);
+		return dailyproduction;
+	}
+	
+	private void updateProductionPlan(Dailyproduction dailyproduction,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, dailyproduction.getProductionplanning().getId());
+		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()+dailyproduction.getAchivedQuantity());
+		productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		productionplanning.setUpdatedDate(new Timestamp(new Date().getTime()));
+		productionplanningService.updateEntity(productionplanning);
 	}
 }
-

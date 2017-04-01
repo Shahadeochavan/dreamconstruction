@@ -18,9 +18,7 @@ public class QualitycheckrawmaterialDaoImpl extends
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("rawmaterialorderinvoice.id", invoiceId));
 		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
-		Qualitycheckrawmaterial qualitycheckrawmaterial = criteria.list().size() > 0 ? (Qualitycheckrawmaterial) criteria.list().get(0)
-				: null;
-	 //session.close();
+		Qualitycheckrawmaterial qualitycheckrawmaterial = criteria.list().size() > 0 ? (Qualitycheckrawmaterial) criteria.list().get(0): null;
 		return qualitycheckrawmaterial;
 }
 }

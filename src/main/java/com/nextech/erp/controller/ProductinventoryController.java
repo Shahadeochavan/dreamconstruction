@@ -31,6 +31,7 @@ public class ProductinventoryController {
 
 	@Autowired
 	ProductinventoryService productinventoryService;
+	
 	@Autowired
 	private MessageSource messageSource;
 
@@ -43,7 +44,7 @@ public class ProductinventoryController {
 						.getDefaultMessage());
 			}
 			if (productinventoryService.getProductinventoryByProductId(
-					productinventory.getProduct().getId()) == null){
+				productinventory.getProduct().getId()) == null){
 				productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productinventory.setIsactive(true);
 				productinventoryService.addEntity(productinventory);
@@ -92,22 +93,22 @@ public class ProductinventoryController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public  @ResponseBody Response getProductinventory() {
+	public @ResponseBody Response getProductinventory() {
 
 		List<Productinventory> productinventoryList = null;
 		try {
-			
 			productinventoryList = productinventoryService.getEntityList(Productinventory.class);
-			if(productinventoryList.isEmpty()){
+			if (productinventoryList.isEmpty()) {
 				System.out.println("Please add product inventory");
-				return new Response(1, "Product Inventory is empty",productinventoryList);
+				return new Response(1, "Product Inventory is empty",
+						productinventoryList);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		 return new Response(1,productinventoryList);
+		return new Response(1, productinventoryList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

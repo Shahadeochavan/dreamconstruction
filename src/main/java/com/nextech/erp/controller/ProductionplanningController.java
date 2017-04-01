@@ -1,8 +1,9 @@
 package com.nextech.erp.controller;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.dto.ProductinPlanCurrentDateList;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
@@ -30,6 +30,7 @@ import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.DateUtil;
 
 @Controller
 @RequestMapping("/productionplanning")
@@ -123,26 +124,6 @@ public class ProductionplanningController {
 		}
 		return productionplanning;
 	}
-
-/*	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductionplanning(@RequestBody ProductionPlanCurrentDate productionPlanCurrentDate, BindingResult bindingResult,
-			HttpServletRequest request, HttpServletResponse response) {
-		try {
-			for(ProductinPlanCurrentDateList productinPlanCurrentDateList : productionPlanCurrentDate.getProductinPlanCurrentDateLists()){
-				Productionplanning productionplanning = setProductinPlanCurrentDate(productinPlanCurrentDateList);
-						productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-						productionplanning.setDate(productionPlanCurrentDate.getCreateDate());
-				productionplanning.setIsactive(true);
-				productionplanningService.updateEntity(productionplanning);
-				
-			}
-		
-		} catch (Exception e) {
-			 e.printStackTrace();
-			return new UserStatus(0, e.toString());
-		}
-		return new UserStatus(1, "Productionplanning update Successfully !");
-	}*/
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanning(@RequestBody Productionplanning productionplanning,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -156,17 +137,6 @@ public class ProductionplanningController {
 		}
 	}
 	
-
-	private Productionplanning setProductinPlanCurrentDate(ProductinPlanCurrentDateList productinPlanCurrentDateList) throws Exception {
-		Productionplanning productionplanning = new Productionplanning();
-		productionplanning = productionplanningService.getEntityById(Productionplanning.class, productinPlanCurrentDateList.getProductionPlanId());
-		productionplanning.setProduct(productService.getEntityById(Product.class, productinPlanCurrentDateList.getProductId()));
-		productionplanning.setTargetQuantity(productinPlanCurrentDateList.getTargetQuantity());
-		productionplanning.setAchivedQuantity(productinPlanCurrentDateList.getAchivedQuantity());
-		productionplanning.setRemark(productinPlanCurrentDateList.getRemark());
-		productionplanning.setIsactive(true);
-		return productionplanning;
-	}
 	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -266,39 +236,53 @@ public class ProductionplanningController {
 	}
 	
 	@RequestMapping(value = "getProductionPlanByDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productionplanning getProductionPlanDateAndProductId(@PathVariable("date") Date date,@PathVariable("pID")long pId) {
+	public @ResponseBody Productionplanning getProductionPlanDateAndProductId(@PathVariable("date") String date,@PathVariable("pID")long pId) {
 
 		Productionplanning productionplanning = null;
 		try {
-			productionplanning = productionplanningService.getProductionplanByDateAndProductId(date,pId);
+			productionplanning = productionplanningService.getProductionplanByDateAndProductId(DateUtil.convertToDate(date),pId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return productionplanning;
 	}
+	
 	@RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") Date date) {
+	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date) {
 
-		List<Productionplanning> productionplanningsList = null;
+		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
 		try {
-			productionplanningsList = productionplanningService.getProductionplanByDate(date);
+			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			for (Productionplanning productionplanning : productionplannings) {
+				boolean isProductRemaining = false;
+				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+				if(productorderassociations !=null && !productorderassociations.isEmpty()){
+					for (Productorderassociation productorderassociation : productorderassociations) {
+						if(productorderassociation.getRemainingQuantity() > 0){
+							isProductRemaining = true;
+							break;
+						}
+					}
+				}
+				if(isProductRemaining)
+					productionplanningFinalList.add(productionplanning);
+			}
 					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productionplanningsList;
+		return productionplanningFinalList;
 	}
 	
-	
 	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") Date date) {
+	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
 		try {
 		
-			List<Productionplanning> productionplanningList = productionplanningService.getProductionplanByDate(date);
+			List<Productionplanning> productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplanningList) {
 				boolean isProductRemaining = false;
 				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());

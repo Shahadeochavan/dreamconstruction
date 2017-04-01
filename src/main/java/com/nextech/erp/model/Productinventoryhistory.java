@@ -3,11 +3,7 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import java.sql.Timestamp;
 
 

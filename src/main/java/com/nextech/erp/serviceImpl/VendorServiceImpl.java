@@ -7,6 +7,7 @@ import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.VendorService;
 
 public class VendorServiceImpl extends CRUDServiceImpl<Vendor> implements VendorService {
+	
 	@Autowired
 	VendorDao vendorDao;
 

@@ -225,7 +225,7 @@ public class ProductqualityController {
 		if(productinventory != null){
 			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setQuantityavailable(productinventory.getQuantityavailable() + productquality.getGoodQuantity());
-			productinventoryService.updateEntity(productinventory);
+			productinventoryService.updateEntity(productinventory);	
 		}
 		return productinventory;
 	}

@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -22,6 +23,7 @@ import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -98,22 +100,28 @@ public class ProductorderassociationController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		
 		return productorderassociationList;
 	}
 	@RequestMapping(value = "list/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Productorderassociation getProductorderassociationList(@PathVariable("orderId") long orderId) {
+	public @ResponseBody Response getProductorderassociationList(@PathVariable("orderId") long orderId) {
 
-		Productorderassociation productorderassociationList = null;
+		List<Productorderassociation> productorderassociationList = null;
+		List<Productinventory> productinventoriesList = new ArrayList<Productinventory>();
 		try {
-			productorderassociationList = productorderassociationService.getProductOrderAssoByOrderId(orderId);
-			Productinventory productinventory = productinventoryService.getProductinventoryByProductId(orderId);
-            System.out.println(productinventory);
+			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
+			for(Productorderassociation productorderassociation : productorderassociationList){
+				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
+				for(Productinventory productinventory : productinventories){
+					productinventoriesList.add(productinventory);
+				}
+			}
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productorderassociationList;
+		return new Response(1,"ProductorderList and ProductInventoryList",productorderassociationList,productinventoriesList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

@@ -8,7 +8,7 @@ import com.nextech.erp.model.Rawmaterialorderassociation;
 public class RawmaterialOrderAssociationModel {
 	
 	private String description;
-	private Date deliveryDate;	
+	private Date expecteddeliveryDate;	
 	private Date createDate;
 	private long Vendor;
 	private long status;
@@ -24,11 +24,12 @@ public class RawmaterialOrderAssociationModel {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public Date getDeliveryDate() {
-		return deliveryDate;
+
+	public Date getExpecteddeliveryDate() {
+		return expecteddeliveryDate;
 	}
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
+	public void setExpecteddeliveryDate(Date expecteddeliveryDate) {
+		this.expecteddeliveryDate = expecteddeliveryDate;
 	}
 	public Date getCreateDate() {
 		return createDate;

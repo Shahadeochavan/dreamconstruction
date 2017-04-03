@@ -241,19 +241,17 @@ public class DispatchController {
 
 	private Productinventory updateProductInventory(Dispatch dispatch,
 			Product product,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		Productinventory productinventory = productinventoryService
-				.getProductinventoryByProductId(dispatch.getProduct().getId());
+		Productinventory productinventory = productinventoryService.getProductinventoryByProductId(dispatch.getProduct().getId());
 		if (productinventory == null) {
 			productinventory = new Productinventory();
 			productinventory.setProduct(product);
 			productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productinventory.setQuantityavailable(productinventory.getQuantityavailable() - dispatch.getQuantity());
-				productinventory.setIsactive(true);
-				productinventoryService.addEntity(productinventory);
+			productinventory.setQuantityavailable(productinventory.getQuantityavailable() - dispatch.getQuantity());
+			productinventory.setIsactive(true);
+			productinventoryService.addEntity(productinventory);
 		
 		} else {
-				productinventory.setQuantityavailable(productinventory
-						.getQuantityavailable() - dispatch.getQuantity());
+				productinventory.setQuantityavailable(productinventory.getQuantityavailable() - dispatch.getQuantity());
 				productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productinventory.setIsactive(true);
 				productinventoryService.updateEntity(productinventory);
@@ -278,12 +276,10 @@ public class DispatchController {
 		productinventoryhistory.setProductinventory(productinventory);
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-
-			productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable() - dispatch.getQuantity());
-			productinventoryhistory.setAfterquantity((goodQuantity+ productinventory.getQuantityavailable() - dispatch.getQuantity()));
-			productinventoryhistory.setStatus(statusService.getEntityById(
-					Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT__INVENTORY_ADD, null, null))));
-			productinventoryhistoryService.addEntity(productinventoryhistory);		
+		productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable() - dispatch.getQuantity());
+		productinventoryhistory.setAfterquantity((goodQuantity+ productinventory.getQuantityavailable() - dispatch.getQuantity()));
+		productinventoryhistory.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT__INVENTORY_ADD, null, null))));
+	    productinventoryhistoryService.addEntity(productinventoryhistory);		
 	}
 	
 	private Dispatch setPart(Part part) throws Exception {

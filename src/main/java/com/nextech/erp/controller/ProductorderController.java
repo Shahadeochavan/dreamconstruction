@@ -207,7 +207,7 @@ public class ProductorderController {
 		productorder.setCreateDate(new Date());
 		productorder.setDescription(productOrderAssociationModel.getDescription());
 		productorder.setInvoiceNo(productOrderAssociationModel.getInvoiceNo());
-		productorder.setExpecteddeliveryDate(productOrderAssociationModel.getDeliveryDate());
+		productorder.setExpecteddeliveryDate(productOrderAssociationModel.getExpecteddeliveryDate());
 		productorder.setQuantity(productOrderAssociationModel.getOrderproductassociations().size());
 		productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorder.setIsactive(true);

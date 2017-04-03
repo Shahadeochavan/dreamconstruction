@@ -10,7 +10,7 @@ public class ProductOrderAssociationModel {
 	private String description;
 	private long client;
 	private long status;
-	private Date deliveryDate;	
+	private Date expecteddeliveryDate;	
 	private Date createDate;
 	private String invoiceNo;
 	private List<Productorderassociation> orderproductassociations;
@@ -26,11 +26,12 @@ public class ProductOrderAssociationModel {
 	public void setClient(long client) {
 		this.client = client;
 	}
-	public Date getDeliveryDate() {
-		return deliveryDate;
+	
+	public Date getExpecteddeliveryDate() {
+		return expecteddeliveryDate;
 	}
-	public void setDeliveryDate(Date deliveryDate) {
-		this.deliveryDate = deliveryDate;
+	public void setExpecteddeliveryDate(Date expecteddeliveryDate) {
+		this.expecteddeliveryDate = expecteddeliveryDate;
 	}
 	public Date getCreateDate() {
 		return createDate;

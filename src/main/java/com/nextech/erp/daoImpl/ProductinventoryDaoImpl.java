@@ -1,9 +1,13 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+
 import com.nextech.erp.dao.ProductinventoryDao;
 import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productorderassociation;
 
 public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		implements ProductinventoryDao {
@@ -18,5 +22,18 @@ public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		criteria.add(Restrictions.eq("isactive", true));
 		Productinventory productinventory = (Productinventory) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
 		return productinventory;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productinventory> getProductinventoryListByProductId(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productinventory.class);
+		criteria.add(Restrictions.eq("product.id", productId));
+		criteria.add(Restrictions.eq("isactive", true));
+		return (criteria.list().size() > 0 ? (List<Productinventory>)criteria.list() : null);
 	}
 }

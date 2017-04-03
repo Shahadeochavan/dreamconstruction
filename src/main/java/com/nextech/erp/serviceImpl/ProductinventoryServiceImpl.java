@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.ProductinventoryDao;
@@ -15,6 +17,12 @@ public class ProductinventoryServiceImpl extends CRUDServiceImpl<Productinventor
 			throws Exception {
 		// TODO Auto-generated method stub
 		return productinventoryDao.getProductinventoryByProductId(productId);
+	}
+	@Override
+	public List<Productinventory> getProductinventoryListByProductId(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+		return productinventoryDao.getProductinventoryListByProductId(productId);
 	}
 
 }

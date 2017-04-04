@@ -44,6 +44,13 @@ public class Status implements Serializable {
 	private Timestamp updatedDate;
 
 	//bi-directional many-to-one association to Productinventoryhistory
+	@OneToMany(mappedBy="status")
+	private List<Securitycheckout> securitycheckouts;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Storeout> storeouts;
+	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productinventoryhistory> productinventoryhistories;
@@ -364,5 +371,47 @@ public class Status implements Serializable {
 
 		return dailyproduction;
 	}
+	public List<Storeout> getStoreouts() {
+		return this.storeouts;
+	}
 
+	public void setStoreouts(List<Storeout> storeouts) {
+		this.storeouts = storeouts;
+	}
+
+	public Storeout addStoreout(Storeout storeout) {
+		getStoreouts().add(storeout);
+		storeout.setStatus(this);
+
+		return storeout;
+	}
+
+	public Storeout removeStoreout(Storeout storeout) {
+		getStoreouts().remove(storeout);
+		storeout.setStatus(null);
+
+		return storeout;
+	}
+	
+	public List<Securitycheckout> getSecuritycheckouts() {
+		return this.securitycheckouts;
+	}
+
+	public void setSecuritycheckouts(List<Securitycheckout> securitycheckouts) {
+		this.securitycheckouts = securitycheckouts;
+	}
+
+	public Securitycheckout addSecuritycheckout(Securitycheckout securitycheckout) {
+		getSecuritycheckouts().add(securitycheckout);
+		securitycheckout.setStatus(this);
+
+		return securitycheckout;
+	}
+
+	public Securitycheckout removeSecuritycheckout(Securitycheckout securitycheckout) {
+		getSecuritycheckouts().remove(securitycheckout);
+		securitycheckout.setStatus(null);
+
+		return securitycheckout;
+	}
 }

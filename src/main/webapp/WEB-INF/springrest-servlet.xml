@@ -44,11 +44,13 @@
 				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
 				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
 				<value>com.nextech.erp.model.Client</value>
-					<value>com.nextech.erp.model.Dailyproduction</value>
+				<value>com.nextech.erp.model.Dailyproduction</value>
+				<value>com.nextech.erp.model.Securitycheckout</value>
 				<value>com.nextech.erp.model.Productorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
 				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
+					<value>com.nextech.erp.model.Storeout</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
 				</value>
 				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
@@ -206,4 +208,11 @@
 		<bean id="dailyproductionDao" class="com.nextech.erp.daoImpl.DailyproductionDaoImpl" />
 	<bean id="dailyproductionService"
 		class="com.nextech.erp.serviceImpl.DailyproductionServiceImpl" />
+	
+		<bean id="storeoutDao" class="com.nextech.erp.daoImpl.StoreoutDaoImpl" />
+	<bean id="storeoutService" class="com.nextech.erp.serviceImpl.StoreoutServiceImpl" />
+	
+			<bean id="securitycheckoutDao" class="com.nextech.erp.daoImpl.SecuritycheckoutDaoImpl" />
+	<bean id="securitycheckoutService" class="com.nextech.erp.serviceImpl.SecuritycheckoutServiceImpl" />
+
 </beans>

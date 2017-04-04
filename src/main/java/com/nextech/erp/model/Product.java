@@ -77,6 +77,7 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
+	
 
 	public Product() {
 	}
@@ -304,5 +305,4 @@ public class Product implements Serializable {
 
 		return productrawmaterialassociation;
 	}
-
 }

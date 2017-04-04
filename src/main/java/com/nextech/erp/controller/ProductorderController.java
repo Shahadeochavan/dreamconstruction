@@ -185,6 +185,22 @@ public class ProductorderController {
 		return productorderList;
 	}
 	
+	
+	@RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productorder> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
+
+		List<Productorder> productorderList = null;
+		try {
+			// TODO afterwards you need to change it from properties. 
+			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productorderList;
+	}
+	
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorder(
 			@PathVariable("id") long id) {

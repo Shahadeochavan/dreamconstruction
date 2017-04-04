@@ -248,6 +248,7 @@ public class ProductqualityController {
 		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
 		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()-productquality.getGoodQuantity());
 		productionplanning.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity()+productquality.getGoodQuantity());
+		productionplanning.setFailQuantity(productquality.getRejectedQuantity());
 		productionplanning.setUpdatedBy(userId);
 		productionplanningService.updateEntity(productionplanning);
 	}

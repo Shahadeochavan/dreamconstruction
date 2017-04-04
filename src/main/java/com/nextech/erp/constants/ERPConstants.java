@@ -44,5 +44,6 @@ public class ERPConstants {
     public static String STATUS_RAW_MATERIAL_INCOMPLETE="rmInComplete";
     public static String STATUS_PRODUCT__INVENTORY_ADD="productInventoryAdd";
     public static String SESSION_EXPIRED="Session Expired! Please login again.";
+    public static String STATUS_PRODUCT_ORDER_INCOMPLETE="productOrderIncomplete";
     
 }

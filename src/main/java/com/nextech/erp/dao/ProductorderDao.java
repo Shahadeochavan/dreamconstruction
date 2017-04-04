@@ -9,5 +9,7 @@ public interface ProductorderDao extends SuperDao<Productorder> {
 			long pOrderId) throws Exception;
 	
 	public List<Productorder> getPendingProductOrders(long statusId); 
+	
+	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId);
 
 }

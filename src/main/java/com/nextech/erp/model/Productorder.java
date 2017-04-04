@@ -54,6 +54,7 @@ public class Productorder implements Serializable {
 	private Timestamp updatedDate;
 	
 	private String invoiceNo;
+	
 
 	//bi-directional many-to-one association to Orderproductassociation
 	@JsonIgnore

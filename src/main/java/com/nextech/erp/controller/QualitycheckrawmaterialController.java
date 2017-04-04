@@ -233,7 +233,7 @@ public class QualitycheckrawmaterialController {
 	}
 	
 	private void updateRawMaterialInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
+		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_ORDER_COMPLETE, null, null))));
 		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
 	}

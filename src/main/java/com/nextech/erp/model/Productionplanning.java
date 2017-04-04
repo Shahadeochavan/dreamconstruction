@@ -53,6 +53,9 @@ public class Productionplanning implements Serializable {
 	@Column(name="quality_checked_quantity")
 	private long qualityCheckedQuantity;
 	
+	@Column(name="fail_quantity")
+	private long failQuantity;
+	
 	private String remark;
 
 	@Column(name="target_quantity")
@@ -82,6 +85,9 @@ public class Productionplanning implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
 	private List<Dailyproduction> dailyproductions;
+	
+	@OneToMany(mappedBy="productionplanning")
+	private List<Storeout> storeouts;
 
 	public Productionplanning() {
 	}
@@ -266,4 +272,32 @@ public class Productionplanning implements Serializable {
 		return dailyproduction;
 	}
 
+	public long getFailQuantity() {
+		return failQuantity;
+	}
+
+	public void setFailQuantity(long failQuantity) {
+		this.failQuantity = failQuantity;
+	}
+	public List<Storeout> getStoreouts() {
+		return this.storeouts;
+	}
+
+	public void setStoreouts(List<Storeout> storeouts) {
+		this.storeouts = storeouts;
+	}
+
+	public Storeout addStoreout(Storeout storeout) {
+		getStoreouts().add(storeout);
+		storeout.setProductionplanning(this);
+
+		return storeout;
+	}
+
+	public Storeout removeStoreout(Storeout storeout) {
+		getStoreouts().remove(storeout);
+		storeout.setProductionplanning(null);
+
+		return storeout;
+	}
 }

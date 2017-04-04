@@ -114,6 +114,20 @@ public class ProductRMAssoController {
 
 		return productrawmaterialassociationList;
 	}
+	
+	@RequestMapping(value = "productRMAssoList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productrawmaterialassociation> getProductRMAssoList(@PathVariable("productId") long productId) {
+
+		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
+		try {
+			productrawmaterialassociationList = productRMAssoService.getProductRMAssoListByProductId(productId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productrawmaterialassociationList;
+	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductrawmaterialassociation(

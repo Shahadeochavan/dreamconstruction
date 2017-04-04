@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
 
@@ -27,6 +28,19 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
+		criteria.add(Restrictions.eq("status.id", statusId));
+		criteria.add(Restrictions.eq("isactive", true));
+		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId) {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productorder.class);
+		criteria.add(Restrictions.eq("client.id", clientId));
 		criteria.add(Restrictions.eq("status.id", statusId));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);

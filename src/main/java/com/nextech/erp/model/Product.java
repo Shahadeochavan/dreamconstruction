@@ -47,6 +47,10 @@ public class Product implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+	private List<Storeout> storeouts;
 
 	//bi-directional many-to-one association to Dispatch
 	@JsonIgnore
@@ -304,5 +308,26 @@ public class Product implements Serializable {
 		productrawmaterialassociation.setProduct(null);
 
 		return productrawmaterialassociation;
+	}
+	public List<Storeout> getStoreouts() {
+		return this.storeouts;
+	}
+
+	public void setStoreouts(List<Storeout> storeouts) {
+		this.storeouts = storeouts;
+	}
+
+	public Storeout addStoreout(Storeout storeout) {
+		getStoreouts().add(storeout);
+		storeout.setProduct(this);
+
+		return storeout;
+	}
+
+	public Storeout removeStoreout(Storeout storeout) {
+		getStoreouts().remove(storeout);
+		storeout.setProduct(null);
+
+		return storeout;
 	}
 }

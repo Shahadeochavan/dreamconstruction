@@ -4,10 +4,12 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.DispatchDTO;
 import com.nextech.erp.dto.Part;
@@ -118,6 +121,7 @@ public class DispatchController {
 				dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
 				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
 				dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_DISPATCHED, null, null))));
 				dispatchservice.addEntity(dispatch);
 				Productorder productorder = productorderService.getEntityById(Productorder.class, dispatch.getProductorder().getId());
 				Product product = productService.getEntityById(Product.class,dispatch.getProduct().getId());

@@ -4,6 +4,7 @@ import java.util.List;
 
 public class StoreOutDTO {
 	private long productionPlanId;
+	private long productId;
 	private long statusId;
 	private List<StoreOutPart> storeOutParts;
 	private String description;
@@ -38,6 +39,14 @@ public class StoreOutDTO {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public long getProductId() {
+		return productId;
+	}
+
+	public void setProductId(long productId) {
+		this.productId = productId;
 	}
 
 }

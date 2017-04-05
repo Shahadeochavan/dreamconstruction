@@ -18,10 +18,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.StoreOutDTO;
 import com.nextech.erp.dto.StoreOutPart;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Storeout;
+import com.nextech.erp.model.Storeoutrm;
+import com.nextech.erp.model.Storeoutrmassociation;
+import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.StoreoutService;
+import com.nextech.erp.service.StoreoutrmService;
+import com.nextech.erp.service.StoreoutrmassociationService;
 import com.nextech.erp.status.UserStatus;
 
 
@@ -35,6 +49,24 @@ public class StoreoutController {
 	@Autowired
 	private MessageSource messageSource;
 	
+	@Autowired 
+	ProductionplanningService productionplanningService;
+	
+	@Autowired 
+	ProductService productService;
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	RawmaterialService rawmaterialService;
+	
+	@Autowired
+	StoreoutrmService storeoutrmService;
+	
+	@Autowired
+	StoreoutrmassociationService storeoutrmassociationService;
+	
 	
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -45,11 +77,29 @@ public class StoreoutController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, storeOutDTO.getProductId());
+			Storeout storeout = new Storeout();
+			storeout.setProduct(productService.getEntityById(Product.class, productionplanning.getProduct().getId()));
+			storeout.setProductionplanning(productionplanning);
+			storeout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+			storeout.setIsactive(true);
+			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			storeoutService.addEntity(storeout);
 			for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
-				Storeout storeout = setStoreParts(storeOutPart);
-				storeout.setDescription(storeOutDTO.getDescription());
-				storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				storeoutService.addEntity(storeout);
+				
+			 Storeoutrm storeoutrm = setStoreParts(storeOutPart);
+			   storeoutrm.setDescription(storeOutDTO.getDescription());
+			   storeoutrm.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+			   storeoutrmService.addEntity(storeoutrm);
+			   
+			   Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
+			   storeoutrmassociation.setStoreout(storeout);
+			   storeoutrmassociation.setStoreoutrm(storeoutrm);
+			   storeoutrmassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			   storeoutrmassociation.setIsactive(true);
+			   storeoutrmassociationService.addEntity(storeoutrmassociation);
+			   
 			}
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -120,12 +170,13 @@ public class StoreoutController {
 
 	}
 	
-	private Storeout setStoreParts(StoreOutPart storeOutPart) throws Exception {
-		Storeout storeout = new Storeout();
-		storeout.setQuantityRequired(storeOutPart.getQuantityRequired());
-		storeout.setQuantityDispatched(storeOutPart.getQuantityDispatched());
-		storeout.setIsactive(true);
-		return storeout;
+	private Storeoutrm setStoreParts(StoreOutPart storeOutPart) throws Exception {
+		Storeoutrm storeoutrm = new Storeoutrm();
+		storeoutrm.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, storeOutPart.getRawmaterial()));
+		storeoutrm.setQuantityRequired(storeOutPart.getQuantityRequired());
+		storeoutrm.setQuantityDispatched(storeOutPart.getQuantityDispatched());
+		storeoutrm.setIsactive(true);
+		return storeoutrm;
 	}
 }
 

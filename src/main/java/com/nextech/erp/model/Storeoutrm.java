@@ -11,12 +11,12 @@ import java.util.List;
 
 
 /**
- * The persistent class for the storeout database table.
+ * The persistent class for the storeoutrm database table.
  * 
  */
 @Entity
-@NamedQuery(name="Storeout.findAll", query="SELECT s FROM Storeout s")
-public class Storeout implements Serializable {
+@NamedQuery(name="Storeoutrm.findAll", query="SELECT s FROM Storeoutrm s")
+public class Storeoutrm implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
@@ -33,41 +33,38 @@ public class Storeout implements Serializable {
 
 	private boolean isactive;
 
+	private long quantityDispatched;
+
 	private long quantityRequired;
 
 	@Column(name="updated_by")
-	private long updatedBy;
+	private int updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
-
-	//bi-directional many-to-one association to Product
-	@ManyToOne
-	@JoinColumn(name="productId")
-	private Product product;
-
-	//bi-directional many-to-one association to Productionplanning
-	@ManyToOne
-	@JoinColumn(name="productionPlanid")
-	private Productionplanning productionplanning;
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
 	private Status status;
 
+	//bi-directional many-to-one association to Rawmaterial
+	@ManyToOne
+	@JoinColumn(name="rawmaterialId")
+	private Rawmaterial rawmaterial;
+
 	//bi-directional many-to-one association to Storeoutrmassociation
 	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "storeout", cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "storeoutrm", cascade = CascadeType.ALL)
 	private List<Storeoutrmassociation> storeoutrmassociations;
 
-	public Storeout() {
+	public Storeoutrm() {
+	}
+
+	public Storeoutrm(int id) {
+		this.id=id;
+		
 	}
 	
-	public Storeout(int id) {
-		this.id=id;
-	}
-
-
 	public long getId() {
 		return this.id;
 	}
@@ -108,6 +105,14 @@ public class Storeout implements Serializable {
 		this.isactive = isactive;
 	}
 
+	public long getQuantityDispatched() {
+		return this.quantityDispatched;
+	}
+
+	public void setQuantityDispatched(long quantityDispatched) {
+		this.quantityDispatched = quantityDispatched;
+	}
+
 	public long getQuantityRequired() {
 		return this.quantityRequired;
 	}
@@ -116,11 +121,11 @@ public class Storeout implements Serializable {
 		this.quantityRequired = quantityRequired;
 	}
 
-	public long getUpdatedBy() {
+	public int getUpdatedBy() {
 		return this.updatedBy;
 	}
 
-	public void setUpdatedBy(long updatedBy) {
+	public void setUpdatedBy(int updatedBy) {
 		this.updatedBy = updatedBy;
 	}
 
@@ -132,28 +137,20 @@ public class Storeout implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Product getProduct() {
-		return this.product;
-	}
-
-	public void setProduct(Product product) {
-		this.product = product;
-	}
-
-	public Productionplanning getProductionplanning() {
-		return this.productionplanning;
-	}
-
-	public void setProductionplanning(Productionplanning productionplanning) {
-		this.productionplanning = productionplanning;
-	}
-
 	public Status getStatus() {
 		return this.status;
 	}
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public Rawmaterial getRawmaterial() {
+		return this.rawmaterial;
+	}
+
+	public void setRawmaterial(Rawmaterial rawmaterial) {
+		this.rawmaterial = rawmaterial;
 	}
 
 	public List<Storeoutrmassociation> getStoreoutrmassociations() {
@@ -166,14 +163,14 @@ public class Storeout implements Serializable {
 
 	public Storeoutrmassociation addStoreoutrmassociation(Storeoutrmassociation storeoutrmassociation) {
 		getStoreoutrmassociations().add(storeoutrmassociation);
-		storeoutrmassociation.setStoreout(this);
+		storeoutrmassociation.setStoreoutrm(this);
 
 		return storeoutrmassociation;
 	}
 
 	public Storeoutrmassociation removeStoreoutrmassociation(Storeoutrmassociation storeoutrmassociation) {
 		getStoreoutrmassociations().remove(storeoutrmassociation);
-		storeoutrmassociation.setStoreout(null);
+		storeoutrmassociation.setStoreoutrm(null);
 
 		return storeoutrmassociation;
 	}

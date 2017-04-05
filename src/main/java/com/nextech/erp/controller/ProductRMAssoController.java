@@ -20,8 +20,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductRMAssociationModel;
+import com.nextech.erp.dto.ProductRMAssociationModelParts;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.service.ProductRMAssoService;
+import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -33,6 +39,12 @@ public class ProductRMAssoController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	RawmaterialService rawmaterialService; 
+	
+	@Autowired
+	ProductService productService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductrawmaterialassociation(
@@ -56,6 +68,35 @@ public class ProductRMAssoController {
 						messageSource.getMessage(ERPConstants.PRODUCT_RM_ASSO_EXIT, null, null));
 			return new UserStatus(1,
 					"Productrawmaterialassociation added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
+	
+	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addMultipleRawmaterialorder(
+			@Valid @RequestBody ProductRMAssociationModel productRMAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+			}
+			for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationModel.getProductRMAssociationModelParts()){
+				Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
+				productrawmaterialassociation.setProduct(productService.getEntityById(Product.class, productRMAssociationModel.getProduct()));
+				productRMAssoService.addEntity(productrawmaterialassociation);
+			}
+	
+			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -145,5 +186,13 @@ public class ProductRMAssoController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	
+	private Productrawmaterialassociation setMultipleRM(ProductRMAssociationModelParts productRMAssociationModelParts) throws Exception {
+		Productrawmaterialassociation productrawmaterialassociation = new Productrawmaterialassociation();
+		productrawmaterialassociation.setQuantity(productRMAssociationModelParts.getQuantity());
+		productrawmaterialassociation.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationModelParts.getRawmaterial()));
+		productrawmaterialassociation.setIsactive(true);
+		return productrawmaterialassociation;
 	}
 }

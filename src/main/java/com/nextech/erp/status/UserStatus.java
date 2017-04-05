@@ -1,7 +1,6 @@
 package com.nextech.erp.status;
 
 
-import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.User;
 
 public class UserStatus {
@@ -9,7 +8,6 @@ public class UserStatus {
 	private String message;
 	private Object data;
 	private User user;
-	private Productinventory productinventory;
 
 	public UserStatus() {
 	}
@@ -24,14 +22,6 @@ public class UserStatus {
 		this.data = data;
 		this.user= user;
 	}
-	
-	public UserStatus(int code, String message,Object data, Productinventory productinventory) {
-		this.code = code;
-		this.message = message;
-		this.data = data;
-		this.productinventory= productinventory;
-	}
-	
 	public UserStatus(int code, String message,String data) {
 		this.code = code;
 		this.message = message;
@@ -77,14 +67,5 @@ public class UserStatus {
 		return user;
 	}
 
-	public void setUser(User user) {
-		user = user;
-	}
-	public Productinventory getProductinventory() {
-		return productinventory;
-	}
-	public void setProductinventory(Productinventory productinventory) {
-		this.productinventory = productinventory;
-	}
 
 }

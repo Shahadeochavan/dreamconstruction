@@ -3,16 +3,17 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 
 
 /**
- * The persistent class for the productrawmaterialassociation database table.
+ * The persistent class for the storeoutrmassociation database table.
  * 
  */
 @Entity
-@NamedQuery(name="Productrawmaterialassociation.findAll", query="SELECT p FROM Productrawmaterialassociation p")
-public class Productrawmaterialassociation implements Serializable {
+@NamedQuery(name="Storeoutrmassociation.findAll", query="SELECT s FROM Storeoutrmassociation s")
+public class Storeoutrmassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id 
@@ -27,29 +28,25 @@ public class Productrawmaterialassociation implements Serializable {
 
 	private boolean isactive;
 
-/*	 @Min(value = 0, message = "please enter quantity")
-	 @Max(value = 100, message = "quantity should be maximum 100")*/
-	private long quantity;
-
 	@Column(name="updated_by")
 	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Product
+	//bi-directional many-to-one association to Storeout
 	@ManyToOne
-	@JoinColumn(name="productid")
-	private Product product;
+	@JoinColumn(name="storeOutId")
+	private Storeout storeout;
 
-	//bi-directional many-to-one association to Rawmaterial
+	//bi-directional many-to-one association to Storeoutrm
 	@ManyToOne
-	@JoinColumn(name="rawmaterialid")
-	private Rawmaterial rawmaterial;
+	@JoinColumn(name="storeOutRMId")
+	private Storeoutrm storeoutrm;
 
-	public Productrawmaterialassociation() {
+	public Storeoutrmassociation() {
 	}
-	public Productrawmaterialassociation(int id) {
+	public Storeoutrmassociation(int id) {
 		this.id=id;
 	}
 
@@ -85,14 +82,6 @@ public class Productrawmaterialassociation implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public long getQuantity() {
-		return this.quantity;
-	}
-
-	public void setQuantity(long quantity) {
-		this.quantity = quantity;
-	}
-
 	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
@@ -109,20 +98,20 @@ public class Productrawmaterialassociation implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public Product getProduct() {
-		return this.product;
+	public Storeout getStoreout() {
+		return this.storeout;
 	}
 
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setStoreout(Storeout storeout) {
+		this.storeout = storeout;
 	}
 
-	public Rawmaterial getRawmaterial() {
-		return this.rawmaterial;
+	public Storeoutrm getStoreoutrm() {
+		return this.storeoutrm;
 	}
 
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
+	public void setStoreoutrm(Storeoutrm storeoutrm) {
+		this.storeoutrm = storeoutrm;
 	}
 
 }

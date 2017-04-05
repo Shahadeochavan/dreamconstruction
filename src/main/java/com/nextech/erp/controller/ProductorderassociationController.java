@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.dto.ProductOrderInventoryData;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.status.Response;
@@ -35,6 +38,9 @@ public class ProductorderassociationController {
 	
 	@Autowired
 	ProductinventoryService productinventoryService;
+	
+	@Autowired
+	ProductService productService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorderassociation(
@@ -93,9 +99,6 @@ public class ProductorderassociationController {
 		List<Productorderassociation> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getEntityList(Productorderassociation.class);
-			for(Productorderassociation productorderassociation : productorderassociationList){
-				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productorderassociation.getProduct().getId());
-			}
   
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,17 +106,25 @@ public class ProductorderassociationController {
 		
 		return productorderassociationList;
 	}
-	@RequestMapping(value = "list/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	@RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductorderassociationList(@PathVariable("orderId") long orderId) {
 
 		List<Productorderassociation> productorderassociationList = null;
-		List<Productinventory> productinventoriesList = new ArrayList<Productinventory>();
+		List<ProductOrderInventoryData> productOrderInventoryList = new ArrayList<ProductOrderInventoryData>();
 		try {
 			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
 			for(Productorderassociation productorderassociation : productorderassociationList){
 				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
 				for(Productinventory productinventory : productinventories){
-					productinventoriesList.add(productinventory);
+					
+						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
+						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
+						productOrderInventoryData.setPartNumber(product.getPartNumber());
+						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityavailable());
+						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
+						productOrderInventoryList.add(productOrderInventoryData);
+					
+					
 				}
 			}
 		
@@ -121,7 +132,7 @@ public class ProductorderassociationController {
 			e.printStackTrace();
 		}
 
-		return new Response(1,"ProductorderList and ProductInventoryList",productorderassociationList,productinventoriesList);
+		return new Response(1,"ProductorderList and ProductInventoryList",productOrderInventoryList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

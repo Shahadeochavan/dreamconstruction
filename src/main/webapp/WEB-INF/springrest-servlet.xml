@@ -50,7 +50,9 @@
 				<value>com.nextech.erp.model.Rawmaterialorderassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
 				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
-					<value>com.nextech.erp.model.Storeout</value>
+				<value>com.nextech.erp.model.Storeout</value>
+				<value>com.nextech.erp.model.Storeoutrm</value>
+				<value>com.nextech.erp.model.Storeoutrmassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
 				</value>
 				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
@@ -214,5 +216,11 @@
 	
 			<bean id="securitycheckoutDao" class="com.nextech.erp.daoImpl.SecuritycheckoutDaoImpl" />
 	<bean id="securitycheckoutService" class="com.nextech.erp.serviceImpl.SecuritycheckoutServiceImpl" />
+	
+				<bean id="storeoutrmDao" class="com.nextech.erp.daoImpl.StoreoutrmDaoImpl" />
+	<bean id="storeoutrmService" class="com.nextech.erp.serviceImpl.StoreoutrmServiceImpl" />
+	
+				<bean id="storeoutrmassociationDao" class="com.nextech.erp.daoImpl.StoreoutrmassociationDaoImpl" />
+	<bean id="storeoutrmassociationService" class="com.nextech.erp.serviceImpl.StoreoutrmassociationServiceImpl" />
 
 </beans>

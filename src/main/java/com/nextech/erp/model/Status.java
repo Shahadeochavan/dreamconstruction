@@ -43,14 +43,17 @@ public class Status implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
-	//bi-directional many-to-one association to Productinventoryhistory
-	@OneToMany(mappedBy="status")
-	private List<Securitycheckout> securitycheckouts;
-	
+	//bi-directional many-to-one association to Dailyproduction
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
-	private List<Storeout> storeouts;
-	
+	private List<Dailyproduction> dailyproductions;
+
+	//bi-directional many-to-one association to Dispatch
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Dispatch> dispatches;
+
+	//bi-directional many-to-one association to Productinventoryhistory
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productinventoryhistory> productinventoryhistories;
@@ -90,14 +93,24 @@ public class Status implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Rawmaterialorderinvoice> rawmaterialorderinvoices;
 
-	//bi-directional many-to-one association to Dailyproduction
-//	@OneToMany(mappedBy="status")
+	//bi-directional many-to-one association to Securitycheckout
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
-	private List<Dailyproduction> dailyproductions;
+	private List<Securitycheckout> securitycheckouts;
+
+	//bi-directional many-to-one association to Storeout
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Storeout> storeouts;
+
+	//bi-directional many-to-one association to Storeoutrm
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+	private List<Storeoutrm> storeoutrms;
 
 	public Status() {
 	}
+	
 	public Status(int id) {
 		this.id=id;
 	}
@@ -172,6 +185,50 @@ public class Status implements Serializable {
 
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public List<Dailyproduction> getDailyproductions() {
+		return this.dailyproductions;
+	}
+
+	public void setDailyproductions(List<Dailyproduction> dailyproductions) {
+		this.dailyproductions = dailyproductions;
+	}
+
+	public Dailyproduction addDailyproduction(Dailyproduction dailyproduction) {
+		getDailyproductions().add(dailyproduction);
+		dailyproduction.setStatus(this);
+
+		return dailyproduction;
+	}
+
+	public Dailyproduction removeDailyproduction(Dailyproduction dailyproduction) {
+		getDailyproductions().remove(dailyproduction);
+		dailyproduction.setStatus(null);
+
+		return dailyproduction;
+	}
+
+	public List<Dispatch> getDispatches() {
+		return this.dispatches;
+	}
+
+	public void setDispatches(List<Dispatch> dispatches) {
+		this.dispatches = dispatches;
+	}
+
+	public Dispatch addDispatch(Dispatch dispatch) {
+		getDispatches().add(dispatch);
+		dispatch.setStatus(this);
+
+		return dispatch;
+	}
+
+	public Dispatch removeDispatch(Dispatch dispatch) {
+		getDispatches().remove(dispatch);
+		dispatch.setStatus(null);
+
+		return dispatch;
 	}
 
 	public List<Productinventoryhistory> getProductinventoryhistories() {
@@ -350,49 +407,6 @@ public class Status implements Serializable {
 		return rawmaterialorderinvoice;
 	}
 
-	public List<Dailyproduction> getDailyproductions() {
-		return this.dailyproductions;
-	}
-
-	public void setDailyproductions(List<Dailyproduction> dailyproductions) {
-		this.dailyproductions = dailyproductions;
-	}
-
-	public Dailyproduction addDailyproduction(Dailyproduction dailyproduction) {
-		getDailyproductions().add(dailyproduction);
-		dailyproduction.setStatus(this);
-
-		return dailyproduction;
-	}
-
-	public Dailyproduction removeDailyproduction(Dailyproduction dailyproduction) {
-		getDailyproductions().remove(dailyproduction);
-		dailyproduction.setStatus(null);
-
-		return dailyproduction;
-	}
-	public List<Storeout> getStoreouts() {
-		return this.storeouts;
-	}
-
-	public void setStoreouts(List<Storeout> storeouts) {
-		this.storeouts = storeouts;
-	}
-
-	public Storeout addStoreout(Storeout storeout) {
-		getStoreouts().add(storeout);
-		storeout.setStatus(this);
-
-		return storeout;
-	}
-
-	public Storeout removeStoreout(Storeout storeout) {
-		getStoreouts().remove(storeout);
-		storeout.setStatus(null);
-
-		return storeout;
-	}
-	
 	public List<Securitycheckout> getSecuritycheckouts() {
 		return this.securitycheckouts;
 	}
@@ -414,4 +428,49 @@ public class Status implements Serializable {
 
 		return securitycheckout;
 	}
+
+	public List<Storeout> getStoreouts() {
+		return this.storeouts;
+	}
+
+	public void setStoreouts(List<Storeout> storeouts) {
+		this.storeouts = storeouts;
+	}
+
+	public Storeout addStoreout(Storeout storeout) {
+		getStoreouts().add(storeout);
+		storeout.setStatus(this);
+
+		return storeout;
+	}
+
+	public Storeout removeStoreout(Storeout storeout) {
+		getStoreouts().remove(storeout);
+		storeout.setStatus(null);
+
+		return storeout;
+	}
+
+	public List<Storeoutrm> getStoreoutrms() {
+		return this.storeoutrms;
+	}
+
+	public void setStoreoutrms(List<Storeoutrm> storeoutrms) {
+		this.storeoutrms = storeoutrms;
+	}
+
+	public Storeoutrm addStoreoutrm(Storeoutrm storeoutrm) {
+		getStoreoutrms().add(storeoutrm);
+		storeoutrm.setStatus(this);
+
+		return storeoutrm;
+	}
+
+	public Storeoutrm removeStoreoutrm(Storeoutrm storeoutrm) {
+		getStoreoutrms().remove(storeoutrm);
+		storeoutrm.setStatus(null);
+
+		return storeoutrm;
+	}
+
 }

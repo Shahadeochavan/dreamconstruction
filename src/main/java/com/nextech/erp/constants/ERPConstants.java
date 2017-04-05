@@ -45,5 +45,9 @@ public class ERPConstants {
     public static String STATUS_PRODUCT__INVENTORY_ADD="productInventoryAdd";
     public static String SESSION_EXPIRED="Session Expired! Please login again.";
     public static String STATUS_PRODUCT_ORDER_INCOMPLETE="productOrderIncomplete";
+   public static String ORDER_DISPATCHED="orderDispatched";
+   public static String ORDER_SECURITY_OUT="orderSecuirtyCheckout";
+   public static String ORDER_DISPATCHED_COMPLETE="orderDispatchedComplete";
+   
     
 }

@@ -83,6 +83,9 @@ public class Rawmaterial implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
+	
+	@OneToMany(mappedBy="rawmaterial")
+	private List<Storeoutrm> storeoutrms;
 
 	public Rawmaterial() {
 	}
@@ -309,5 +312,25 @@ public class Rawmaterial implements Serializable {
 
 		return rmorderinvoiceintakquantity;
 	}
+	public List<Storeoutrm> getStoreoutrms() {
+		return this.storeoutrms;
+	}
 
+	public void setStoreoutrms(List<Storeoutrm> storeoutrms) {
+		this.storeoutrms = storeoutrms;
+	}
+
+	public Storeoutrm addStoreoutrm(Storeoutrm storeoutrm) {
+		getStoreoutrms().add(storeoutrm);
+		storeoutrm.setRawmaterial(this);
+
+		return storeoutrm;
+	}
+
+	public Storeoutrm removeStoreoutrm(Storeoutrm storeoutrm) {
+		getStoreoutrms().remove(storeoutrm);
+		storeoutrm.setRawmaterial(null);
+
+		return storeoutrm;
+	}
 }

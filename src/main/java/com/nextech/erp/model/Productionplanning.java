@@ -86,7 +86,8 @@ public class Productionplanning implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
 	private List<Dailyproduction> dailyproductions;
 	
-	@OneToMany(mappedBy="productionplanning")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "productionplanning", cascade = CascadeType.ALL)
 	private List<Storeout> storeouts;
 
 	public Productionplanning() {

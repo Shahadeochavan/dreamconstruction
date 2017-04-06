@@ -8,6 +8,7 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -19,16 +20,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductinPlanPRMAssoData;
 import com.nextech.erp.dto.ProductionPlan;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
 import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
 
@@ -54,6 +62,12 @@ public class ProductionplanningController {
 	
 	@Autowired
 	ProductorderassociationService productorderassociationService; 
+	
+	@Autowired
+	ProductRMAssoService productRMAssoService;
+	
+	@Autowired
+	RawmaterialService rawmaterialService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductionplanning(@Valid @RequestBody Productionplanning productionplanning,
@@ -304,6 +318,39 @@ public class ProductionplanningController {
 
 		return productionplanningFinalList;
 	}
+	
+	
+	@RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date) {
+
+		List<Productionplanning> productionplanningList = null;
+		List<ProductinPlanPRMAssoData> productinPlanPRMAssoDataList = new ArrayList<ProductinPlanPRMAssoData>(); 
+		try {
+			productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			for(Productionplanning productionplanning : productionplanningList){
+				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productionplanning.getProduct().getId());
+				if(productrawmaterialassociations !=null && !productrawmaterialassociations.isEmpty()){
+				for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+					
+					ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
+					
+					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
+					
+					productinPlanPRMAssoData.setName(rawmaterial.getName());
+					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
+					productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
+					productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);
+					
+				}
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productinPlanPRMAssoDataList);
+	}
+	
 	
 	
 }

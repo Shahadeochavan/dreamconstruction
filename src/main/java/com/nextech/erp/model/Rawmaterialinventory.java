@@ -30,7 +30,7 @@ public class Rawmaterialinventory implements Serializable {
 
 	private boolean isactive;
 
-	private int quantityAvailable;
+	private long quantityAvailable;
 
 /*	@NotBlank(message="{rack number should not be blank}")
 	@Size(min = 1, max = 255, message = "{rack number sholud be greater than 1 or less than 255 characters or digits}")*/
@@ -89,11 +89,11 @@ public class Rawmaterialinventory implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public int getQuantityAvailable() {
+	public long getQuantityAvailable() {
 		return this.quantityAvailable;
 	}
 
-	public void setQuantityAvailable(int quantityAvailable) {
+	public void setQuantityAvailable(long quantityAvailable) {
 		this.quantityAvailable = quantityAvailable;
 	}
 

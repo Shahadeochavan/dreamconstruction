@@ -6,6 +6,7 @@ public class StoreOutDTO {
 	private long productionPlanId;
 	private long productId;
 	private long statusId;
+	private long quantityRequired;
 	private List<StoreOutPart> storeOutParts;
 	private String description;
 
@@ -47,6 +48,14 @@ public class StoreOutDTO {
 
 	public void setProductId(long productId) {
 		this.productId = productId;
+	}
+
+	public long getQuantityRequired() {
+		return quantityRequired;
+	}
+
+	public void setQuantityRequired(long quantityRequired) {
+		this.quantityRequired = quantityRequired;
 	}
 
 }

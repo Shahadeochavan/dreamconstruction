@@ -120,6 +120,7 @@ public class ProductorderassociationController {
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
 						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());
+						productOrderInventoryData.setProductId(productinventory.getProduct().getId());
 						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityavailable());
 						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 						productOrderInventoryList.add(productOrderInventoryData);

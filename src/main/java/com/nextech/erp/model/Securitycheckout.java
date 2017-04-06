@@ -56,14 +56,20 @@ public class Securitycheckout implements Serializable {
 	private Timestamp updatedDate;
 
 	@Column(name="vehicle_no")
-	private int vehicleNo;
+	private String vehicleNo;
 
 	
 	@ManyToOne
 	@JoinColumn(name="statusid")
 	private Status status;
+	
+	private String dispatch;
 
 	public Securitycheckout() {
+	}
+	
+	public Securitycheckout(int id) {
+		this.id=id;
 	}
 
 	public long getId() {
@@ -178,11 +184,13 @@ public class Securitycheckout implements Serializable {
 		this.updatedDate = updatedDate;
 	}
 
-	public int getVehicleNo() {
-		return this.vehicleNo;
+
+
+	public String getVehicleNo() {
+		return vehicleNo;
 	}
 
-	public void setVehicleNo(int vehicleNo) {
+	public void setVehicleNo(String vehicleNo) {
 		this.vehicleNo = vehicleNo;
 	}
 
@@ -192,6 +200,14 @@ public class Securitycheckout implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getDispatch() {
+		return dispatch;
+	}
+
+	public void setDispatch(String dispatch) {
+		this.dispatch = dispatch;
 	}
 
 }

@@ -25,6 +25,8 @@ import com.nextech.erp.dto.StoreOutPart;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialinventory;
+import com.nextech.erp.model.Rawmaterialinventoryhistory;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Storeout;
 import com.nextech.erp.model.Storeoutrm;
@@ -32,6 +34,7 @@ import com.nextech.erp.model.Storeoutrmassociation;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.StoreoutService;
 import com.nextech.erp.service.StoreoutrmService;
@@ -67,9 +70,12 @@ public class StoreoutController {
 	@Autowired
 	StoreoutrmassociationService storeoutrmassociationService;
 	
+	@Autowired
+	RawmaterialinventoryService rawmaterialinventoryService;
+	
 	
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	@RequestMapping(value = "/createStoreOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStoreout(@Valid @RequestBody StoreOutDTO storeOutDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -79,6 +85,8 @@ public class StoreoutController {
 			}
 			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, storeOutDTO.getProductId());
 			Storeout storeout = new Storeout();
+			storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
+			storeout.setDescription(storeOutDTO.getDescription());
 			storeout.setProduct(productService.getEntityById(Product.class, productionplanning.getProduct().getId()));
 			storeout.setProductionplanning(productionplanning);
 			storeout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
@@ -99,6 +107,13 @@ public class StoreoutController {
 			   storeoutrmassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   storeoutrmassociation.setIsactive(true);
 			   storeoutrmassociationService.addEntity(storeoutrmassociation);
+			 
+		/*	   Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
+			   
+			   rawmaterialinventory.setQuantityAvailable(storeoutrm.getQuantityDispatched()-rawmaterialinventory.getQuantityAvailable());
+			   rawmaterialinventory.setIsactive(true);
+			   rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			   rawmaterialinventoryService.updateEntity(rawmaterialinventory);*/
 			   
 			}
 			return new UserStatus(1, "Storeout added Successfully !");
@@ -177,6 +192,19 @@ public class StoreoutController {
 		storeoutrm.setQuantityDispatched(storeOutPart.getQuantityDispatched());
 		storeoutrm.setIsactive(true);
 		return storeoutrm;
+	}
+	
+	private void saveStoreOut(StoreOutDTO storeOutDTO,HttpServletRequest request) throws Exception{
+		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, storeOutDTO.getProductId());
+		Storeout storeout = new Storeout();
+		storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
+		storeout.setDescription(storeOutDTO.getDescription());
+		storeout.setProduct(productService.getEntityById(Product.class, productionplanning.getProduct().getId()));
+		storeout.setProductionplanning(productionplanning);
+		storeout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+		storeout.setIsactive(true);
+		storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		storeoutService.addEntity(storeout);
 	}
 }
 

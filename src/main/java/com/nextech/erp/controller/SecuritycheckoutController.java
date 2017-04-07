@@ -25,6 +25,7 @@ import com.nextech.erp.dto.SecurityCheckOutDTO;
 import com.nextech.erp.dto.SecurityCheckOutPart;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Securitycheckout;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.service.DispatchService;
@@ -38,27 +39,27 @@ import com.nextech.erp.status.UserStatus;
 @Controller
 @RequestMapping("/securitycheckout")
 public class SecuritycheckoutController {
-	
+
 	@Autowired
 	SecuritycheckoutService securitycheckoutService;
-	
+
 	@Autowired
 	ProductorderService productorderService;
-	
-	
+
+
 	@Autowired
 	ProductorderassociationService productorderassociationService;
-	
+
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	DispatchService dispatchService;
-	
-	
+
+
 
 	@RequestMapping(value = "/productOrderCheckOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addSecuritycheckout(@Valid @RequestBody SecurityCheckOutDTO securityCheckOutDTO,
@@ -68,7 +69,7 @@ public class SecuritycheckoutController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			
+
 			Securitycheckout securitycheckout = new Securitycheckout();
 			securitycheckout.setClientname(securityCheckOutDTO.getClientname());
 			securitycheckout.setDescription(securityCheckOutDTO.getDescription());
@@ -82,17 +83,25 @@ public class SecuritycheckoutController {
 			securitycheckout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			securitycheckout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.SECURITY_CHECK_COMPLETE, null, null))));
 			securitycheckoutService.addEntity(securitycheckout);
+			StringBuilder stringBuilder = new StringBuilder();
+			String prefix="";
+			String send="";
 			for(SecurityCheckOutPart securityCheckOutPart : securityCheckOutDTO.getSecurityCheckOutParts()){
-				
-				securitycheckout =  setSecurityCheckOut(securityCheckOutPart);
-	
+				Productorderassociation  productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class, securityCheckOutPart.getProductId());
+				stringBuilder.append(prefix);
+				prefix=",";
+				stringBuilder.append(productorderassociation.getProduct().getId());
+				send = stringBuilder.toString();
+				securitycheckout.setDispatch(send);
+
 			}
+			securitycheckoutService.updateEntity(securitycheckout);
 			Dispatch dispatch = dispatchService.getEntityById(Dispatch.class, securityCheckOutDTO.getPoNo());
 			dispatch.setIsactive(true);
 			dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_SECURITY_OUT, null, null))));
 			dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			dispatchService.updateEntity(dispatch);
-		
+
 			return new UserStatus(1, "Securitycheckout added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -161,16 +170,19 @@ public class SecuritycheckoutController {
 		}
 
 	}
-	
-	private  Securitycheckout setSecurityCheckOut(SecurityCheckOutPart securityCheckOutPart){
-		
-     List<Securitycheckout> securitycheckouts = new ArrayList<Securitycheckout>();
-       Securitycheckout securitycheckout = new Securitycheckout();
-       securitycheckout.setDispatch(securityCheckOutPart.getProductId());
-       securitycheckouts.add(securitycheckout);
-		return securitycheckout;
-		
-	}
 
+/*	private  String setSecurityCheckOut(SecurityCheckOutPart securityCheckOutPart) throws Exception{
+
+	Productorderassociation  productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class, securityCheckOutPart.getProductId());
+	stringBuilder.append(prefix);
+		prefix =",";
+		stringBuilder.append(productorderassociation.getProduct());
+		String send = stringBuilder.toString();
+		System.out.println(send);
+		return send;
+
+
+	}
+*/
 }
 

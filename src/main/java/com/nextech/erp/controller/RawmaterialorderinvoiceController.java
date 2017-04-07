@@ -53,16 +53,16 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
-	
+
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	RawmaterialorderhistoryService rawmaterialorderhistoryService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	RawmaterialorderassociationService rawmaterialorderassociationService;
 
@@ -76,25 +76,25 @@ public class RawmaterialorderinvoiceController {
 						.getDefaultMessage());
 			}
 			//TODO save raw material invoice
-			    saveRMOrderInvoice(rawmaterialorderinvoice, request, response);	
+			    saveRMOrderInvoice(rawmaterialorderinvoice, request, response);
 				Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class,rawmaterialorderinvoice.getPo_No());
-				
+
 				//TODO call to RM Invoice Association
 				addRMOrderInvoiceAsso(rawmaterialorderinvoice,rawmaterialorder, request, response);
-				
+
 				//TODO call to RM Invoice quantities
 				addRMInvoiceQuantity(rawmaterialorderinvoice, request, response);
 				//TODO call to order history
 				addOrderHistory(rawmaterialorderinvoice, rawmaterialorder, request, response);
-				
+
 				//change status to Quality Check
 				//TODO update raw materail order
 				updateRawMaterialOrder(rawmaterialorder, request, response);
-	
+
 				return new UserStatus(1,
 						"Rawmaterialorderinvoice added Successfully !");
 
-			
+
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -123,7 +123,7 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
-	
+
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateRawmaterialorderinvoice(
 			@RequestBody Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) {
@@ -159,13 +159,13 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
-	
+
 	@RequestMapping(value = "quality-check-invoices", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceQualityCheckByStatusId() {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
-					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null)));
+					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_ORDER_COMPLETE, null, null)));
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null&& !rawmaterialorderinvoices.isEmpty()) {
@@ -178,7 +178,7 @@ public class RawmaterialorderinvoiceController {
 		}
 		return rawmaterialorderinvoiceList;
 	}
-	
+
 	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
@@ -197,7 +197,7 @@ public class RawmaterialorderinvoiceController {
 	}
 
 	private void addRMOrderInvoiceAsso(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
-		
+
 		 rawmaterialorder = rawmaterialorderService
 				.getEntityById(Rawmaterialorder.class,
 						rawmaterialorderinvoice.getPo_No());
@@ -211,7 +211,7 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderinvoiceassociationService
 				.addEntity(rawmaterialorderinvoiceassociation);
 	}
-	
+
 	private void addRMInvoiceQuantity(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 
 		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice
@@ -232,7 +232,7 @@ public class RawmaterialorderinvoiceController {
 			}
 		}
 	}
-	
+
 	private void addOrderHistory(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorderhistory rawmaterialorderhistory = new Rawmaterialorderhistory();
 		rawmaterialorderhistory.setComment(rawmaterialorderinvoice.getDescription());
@@ -248,7 +248,7 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderhistory.setCreatedBy(3);
 	//	rawmaterialorderhistory.setRawmaterialorder(rawmaterialorderinvoiceassociationService.getEntityById(Rawmaterialorderinvoiceassociation.class, id)
 		rawmaterialorderhistoryService.addEntity(rawmaterialorderhistory);
-		
+
 	}
 	private void updateRawMaterialOrder(Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		rawmaterialorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_SECURITY_CHECK_INVOICE_IN, null, null))));

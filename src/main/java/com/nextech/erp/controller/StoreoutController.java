@@ -45,35 +45,35 @@ import com.nextech.erp.status.UserStatus;
 @Controller
 @RequestMapping("/storeout")
 public class StoreoutController {
-	
+
 	@Autowired
 	StoreoutService storeoutService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
-	@Autowired 
+
+	@Autowired
 	ProductionplanningService productionplanningService;
-	
-	@Autowired 
+
+	@Autowired
 	ProductService productService;
-	
+
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	RawmaterialService rawmaterialService;
-	
+
 	@Autowired
 	StoreoutrmService storeoutrmService;
-	
+
 	@Autowired
 	StoreoutrmassociationService storeoutrmassociationService;
-	
+
 	@Autowired
 	RawmaterialinventoryService rawmaterialinventoryService;
-	
-	
+
+
 
 	@RequestMapping(value = "/createStoreOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStoreout(@Valid @RequestBody StoreOutDTO storeOutDTO,
@@ -94,27 +94,27 @@ public class StoreoutController {
 			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			storeoutService.addEntity(storeout);
 			for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
-				
+
 			 Storeoutrm storeoutrm = setStoreParts(storeOutPart);
 			   storeoutrm.setDescription(storeOutDTO.getDescription());
 			   storeoutrm.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 			   storeoutrmService.addEntity(storeoutrm);
-			   
+
 			   Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
 			   storeoutrmassociation.setStoreout(storeout);
 			   storeoutrmassociation.setStoreoutrm(storeoutrm);
 			   storeoutrmassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   storeoutrmassociation.setIsactive(true);
 			   storeoutrmassociationService.addEntity(storeoutrmassociation);
-			 
-		/*	   Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
-			   
+
+		   Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
+
 			   rawmaterialinventory.setQuantityAvailable(storeoutrm.getQuantityDispatched()-rawmaterialinventory.getQuantityAvailable());
 			   rawmaterialinventory.setIsactive(true);
 			   rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			   rawmaterialinventoryService.updateEntity(rawmaterialinventory);*/
-			   
+			   rawmaterialinventoryService.updateEntity(rawmaterialinventory);
+
 			}
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -184,7 +184,7 @@ public class StoreoutController {
 		}
 
 	}
-	
+
 	private Storeoutrm setStoreParts(StoreOutPart storeOutPart) throws Exception {
 		Storeoutrm storeoutrm = new Storeoutrm();
 		storeoutrm.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, storeOutPart.getRawmaterial()));
@@ -193,7 +193,7 @@ public class StoreoutController {
 		storeoutrm.setIsactive(true);
 		return storeoutrm;
 	}
-	
+
 	private void saveStoreOut(StoreOutDTO storeOutDTO,HttpServletRequest request) throws Exception{
 		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, storeOutDTO.getProductId());
 		Storeout storeout = new Storeout();

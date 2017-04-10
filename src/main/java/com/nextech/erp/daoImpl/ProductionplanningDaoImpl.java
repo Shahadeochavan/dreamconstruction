@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.ProductionplanningDao;
 import com.nextech.erp.model.Productionplanning;
 
@@ -105,6 +106,19 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productionplanning.class);
 		criteria.add(Restrictions.eq("date", date));
+		return criteria.list();
+	}
+
+	@Override
+	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("product.id", productID));
+		criteria.add(Restrictions.eq("date", date));
+		criteria.add(Restrictions.eq("isactive", true));
 		return criteria.list();
 	}
 

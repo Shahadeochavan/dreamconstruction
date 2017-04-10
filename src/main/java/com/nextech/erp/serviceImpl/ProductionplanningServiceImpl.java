@@ -37,30 +37,30 @@ import com.nextech.erp.service.StatusService;
 public class ProductionplanningServiceImpl extends
 		CRUDServiceImpl<Productionplanning> implements
 		ProductionplanningService {
-	
+
 	@Autowired
 	ProductionplanningDao productionplanningDao;
 
 	@Autowired
-	ProductinventoryService productinventoryService; 
-	
+	ProductinventoryService productinventoryService;
+
 	@Autowired
-	ProductorderassociationService productorderassociationService; 
-	
+	ProductorderassociationService productorderassociationService;
+
 	@Autowired
 	ProductorderService productorderService;
-	
+
 	@Autowired
 	ProductService productService;
-	@Autowired 
+	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	ProductorderassociationDao productorderassociationDao;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Override
 	public Productionplanning getProductionPlanningforCurrentMonthByProductIdAndDate(
 			long pId,Date date) throws Exception {
@@ -84,7 +84,7 @@ public class ProductionplanningServiceImpl extends
 			) throws Exception {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(new Date());
-		cal.set(Calendar.DAY_OF_MONTH, 1); 
+		cal.set(Calendar.DAY_OF_MONTH, 1);
 //		int myMonth=cal.get(Calendar.MONTH);
 		Date startDate = cal.getTime();
 		cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
@@ -132,8 +132,8 @@ public class ProductionplanningServiceImpl extends
 				productProductionPlans = productionPlanMap.get(productionplanning.getProduct().getId());
 			}
 			productProductionPlans.add(getProductProductionPlanBean(productionplanning));
-			productionPlanMap.put(productionplanning.getProduct().getId(), productProductionPlans);			
-		}		
+			productionPlanMap.put(productionplanning.getProduct().getId(), productProductionPlans);
+		}
 		return productionPlanMap;
 	}
 
@@ -160,11 +160,11 @@ public class ProductionplanningServiceImpl extends
 		List<Productionplanning> productionPlanList = new ArrayList<Productionplanning>();
 		Productionplanning productionplanning = null;
 		Calendar cal = Calendar.getInstance();
-		
+
 		for (Iterator<Product> iterator = productList.iterator(); iterator.hasNext();) {
 			Product product = (Product) iterator.next();
 			cal.setTime(new Date());
-			cal.set(Calendar.DAY_OF_MONTH, 1); 
+			cal.set(Calendar.DAY_OF_MONTH, 1);
 			int myMonth=cal.get(Calendar.MONTH);
 
 			while (myMonth==cal.get(Calendar.MONTH)) {
@@ -180,16 +180,16 @@ public class ProductionplanningServiceImpl extends
 					productionplanningDao.add(productionplanning);
 				}else{
 					System.out.println("production plan already exit");
-					
+
 				}
-				
+
 				productionPlanList.add(productionplanning);
 			  System.out.print("product : " + product.getId() +" Date :" + new SimpleDateFormat("dd-MM-yyyy").format(cal.getTime()));
 			  cal.add(Calendar.DAY_OF_MONTH, 1);
 			}
-			
+
 		}
-		
+
 		return productionPlanList;
 	}
 
@@ -213,7 +213,7 @@ public class ProductionplanningServiceImpl extends
 				cal.set(Calendar.HOUR, 23);
 				cal.set(Calendar.MINUTE, 59);
 				cal.set(Calendar.SECOND, 59);
-				Date productionDateEnd = cal.getTime(); 
+				Date productionDateEnd = cal.getTime();
 				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
 				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
@@ -223,11 +223,11 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningDao.update(productionplanning);
 			}
-			
-			
+
+
 		}
 	}
-/*	
+/*
 	@Override
 	public void updateProductionplanningForCurrentDate(
 			List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) throws Exception {
@@ -248,7 +248,7 @@ public class ProductionplanningServiceImpl extends
 				cal.set(Calendar.HOUR, 23);
 				cal.set(Calendar.MINUTE, 59);
 				cal.set(Calendar.SECOND, 59);
-				Date productionDateEnd = cal.getTime(); 
+				Date productionDateEnd = cal.getTime();
 				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
 				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
@@ -258,8 +258,8 @@ public class ProductionplanningServiceImpl extends
 				productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productionplanningDao.update(productionplanning);
 			}
-			
-			
+
+
 		}
 	}
 */
@@ -267,5 +267,12 @@ public class ProductionplanningServiceImpl extends
 	public List<Productionplanning> getProductionplanByDate(Date date)
 			throws Exception {
 		return productionplanningDao.getProductionplanByDate(date);
+	}
+
+	@Override
+	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return productionplanningDao.getProductionplanByProdutId(date,productID);
 	}
 }

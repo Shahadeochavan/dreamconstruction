@@ -1,6 +1,5 @@
 package com.nextech.erp.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -24,7 +23,6 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.SecurityCheckOutDTO;
 import com.nextech.erp.dto.SecurityCheckOutPart;
 import com.nextech.erp.model.Dispatch;
-import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Securitycheckout;
 import com.nextech.erp.model.Status;
@@ -171,18 +169,5 @@ public class SecuritycheckoutController {
 
 	}
 
-/*	private  String setSecurityCheckOut(SecurityCheckOutPart securityCheckOutPart) throws Exception{
-
-	Productorderassociation  productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class, securityCheckOutPart.getProductId());
-	stringBuilder.append(prefix);
-		prefix =",";
-		stringBuilder.append(productorderassociation.getProduct());
-		String send = stringBuilder.toString();
-		System.out.println(send);
-		return send;
-
-
-	}
-*/
 }
 

@@ -14,11 +14,11 @@
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 	</bean>
-	
+
 	<mvc:interceptors>
      	<bean class="com.nextech.erp.filter.AjaxLoginProcessingFilter"></bean>
 	</mvc:interceptors>
-	
+
 	<bean id="sessionFactory"
 		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
@@ -99,16 +99,16 @@
 				<prop key="java.lang.Exception">Error</prop>
 			</props>
 		</property>
-	</bean>	
+	</bean>
 	   <bean id="alertMailMessage" class="org.springframework.mail.SimpleMailMessage">
 
-        <property name="from">           
+        <property name="from">
 
             <value>shahadeochavan@gmail.com</value>
 
         </property>
 
-        <property name="to">           
+        <property name="to">
 
             <value>shahadeochavan@gmail.com</value>
 
@@ -117,7 +117,7 @@
         <property name="subject" value="Alert - Exception occurred. Please investigate"/>
 
     </bean>
-		
+
 	<bean id="messageSource"
 		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basenames">
@@ -210,16 +210,16 @@
 		<bean id="dailyproductionDao" class="com.nextech.erp.daoImpl.DailyproductionDaoImpl" />
 	<bean id="dailyproductionService"
 		class="com.nextech.erp.serviceImpl.DailyproductionServiceImpl" />
-	
+
 		<bean id="storeoutDao" class="com.nextech.erp.daoImpl.StoreoutDaoImpl" />
 	<bean id="storeoutService" class="com.nextech.erp.serviceImpl.StoreoutServiceImpl" />
-	
+
 			<bean id="securitycheckoutDao" class="com.nextech.erp.daoImpl.SecuritycheckoutDaoImpl" />
 	<bean id="securitycheckoutService" class="com.nextech.erp.serviceImpl.SecuritycheckoutServiceImpl" />
-	
+
 				<bean id="storeoutrmDao" class="com.nextech.erp.daoImpl.StoreoutrmDaoImpl" />
 	<bean id="storeoutrmService" class="com.nextech.erp.serviceImpl.StoreoutrmServiceImpl" />
-	
+
 				<bean id="storeoutrmassociationDao" class="com.nextech.erp.daoImpl.StoreoutrmassociationDaoImpl" />
 	<bean id="storeoutrmassociationService" class="com.nextech.erp.serviceImpl.StoreoutrmassociationServiceImpl" />
 

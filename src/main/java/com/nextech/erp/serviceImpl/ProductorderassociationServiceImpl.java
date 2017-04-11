@@ -14,7 +14,7 @@ public class ProductorderassociationServiceImpl extends CRUDServiceImpl<Producto
 		ProductorderassociationService {
 @Autowired
 ProductorderassociationDao productorderassociationDao;
-	
+
 	@Override
 	public Productorderassociation getProductorderassociationByProdcutOrderIdandProdcutId(
 			long pOrderId, long pId) throws Exception {
@@ -48,7 +48,7 @@ ProductorderassociationDao productorderassociationDao;
 	}
 
 	@Override
-	public Productorderassociation getProductOrderAssoByOrderId(
+	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {
 		// TODO Auto-generated method stub
 		return productorderassociationDao.getProductOrderAssoByOrderId(orderId);

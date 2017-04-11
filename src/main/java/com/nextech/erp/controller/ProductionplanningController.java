@@ -320,13 +320,13 @@ public class ProductionplanningController {
 	}
 
 
-	@RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date) {
+	@RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}/{productID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date,@PathVariable("productID") long productID) {
 
 		List<Productionplanning> productionplanningList = null;
 		List<ProductinPlanPRMAssoData> productinPlanPRMAssoDataList = new ArrayList<ProductinPlanPRMAssoData>();
 		try {
-			productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			productionplanningList = productionplanningService.getProductionplanByProdutId(DateUtil.convertToDate(date),productID);
 			for(Productionplanning productionplanning : productionplanningList){
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productionplanning.getProduct().getId());
 				if(productrawmaterialassociations !=null && !productrawmaterialassociations.isEmpty()){

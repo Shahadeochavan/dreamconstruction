@@ -28,6 +28,7 @@ import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -36,13 +37,13 @@ public class ProductRMAssoController {
 
 	@Autowired
 	ProductRMAssoService productRMAssoService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
-	RawmaterialService rawmaterialService; 
-	
+	RawmaterialService rawmaterialService;
+
 	@Autowired
 	ProductService productService;
 
@@ -82,7 +83,7 @@ public class ProductRMAssoController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
 			@Valid @RequestBody ProductRMAssociationModel productRMAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -95,7 +96,7 @@ public class ProductRMAssoController {
 				productrawmaterialassociation.setProduct(productService.getEntityById(Product.class, productRMAssociationModel.getProduct()));
 				productRMAssoService.addEntity(productrawmaterialassociation);
 			}
-	
+
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -155,9 +156,9 @@ public class ProductRMAssoController {
 
 		return productrawmaterialassociationList;
 	}
-	
+
 	@RequestMapping(value = "productRMAssoList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productrawmaterialassociation> getProductRMAssoList(@PathVariable("productId") long productId) {
+	public @ResponseBody Response getProductRMAssoList(@PathVariable("productId") long productId) {
 
 		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
 		try {
@@ -167,7 +168,7 @@ public class ProductRMAssoController {
 			e.printStackTrace();
 		}
 
-		return productrawmaterialassociationList;
+		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productrawmaterialassociationList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
@@ -187,7 +188,7 @@ public class ProductRMAssoController {
 		}
 
 	}
-	
+
 	private Productrawmaterialassociation setMultipleRM(ProductRMAssociationModelParts productRMAssociationModelParts) throws Exception {
 		Productrawmaterialassociation productrawmaterialassociation = new Productrawmaterialassociation();
 		productrawmaterialassociation.setQuantity(productRMAssociationModelParts.getQuantity());

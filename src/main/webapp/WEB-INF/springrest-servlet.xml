@@ -51,6 +51,8 @@
 				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
 				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
 				<value>com.nextech.erp.model.Storeout</value>
+					<value>com.nextech.erp.model.Notification</value>
+						<value>com.nextech.erp.model.Notificationuserassociation</value>
 				<value>com.nextech.erp.model.Storeoutrm</value>
 				<value>com.nextech.erp.model.Storeoutrmassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation

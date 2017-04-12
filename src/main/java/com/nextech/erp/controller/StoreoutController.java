@@ -86,8 +86,8 @@ public class StoreoutController {
 			Storeout storeout = new Storeout();
 			storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
 			storeout.setDescription(storeOutDTO.getDescription());
-			storeout.setProduct(productService.getEntityById(Product.class, productionplanning.getProduct().getId()));
-			storeout.setProductionplanning(productionplanning);
+			storeout.setProduct(productService.getEntityById(Product.class, storeOutDTO.getProductId()));
+			storeout.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class,storeOutDTO.getProductionPlanId()));
 			storeout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 			storeout.setIsactive(true);
 			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));

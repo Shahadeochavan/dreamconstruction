@@ -19,8 +19,8 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		return productorderDao.getProductorderByProductOrderId(pOrderId);
 	}
 	@Override
-	public List<Productorder> getPendingProductOrders(long statusId) {
-		return productorderDao.getPendingProductOrders(statusId);
+	public List<Productorder> getPendingProductOrders(long statusId,long statusId1) {
+		return productorderDao.getPendingProductOrders(statusId,statusId1);
 	}
 	@Override
 	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId) {

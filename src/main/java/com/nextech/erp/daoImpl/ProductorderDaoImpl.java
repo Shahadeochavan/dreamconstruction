@@ -1,8 +1,10 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 
 import com.nextech.erp.dao.ProductorderDao;
@@ -24,12 +26,13 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Productorder> getPendingProductOrders(long statusId) {
+	public List<Productorder> getPendingProductOrders(long statusId,long statusId1) {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
-		criteria.add(Restrictions.eq("status.id", statusId));
 		criteria.add(Restrictions.eq("isactive", true));
+		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1));
+		criteria.add(Restrictions.and(criterion));
 		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}
 

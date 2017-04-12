@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductRMAssociationModel;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
@@ -27,6 +26,7 @@ import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
@@ -46,6 +46,9 @@ public class ProductRMAssoController {
 
 	@Autowired
 	ProductService productService;
+
+	@Autowired
+	ProductionplanningService productionplanningService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductrawmaterialassociation(
@@ -163,6 +166,8 @@ public class ProductRMAssoController {
 		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
 		try {
 			productrawmaterialassociationList = productRMAssoService.getProductRMAssoListByProductId(productId);
+			/*List<Productionplanning> productionplannings = productionplanningService.getProductionplanByProdutId(productId);
+			System.out.println("production plan"+productionplannings);*/
 
 		} catch (Exception e) {
 			e.printStackTrace();

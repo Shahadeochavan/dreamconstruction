@@ -26,7 +26,6 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
-import com.nextech.erp.model.Rawmaterialinventoryhistory;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Storeout;
 import com.nextech.erp.model.Storeoutrm;
@@ -87,9 +86,9 @@ public class StoreoutController {
 			Storeout storeout = new Storeout();
 			storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
 			storeout.setDescription(storeOutDTO.getDescription());
-			storeout.setProduct(productService.getEntityById(Product.class, productionplanning.getProduct().getId()));
-			storeout.setProductionplanning(productionplanning);
-			storeout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+			storeout.setProduct(productService.getEntityById(Product.class, storeOutDTO.getProductId()));
+			storeout.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class,storeOutDTO.getProductionPlanId()));
+			storeout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 			storeout.setIsactive(true);
 			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			storeoutService.addEntity(storeout);
@@ -98,7 +97,7 @@ public class StoreoutController {
 			 Storeoutrm storeoutrm = setStoreParts(storeOutPart);
 			   storeoutrm.setDescription(storeOutDTO.getDescription());
 			   storeoutrm.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+			   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 			   storeoutrmService.addEntity(storeoutrm);
 
 			   Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();

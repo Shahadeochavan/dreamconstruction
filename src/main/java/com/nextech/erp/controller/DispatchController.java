@@ -111,18 +111,19 @@ public class DispatchController {
 				Dispatch dispatch = setPart(part);
 				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(dispatch.getProduct().getId());
 				System.out.println("dispatchDTO"+dispatchDTO.getOrderId());
-				Productorderassociation productorderassociation = productorderassociationService.getProductOrderAssoByOrderId(dispatchDTO.getOrderId());
-				
-				if(productinventory.getQuantityavailable() < dispatch.getQuantity() || productorderassociation.getQuantity() < dispatch.getQuantity()){
+				List<Productorderassociation> productorderassociationList = productorderassociationService.getProductOrderAssoByOrderId(dispatchDTO.getOrderId());
+				for(Productorderassociation productorderassociation : productorderassociationList){
+				if(productinventory.getQuantityavailable() < dispatch.getQuantity() || productorderassociation.getRemainingQuantity() < dispatch.getQuantity()){
 					return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
 				}
-				
 				dispatch.setDescription(dispatchDTO.getDescription());
 				dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
 				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
 				dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_DISPATCHED, null, null))));
 				dispatchservice.addEntity(dispatch);
+
+				}
 				Productorder productorder = productorderService.getEntityById(Productorder.class, dispatch.getProductorder().getId());
 				Product product = productService.getEntityById(Product.class,dispatch.getProduct().getId());
 
@@ -137,8 +138,9 @@ public class DispatchController {
 
 				// TODO update product order
 				updateProductOrder(productorder, request, response);
-			}
 
+
+			}
 			return new UserStatus(1, "Dispatch added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -219,7 +221,7 @@ public class DispatchController {
 		productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderassociationService.updateEntity(productorderassociation);
 	}
-	
+
 	private int getProductOrderStatus(Productorder productorder) throws Exception{
 		boolean isOrderComplete = false;
 		List<Productorderassociation> productorderassociationsList  =productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
@@ -231,11 +233,11 @@ public class DispatchController {
 				isOrderComplete = false;
 				break;
 			}
-			
+
 		}
 		return isOrderComplete ? STATUS_PRODUCT_ORDER_COMPLETE : STATUS_PRODUCT_ORDER_INCOMPLETE;
 	}
-	
+
 	private void updateProductOrder(Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		productorder.setStatus(statusService.getEntityById(Status.class, getProductOrderStatus(productorder)));
 		productorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -253,13 +255,13 @@ public class DispatchController {
 			productinventory.setQuantityavailable(productinventory.getQuantityavailable() - dispatch.getQuantity());
 			productinventory.setIsactive(true);
 			productinventoryService.addEntity(productinventory);
-		
+
 		} else {
 				productinventory.setQuantityavailable(productinventory.getQuantityavailable() - dispatch.getQuantity());
 				productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productinventory.setIsactive(true);
 				productinventoryService.updateEntity(productinventory);
-		
+
 		}
 		return productinventory;
 	}
@@ -283,9 +285,9 @@ public class DispatchController {
 		productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable() - dispatch.getQuantity());
 		productinventoryhistory.setAfterquantity((goodQuantity+ productinventory.getQuantityavailable() - dispatch.getQuantity()));
 		productinventoryhistory.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT__INVENTORY_ADD, null, null))));
-	    productinventoryhistoryService.addEntity(productinventoryhistory);		
+	    productinventoryhistoryService.addEntity(productinventoryhistory);
 	}
-	
+
 	private Dispatch setPart(Part part) throws Exception {
 		Dispatch dispatch = new Dispatch();
 		dispatch.setProduct(productService.getEntityById(Product.class,	part.getProductId()));

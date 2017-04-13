@@ -12,15 +12,15 @@ import java.util.List;
 
 /**
  * The persistent class for the status database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Status.findAll", query="SELECT s FROM Status s")
 public class Status implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -108,9 +108,18 @@ public class Status implements Serializable {
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Storeoutrm> storeoutrms;
 
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status1", cascade = CascadeType.ALL)
+	private List<Notification> notifications1;
+
+	//bi-directional many-to-one association to Notification
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status2", cascade = CascadeType.ALL)
+	private List<Notification> notifications2;
+
 	public Status() {
 	}
-	
+
 	public Status(int id) {
 		this.id=id;
 	}
@@ -472,5 +481,47 @@ public class Status implements Serializable {
 
 		return storeoutrm;
 	}
+	public List<Notification> getNotifications1() {
+		return this.notifications1;
+	}
 
+	public void setNotifications1(List<Notification> notifications1) {
+		this.notifications1 = notifications1;
+	}
+
+	public Notification addNotifications1(Notification notifications1) {
+		getNotifications1().add(notifications1);
+		notifications1.setStatus1(this);
+
+		return notifications1;
+	}
+
+	public Notification removeNotifications1(Notification notifications1) {
+		getNotifications1().remove(notifications1);
+		notifications1.setStatus1(null);
+
+		return notifications1;
+	}
+
+	public List<Notification> getNotifications2() {
+		return this.notifications2;
+	}
+
+	public void setNotifications2(List<Notification> notifications2) {
+		this.notifications2 = notifications2;
+	}
+
+	public Notification addNotifications2(Notification notifications2) {
+		getNotifications2().add(notifications2);
+		notifications2.setStatus2(this);
+
+		return notifications2;
+	}
+
+	public Notification removeNotifications2(Notification notifications2) {
+		getNotifications2().remove(notifications2);
+		notifications2.setStatus2(null);
+
+		return notifications2;
+	}
 }

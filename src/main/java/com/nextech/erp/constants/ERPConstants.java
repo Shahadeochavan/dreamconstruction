@@ -49,6 +49,7 @@ public class ERPConstants {
    public static String ORDER_SECURITY_OUT="orderSecuirtyCheckout";
    public static String ORDER_DISPATCHED_COMPLETE="orderDispatchedComplete";
    public static String SECURITY_CHECK_COMPLETE="securityCheckOutComplete";
-   
-    
+   public static String ADDED_STORE_OUT="storeOut";
+
+
 }

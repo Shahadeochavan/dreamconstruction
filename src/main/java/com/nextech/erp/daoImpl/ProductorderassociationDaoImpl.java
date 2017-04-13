@@ -82,15 +82,13 @@ public class ProductorderassociationDaoImpl extends
 	}
 
 	@Override
-	public Productorderassociation getProductOrderAssoByOrderId(
+	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("productorder.id", orderId));
 		criteria.add(Restrictions.eq("isactive", true));
-		Productorderassociation productorderassociation = criteria.list().size() > 0 ? (Productorderassociation) criteria
-				.list().get(0) : null;
-		return productorderassociation;
+		return  (criteria.list().size() > 0 ? criteria.list() : null);
 	}
 }

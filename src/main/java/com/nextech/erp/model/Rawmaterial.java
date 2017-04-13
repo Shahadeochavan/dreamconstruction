@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * The persistent class for the rawmaterial database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Rawmaterial.findAll", query="SELECT r FROM Rawmaterial r")
@@ -21,7 +21,7 @@ public class Rawmaterial implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -83,8 +83,9 @@ public class Rawmaterial implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities;
-	
-	@OneToMany(mappedBy="rawmaterial")
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Storeoutrm> storeoutrms;
 
 	public Rawmaterial() {

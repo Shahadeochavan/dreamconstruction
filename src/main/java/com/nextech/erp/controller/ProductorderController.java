@@ -47,7 +47,7 @@ public class ProductorderController {
 
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
 
@@ -60,7 +60,7 @@ public class ProductorderController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			// TODO afterwards you need to change it from properties. 
+			// TODO afterwards you need to change it from properties.
 			productorder.setStatus(statusService.getEntityById(Status.class, 14));
 			productorder.setIsactive(true);
 			productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -126,7 +126,7 @@ public class ProductorderController {
 		}
 		return productorder;
 	}
-	
+
 	@RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorderassociation> getProductOrder(
 			@PathVariable("orderId") long id) {
@@ -175,8 +175,9 @@ public class ProductorderController {
 
 		List<Productorder> productorderList = null;
 		try {
-			// TODO afterwards you need to change it from properties. 
-			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)));
+			// TODO afterwards you need to change it from properties.
+			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
+					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -184,14 +185,14 @@ public class ProductorderController {
 
 		return productorderList;
 	}
-	
-	
+
+
 	@RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productorder> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
 
 		List<Productorder> productorderList = null;
 		try {
-			// TODO afterwards you need to change it from properties. 
+			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
 
 		} catch (Exception e) {
@@ -200,7 +201,7 @@ public class ProductorderController {
 
 		return productorderList;
 	}
-	
+
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorder(
 			@PathVariable("id") long id) {

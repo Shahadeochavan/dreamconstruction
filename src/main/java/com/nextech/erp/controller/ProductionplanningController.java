@@ -47,25 +47,25 @@ public class ProductionplanningController {
 
 	@Autowired
 	ProductionplanningService productionplanningService;
-	
+
 	@Autowired
 	ProductService productService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	ProductinventoryService productinventoryService;
-	
+
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
-	
+
 	@Autowired
-	ProductorderassociationService productorderassociationService; 
-	
+	ProductorderassociationService productorderassociationService;
+
 	@Autowired
 	ProductRMAssoService productRMAssoService;
-	
+
 	@Autowired
 	RawmaterialService rawmaterialService;
 
@@ -77,7 +77,7 @@ public class ProductionplanningController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			
+
 			productionplanningService.addEntity(productionplanning);
 			return new UserStatus(1, "Productionplanning added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -150,7 +150,7 @@ public class ProductionplanningController {
 			return new UserStatus(0, e.toString());
 		}
 	}
-	
+
 	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -175,7 +175,7 @@ public class ProductionplanningController {
 
 		return productionplanningList;
 	}
-	
+
 	@RequestMapping(value = "getProductionplanningByMonth/{month}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionplanningByMonth(@PathVariable("month") Date month) {
 
@@ -190,7 +190,7 @@ public class ProductionplanningController {
 
 		return productionplanningList;
 	}
-	
+
 	@RequestMapping(value = "getProductionPlanForCurrentMonth", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<ProductionPlan> getProductionPlanMonthYear() {
 
@@ -209,7 +209,7 @@ public class ProductionplanningController {
 
 		List<Productionplanning> productionplanningList = null;
 		try {
-			
+
 			productionplanningList = productionplanningService.updateProductionPlanByMonthYear(month_year);
 
 		} catch (Exception e) {
@@ -218,7 +218,7 @@ public class ProductionplanningController {
 
 		return productionplanningList;
 	}
-	
+
 	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
 
@@ -248,7 +248,7 @@ public class ProductionplanningController {
 		}
 
 	}
-	
+
 	@RequestMapping(value = "getProductionPlanByDateAndPId/{date}/{pID}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productionplanning getProductionPlanDateAndProductId(@PathVariable("date") String date,@PathVariable("pID")long pId) {
 
@@ -261,7 +261,7 @@ public class ProductionplanningController {
 
 		return productionplanning;
 	}
-	
+
 	@RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date) {
 
@@ -282,20 +282,20 @@ public class ProductionplanningController {
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
-					
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return productionplanningFinalList;
 	}
-	
+
 	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
 		try {
-		
+
 			List<Productionplanning> productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplanningList) {
 				boolean isProductRemaining = false;
@@ -311,36 +311,37 @@ public class ProductionplanningController {
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
-					
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return productionplanningFinalList;
 	}
-	
-	
-	@RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date) {
+
+
+	@RequestMapping(value = "getProductionPlanListForStoreOutByDateAndPId/{date}/{productID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getProductionPlanListByDate(@PathVariable("date") String date,@PathVariable("productID") long productID) {
 
 		List<Productionplanning> productionplanningList = null;
-		List<ProductinPlanPRMAssoData> productinPlanPRMAssoDataList = new ArrayList<ProductinPlanPRMAssoData>(); 
+		List<ProductinPlanPRMAssoData> productinPlanPRMAssoDataList = new ArrayList<ProductinPlanPRMAssoData>();
 		try {
-			productionplanningList = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			productionplanningList = productionplanningService.getProductionplanByProdutId(DateUtil.convertToDate(date),productID);
 			for(Productionplanning productionplanning : productionplanningList){
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productionplanning.getProduct().getId());
 				if(productrawmaterialassociations !=null && !productrawmaterialassociations.isEmpty()){
 				for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
-					
+
 					ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
-					
+
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
-					
+
 					productinPlanPRMAssoData.setName(rawmaterial.getName());
+					productinPlanPRMAssoData.setProductionPlanId(productionplanning.getId());
 					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
 					productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
 					productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);
-					
+
 				}
 				}
 			}
@@ -350,8 +351,8 @@ public class ProductionplanningController {
 
 		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productinPlanPRMAssoDataList);
 	}
-	
-	
-	
+
+
+
 }
 

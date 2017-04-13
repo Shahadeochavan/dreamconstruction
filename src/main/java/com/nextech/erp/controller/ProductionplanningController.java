@@ -337,7 +337,6 @@ public class ProductionplanningController {
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
 
 					productinPlanPRMAssoData.setName(rawmaterial.getName());
-					productinPlanPRMAssoData.setProductionPlanId(productionplanning.getId());
 					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
 					productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
 					productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);

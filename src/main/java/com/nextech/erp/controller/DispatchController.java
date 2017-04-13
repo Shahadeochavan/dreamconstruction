@@ -113,16 +113,20 @@ public class DispatchController {
 				System.out.println("dispatchDTO"+dispatchDTO.getOrderId());
 				List<Productorderassociation> productorderassociationList = productorderassociationService.getProductOrderAssoByOrderId(dispatchDTO.getOrderId());
 				for(Productorderassociation productorderassociation : productorderassociationList){
-				if(productinventory.getQuantityavailable() < dispatch.getQuantity() || productorderassociation.getRemainingQuantity() < dispatch.getQuantity()){
-					return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
-				}
-				dispatch.setDescription(dispatchDTO.getDescription());
-				dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
-				dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
-				dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_DISPATCHED, null, null))));
-				dispatchservice.addEntity(dispatch);
-
+					//check product id is equal
+					if(dispatch.getProduct().getId() == productorderassociation.getProduct().getId()){
+						//update data related to dispatch
+						if(productinventory.getQuantityavailable() < dispatch.getQuantity() || productorderassociation.getQuantity() < dispatch.getQuantity()){
+							return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
+						}else{
+							dispatch.setDescription(dispatchDTO.getDescription());
+							dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));
+							dispatch.setInvoiceNo(dispatchDTO.getInvoiceNo());
+							dispatch.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+							dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_DISPATCHED, null, null))));
+							dispatchservice.addEntity(dispatch);
+						}
+					}
 				}
 				Productorder productorder = productorderService.getEntityById(Productorder.class, dispatch.getProductorder().getId());
 				Product product = productService.getEntityById(Product.class,dispatch.getProduct().getId());

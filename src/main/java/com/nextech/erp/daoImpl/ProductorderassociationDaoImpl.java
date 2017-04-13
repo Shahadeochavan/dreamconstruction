@@ -49,7 +49,7 @@ public class ProductorderassociationDaoImpl extends
 		Criteria criteria = session.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("productorder.id", oderID));
 		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
+//		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
 		return (criteria.list().size() > 0 ? (List<Productorderassociation>)criteria.list() : null);
 	}
 

@@ -5,7 +5,6 @@ public class ProductinPlanPRMAssoData {
 	private String name;
 	private long rawmaterial;
 	private long quantityRequired;
-	private long productionPlanId;
 	public String getName() {
 		return name;
 	}
@@ -23,12 +22,6 @@ public class ProductinPlanPRMAssoData {
 	}
 	public void setRawmaterial(long rawmaterial) {
 		this.rawmaterial = rawmaterial;
-	}
-	public long getProductionPlanId() {
-		return productionPlanId;
-	}
-	public void setProductionPlanId(long productionPlanId) {
-		this.productionPlanId = productionPlanId;
 	}
 
 

@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.SecurityCheckOutDTO;
 import com.nextech.erp.dto.SecurityCheckOutPart;
@@ -92,11 +90,15 @@ public class SecuritycheckoutController {
 				send = stringBuilder.toString();
 				securitycheckout.setDispatch(send);
 
-				Dispatch dispatch = dispatchService.getEntityById(Dispatch.class, securityCheckOutDTO.getPoNo());
-				dispatch.setIsactive(true);
-				dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_SECURITY_OUT, null, null))));
-				dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				dispatchService.updateEntity(dispatch);
+				List<Dispatch> dispatchList = dispatchService.getDispatchByProductOrderId(securityCheckOutDTO.getPoNo());
+				for(Dispatch dispatch : dispatchList){
+					if(dispatch.getProduct().getId()==securityCheckOutPart.getProductId()){
+				        dispatch.setIsactive(true);
+				        dispatch.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ORDER_SECURITY_OUT, null, null))));
+				        dispatch.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+				        dispatchService.updateEntity(dispatch);
+					}
+				}
 			}
 			securitycheckoutService.updateEntity(securitycheckout);
 

@@ -94,11 +94,23 @@ public class StoreoutController {
 			storeoutService.addEntity(storeout);
 			for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
 
-			 Storeoutrm storeoutrm = setStoreParts(storeOutPart);
-			   storeoutrm.setDescription(storeOutDTO.getDescription());
-			   storeoutrm.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
-			   storeoutrmService.addEntity(storeoutrm);
+			    Storeoutrm storeoutrm = setStoreParts(storeOutPart);
+				   Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
+
+				   // to check RM id is equal
+				   if(rawmaterialinventory.getRawmaterial().getId()==storeoutrm.getRawmaterial().getId()){
+
+				   // to check RM inventory quantity and storeout quantity
+					   if(rawmaterialinventory.getQuantityAvailable()>=storeoutrm.getQuantityDispatched()){
+						   storeoutrm.setDescription(storeOutDTO.getDescription());
+						   storeoutrm.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+						   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
+						   storeoutrmService.addEntity(storeoutrm);
+					   }else{
+							return new UserStatus(1,messageSource.getMessage(ERPConstants.TO_CHECK_QUANTITY_IN_RMINVENTORY, null, null));
+					   }
+				   }
+
 
 			   Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
 			   storeoutrmassociation.setStoreout(storeout);
@@ -107,9 +119,9 @@ public class StoreoutController {
 			   storeoutrmassociation.setIsactive(true);
 			   storeoutrmassociationService.addEntity(storeoutrmassociation);
 
-		   Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
 
-			   rawmaterialinventory.setQuantityAvailable(storeoutrm.getQuantityDispatched()-rawmaterialinventory.getQuantityAvailable());
+		   if(rawmaterialinventory.getRawmaterial().getId()==storeoutrm.getRawmaterial().getId())
+			   rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()-storeoutrm.getQuantityDispatched());
 			   rawmaterialinventory.setIsactive(true);
 			   rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			   rawmaterialinventoryService.updateEntity(rawmaterialinventory);

@@ -38,13 +38,14 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId) {
+	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1) {
 		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productorder.class);
 		criteria.add(Restrictions.eq("client.id", clientId));
-		criteria.add(Restrictions.eq("status.id", statusId));
+		Criterion criterion = Restrictions.in("status.id", Arrays.asList(statusId,statusId1));
+		criteria.add(Restrictions.and(criterion));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}

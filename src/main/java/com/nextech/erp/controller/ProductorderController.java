@@ -193,7 +193,8 @@ public class ProductorderController {
 		List<Productorder> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
-			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
+			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
+					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null)));
 
 		} catch (Exception e) {
 			e.printStackTrace();

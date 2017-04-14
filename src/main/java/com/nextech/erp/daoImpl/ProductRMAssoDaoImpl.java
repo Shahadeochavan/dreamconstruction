@@ -33,11 +33,11 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productrawmaterialassociation> getProductRMAssoListByProductId(
-			long pid) throws Exception {
+			long productID) throws Exception {
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
-		criteria.add(Restrictions.eq("product.id", pid));
+		criteria.add(Restrictions.eq("product.id", productID));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Productrawmaterialassociation>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}

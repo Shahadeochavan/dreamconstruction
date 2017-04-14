@@ -20,8 +20,8 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 
 	@Override
 	public List<Productrawmaterialassociation> getProductRMAssoListByProductId(
-			long pid) throws Exception {
+			long productID) throws Exception {
 		// TODO Auto-generated method stub
-		return productrmassDao.getProductRMAssoListByProductId(pid);
+		return productrmassDao.getProductRMAssoListByProductId(productID);
 	}
 }

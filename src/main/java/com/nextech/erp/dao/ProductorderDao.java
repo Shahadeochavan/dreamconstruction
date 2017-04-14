@@ -10,6 +10,6 @@ public interface ProductorderDao extends SuperDao<Productorder> {
 
 	public List<Productorder> getPendingProductOrders(long statusId,long statusId1);
 
-	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId);
+	public List<Productorder> getInCompleteProductOrder(long clientId,long statusId,long statusId1);
 
 }

@@ -97,6 +97,7 @@ public class ProductRMAssoController {
 			for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationModel.getProductRMAssociationModelParts()){
 				Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
 				productrawmaterialassociation.setProduct(productService.getEntityById(Product.class, productRMAssociationModel.getProduct()));
+				productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productRMAssoService.addEntity(productrawmaterialassociation);
 			}
 
@@ -166,8 +167,6 @@ public class ProductRMAssoController {
 		List<Productrawmaterialassociation> productrawmaterialassociationList = null;
 		try {
 			productrawmaterialassociationList = productRMAssoService.getProductRMAssoListByProductId(productId);
-			/*List<Productionplanning> productionplannings = productionplanningService.getProductionplanByProdutId(productId);
-			System.out.println("production plan"+productionplannings);*/
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -117,7 +117,7 @@ public class DispatchController {
 					if(dispatch.getProduct().getId() == productorderassociation.getProduct().getId()){
 						//update data related to dispatch
 						if(productinventory.getQuantityavailable() < dispatch.getQuantity() || productorderassociation.getQuantity() < dispatch.getQuantity()){
-							return new UserStatus(1,"Please enter Dispatch Quantity less than equal to Productinventory Quantityavailable and Product Order Quantity");
+							return new UserStatus(1,messageSource.getMessage(ERPConstants.TO_CHECK_QUANTITY_IN_PRODUCTINVENTORY, null, null));
 						}else{
 							dispatch.setDescription(dispatchDTO.getDescription());
 							dispatch.setProductorder(productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId()));

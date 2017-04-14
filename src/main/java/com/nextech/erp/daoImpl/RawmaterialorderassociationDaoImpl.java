@@ -25,7 +25,7 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
 		criteria.add(Restrictions.eq("rawmaterialorder.id", id));
 		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
+		//criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
 		return (criteria.list().size() > 0 ? (List<Rawmaterialorderassociation>)criteria.list() : null);
 	}
 

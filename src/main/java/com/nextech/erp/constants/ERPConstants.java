@@ -45,11 +45,15 @@ public class ERPConstants {
     public static String STATUS_PRODUCT__INVENTORY_ADD="productInventoryAdd";
     public static String SESSION_EXPIRED="Session Expired! Please login again.";
     public static String STATUS_PRODUCT_ORDER_INCOMPLETE="productOrderIncomplete";
+    public static String STATUS_PRODUCT_ORDER_COMPLETE="productOrderComplete";
    public static String ORDER_DISPATCHED="orderDispatched";
    public static String ORDER_SECURITY_OUT="orderSecuirtyCheckout";
    public static String ORDER_DISPATCHED_COMPLETE="orderDispatchedComplete";
    public static String SECURITY_CHECK_COMPLETE="securityCheckOutComplete";
    public static String ADDED_STORE_OUT="storeOut";
+   public static String TO_CHECK_QUANTITY_IN_PRODUCTINVENTORY="checkquantityInProductInventory";
+   public static String TO_CHECK_QUANTITY_IN_RMINVENTORY="checkquantityInRMInventory";
+
 
 
 }

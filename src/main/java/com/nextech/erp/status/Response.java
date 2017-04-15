@@ -1,9 +1,6 @@
 package com.nextech.erp.status;
 
-import java.util.List;
 
-import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productorderassociation;
 
 public class Response {
 	private int code;
@@ -49,5 +46,5 @@ public class Response {
 	public void setData(Object data) {
 		this.data = data;
 	}
-	
+
 }

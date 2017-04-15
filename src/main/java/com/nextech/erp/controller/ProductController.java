@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -20,25 +21,32 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductNewAssoicatedList;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
-	
+
 	@Autowired
 	ProductService productService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
 
 	@Autowired
 	ProductinventoryService productinventoryService;
-	
+
+	@Autowired
+	ProductRMAssoService productRMAssoService;
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
 			@Valid @RequestBody Product product, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -113,6 +121,30 @@ public class ProductController {
 
 		return ProductList;
 	}
+	@RequestMapping(value = "/list/newProductRMAssociation", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getNewProductRMAsso() {
+
+		List<Product> productList = null;
+		List<ProductNewAssoicatedList> productNewAssoicatedLists = new ArrayList<ProductNewAssoicatedList>();
+		try {
+			productList = productService.getEntityList(Product.class);
+			for(Product product : productList){
+				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(product.getId());
+				if(productrawmaterialassociations==null){
+					ProductNewAssoicatedList productNewAssoicatedList = new ProductNewAssoicatedList();
+					productNewAssoicatedList.setProductId(product.getId());
+					productNewAssoicatedList.setPartNumber(product.getPartNumber());
+					productNewAssoicatedLists.add(productNewAssoicatedList);
+				}
+			}
+
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new Response(1,"New Productrawmaterialassociation List",productNewAssoicatedLists);
+	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProduct(@PathVariable("id") long id) {
@@ -127,7 +159,7 @@ public class ProductController {
 		}
 
 	}
-	
+
 	private void addProductInventory(Product product,long userId) throws Exception{
 		Productinventory productinventory = new Productinventory();
 		productinventory.setProduct(product);

@@ -1,6 +1,11 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -182,6 +187,44 @@ public class ProductRMAssoController {
 		}
 
 		return productrawmaterialassociationList;
+	}
+
+	@RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<ProductRMAssociationModel> getMultipleProductrawmaterialassociation() {
+
+
+		List<ProductRMAssociationModel> productRMAssociationModels = new ArrayList<ProductRMAssociationModel>();
+		try {
+			List<Productrawmaterialassociation> productrawmaterialassociationList = null;
+			productrawmaterialassociationList = productRMAssoService
+					.getEntityList(Productrawmaterialassociation.class);
+			HashMap<Long, List<ProductRMAssociationModelParts>> multplePRMAsso = new HashMap<Long, List<ProductRMAssociationModelParts>>();
+			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociationList){
+				List<ProductRMAssociationModelParts> productRMAssociationModelParts = null;
+				if(multplePRMAsso.get(productrawmaterialassociation.getProduct().getId()) == null){
+					productRMAssociationModelParts = new ArrayList<ProductRMAssociationModelParts>();
+				}else{
+					productRMAssociationModelParts = multplePRMAsso.get(productrawmaterialassociation.getProduct().getId());
+				}
+				ProductRMAssociationModelParts productRMAssociationModelPart = new ProductRMAssociationModelParts();
+				productRMAssociationModelPart.setQuantity(productrawmaterialassociation.getQuantity());
+				productRMAssociationModelPart.setRawmaterial(productrawmaterialassociation.getRawmaterial());
+				productRMAssociationModelParts.add(productRMAssociationModelPart);
+				multplePRMAsso.put(productrawmaterialassociation.getProduct().getId(), productRMAssociationModelParts);
+			}
+			 Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
+			for(Entry<Long, List<ProductRMAssociationModelParts>> multplePRMAssoEntry : multplePRMAssoEntries){
+				ProductRMAssociationModel productRMAssociationModel = new ProductRMAssociationModel();
+				productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());
+				productRMAssociationModel.setProductRMAssociationModelParts(multplePRMAssoEntry.getValue());
+				productRMAssociationModels.add(productRMAssociationModel);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productRMAssociationModels;
 	}
 
 	@RequestMapping(value = "productRMAssoList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")

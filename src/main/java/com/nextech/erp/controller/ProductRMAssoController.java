@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductRMAssociationModel;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
@@ -94,12 +95,7 @@ public class ProductRMAssoController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationModel.getProductRMAssociationModelParts()){
-				Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
-				productrawmaterialassociation.setProduct(productService.getEntityById(Product.class, productRMAssociationModel.getProduct()));
-				productrawmaterialassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productRMAssoService.addEntity(productrawmaterialassociation);
-			}
+			createMultipleRMAssociations(productRMAssociationModel, request.getAttribute("current_user").toString());
 
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -114,6 +110,15 @@ public class ProductRMAssoController {
 			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
+		}
+	}
+
+	private void createMultipleRMAssociations(ProductRMAssociationModel productRMAssociationModel,String currentUser) throws Exception{
+		for(ProductRMAssociationModelParts productRMAssociationModelParts : productRMAssociationModel.getProductRMAssociationModelParts()){
+			Productrawmaterialassociation productrawmaterialassociation =  setMultipleRM(productRMAssociationModelParts);
+			productrawmaterialassociation.setProduct(productService.getEntityById(Product.class, productRMAssociationModel.getProduct()));
+			productrawmaterialassociation.setCreatedBy(Long.parseLong(currentUser));
+			productRMAssoService.addEntity(productrawmaterialassociation);
 		}
 	}
 
@@ -136,10 +141,28 @@ public class ProductRMAssoController {
 		try {
 			productrawmaterialassociation.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productrawmaterialassociation.setIsactive(true);
-			productRMAssoService
-					.updateEntity(productrawmaterialassociation);
-			return new UserStatus(1,
-					"Productrawmaterialassociation update Successfully !");
+			productRMAssoService.updateEntity(productrawmaterialassociation);
+			return new UserStatus(1,"Productrawmaterialassociation update Successfully !");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new UserStatus(0, e.toString());
+		}
+	}
+
+	@RequestMapping(value = "/update/productRMAssociation", method = RequestMethod.PUT, headers = "Accept=application/json")
+	public @ResponseBody UserStatus updateProductRMAssociation(
+			@RequestBody ProductRMAssociationModel productRMAssociationModel,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productRMAssociationModel.getProduct());
+			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+				//Remove all Product RM Associations
+				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
+				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
+			}
+
+			createMultipleRMAssociations(productRMAssociationModel, request.getAttribute("current_user").toString());
+
+			return new UserStatus(1,"Productrawmaterialassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());

@@ -196,7 +196,7 @@ public class ProductRMAssoController {
 	private Productrawmaterialassociation setMultipleRM(ProductRMAssociationModelParts productRMAssociationModelParts) throws Exception {
 		Productrawmaterialassociation productrawmaterialassociation = new Productrawmaterialassociation();
 		productrawmaterialassociation.setQuantity(productRMAssociationModelParts.getQuantity());
-		productrawmaterialassociation.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationModelParts.getRawmaterial()));
+		productrawmaterialassociation.setRawmaterial(rawmaterialService.getEntityById(Rawmaterial.class, productRMAssociationModelParts.getRawmaterial().getId()));
 		productrawmaterialassociation.setIsactive(true);
 		return productrawmaterialassociation;
 	}

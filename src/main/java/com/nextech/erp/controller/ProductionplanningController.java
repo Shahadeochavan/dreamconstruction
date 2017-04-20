@@ -181,7 +181,6 @@ public class ProductionplanningController {
 
 		List<Productionplanning> productionplanningList = null;
 		try {
-		//	productionplanningList = productionplanningService.getEntityList(Productionplanning.class);
 			productionplanningList = productionplanningService.getProductionplanningByMonth(month);
 
 		} catch (Exception e) {

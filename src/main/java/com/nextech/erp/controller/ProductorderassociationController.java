@@ -35,10 +35,10 @@ public class ProductorderassociationController {
 
 	@Autowired
 	ProductorderassociationService productorderassociationService;
-	
+
 	@Autowired
 	ProductinventoryService productinventoryService;
-	
+
 	@Autowired
 	ProductService productService;
 
@@ -55,7 +55,6 @@ public class ProductorderassociationController {
 			productorderassociationService.addEntity(productorderassociation);
 			return new UserStatus(1, "Productorderassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
@@ -99,11 +98,11 @@ public class ProductorderassociationController {
 		List<Productorderassociation> productorderassociationList = null;
 		try {
 			productorderassociationList = productorderassociationService.getEntityList(Productorderassociation.class);
-  
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return productorderassociationList;
 	}
 	@RequestMapping(value = "getProductOrderInventoryData/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -116,7 +115,7 @@ public class ProductorderassociationController {
 			for(Productorderassociation productorderassociation : productorderassociationList){
 				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
 				for(Productinventory productinventory : productinventories){
-					
+
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
 						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());
@@ -124,11 +123,11 @@ public class ProductorderassociationController {
 						productOrderInventoryData.setAvailableQuantity(productinventory.getQuantityavailable());
 						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 						productOrderInventoryList.add(productOrderInventoryData);
-					
-					
+
+
 				}
 			}
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

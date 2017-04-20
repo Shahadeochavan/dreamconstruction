@@ -25,7 +25,7 @@ import com.nextech.erp.status.UserStatus;
 @RestController
 @RequestMapping("/status")
 public class StatusController {
-	
+
 	@Autowired
 	StatusService statusService;
 
@@ -42,7 +42,6 @@ public class StatusController {
 			statusService.addEntity(status);
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {

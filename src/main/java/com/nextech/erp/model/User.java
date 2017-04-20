@@ -55,7 +55,6 @@ public class User implements Serializable {
 	@Column(name="last_name")
 	private String lastName;
 
-	@NotBlank(message="{contact number  should not be blank}")
 	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String mobile;
 

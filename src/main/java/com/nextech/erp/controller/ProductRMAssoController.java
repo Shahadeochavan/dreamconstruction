@@ -2,7 +2,6 @@ package com.nextech.erp.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -154,7 +153,7 @@ public class ProductRMAssoController {
 		}
 	}
 
-	@RequestMapping(value = "/update/productRMAssociation", method = RequestMethod.PUT, headers = "Accept=application/json")
+	@RequestMapping(value = "/update/multipleProductRMAssociation", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductRMAssociation(
 			@RequestBody ProductRMAssociationModel productRMAssociationModel,HttpServletRequest request,HttpServletResponse response) {
 		try {
@@ -196,8 +195,7 @@ public class ProductRMAssoController {
 		List<ProductRMAssociationModel> productRMAssociationModels = new ArrayList<ProductRMAssociationModel>();
 		try {
 			List<Productrawmaterialassociation> productrawmaterialassociationList = null;
-			productrawmaterialassociationList = productRMAssoService
-					.getEntityList(Productrawmaterialassociation.class);
+			productrawmaterialassociationList = productRMAssoService.getEntityList(Productrawmaterialassociation.class);
 			HashMap<Long, List<ProductRMAssociationModelParts>> multplePRMAsso = new HashMap<Long, List<ProductRMAssociationModelParts>>();
 			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociationList){
 				List<ProductRMAssociationModelParts> productRMAssociationModelParts = null;

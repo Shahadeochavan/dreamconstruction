@@ -109,6 +109,7 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		return criteria.list();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productionplanning> getProductionplanByProdutId(Date date,long productID)
 			throws Exception {

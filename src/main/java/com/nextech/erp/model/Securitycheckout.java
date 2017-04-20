@@ -6,21 +6,20 @@ import javax.persistence.*;
 
 import java.sql.Time;
 import java.util.Date;
-import java.util.List;
 import java.sql.Timestamp;
 
 
 /**
  * The persistent class for the securitycheckout database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Securitycheckout.findAll", query="SELECT s FROM Securitycheckout s")
 public class Securitycheckout implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	private String clientname;
@@ -58,16 +57,16 @@ public class Securitycheckout implements Serializable {
 	@Column(name="vehicle_no")
 	private String vehicleNo;
 
-	
+
 	@ManyToOne
 	@JoinColumn(name="statusid")
 	private Status status;
-	
+
 	private String dispatch;
 
 	public Securitycheckout() {
 	}
-	
+
 	public Securitycheckout(int id) {
 		this.id=id;
 	}

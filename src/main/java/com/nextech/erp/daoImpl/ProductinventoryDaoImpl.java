@@ -7,7 +7,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.nextech.erp.dao.ProductinventoryDao;
 import com.nextech.erp.model.Productinventory;
-import com.nextech.erp.model.Productorderassociation;
 
 public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		implements ProductinventoryDao {

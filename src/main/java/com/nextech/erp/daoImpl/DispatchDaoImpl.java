@@ -7,7 +7,6 @@ import org.hibernate.criterion.Restrictions;
 
 import com.nextech.erp.dao.DispatchDao;
 import com.nextech.erp.model.Dispatch;
-import com.nextech.erp.model.Productinventory;
 
 public class DispatchDaoImpl extends SuperDaoImpl<Dispatch> implements DispatchDao {
 

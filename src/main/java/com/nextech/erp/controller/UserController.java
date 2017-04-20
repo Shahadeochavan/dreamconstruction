@@ -14,6 +14,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,6 +56,9 @@ public class UserController {
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
 
+	@Autowired
+	private JavaMailSender mailSender;
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -64,7 +69,7 @@ public class UserController {
 			}
 			if ((Boolean) request.getAttribute("auth_token")) {
 				if (userservice.getUserByUserId(user.getUserid()) == null) {
-					
+
 				} else {
 					return new UserStatus(2, messageSource.getMessage(
 							ERPConstants.USER_ID, null, null));
@@ -82,6 +87,15 @@ public class UserController {
 				user.setIsactive(true);
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				userservice.addEntity(user);
+
+				SimpleMailMessage email = new SimpleMailMessage();
+				email.setFrom(user.getEmail());
+				email.setTo(user.getEmail());
+				email.setSubject("Welcome In NexTech Services Pvt.Ltd");
+				email.setText("Your UserId Is = "+user.getUserid()+'\n'+"Your Password Is = "+user.getPassword());
+
+				// sends the e-mail
+				mailSender.send(email);
 				return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -118,9 +132,7 @@ public class UserController {
 				authorization.setUserid(user.getUserid());
 				authorization.setPassword(user.getPassword());
 				authorization.setUpdatedDate(new Date());
-				System.out.println("user is"+user2.getFirstName());
 				String token = TokenFactory.createAccessJwtToken(user2);
-				System.out.println(token);
 				authorization.setToken(token);
 				response.addHeader("auth_token", token);
 				Usertype usertype = userTypeService.getEntityById(
@@ -149,7 +161,6 @@ public class UserController {
 				&& formUser.getPassword().equals(dbUser.getPassword())) {
 			dbUser.getFirstName();
 			dbUser.getLastName();
-			System.out.println("First name is :"+dbUser.getFirstName()+"Last name is :"+dbUser.getLastName());
 			return true;
 		} else {
 			return false;

@@ -30,10 +30,10 @@ public class RawmaterialController {
 
 	@Autowired
 	RawmaterialService rawmaterialService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterial(
 			@Valid @RequestBody Rawmaterial rawmaterial, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -47,15 +47,12 @@ public class RawmaterialController {
 			rawmaterialService.addEntity(rawmaterial);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -112,7 +109,7 @@ public class RawmaterialController {
 		}
 
 	}
-	
+
 	@RequestMapping(value = "/getRMaterial/{VendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialvendorassociation> getRawmaterialForVendor(@PathVariable("VendorId") long id) {
 
@@ -124,7 +121,7 @@ public class RawmaterialController {
 		}
 		return rawmaterialvendorassociationList;
 	}
-	
+
 	@RequestMapping(value = "/getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterial> getRawmaterialForRMOrder(@PathVariable("RMOrderId") long id) {
 

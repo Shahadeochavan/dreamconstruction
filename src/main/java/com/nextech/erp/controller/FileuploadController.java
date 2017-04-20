@@ -22,7 +22,7 @@ public class FileuploadController {
 	@Autowired
 	ServletContext context;
 
-	@RequestMapping(value = "/fileupload", headers = ("content-type=multipart/*"), method = RequestMethod.POST)
+	@RequestMapping(value = "/fileupload",headers = "Content-Type=*/*", method = RequestMethod.POST)
 	public ResponseEntity<FileInfo> upload(
 			@RequestParam("file") MultipartFile inputFile) {
 		FileInfo fileInfo = new FileInfo();

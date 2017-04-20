@@ -52,33 +52,33 @@ import com.nextech.erp.util.DateUtil;
 public class ProductqualityController {
 	@Autowired
 	ProductqualityService productqualityService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	ProductinventoryService productinventoryService;
-	
+
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
-	
+
 	@Autowired
 	ProductService productService;
 	@Autowired
 	ProductionplanningService productionplanningService;
-	
+
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	ProductorderassociationService productorderassociationService;
-	
+
 	@Autowired
 	ProductorderService productorderService;
-	
+
 	@Autowired
 	DailyproductionService dailyproductionService;
-	
+
 	@RequestMapping(value = "getQualityPendingListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date,HttpServletRequest request,HttpServletResponse response) {
 		List<Productionplanning> productionplanningsList = new ArrayList<Productionplanning>();
@@ -103,8 +103,8 @@ public class ProductqualityController {
 		}
 		return productionplanningsList;
 	}
-	
-	
+
+
 	@RequestMapping(value = "/productQualityCheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductquality(@Valid @RequestBody ProductQualityDTO productQualityDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -119,7 +119,7 @@ public class ProductqualityController {
 				updateProductionPlanningForQualityCheck(productquality,userId);
 				updateDailyProduction(productQualityPart,userId);
 			}
-			
+
 			return new UserStatus(1, "Productquality added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -135,7 +135,7 @@ public class ProductqualityController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/productQualityCheckStore", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductqualityStore(@Valid @RequestBody ProductQualityDTO productQualityDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -153,15 +153,12 @@ public class ProductqualityController {
 			}
 			return new UserStatus(1, "Productquality Store added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -171,7 +168,7 @@ public class ProductqualityController {
 	public @ResponseBody Productquality getProductquality(@PathVariable("id") long id) {
 		Productquality productquality = null;
 		try {
-			
+
 			productquality = productqualityService.getEntityById(Productquality.class,id);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -219,17 +216,17 @@ public class ProductqualityController {
 		}
 
 	}
-	
+
 	private Productinventory updateProductInventory(Productquality productquality,Product product,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(productquality.getProduct().getId());
 		if(productinventory != null){
 			productinventory.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productinventory.setQuantityavailable(productinventory.getQuantityavailable() + productquality.getGoodQuantity());
-			productinventoryService.updateEntity(productinventory);	
+			productinventoryService.updateEntity(productinventory);
 		}
 		return productinventory;
 	}
-	
+
 	private void addProductInventoryHistory(long goodQuantity,Product product,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Productinventory productinventory =  productinventoryService.getProductinventoryByProductId(product.getId());
 		if(productinventory != null){
@@ -240,7 +237,7 @@ public class ProductqualityController {
 			productinventoryhistory.setBeforequantity((int)productinventory.getQuantityavailable());
 			productinventoryhistory.setAfterquantity((int)(goodQuantity+productinventory.getQuantityavailable()));
 			productinventoryhistory.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null))));
-			productinventoryhistoryService.addEntity(productinventoryhistory);			
+			productinventoryhistoryService.addEntity(productinventoryhistory);
 		}
 	}
 
@@ -252,7 +249,7 @@ public class ProductqualityController {
 		productionplanning.setUpdatedBy(userId);
 		productionplanningService.updateEntity(productionplanning);
 	}
-	
+
 	private void updateProductionPlanningForStore(Productquality productquality,long userId) throws Exception {
 		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
 		productionplanning.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity()-productquality.getGoodQuantity());
@@ -263,7 +260,7 @@ public class ProductqualityController {
 		}
 		productionplanningService.updateEntity(productionplanning);
 	}
-	
+
 	private Productquality setProductquality(ProductQualityPart productQualityPart,long userId) throws Exception {
 		Productquality productquality = new Productquality();
 		productquality.setProduct(productService.getEntityById(Product.class, productQualityPart.getProductId()));
@@ -276,7 +273,7 @@ public class ProductqualityController {
 		productquality.setIsactive(true);
 		return productquality;
 	}
-	
+
 	private void updateDailyProduction(ProductQualityPart productQualityPart,long userId) throws NumberFormatException, NoSuchMessageException, Exception {
 		List<Dailyproduction> dailyproductions = dailyproductionService.getDailyProdPendingForQualityCheckByPlanningId(productQualityPart.getProductionPlanId());
 		for (Dailyproduction dailyproduction : dailyproductions) {

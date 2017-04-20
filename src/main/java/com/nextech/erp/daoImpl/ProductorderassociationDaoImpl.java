@@ -81,6 +81,7 @@ public class ProductorderassociationDaoImpl extends
 		return productionplanning;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Productorderassociation> getProductOrderAssoByOrderId(
 			long orderId) throws Exception {

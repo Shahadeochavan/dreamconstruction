@@ -43,7 +43,6 @@ public class UnitController {
 			System.out.println("id is"+id);
 			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {

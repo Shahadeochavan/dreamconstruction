@@ -31,10 +31,10 @@ public class VendorController {
 
 	@Autowired
 	VendorService vendorService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
-	
+
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
@@ -45,7 +45,7 @@ public class VendorController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		
+
 			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 
 			} else {
@@ -60,15 +60,12 @@ public class VendorController {
 			vendorService.addEntity(vendor);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -126,5 +123,5 @@ public class VendorController {
 
 	}
 
- 
+
 }

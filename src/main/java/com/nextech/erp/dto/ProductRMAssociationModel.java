@@ -4,9 +4,11 @@ import java.util.List;
 
 public class ProductRMAssociationModel {
 	private long product;
+	private String name;
+
 	private List<ProductRMAssociationModelParts> productRMAssociationModelParts;
-	
-	
+
+
 	public long getProduct() {
 		return product;
 	}
@@ -19,6 +21,12 @@ public class ProductRMAssociationModel {
 	public void setProductRMAssociationModelParts(
 			List<ProductRMAssociationModelParts> productRMAssociationModelParts) {
 		this.productRMAssociationModelParts = productRMAssociationModelParts;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

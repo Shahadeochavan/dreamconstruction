@@ -3,7 +3,9 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Date;
@@ -13,7 +15,7 @@ import java.util.List;
 
 /**
  * The persistent class for the rawmaterialorder database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Rawmaterialorder.findAll", query="SELECT r FROM Rawmaterialorder r")
@@ -21,7 +23,7 @@ public class Rawmaterialorder implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="actual_price")
@@ -45,13 +47,16 @@ public class Rawmaterialorder implements Serializable {
 
 	private boolean isactive;
 
+	@Size(min = 2, max = 255, message = "{Rawmaterialorder sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
 	@Column(name="other_charges")
 	private float otherCharges;
 
+
+	@Min(value = 1 ,message="Please enter atleast 1 quantity")
 	private int quantity;
-	
+
 
 	private float tax;
 

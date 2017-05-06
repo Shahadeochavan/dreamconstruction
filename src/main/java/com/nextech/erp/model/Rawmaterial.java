@@ -36,8 +36,10 @@ public class Rawmaterial implements Serializable {
 
 	private boolean isactive;
 
+	@Size(min = 2, max = 255, message = "{Rawmaterial name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@Size(min = 2, max = 255, message = "{Rawmaterial Part Number  sholud be greater than 2 or less than 255 characters or digits}")
 	@Column(name="part_number")
 	private String partNumber;
 

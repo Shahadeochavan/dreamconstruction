@@ -3,6 +3,7 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.sql.Time;
 import java.util.Date;
@@ -33,12 +34,15 @@ public class Securitycheckout implements Serializable {
 	@Temporal(TemporalType.DATE)
 	private Date createDate;
 
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	@Size(min = 2, max = 255, message = "{Driver name  sholud be greater than 2 or less than 255 characters}")
 	private String driver_Name;
 
 	private Time intime;
 
+	@Size(min = 2, max = 255, message = "{Invoice Number  sholud be greater than 2 or less than 255 characters or digits}")
 	private int invoice_No;
 
 	private boolean isactive;
@@ -54,6 +58,7 @@ public class Securitycheckout implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
+	@Size(min = 2, max = 255, message = "{Vehicle Number  sholud be greater than 2 or less than 255 characters or digits}")
 	@Column(name="vehicle_no")
 	private String vehicleNo;
 

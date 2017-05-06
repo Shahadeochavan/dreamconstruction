@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * The persistent class for the rawmaterialorderinvoice database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Rawmaterialorderinvoice.findAll", query="SELECT r FROM Rawmaterialorderinvoice r")
@@ -24,7 +24,7 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -39,10 +39,12 @@ public class Rawmaterialorderinvoice implements Serializable {
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	@Size(min = 2, max = 255, message = "{Driver name  sholud be greater than 2 or less than 255 characters}")
 	private String driver_Name;
 
 	private Time intime;
 
+	@Size(min = 2, max = 255, message = "{Invoice Number  sholud be greater than 2 or less than 255 characters or digits}")
 	private String invoice_No;
 
 	private boolean isactive;
@@ -58,13 +60,15 @@ public class Rawmaterialorderinvoice implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
+
+	@Size(min = 2, max = 255, message = "{Vehicle Number  sholud be greater than 2 or less than 255 characters or digits}")
 	@Column(name="vehicle_no")
 	private String vehicleNo;
 
 	private String vendorname;
 
 	//bi-directional many-to-one association to Qualitycheckrawmaterial
-	
+
 	@OneToMany(mappedBy="rawmaterialorderinvoice")
 	private List<Qualitycheckrawmaterial> qualitycheckrawmaterials;
 

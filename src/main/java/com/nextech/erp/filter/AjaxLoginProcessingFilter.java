@@ -22,23 +22,23 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	TokenFactory tokenFactory;
 
 	@Autowired
 	private MessageSource messageSource;
-	
+
 	@Autowired
 	UserTypeService userTypeService;
-	
+
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
 
 	@Autowired
 	PageService pageservice;
-	
-	
+
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
@@ -50,13 +50,13 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
 						String[] string = token.split("-");
 						User user = userService.getUserByUserId(string[0]);
-//						Page page = pageservice.getPageByUrl(url); 
+//						Page page = pageservice.getPageByUrl(url);
 						if(user != null && user.getPassword().equals(string[1])){
 							String str = string[string.length - 1];
 							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
-							System.out.println(new Long(str) + time > new Date().getTime());
-							System.out.println(new Long(str) + time );
-							System.out.println(new Date().getTime());
+//							System.out.println(new Long(str) + time > new Date().getTime());
+//							System.out.println(new Long(str) + time );
+//							System.out.println(new Date().getTime());
 							if (new Long(str) > new Date().getTime() - time) {
 								String generatedToken = TokenFactory.createAccessJwtToken(user);
 								request.setAttribute("current_user", user.getId());
@@ -107,7 +107,7 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 			throws Exception {
 		super.afterConcurrentHandlingStarted(request, response, handler);
 	}
-	
+
 	private HttpServletResponse setResponse(ServletRequest request,ServletResponse response){
 		HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 		httpServletResponse.reset();

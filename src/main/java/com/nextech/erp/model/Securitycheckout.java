@@ -42,7 +42,6 @@ public class Securitycheckout implements Serializable {
 
 	private Time intime;
 
-	@Size(min = 2, max = 255, message = "{Invoice Number  sholud be greater than 2 or less than 255 characters or digits}")
 	private int invoice_No;
 
 	private boolean isactive;

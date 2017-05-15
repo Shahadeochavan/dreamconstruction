@@ -3,6 +3,7 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -12,17 +13,18 @@ import java.util.List;
 
 /**
  * The persistent class for the product database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Product.findAll", query="SELECT p FROM Product p")
 public class Product implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
+	@Size(min = 2, max = 255, message = "{Client Part Number sholud be greater than 2 or less than 255 characters or digits}")
 	private String clientpartnumber;
 
 	@Column(name="created_by")
@@ -31,14 +33,17 @@ public class Product implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+	@Size(min = 2, max = 255, message = "{Description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private String design;
 
 	private boolean isactive;
 
+	@Size(min = 2, max = 255, message = "{Name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
+	@Size(min = 2, max = 255, message = "{Part Number sholud be greater than 2 or less than 255 characters or digits}")
 	@Column(name="part_number")
 	private String partNumber;
 
@@ -47,7 +52,7 @@ public class Product implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
-	
+
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Storeout> storeouts;
@@ -81,11 +86,11 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productrawmaterialassociation> productrawmaterialassociations;
-	
+
 
 	public Product() {
 	}
-	
+
 	public Product(int id) {
 		this.id=id;
 	}

@@ -1,5 +1,6 @@
 package com.nextech.erp.dto;
 
+import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
@@ -7,6 +8,7 @@ public class SecurityCheckOutDTO {
 
 	private String description;
 	private String driver_Name;
+	private Date createDate;
 	private Time intime;
 	private int invoice_No;
 	private Time outtime;
@@ -86,6 +88,14 @@ public class SecurityCheckOutDTO {
 	public void setSecurityCheckOutParts(
 			List<SecurityCheckOutPart> securityCheckOutParts) {
 		this.securityCheckOutParts = securityCheckOutParts;
+	}
+
+	public Date getCreateDate() {
+		return createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 
 }

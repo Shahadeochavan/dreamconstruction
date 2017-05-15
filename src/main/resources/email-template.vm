@@ -1,0 +1,16 @@
+<html>
+
+<head></head>
+
+<body>
+    <p>Dear ${firstName} ${lastName},</p>
+    <p>Greetings from Nextech Services!</p>
+    <p>RM Order Name ${rmOrderName}</p>
+     <p>In case of any further assistance or clarification on this issue, please reply back to this email.</p>
+    <p>Assuring you of our best services always,</p>
+   <p>Yours sincerely</p>
+    <p>${signature}</p>
+    <p>${location}</p>
+</body>
+
+</html>

@@ -41,6 +41,7 @@ public class User implements Serializable {
 	private Date doj;
 
 	@Email(message="{email should be enter valid")
+	@Size(min = 2, max = 255, message = "{Email sholud be greater than 2 or less than 255 characters}")
 	private String email;
 
 	@NotBlank(message="{first Name should not be blank}")

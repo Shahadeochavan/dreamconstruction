@@ -1,5 +1,7 @@
 package com.nextech.erp.service;
 
-public interface NotificationService {
+import com.nextech.erp.model.Notification;
+
+public interface NotificationService extends CRUDService<Notification>{
 
 }

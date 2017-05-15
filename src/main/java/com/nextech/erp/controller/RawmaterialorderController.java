@@ -1,7 +1,9 @@
 package com.nextech.erp.controller;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,11 +23,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
+import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.StatusService;
@@ -44,12 +50,18 @@ public class RawmaterialorderController {
 
 	@Autowired
 	StatusService statusService;
-	
+
 	@Autowired
 	VendorService vendorService;
-	
+
 	@Autowired
 	private MessageSource messageSource;
+
+	@Autowired
+	NotificationService notificationService;
+
+	@Autowired
+	MailService mailService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
@@ -88,10 +100,10 @@ public class RawmaterialorderController {
 			}
 			//TODO save call raw material order
 			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
-			
+
 			//TODO add raw material association
 			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
-	
+
 			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -107,7 +119,7 @@ public class RawmaterialorderController {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Rawmaterialorder getRawmaterialorder(
 			@PathVariable("id") long id) {
@@ -166,7 +178,7 @@ public class RawmaterialorderController {
 
 		return rawmaterialorderList;
 	}
-	
+
 	@RequestMapping(value = "/list/qualityCheck", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Rawmaterialorder> getRMOrderForQualityCheck() {
 
@@ -209,7 +221,7 @@ public class RawmaterialorderController {
 
 		return rawmaterialorderList;
 	}
-	
+
 	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
 		rawmaterialorder.setCreateDate(new Date());
@@ -228,9 +240,30 @@ public class RawmaterialorderController {
 		rawmaterialorder.setIsactive(true);
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
+		Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
+
+		Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
+		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
+		System.out.println("vendor is"+vendor);
+
+	       Mail mail = new Mail();
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(vendor.getEmail());
+	        mail.setMailSubject(notification.getSubject());
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", notification.getName());
+	        model.put("lastName", "Chavan");
+	        model.put("location", "Pune");
+	        model.put("rmOrderName",rawmaterialorder.getName());
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmail(mail,notification);
+
 		return rawmaterialorder;
 	}
-	
+
 	private void addRMOrderAsso(Rawmaterialorder rawmaterialorder,RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
 		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){

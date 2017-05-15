@@ -70,6 +70,7 @@ public class SecuritycheckoutController {
 			securitycheckout.setClientname(securityCheckOutDTO.getClientname());
 			securitycheckout.setDescription(securityCheckOutDTO.getDescription());
 			securitycheckout.setDriver_Name(securityCheckOutDTO.getDriver_Name());
+			securitycheckout.setCreateDate(securityCheckOutDTO.getCreateDate());
 			securitycheckout.setPoNo(securityCheckOutDTO.getPoNo());
 			securitycheckout.setIntime(securityCheckOutDTO.getIntime());
 			securitycheckout.setOuttime(securityCheckOutDTO.getOuttime());

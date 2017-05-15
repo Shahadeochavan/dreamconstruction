@@ -3,6 +3,8 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.sql.Timestamp;
@@ -11,15 +13,15 @@ import java.util.List;
 
 /**
  * The persistent class for the productinventory database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Productinventory.findAll", query="SELECT p FROM Productinventory p")
 public class Productinventory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	@Column(name="created_by")
@@ -28,8 +30,7 @@ public class Productinventory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-/*	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")*/
+	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
 	private boolean isactive;
@@ -41,7 +42,7 @@ public class Productinventory implements Serializable {
 
    // @Min(value = 0, message = " please enter quantityavailabl")
 	private long quantityavailable;
-    
+
 /*    @Min(value = 1, message = "racknumber should be greater than 1 digit")
 	 @Max(value = 100, message = "racknumber should be less than 100 digit")*/
 	private long racknumber;

@@ -3,12 +3,13 @@ package com.nextech.erp.model;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import java.sql.Timestamp;
 
 /**
  * The persistent class for the dispatch database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name = "Dispatch.findAll", query = "SELECT d FROM Dispatch d")
@@ -25,8 +26,10 @@ public class Dispatch implements Serializable {
 	@Column(name = "created_date")
 	private Timestamp createdDate;
 
+	@Size(min = 2, max = 255, message = "{Invoice Number sholud be greater than 2 or less than 255 characters or digits}")
 	private String invoiceNo;
 
+	@Size(min = 2, max = 255, message = "{Description sholud be greater than 2 or less than 255 characters}")
 	private String description;
 
 	private boolean isactive;

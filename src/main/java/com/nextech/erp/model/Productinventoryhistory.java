@@ -9,15 +9,15 @@ import java.sql.Timestamp;
 
 /**
  * The persistent class for the productinventoryhistory database table.
- * 
+ *
  */
 @Entity
 @NamedQuery(name="Productinventoryhistory.findAll", query="SELECT p FROM Productinventoryhistory p")
 public class Productinventoryhistory implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id 
-	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
 	// @Min(value = 0, message = " please enter after quantity")
@@ -32,7 +32,6 @@ public class Productinventoryhistory implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	//@NotBlank(message="{description should not be blank}")
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 

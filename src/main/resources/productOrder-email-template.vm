@@ -1,0 +1,14 @@
+<html>
+
+<head></head>
+
+<body>
+    <p>Dear ${firstName} ${lastName},</p>
+    <p>Sending Email from Nextech <b>Welcome In Nextech Srevcies.in!!!</b></p>
+    <p>Product Order Invoice Number :${productOrderNumber}</p>
+    <p>Thanks</p>
+    <p>${signature}</p>
+    <p>${location}</p>
+</body>
+
+</html>

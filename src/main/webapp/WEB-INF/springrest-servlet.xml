@@ -51,8 +51,8 @@
 				<value>com.nextech.erp.model.Rawmaterialorderinvoice</value>
 				<value>com.nextech.erp.model.Rmorderinvoiceintakquantity</value>
 				<value>com.nextech.erp.model.Storeout</value>
-					<value>com.nextech.erp.model.Notification</value>
-						<value>com.nextech.erp.model.Notificationuserassociation</value>
+				<value>com.nextech.erp.model.Notification</value>
+				<value>com.nextech.erp.model.Notificationuserassociation</value>
 				<value>com.nextech.erp.model.Storeoutrm</value>
 				<value>com.nextech.erp.model.Storeoutrmassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
@@ -81,10 +81,10 @@
  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
      <property name="maxUploadSize" value="268435456"/>
  </bean>
- 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+<!--  	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 		<property name="host" value="smtp.gmail.com" />
 		<property name="port" value="587" />
-		<property name="username" value="shahadeochavan@gmail.com" />
+	 <property name="username" value="shahadeochavan@gmail.com" />
 		<property name="password" value="shahadeo" />
 		<property name="javaMailProperties">
 			<props>
@@ -93,7 +93,7 @@
 				<prop key="mail.smtp.starttls.enable">true</prop>
 			</props>
 		</property>
-	</bean>
+	</bean> -->
 		<bean
 		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
 		<property name="exceptionMappings">
@@ -224,5 +224,11 @@
 
 				<bean id="storeoutrmassociationDao" class="com.nextech.erp.daoImpl.StoreoutrmassociationDaoImpl" />
 	<bean id="storeoutrmassociationService" class="com.nextech.erp.serviceImpl.StoreoutrmassociationServiceImpl" />
+
+	<bean id="notificationDao" class="com.nextech.erp.daoImpl.NotificationDaoImpl" />
+	<bean id="notificationService" class="com.nextech.erp.serviceImpl.NotificationServiceImpl" />
+
+	<bean id="mailService" class="com.nextech.erp.serviceImpl.MailServiceImpl" />
+
 
 </beans>

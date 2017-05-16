@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+
 import com.nextech.erp.dao.RawmaterialorderDao;
 import com.nextech.erp.model.Rawmaterialorder;
 
@@ -60,4 +61,17 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		criteria.add(Restrictions.eq("vendor.id", vendorId));
 		return criteria.list();
 	}
-}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Rawmaterialorder> getRawmaterialByName(String name)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
+		criteria.add(Restrictions.eq("name", name));
+		return criteria.list();
+	}
+	}
+

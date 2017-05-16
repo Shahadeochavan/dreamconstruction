@@ -1,11 +1,20 @@
 package com.nextech.erp.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -13,6 +22,7 @@ import javax.validation.Valid;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -22,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.itextpdf.text.Document;
+import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
@@ -93,13 +105,13 @@ public class RawmaterialorderController {
 
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
-			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response,Document document) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
+			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response,document);
 
 			//TODO add raw material association
 			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
@@ -222,7 +234,7 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 
-	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response,Document document) throws Exception{
 		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
 		rawmaterialorder.setCreateDate(new Date());
 		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
@@ -240,26 +252,40 @@ public class RawmaterialorderController {
 		rawmaterialorder.setIsactive(true);
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
-		Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
+		//TODO Create PDF file
+		downloadPDF(request, response, rawmaterialorder,document);
+
+	/*	Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
 
 		Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
 		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
-		System.out.println("vendor is"+vendor);
 
+		//TODO sending the email
 	       Mail mail = new Mail();
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
 
+	        List < Object > attachments = new ArrayList < Object > ();
+	        attachments.add(new ClassPathResource("dog.jpg"));
+	        attachments.add(new ClassPathResource("cat.jpg"));
+	        mail.setAttachments(attachments);
+
 	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", notification.getName());
-	        model.put("lastName", "Chavan");
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
 	        model.put("location", "Pune");
 	        model.put("rmOrderName",rawmaterialorder.getName());
+	        model.put("createdDate",rawmaterialorder.getCreateDate());
+	        model.put("quantity",rawmaterialorder.getQuantity());
+	        model.put("totalPrice", rawmaterialorder.getTotalprice());
+	        model.put("otherCharges", rawmaterialorder.getOtherCharges());
+	        model.put("actualPrice", rawmaterialorder.getActualPrice());
+	        model.put("tax", rawmaterialorder.getTax());
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 
-		mailService.sendEmail(mail,notification);
+		mailService.sendEmail(mail,notification);*/
 
 		return rawmaterialorder;
 	}
@@ -276,5 +302,96 @@ public class RawmaterialorderController {
 			}
 		}
 	}
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder,Document document) throws IOException {
 
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+
+	    String fileName = "RMOrder.pdf";
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+
+	    try {
+
+	   CreatePDF createPDF = new CreatePDF();
+	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder,document);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	        OutputStream os = response.getOutputStream();
+	        baos.writeTo(os);
+	        os.flush();
+
+	    	Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
+			Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
+			Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
+	        mailSending(notification, rawmaterialorder, vendor, document);
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+
+	}
+
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName) {
+
+		InputStream inputStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+
+			inputStream = new FileInputStream(fileName);
+			byte[] buffer = new byte[1024];
+			baos = new ByteArrayOutputStream();
+
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return baos;
+	}
+
+	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor,Document document){
+		  Mail mail = new Mail();
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(vendor.getEmail());
+	        mail.setMailSubject(notification.getSubject());
+
+	  /*      List < Object > attachments = new ArrayList < Object > ();
+	        attachments.add(new ClassPathResource("dog.jpg"));
+	        attachments.add(new ClassPathResource("cat.jpg"));
+	        mail.setAttachments(attachments);*/
+
+	        List <Object> list = new ArrayList < Object > ();
+	        list.add(document);
+	        mail.setAttachments(list);
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
+	        model.put("location", "Pune");
+	        model.put("rmOrderName",rawmaterialorder.getName());
+	        model.put("createdDate",rawmaterialorder.getCreateDate());
+	        model.put("quantity",rawmaterialorder.getQuantity());
+	        model.put("totalPrice", rawmaterialorder.getTotalprice());
+	        model.put("otherCharges", rawmaterialorder.getOtherCharges());
+	        model.put("actualPrice", rawmaterialorder.getActualPrice());
+	        model.put("tax", rawmaterialorder.getTax());
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmail(mail,notification);
+	}
 }

@@ -243,7 +243,7 @@ public class ProductorderController {
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderService.addEntity(productorder);
 
-		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
+/*		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
 
 		Client client = clientService.getEntityById(Client.class, productorder.getStatus().getId());
 
@@ -261,7 +261,7 @@ public class ProductorderController {
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 
-		mailService.sendEmail(mail,notification);
+		mailService.sendEmail(mail,notification);*/
 		return productorder;
 	}
 

@@ -9,10 +9,10 @@ import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.service.RawmaterialorderService;
 
 public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorder> implements RawmaterialorderService{
-	
+
 	@Autowired
 	RawmaterialorderDao rawmaterialorderDao;
-	
+
 	@Override
 	public Rawmaterialorder getRawmaterialorderByIdName(long id,String rmname) throws Exception {
 		return rawmaterialorderDao.getRawmaterialorderByIdName(id,rmname);
@@ -37,6 +37,13 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 			throws Exception {
 		// TODO Auto-generated method stub
 		return rawmaterialorderDao.getRawmaterialorderByVendor(vendorId);
+	}
+
+	@Override
+	public List<Rawmaterialorder> getRawmaterialByName(String name)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return rawmaterialorderDao.getRawmaterialByName(name);
 	}
 
 }

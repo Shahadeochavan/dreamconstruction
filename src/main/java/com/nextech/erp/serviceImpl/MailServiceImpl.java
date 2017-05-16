@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 
 import javax.mail.MessagingException;
@@ -7,6 +9,8 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.ui.velocity.VelocityEngineUtils;
@@ -35,7 +39,8 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 	            mimeMessageHelper.setTo(mail.getMailTo());
 	            mail.setMailContent(geContentFromTemplate(mail.getModel(),notification));
 	            mimeMessageHelper.setText(mail.getMailContent(), true);
-
+	           /* FileSystemResource file = new FileSystemResource(mail.getAttachments())
+	            mimeMessageHelper.addAttachment(file.getFilename(), file);*/
 	            mailSender.send(mimeMessageHelper.getMimeMessage());
 		} catch (MessagingException e) {
 			e.printStackTrace();

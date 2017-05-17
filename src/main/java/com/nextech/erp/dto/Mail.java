@@ -19,9 +19,19 @@ public class Mail {
 
     private String contentType;
 
+    private String attachment;
+
     private List < Object > attachments;
 
-    private Map < String, Object > model;
+    public String getAttachment() {
+		return attachment;
+	}
+
+	public void setAttachment(String attachment) {
+		this.attachment = attachment;
+	}
+
+	private Map < String, Object > model;
 
     public Mail() {
         contentType = "text/plain";

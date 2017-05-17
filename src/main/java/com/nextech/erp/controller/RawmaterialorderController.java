@@ -105,13 +105,13 @@ public class RawmaterialorderController {
 
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleRawmaterialorder(
-			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response,Document document) {
+			@Valid @RequestBody RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
 			//TODO save call raw material order
-			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response,document);
+			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
 
 			//TODO add raw material association
 			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
@@ -234,7 +234,7 @@ public class RawmaterialorderController {
 		return rawmaterialorderList;
 	}
 
-	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response,Document document) throws Exception{
+	private Rawmaterialorder  saveRMOrder(RawmaterialOrderAssociationModel rawmaterialOrderAssociationModel,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		Rawmaterialorder rawmaterialorder= new Rawmaterialorder();
 		rawmaterialorder.setCreateDate(new Date());
 		rawmaterialorder.setDescription(rawmaterialOrderAssociationModel.getDescription());
@@ -253,39 +253,7 @@ public class RawmaterialorderController {
 		long id=rawmaterialorderService.addEntity(rawmaterialorder);
 		System.out.println("id is"+id);
 		//TODO Create PDF file
-		downloadPDF(request, response, rawmaterialorder,document);
-
-	/*	Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
-
-		Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
-		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
-
-		//TODO sending the email
-	       Mail mail = new Mail();
-	        mail.setMailFrom(notification.getBeanClass());
-	        mail.setMailTo(vendor.getEmail());
-	        mail.setMailSubject(notification.getSubject());
-
-	        List < Object > attachments = new ArrayList < Object > ();
-	        attachments.add(new ClassPathResource("dog.jpg"));
-	        attachments.add(new ClassPathResource("cat.jpg"));
-	        mail.setAttachments(attachments);
-
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", vendor.getFirstName());
-	        model.put("lastName", vendor.getLastName());
-	        model.put("location", "Pune");
-	        model.put("rmOrderName",rawmaterialorder.getName());
-	        model.put("createdDate",rawmaterialorder.getCreateDate());
-	        model.put("quantity",rawmaterialorder.getQuantity());
-	        model.put("totalPrice", rawmaterialorder.getTotalprice());
-	        model.put("otherCharges", rawmaterialorder.getOtherCharges());
-	        model.put("actualPrice", rawmaterialorder.getActualPrice());
-	        model.put("tax", rawmaterialorder.getTax());
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-
-		mailService.sendEmail(mail,notification);*/
+		downloadPDF(request, response, rawmaterialorder);
 
 		return rawmaterialorder;
 	}
@@ -302,7 +270,7 @@ public class RawmaterialorderController {
 			}
 		}
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder,Document document) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -315,24 +283,32 @@ public class RawmaterialorderController {
 	    try {
 
 	   CreatePDF createPDF = new CreatePDF();
-	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder,document);
+	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialorder);
 	        OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
 
-	    	Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
+	    /*	Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
 			Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
 			Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
-	        mailSending(notification, rawmaterialorder, vendor, document);
+			//TODO mail sending
+	        mailSending(notification, rawmaterialorder, vendor,temperotyFilePath);*/
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
 
 	}
 
-	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName) {
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,Rawmaterialorder rawmaterialorder) throws Exception {
+
+
+		Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
+		Notification notification = notificationService.getEntityById(Notification.class, status.getNotifications1().size());
+		Vendor vendor = vendorService.getEntityById(Vendor.class,rawmaterialorder.getVendor().getId());
+		//TODO mail sending
+        mailSending(notification, rawmaterialorder, vendor,fileName);
 
 		InputStream inputStream = null;
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -363,7 +339,7 @@ public class RawmaterialorderController {
 		return baos;
 	}
 
-	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor,Document document){
+	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor,String fileName){
 		  Mail mail = new Mail();
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(vendor.getEmail());
@@ -374,9 +350,11 @@ public class RawmaterialorderController {
 	        attachments.add(new ClassPathResource("cat.jpg"));
 	        mail.setAttachments(attachments);*/
 
-	        List <Object> list = new ArrayList < Object > ();
-	        list.add(document);
-	        mail.setAttachments(list);
+	     /*   List <Object> list = new ArrayList < Object > ();
+	        list.add(tempDirectory);
+	        mail.setAttachments(list);*/
+
+	        mail.setAttachment(fileName);
 
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());

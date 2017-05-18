@@ -39,4 +39,16 @@ public class VendorDaoImpl extends SuperDaoImpl<Vendor> implements VendorDao {
 		 // //session.close();
 		return vendor;
 	}
+
+	@Override
+	public Vendor getVendorByName(String vendorName) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Vendor.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("firstName", vendorName));
+		Vendor vendor = criteria.list().size() > 0 ? (Vendor) criteria.list().get(0) : null;
+		 // //session.close();
+		return vendor;
+	}
 }

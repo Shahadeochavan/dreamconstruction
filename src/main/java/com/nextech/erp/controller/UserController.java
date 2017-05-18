@@ -2,7 +2,9 @@ package com.nextech.erp.controller;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.AuthenticationException;
 import javax.persistence.PersistenceException;
@@ -26,12 +28,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
 import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
+import com.nextech.erp.model.Client;
+import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Page;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
@@ -58,6 +66,12 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender mailSender;
+
+	@Autowired
+	NotificationService notificationService;
+
+	@Autowired
+	MailService mailService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
@@ -88,14 +102,7 @@ public class UserController {
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				userservice.addEntity(user);
 
-				SimpleMailMessage email = new SimpleMailMessage();
-				email.setFrom(user.getEmail());
-				email.setTo(user.getEmail());
-				email.setSubject("Welcome In NexTech Services Pvt.Ltd");
-				email.setText("Your UserId Is = "+user.getUserid()+'\n'+"Your Password Is = "+user.getPassword());
-
-				// sends the e-mail
-				mailSender.send(email);
+				mailSending(user);
 				return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -236,5 +243,17 @@ public class UserController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+
+	private void mailSending(User user){
+		  Mail mail = new Mail();
+	        mail.setMailFrom(user.getEmail());
+	        mail.setMailTo(user.getEmail());
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", user.getFirstName());
+	        model.put("lastName", user.getLastName());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
 	}
 }

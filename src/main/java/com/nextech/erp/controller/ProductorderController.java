@@ -1,11 +1,19 @@
 package com.nextech.erp.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -23,13 +31,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.CreatePDF;
+import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -58,7 +70,7 @@ public class ProductorderController {
 	private MessageSource messageSource;
 
 	@Autowired
-	NotificationService NotificationService;
+	NotificationService notificationService;
 
 	@Autowired
 	MailService mailService;
@@ -243,25 +255,8 @@ public class ProductorderController {
 		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderService.addEntity(productorder);
 
-/*		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
-
-		Client client = clientService.getEntityById(Client.class, productorder.getStatus().getId());
-
-		Notification notification = NotificationService.getEntityById(Notification.class, status.getNotifications1().size());
-	       Mail mail = new Mail();
-	        mail.setMailFrom(notification.getBeanClass());
-	        mail.setMailTo(client.getEmailid());
-	        mail.setMailSubject(notification.getSubject());
-
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", notification.getName());
-	        model.put("lastName", "Chavan");
-	        model.put("location", "Pune");
-	        model.put("productOrderNumber", productorder.getInvoiceNo());
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-
-		mailService.sendEmail(mail,notification);*/
+		//TODO create  PDF file
+		downloadPDF(request, response, productorder);
 		return productorder;
 	}
 
@@ -278,5 +273,87 @@ public class ProductorderController {
 						.addEntity(productorderassociation);
 			}
 		}
+	}
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder) throws IOException {
+
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+
+	    String fileName = "ProductOrder.pdf";
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+
+	    try {
+
+	   CreatePDFProductOrder ceCreatePDFProductOrder = new CreatePDFProductOrder();
+	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productorder);
+	        OutputStream os = response.getOutputStream();
+	        baos.writeTo(os);
+	        os.flush();
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+
+	}
+
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,Productorder productorder) throws Exception {
+
+
+		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
+		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+		Client client = clientService.getEntityById(Client.class,productorder.getClient().getId());
+		//TODO mail sending
+        mailSending(notification, productorder, client,fileName);
+
+		InputStream inputStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+
+			inputStream = new FileInputStream(fileName);
+			byte[] buffer = new byte[1024];
+			baos = new ByteArrayOutputStream();
+
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return baos;
+	}
+
+	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName){
+		  Mail mail = new Mail();
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(client.getEmailid());
+	        mail.setMailSubject(notification.getSubject());
+	        mail.setAttachment(fileName);
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("companyName", client.getCompanyname());
+	        model.put("location", "Pune");
+	        model.put("invoiceNumber",productorder.getInvoiceNo());
+	        model.put("createdDate",productorder.getCreateDate());
+	        model.put("deliveryDate",productorder.getExpecteddeliveryDate());
+	        model.put("quantity",productorder.getQuantity());
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmail(mail,notification);
 	}
 }

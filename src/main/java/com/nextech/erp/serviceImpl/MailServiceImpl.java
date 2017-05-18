@@ -59,4 +59,23 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 		return content.toString();
 	}
 
+	public void sendEmailWithoutPdF( Mail mail,Notification notification) {
+		MimeMessage mimeMessage = mailSender.createMimeMessage();
+
+		try {
+
+		       MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
+
+	            mimeMessageHelper.setSubject(mail.getMailSubject());
+	            mimeMessageHelper.setFrom(mail.getMailFrom());
+	            mimeMessageHelper.setTo(mail.getMailTo());
+	            mail.setMailContent(geContentFromTemplate(mail.getModel(),notification));
+	            mimeMessageHelper.setText(mail.getMailContent(), true);
+	            mailSender.send(mimeMessageHelper.getMimeMessage());
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 }

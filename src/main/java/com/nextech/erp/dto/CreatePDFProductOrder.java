@@ -5,8 +5,6 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -17,10 +15,9 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.service.RawmaterialorderService;
+import com.nextech.erp.model.Productorder;
 
-public class CreatePDF {
+public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
@@ -28,9 +25,8 @@ public class CreatePDF {
 	 * @param args
 	 */
 
-	@Autowired
-	RawmaterialorderService rawmaterialorderService;
-	public  Document createPDF(String file,Rawmaterialorder rawmaterialorder) throws Exception {
+	public Document createPDF(String file, Productorder productorder)
+			throws Exception {
 
 		Document document = null;
 
@@ -43,7 +39,7 @@ public class CreatePDF {
 
 			addTitlePage(document);
 
-			createTable(document, rawmaterialorder);
+			createTable(document, productorder);
 
 			document.close();
 
@@ -69,7 +65,10 @@ public class CreatePDF {
 
 		Paragraph preface = new Paragraph();
 		creteEmptyLine(preface, 1);
-		preface.add(new Paragraph("Retail Invoice", TIME_ROMAN));
+		preface.add(new Paragraph("RETAIL INVOICE", TIME_ROMAN));
+
+		creteEmptyLine(preface, 1);
+		 document.setMargins(36, 72, 108, 180);
 		preface.add(new Paragraph("Nextech Services Pvt.LTd"));
 		preface.add(new Paragraph("Office:18,3rd Floor Vasantika Aparment"));
 		preface.add(new Paragraph("S.No,47/6B,Opp,Yena Bunglow ,"));
@@ -78,7 +77,7 @@ public class CreatePDF {
 
 		creteEmptyLine(preface, 1);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		preface.add(new Paragraph("Raw Matrial Order Creadted Date :"
+		preface.add(new Paragraph("Product Order Invoice Date :"
 				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
 		document.add(preface);
 
@@ -90,14 +89,15 @@ public class CreatePDF {
 		}
 	}
 
-	private  void createTable(Document document,Rawmaterialorder rawmaterialorder) throws Exception {
-	//	List<Rawmaterialorder> rawmaterialorders = rawmaterialorderService.getEntityList(Rawmaterialorder.class);
+	private void createTable(Document document, Productorder productorder)
+			throws Exception {
+
 		Paragraph paragraph = new Paragraph();
 		creteEmptyLine(paragraph, 2);
 		document.add(paragraph);
-		PdfPTable table = new PdfPTable(6);
+		PdfPTable table = new PdfPTable(3);
 
-		PdfPCell c1 = new PdfPCell(new Phrase("RM Order Name"));
+		PdfPCell c1 = new PdfPCell(new Phrase("Product Order Invoce No"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		c1.setBackgroundColor(BaseColor.WHITE);
 		table.addCell(c1);
@@ -108,40 +108,18 @@ public class CreatePDF {
 		table.addCell(c1);
 		table.setHeaderRows(1);
 
-		c1 = new PdfPCell(new Phrase("Total price"));
+		c1 = new PdfPCell(new Phrase("Descroption"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		c1.setBackgroundColor(BaseColor.WHITE);
 		table.addCell(c1);
 		table.setHeaderRows(1);
 
-		c1 = new PdfPCell(new Phrase("Other Charges"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-
-		c1 = new PdfPCell(new Phrase("Actual Price"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-
-		c1 = new PdfPCell(new Phrase("Tax"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-
-			table.setWidthPercentage(100);
-			table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-			table.addCell(rawmaterialorder.getName());
-			table.addCell(Integer.toString(rawmaterialorder.getQuantity()));
-			table.addCell(Float.toString(rawmaterialorder.getTotalprice()));
-			table.addCell(Float.toString(rawmaterialorder.getOtherCharges()));
-			table.addCell(Float.toString(rawmaterialorder.getActualPrice()));
-			table.addCell(Float.toString(rawmaterialorder.getTax()));
-
+		table.setWidthPercentage(100);
+		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+		table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+		table.addCell(productorder.getInvoiceNo());
+		table.addCell(Long.toString(productorder.getQuantity()));
+		table.addCell(productorder.getDescription());
 		document.add(table);
 	}
 

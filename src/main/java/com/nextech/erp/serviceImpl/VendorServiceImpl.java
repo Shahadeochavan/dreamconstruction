@@ -7,7 +7,7 @@ import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.VendorService;
 
 public class VendorServiceImpl extends CRUDServiceImpl<Vendor> implements VendorService {
-	
+
 	@Autowired
 	VendorDao vendorDao;
 
@@ -19,6 +19,12 @@ public class VendorServiceImpl extends CRUDServiceImpl<Vendor> implements Vendor
 	@Override
 	public Vendor getVendorByEmail(String email) throws Exception {
 		return vendorDao.getVendorByEmail(email);
+	}
+
+	@Override
+	public Vendor getVendorByName(String vendorName) throws Exception {
+		// TODO Auto-generated method stub
+		return vendorDao.getVendorByName(vendorName);
 	}
 
 }

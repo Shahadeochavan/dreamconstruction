@@ -3,7 +3,9 @@ package com.nextech.erp.controller;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
+import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderhistory;
@@ -29,6 +33,9 @@ import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.Vendor;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.RawmaterialorderhistoryService;
@@ -36,6 +43,7 @@ import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -65,6 +73,14 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	RawmaterialorderassociationService rawmaterialorderassociationService;
+
+	@Autowired
+	NotificationService notificationService;
+	@Autowired
+	VendorService vendorService;
+
+	@Autowired
+	MailService mailService;
 
 	@RequestMapping(value = "/securitycheck", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorderinvoice(
@@ -190,6 +206,12 @@ public class RawmaterialorderinvoiceController {
 					.addEntity(rawmaterialorderinvoice);
 			System.out.println("inid " + inid);
 
+			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
+			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
+			//TODO mail sending
+	        mailSending(notification, vendor);
+
 		}else{
 			message = messageSource.getMessage(ERPConstants.RM_ORDER_INVOICE_EXIT, null, null);
 		}
@@ -255,5 +277,22 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorder.setIsactive(true);
 		rawmaterialorderService.updateEntity(rawmaterialorder);
+	}
+
+	private void mailSending(Notification notification,Vendor vendor){
+		  Mail mail = new Mail();
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(vendor.getEmail());
+	        mail.setMailSubject(notification.getSubject());
+
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail,notification);
 	}
 }

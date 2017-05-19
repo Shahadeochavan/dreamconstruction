@@ -16,7 +16,6 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -31,15 +30,15 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.filter.TokenFactory;
 import com.nextech.erp.model.Authorization;
-import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Page;
-import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
@@ -68,7 +67,10 @@ public class UserController {
 	private JavaMailSender mailSender;
 
 	@Autowired
-	NotificationService notificationService;
+	NotificationUserAssociationService notificationUserAssService;
+
+	@Autowired
+	NotificationService notificationService;;
 
 	@Autowired
 	MailService mailService;
@@ -102,7 +104,8 @@ public class UserController {
 				user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				userservice.addEntity(user);
 
-				mailSending(user);
+				//TODO sending the email for new user from admin
+             mailSending(user, request, response);
 				return new UserStatus(1, "User added Successfully !");
 			} else {
 				new UserStatus(0, "User is not authenticated.");
@@ -245,15 +248,29 @@ public class UserController {
 
 	}
 
-	private void mailSending(User user){
-		  Mail mail = new Mail();
-	        mail.setMailFrom(user.getEmail());
-	        mail.setMailTo(user.getEmail());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", user.getFirstName());
-	        model.put("lastName", user.getLastName());
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-	}
+
+	private void mailSending(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
+			  Mail mail = new Mail();
+
+				  mail.setMailCc((request.getAttribute("current_user").toString()));
+				  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
+				  Notification notification = notificationService.getEntityById(Notification.class, notificationuserassociation.getNotification().getId());
+
+				    mail.setMailFrom(notification.getBeanClass());
+			        mail.setMailSubject(notification.getSubject());
+			        mail.setMailTo(user.getEmail());
+			        Map < String, Object > model = new HashMap < String, Object > ();
+
+
+			        model.put("firstName", user.getFirstName());
+			        model.put("lastName", user.getLastName());
+			        model.put("userId", user.getUserid());
+			        model.put("password", user.getPassword());
+			        model.put("email", user.getEmail());
+			        model.put("location", "Pune");
+			        model.put("signature", "www.NextechServices.in");
+			        mail.setModel(model);
+
+			        mailService.sendEmailWithoutPdF(mail, notification);
+}
 }

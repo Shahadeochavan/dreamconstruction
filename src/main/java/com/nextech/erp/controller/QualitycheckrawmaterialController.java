@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
+import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
@@ -35,6 +38,9 @@ import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.Vendor;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.QualitycheckrawmaterialService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
@@ -46,6 +52,7 @@ import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -77,6 +84,15 @@ public class QualitycheckrawmaterialController {
 
 	@Autowired
 	StatusService statusService;
+
+	@Autowired
+	NotificationService notificationService;
+
+	@Autowired
+	VendorService vendorService;
+
+	@Autowired
+	MailService mailService;
 
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
@@ -243,6 +259,17 @@ public class QualitycheckrawmaterialController {
 				qualitycheckrawmaterial.getRawmaterial().getId())==null){
 			qualitycheckrawmaterial.setIsactive(true);
 			qualitycheckrawmaterialService.addEntity(qualitycheckrawmaterial);
+
+		Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId());
+
+		Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoiceNew.getVendorname()));
+
+		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+
+		//TODO Mail Sending to Vendor when quality check or rm order
+		mailSending(notification, vendor);
+
+
 		}else {
 			message += " Invoice id = " + rawmaterialorderinvoiceNew.getId() + " raw material id = " + qualitycheckrawmaterial.getRawmaterial().getId() + " already exists";
 		}
@@ -324,6 +351,22 @@ public class QualitycheckrawmaterialController {
 			e.printStackTrace();
 		}
 		return rmorderinvoiceintakquantities;
+	}
+	private void mailSending(Notification notification,Vendor vendor){
+		  Mail mail = new Mail();
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(vendor.getEmail());
+	        mail.setMailSubject(notification.getSubject());
+
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail,notification);
 	}
 
 }

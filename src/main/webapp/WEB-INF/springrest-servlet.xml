@@ -228,6 +228,9 @@
 	<bean id="notificationDao" class="com.nextech.erp.daoImpl.NotificationDaoImpl" />
 	<bean id="notificationService" class="com.nextech.erp.serviceImpl.NotificationServiceImpl" />
 
+	<bean id="notificationUserAssDao" class="com.nextech.erp.daoImpl.NotificationUserassociationDaoImpl" />
+	<bean id="notificationUserAssService" class="com.nextech.erp.serviceImpl.NotificationUserAssociationServiceImpl" />
+
 	<bean id="mailService" class="com.nextech.erp.serviceImpl.MailServiceImpl" />
 
 

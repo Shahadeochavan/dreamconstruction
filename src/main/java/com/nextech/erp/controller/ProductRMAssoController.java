@@ -196,7 +196,7 @@ public class ProductRMAssoController {
 		try {
 			List<Productrawmaterialassociation> productrawmaterialassociationList = null;
 			productrawmaterialassociationList = productRMAssoService.getEntityList(Productrawmaterialassociation.class);
-			HashMap<String, List<ProductRMAssociationModelParts>> multplePRMAsso = new HashMap<String, List<ProductRMAssociationModelParts>>();
+			HashMap<Long, List<ProductRMAssociationModelParts>> multplePRMAsso = new HashMap<Long, List<ProductRMAssociationModelParts>>();
 			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociationList){
 				List<ProductRMAssociationModelParts> productRMAssociationModelParts = null;
 				if(multplePRMAsso.get(productrawmaterialassociation.getProduct().getId()) == null){
@@ -209,13 +209,13 @@ public class ProductRMAssoController {
 				productRMAssociationModelPart.setRawmaterial(productrawmaterialassociation.getRawmaterial());
 				productRMAssociationModelParts.add(productRMAssociationModelPart);
 				Product product = productService.getEntityById(Product.class, productrawmaterialassociation.getProduct().getId());
-				multplePRMAsso.put(product.getName(), productRMAssociationModelParts);
+				multplePRMAsso.put(productrawmaterialassociation.getProduct().getId(), productRMAssociationModelParts);
 			}
-			 Set<Entry<String, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
-			for(Entry<String, List<ProductRMAssociationModelParts>> multplePRMAssoEntry : multplePRMAssoEntries){
+			 Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
+			for(Entry<Long, List<ProductRMAssociationModelParts>> multplePRMAssoEntry : multplePRMAssoEntries){
 				ProductRMAssociationModel productRMAssociationModel = new ProductRMAssociationModel();
-				//productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());
-				productRMAssociationModel.setName(multplePRMAssoEntry.getKey());
+				productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());
+				//productRMAssociationModel.setName(multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setProductRMAssociationModelParts(multplePRMAssoEntry.getValue());
 				productRMAssociationModels.add(productRMAssociationModel);
 			}

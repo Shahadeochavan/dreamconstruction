@@ -1,6 +1,8 @@
 package com.nextech.erp.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,8 +19,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.Client;
+import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.service.ClientService;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -30,6 +38,16 @@ public class ClientController {
 
 	@Autowired
 	private MessageSource messageSource;
+
+	@Autowired
+	NotificationService notificationService;
+
+
+	@Autowired
+	NotificationUserAssociationService notificationUserAssService;
+
+	@Autowired
+	MailService mailService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
@@ -55,6 +73,9 @@ public class ClientController {
 			client.setCreatedBy(Long.parseLong(request.getAttribute(
 					"current_user").toString()));
 			client.setIsactive(true);
+
+			//TODO sending the email to the client
+			mailSending(client, request, response);
 			clientService.addEntity(client);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
@@ -127,5 +148,22 @@ public class ClientController {
 		}
 
 	}
+	private void mailSending(Client client,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		  Mail mail = new Mail();
 
+		  mail.setMailCc((request.getAttribute("current_user").toString()));
+		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
+		  Notification notification = notificationService.getEntityById(Notification.class, notificationuserassociation.getNotification().getId());
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(client.getEmailid());
+	        mail.setMailSubject(notification.getSubject());
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", client.getCompanyname());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail, notification);
+	}
 }

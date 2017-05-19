@@ -1,6 +1,8 @@
 package com.nextech.erp.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +23,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
+import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
@@ -34,6 +42,16 @@ public class VendorController {
 
 	@Autowired
 	private MessageSource messageSource;
+
+	@Autowired
+	NotificationService notificationService;
+
+
+	@Autowired
+	NotificationUserAssociationService notificationUserAssService;
+
+	@Autowired
+	MailService mailService;
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -58,6 +76,8 @@ public class VendorController {
 			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.addEntity(vendor);
+
+			mailSending(vendor, request, response);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -121,6 +141,25 @@ public class VendorController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	private void mailSending(Vendor vendor,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		  Mail mail = new Mail();
+
+		  mail.setMailCc((request.getAttribute("current_user").toString()));
+		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
+		  Notification notification = notificationService.getEntityById(Notification.class, notificationuserassociation.getNotification().getId());
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(vendor.getEmail());
+	        mail.setMailSubject(notification.getSubject());
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail, notification);
 	}
 
 

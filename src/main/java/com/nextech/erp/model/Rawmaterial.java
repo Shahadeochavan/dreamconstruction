@@ -4,8 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -51,6 +53,9 @@ public class Rawmaterial implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
+	
+	@OneToMany(mappedBy="rawmaterial")
+	private List<Bom> boms;
 
 	//bi-directional many-to-one association to Productrawmaterialassociation
 	@JsonIgnore
@@ -335,5 +340,26 @@ public class Rawmaterial implements Serializable {
 		storeoutrm.setRawmaterial(null);
 
 		return storeoutrm;
+	}
+	public List<Bom> getBoms() {
+		return this.boms;
+	}
+
+	public void setBoms(List<Bom> boms) {
+		this.boms = boms;
+	}
+
+	public Bom addBom(Bom bom) {
+		getBoms().add(bom);
+		bom.setRawmaterial(this);
+
+		return bom;
+	}
+
+	public Bom removeBom(Bom bom) {
+		getBoms().remove(bom);
+		bom.setRawmaterial(null);
+
+		return bom;
 	}
 }

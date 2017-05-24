@@ -52,6 +52,9 @@ public class Product implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
+	
+	@OneToMany(mappedBy="product")
+	private List<Bom> boms;
 
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
@@ -334,5 +337,26 @@ public class Product implements Serializable {
 		storeout.setProduct(null);
 
 		return storeout;
+	}
+	public List<Bom> getBoms() {
+		return this.boms;
+	}
+
+	public void setBoms(List<Bom> boms) {
+		this.boms = boms;
+	}
+
+	public Bom addBom(Bom bom) {
+		getBoms().add(bom);
+		bom.setProduct(this);
+
+		return bom;
+	}
+
+	public Bom removeBom(Bom bom) {
+		getBoms().remove(bom);
+		bom.setProduct(null);
+
+		return bom;
 	}
 }

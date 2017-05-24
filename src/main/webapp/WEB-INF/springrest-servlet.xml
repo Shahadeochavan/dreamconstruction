@@ -10,7 +10,7 @@
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://localhost:3306/erp?zeroDateTimeBehavior=convertToNull" />
+			value="jdbc:mysql://localhost:3306/ekerp?zeroDateTimeBehavior=convertToNull" />
 		<property name="username" value="root" />
 		<property name="password" value="root" />
 	</bean>
@@ -44,6 +44,7 @@
 				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
 				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
 				<value>com.nextech.erp.model.Client</value>
+				<value>com.nextech.erp.model.Bom</value>
 				<value>com.nextech.erp.model.Dailyproduction</value>
 				<value>com.nextech.erp.model.Securitycheckout</value>
 				<value>com.nextech.erp.model.Productorderassociation</value>
@@ -230,6 +231,9 @@
 
 	<bean id="notificationUserAssDao" class="com.nextech.erp.daoImpl.NotificationUserassociationDaoImpl" />
 	<bean id="notificationUserAssService" class="com.nextech.erp.serviceImpl.NotificationUserAssociationServiceImpl" />
+	
+		<bean id="bomDao" class="com.nextech.erp.daoImpl.BomDaoImpl" />
+	<bean id="bomService" class="com.nextech.erp.serviceImpl.BomServiceImpl" />
 
 	<bean id="mailService" class="com.nextech.erp.serviceImpl.MailServiceImpl" />
 

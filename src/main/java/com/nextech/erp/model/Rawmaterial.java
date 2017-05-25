@@ -54,7 +54,8 @@ public class Rawmaterial implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 	
-	@OneToMany(mappedBy="rawmaterial")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
 	private List<Bom> boms;
 
 	//bi-directional many-to-one association to Productrawmaterialassociation

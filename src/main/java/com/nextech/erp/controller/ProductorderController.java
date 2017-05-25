@@ -31,20 +31,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
-import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Status;
-import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.StatusService;
@@ -71,6 +70,9 @@ public class ProductorderController {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	ProductService productService;
 
 	@Autowired
 	MailService mailService;
@@ -256,7 +258,7 @@ public class ProductorderController {
 		productorderService.addEntity(productorder);
 
 		//TODO create  PDF file
-		downloadPDF(request, response, productorder);
+	//	downloadPDF(request, response, productorder);
 		return productorder;
 	}
 
@@ -273,6 +275,7 @@ public class ProductorderController {
 						.addEntity(productorderassociation);
 			}
 		}
+		downloadPDF(request, response, productorder);
 	}
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder) throws IOException {
 
@@ -338,21 +341,25 @@ public class ProductorderController {
 		return baos;
 	}
 
-	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName){
+	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName) throws Exception{
+		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
+	
 		  Mail mail = new Mail();
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 	        mail.setAttachment(fileName);
 	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("companyName", client.getCompanyname());
-	        model.put("location", "Pune");
-	        model.put("invoiceNumber",productorder.getInvoiceNo());
-	        model.put("createdDate",productorder.getCreateDate());
-	        model.put("deliveryDate",productorder.getExpecteddeliveryDate());
-	        model.put("quantity",productorder.getQuantity());
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
+	        for (Productorderassociation productorderassociation : productorderassociations) {
+	        	Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
+	            model.put("companyName", client.getCompanyname());
+	   	        model.put("location", "Pune");
+	   	        model.put("invoiceNumber",productorder.getInvoiceNo());
+	   	        model.put("productName",product.getName());
+	   	        model.put("quantity",productorderassociation.getQuantity());
+	   	        model.put("signature", "www.NextechServices.in");
+	   	        mail.setModel(model);
+			}
 
 		mailService.sendEmail(mail,notification);
 	}

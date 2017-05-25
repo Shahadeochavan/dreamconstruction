@@ -3,6 +3,7 @@ package com.nextech.erp.dto;
 import java.util.List;
 
 public class BomDTO {
+	private long id;
 	private long product;
 	private String bomId;
 	private List<BomModelPart> bomModelParts;
@@ -29,6 +30,14 @@ public class BomDTO {
 
 	public void setBomModelParts(List<BomModelPart> bomModelParts) {
 		this.bomModelParts = bomModelParts;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 
 }

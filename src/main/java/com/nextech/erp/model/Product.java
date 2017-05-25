@@ -53,7 +53,8 @@ public class Product implements Serializable {
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 	
-	@OneToMany(mappedBy="product")
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Bom> boms;
 
 	@JsonIgnore

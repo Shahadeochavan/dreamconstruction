@@ -82,7 +82,7 @@ public class BomController {
 			}
 			createMultipleBom(bomDTO, request.getAttribute("current_user").toString());
 
-			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
+			return new UserStatus(1, "Bom added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -126,7 +126,7 @@ public class BomController {
 			bom.setUpdatedBy(request.getAttribute("current_user").toString());
 			bom.setIsactive(true);
 			bomService.updateEntity(bom);
-			return new UserStatus(1, "Unit update Successfully !");
+			return new UserStatus(1, "Bom update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());

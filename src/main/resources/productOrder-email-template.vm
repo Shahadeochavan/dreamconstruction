@@ -27,14 +27,12 @@ background: rgb(120, 129, 178);
     <table>
     <tr>
       <th>Invoice Number</th>
-      <th>Create Date</th>
-      <th>Expected Delivery DatePrice</th>
-       <th>Product Order Quantity</th>
+      <th>Product Name</th>
+       <th>Product  Quantity</th>
     </tr>
     <tr>
     <td>${invoiceNumber}</td>
-    <td>${createdDate}</td>
-    <td>${deliveryDate}</td>
+    <td>${productName}</td>
      <td>${quantity}</td>
     </tr>
     </table>

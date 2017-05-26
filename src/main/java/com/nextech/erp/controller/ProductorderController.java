@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
+import com.nextech.erp.dto.ProductRMAssociationModel;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Product;
@@ -341,26 +343,30 @@ public class ProductorderController {
 		return baos;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName) throws Exception{
 		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
-	
+		List<Map<String, Object>> prList = new ArrayList<Map<String,Object>>();
 		  Mail mail = new Mail();
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 	        mail.setAttachment(fileName);
-	        Map < String, Object > model = new HashMap < String, Object > ();
+	        Map < String, Object > model = new HashMap < String, Object >();
+	        HashMap<String, Map<String, Object>> models = new HashMap<String, Map<String,Object>>();
 	        for (Productorderassociation productorderassociation : productorderassociations) {
 	        	Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
 	            model.put("companyName", client.getCompanyname());
 	   	        model.put("location", "Pune");
 	   	        model.put("invoiceNumber",productorder.getInvoiceNo());
-	   	        model.put("productName",product.getName());
-	   	        model.put("quantity",productorderassociation.getQuantity());
+ 	            model.put("productName",product.getName());
+   	            model.put("quantity",productorderassociation.getQuantity());
 	   	        model.put("signature", "www.NextechServices.in");
 	   	        mail.setModel(model);
+	   	        prList.add(model);
+	   	 
 			}
-
+	        mail.setModelList(prList);
 		mailService.sendEmail(mail,notification);
 	}
 }

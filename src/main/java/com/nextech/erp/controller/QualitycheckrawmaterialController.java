@@ -156,6 +156,13 @@ public class QualitycheckrawmaterialController {
 			addOrderHistory(rawmaterialorderinvoiceNew, rawmaterialorder, request, response);
 			//TODO update raw material order
 			updateRawMaterialOrder(rawmaterialorder);
+			
+			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoiceNew.getStatus().getId());
+
+			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoiceNew.getVendorname()));
+
+			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+			mailSending(notification, vendor);
 
 
 			// TODO  call to trigger notification (will do it later )
@@ -246,6 +253,12 @@ public class QualitycheckrawmaterialController {
 		rawmaterialorderinvoice.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_ORDER_COMPLETE, null, null))));
 		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
+		Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
+
+		Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
+
+		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+		//mailSending(notification, vendor);
 	}
 
 	private long saveQualityCheck(Qualitycheckrawmaterial qualitycheckrawmaterial,Rawmaterialorderinvoice rawmaterialorderinvoiceNew,Rawmaterial rawmaterial,HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -267,7 +280,7 @@ public class QualitycheckrawmaterialController {
 		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
 
 		//TODO Mail Sending to Vendor when quality check or rm order
-		mailSending(notification, vendor);
+		//mailSending(notification, vendor);
 
 
 		}else {

@@ -22,6 +22,8 @@ public class Mail {
     private String attachment;
 
     private List < Object > attachments;
+    
+    List<Map<String, Object>> modelList;
 
     public String getAttachment() {
 		return attachment;
@@ -112,5 +114,13 @@ public class Mail {
     public void setModel(Map < String, Object > model) {
         this.model = model;
     }
+
+	public List<Map<String, Object>> getModelList() {
+		return modelList;
+	}
+
+	public void setModelList(List<Map<String, Object>> modelList) {
+		this.modelList = modelList;
+	}
 
 }

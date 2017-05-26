@@ -260,8 +260,6 @@ public class UserController {
 			        mail.setMailSubject(notification.getSubject());
 			        mail.setMailTo(user.getEmail());
 			        Map < String, Object > model = new HashMap < String, Object > ();
-
-
 			        model.put("firstName", user.getFirstName());
 			        model.put("lastName", user.getLastName());
 			        model.put("userId", user.getUserid());

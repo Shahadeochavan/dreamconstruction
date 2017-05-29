@@ -35,7 +35,6 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
-import com.nextech.erp.dto.ProductRMAssociationModel;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Product;
@@ -354,18 +353,17 @@ public class ProductorderController {
 	        mail.setAttachment(fileName);
 	        Map < String, Object > model = new HashMap < String, Object >();
 	        HashMap<String, Map<String, Object>> models = new HashMap<String, Map<String,Object>>();
-	        for (Productorderassociation productorderassociation : productorderassociations) {
-	        	Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
+	 //       for (Productorderassociation productorderassociation : productorderassociations) {
+	        	//Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
 	            model.put("companyName", client.getCompanyname());
 	   	        model.put("location", "Pune");
-	   	        model.put("invoiceNumber",productorder.getInvoiceNo());
- 	            model.put("productName",product.getName());
-   	            model.put("quantity",productorderassociation.getQuantity());
+	   	        model.put("productorderassociations",productorderassociations);
+ 	    /*        model.put("productName",product.getName());
+   	            model.put("quantity",productorderassociation.getQuantity());*/
 	   	        model.put("signature", "www.NextechServices.in");
 	   	        mail.setModel(model);
 	   	        prList.add(model);
-	   	 
-			}
+	  
 	        mail.setModelList(prList);
 		mailService.sendEmail(mail,notification);
 	}

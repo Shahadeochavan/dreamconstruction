@@ -24,15 +24,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.ProductOrderInventoryData;
 import com.nextech.erp.dto.ProductRMAssociationModel;
 import com.nextech.erp.dto.ProductRMAssociationModelParts;
+import com.nextech.erp.dto.RMVendorData;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.VendorService;
+import com.nextech.erp.serviceImpl.ProductRMAssoServiceImpl;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
@@ -51,6 +60,13 @@ public class ProductRMAssoController {
 
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	RMVAssoService RMVAssoService;
+	
+	@Autowired
+	VendorService vendorService;
+	
 
 	@Autowired
 	ProductionplanningService productionplanningService;
@@ -186,6 +202,33 @@ public class ProductRMAssoController {
 		}
 
 		return productrawmaterialassociationList;
+	}
+	
+	@RequestMapping(value = "getRMVendorData/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getRMVendorList(@PathVariable("productId") long productId) {
+
+		List<Productrawmaterialassociation> productrawmaterialassociations = null;
+		List<RMVendorData> rmVendorDatas = new ArrayList<RMVendorData>();
+		try {
+			productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productId);
+			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+				List<Rawmaterialvendorassociation> rawmaterialvendorassociations = RMVAssoService.getRawmaterialvendorassociationListByRMId(productrawmaterialassociation.getRawmaterial().getId());
+				for(Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations){
+
+						RMVendorData rawRmVendorData = new RMVendorData();
+						Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
+						Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialvendorassociation.getVendor().getId());
+						rawRmVendorData.setRawmaterial(rawmaterial);
+						rawRmVendorData.setVendor(vendor);
+						rmVendorDatas.add(rawRmVendorData);
+				}
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new Response(1,"RMList and VendorList",rmVendorDatas);
 	}
 
 	@RequestMapping(value = "/list/multiple", method = RequestMethod.GET, headers = "Accept=application/json")

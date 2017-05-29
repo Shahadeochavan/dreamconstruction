@@ -30,10 +30,24 @@ background: rgb(120, 129, 178);
       <th>Product Name</th>
        <th>Product  Quantity</th>
     </tr>
+         #set ( $row = 1 )
+            #foreach ( $productorderassociation in $productorderassociations )
+              #if ( $row % 2 == 0 )
+                #set ($color="#CBDCFF")
+              #else
+                #set ($color="#E3EEFF")
+
+              #end
+    
     <tr>
-    <td>${invoiceNumber}</td>
-    <td>${productName}</td>
-     <td>${quantity}</td>
+          <tr bgcolor="$color">
+                <td align="left">$row</td>
+                <td align="left">$productorderassociation.product</td>
+                <td align="center">$productorderassociation.quantity</td>
+              </tr>
+              #set ( $row = $row + 1 )
+
+            #end
     </tr>
     </table>
      <p>In case of any further assistance or clarification on this issue, please reply back to this email.</p>

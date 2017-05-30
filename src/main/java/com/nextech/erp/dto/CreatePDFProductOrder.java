@@ -4,6 +4,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -16,6 +19,9 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.service.ProductorderService;
+import com.nextech.erp.service.ProductorderassociationService;
 
 public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
@@ -24,6 +30,12 @@ public class CreatePDFProductOrder {
 	/**
 	 * @param args
 	 */
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService;
+	
+	@Autowired
+	ProductorderService productorderService;
 
 	public Document createPDF(String file, Productorder productorder)
 			throws Exception {
@@ -92,6 +104,7 @@ public class CreatePDFProductOrder {
 	private void createTable(Document document, Productorder productorder)
 			throws Exception {
 
+
 		Paragraph paragraph = new Paragraph();
 		creteEmptyLine(paragraph, 2);
 		document.add(paragraph);
@@ -113,7 +126,8 @@ public class CreatePDFProductOrder {
 		c1.setBackgroundColor(BaseColor.WHITE);
 		table.addCell(c1);
 		table.setHeaderRows(1);
-
+		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
+		System.out.println(productorderassociations);
 		table.setWidthPercentage(100);
 		table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 		table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);

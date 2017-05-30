@@ -220,6 +220,7 @@ public class ProductRMAssoController {
 						Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialvendorassociation.getVendor().getId());
 						rawRmVendorData.setRawmaterial(rawmaterial);
 						rawRmVendorData.setVendor(vendor);
+						rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
 						rmVendorDatas.add(rawRmVendorData);
 				}
 			}

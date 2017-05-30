@@ -18,10 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.BomModelPart;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.BomService;
@@ -160,6 +162,22 @@ public class BomController {
 		}
 
 	}
+	
+	@RequestMapping(value = "bomList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Bom> getBomByProductId(@PathVariable("PRODUCT-ID") long productId) {
+
+		List<Bom> boList = null;
+		try {
+			// TODO afterwards you need to change it from properties
+			boList = bomService.getBomListByProductId(productId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return boList;
+	}
+	
 	private Bom setMultipleBom(BomModelPart bomModelPart) throws Exception {
 		Bom bom = new Bom();
 		Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomModelPart.getRawmaterial().getId());

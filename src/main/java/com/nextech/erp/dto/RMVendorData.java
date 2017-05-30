@@ -7,6 +7,7 @@ public class RMVendorData {
 
 	private Rawmaterial rawmaterial;
 	private Vendor vendor;
+	private long quantity;
 
 	public Rawmaterial getRawmaterial() {
 		return rawmaterial;
@@ -22,6 +23,14 @@ public class RMVendorData {
 
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
+	}
+
+	public long getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(long quantity) {
+		this.quantity = quantity;
 	}
 
 }

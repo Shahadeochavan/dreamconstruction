@@ -35,6 +35,7 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
+import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Product;
@@ -345,26 +346,31 @@ public class ProductorderController {
 	@SuppressWarnings("unchecked")
 	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName) throws Exception{
 		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
-		List<Map<String, Object>> prList = new ArrayList<Map<String,Object>>();
+		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
+		for (Productorderassociation productorderassociation : productorderassociations) {
+			Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
+			ProductOrderData productOrderData = new ProductOrderData();
+			productOrderData.setProductName(product.getName());
+			productOrderData.setQuantity(productorderassociation.getQuantity());
+			productOrderData.setRate(product.getRatePerUnit());
+			productOrderDatas.add(productOrderData);
+		}
 		  Mail mail = new Mail();
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 	        mail.setAttachment(fileName);
 	        Map < String, Object > model = new HashMap < String, Object >();
-	        HashMap<String, Map<String, Object>> models = new HashMap<String, Map<String,Object>>();
-	 //       for (Productorderassociation productorderassociation : productorderassociations) {
-	        	//Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
 	            model.put("companyName", client.getCompanyname());
+	            model.put("mailfrom", notification.getName());
 	   	        model.put("location", "Pune");
-	   	        model.put("productorderassociations",productorderassociations);
- 	    /*        model.put("productName",product.getName());
-   	            model.put("quantity",productorderassociation.getQuantity());*/
+	   	        model.put("productOrderDatas",productOrderDatas);
+	   	        model.put("invoiceNumber",productorder.getInvoiceNo());
+	   	         model.put("date",productorder.getCreatedDate());
+	   	        model.put("address", client.getAddress());
 	   	        model.put("signature", "www.NextechServices.in");
 	   	        mail.setModel(model);
-	   	        prList.add(model);
 	  
-	        mail.setModelList(prList);
 		mailService.sendEmail(mail,notification);
 	}
 }

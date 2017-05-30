@@ -39,6 +39,8 @@ public class Product implements Serializable {
 	private String design;
 
 	private boolean isactive;
+	
+	private long ratePerUnit;
 
 	@Size(min = 2, max = 255, message = "{Name sholud be greater than 2 or less than 255 characters}")
 	private String name;
@@ -360,4 +362,13 @@ public class Product implements Serializable {
 
 		return bom;
 	}
+
+	public long getRatePerUnit() {
+		return ratePerUnit;
+	}
+
+	public void setRatePerUnit(long ratePerUnit) {
+		this.ratePerUnit = ratePerUnit;
+	}
+	
 }

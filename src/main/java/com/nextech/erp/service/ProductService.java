@@ -9,4 +9,6 @@ public interface ProductService extends CRUDService<Product>{
 	public Product getProductByPartNumber(String partnumber) throws Exception;
 	
 	public boolean isOrderPartiallyDispatched(long orderId) throws Exception;
+
+	public Product getProductListByProductId(long id);
 }

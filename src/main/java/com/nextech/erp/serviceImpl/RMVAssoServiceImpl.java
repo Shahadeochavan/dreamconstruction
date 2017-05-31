@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.RMVAssoDao;
@@ -16,6 +18,12 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 			long vendorId, long rmId) throws Exception {
 		// TODO Auto-generated method stub
 		return rMVAssoDao.getRMVAssoByVendorIdRMId(vendorId, rmId);
+	}
+
+	@Override
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

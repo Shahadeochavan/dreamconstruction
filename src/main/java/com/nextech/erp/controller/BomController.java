@@ -1,8 +1,16 @@
 package com.nextech.erp.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -21,10 +29,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.BomModelPart;
+import com.nextech.erp.dto.CreatePDFProductOrder;
+import com.nextech.erp.dto.CreatePdfForBomProduct;
 import com.nextech.erp.model.Bom;
+import com.nextech.erp.model.Client;
+import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ProductService;
@@ -136,7 +149,7 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Bom> getUnit() {
+	public @ResponseBody List<Bom> getUnit(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<Bom> bomList = null;
 		try {
@@ -145,7 +158,7 @@ public class BomController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		  downloadPDF(request, response, bomList);
 		return bomList;
 	}
 
@@ -177,6 +190,20 @@ public class BomController {
 
 		return boList;
 	}
+	@RequestMapping(value = "bomPdfList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Bom> getBomPdfByProductId(@PathVariable("PRODUCT-ID") long productId,HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+		List<Bom> boList = null;
+		try {
+			// TODO afterwards you need to change it from properties
+			boList = bomService.getBomListByProductId(productId);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    downloadPDF(request, response, boList);
+		return boList;
+	}
 	
 	private Bom setMultipleBom(BomModelPart bomModelPart) throws Exception {
 		Bom bom = new Bom();
@@ -189,5 +216,61 @@ public class BomController {
 		bom.setCost(bomModelPart.getQuantity()*bomModelPart.getPricePerUnit());
 		return bom;
 	}
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,List<Bom> boList) throws IOException {
+
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+
+	    String fileName = "ProductOrder.pdf";
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+
+	    try {
+
+	    	CreatePdfForBomProduct createPdfForBomProduct = new CreatePdfForBomProduct();
+	    	createPdfForBomProduct.createPDF(temperotyFilePath+"\\"+fileName,boList);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	        OutputStream os = response.getOutputStream();
+	        baos.writeTo(os);
+	        os.flush();
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+	}
+
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName) throws Exception {
+
+		InputStream inputStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+
+			inputStream = new FileInputStream(fileName);
+			byte[] buffer = new byte[1024];
+			baos = new ByteArrayOutputStream();
+
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return baos;
+	}
+
 }
 

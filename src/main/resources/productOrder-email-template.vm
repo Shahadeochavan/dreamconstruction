@@ -21,7 +21,7 @@
         <td align="right">
           <table>
             <tr>
-              <td align="right">
+              <td style="width:400px;align="right";>
                    <p style="font-weight: bold;">To :</p>
                     <div>${companyName},</div>
                     <div>Address :${address},</div>
@@ -43,7 +43,7 @@
     <p>Greetings from Nextech Services!</p>
     <table>
       <tr>
-        <td colspan="2" align="center">
+        <td colspan="2" align="left">
           <table width="80%" bgcolor="#9EC5FF" border="1"
                 bordercolor="#888" cellspacing="0" cellpadding="4">
             <tr>
@@ -76,13 +76,13 @@
                #set ( $row = $row + 1 )
             #end
             <tr bgcolor="#E3EEFF">
-              <td colspan="4" align="left"><strong>Product Sub Total</strong></td>
+              <td colspan="4" align="left"><strong> Total</strong></td>
               <td align="center"> </td> 
               $productSubtotal
             </tr>
     </tr>
     </table>
-    <div align="left">
+    <div style align="left">
      <div>In case of any further assistance or clarification on this issue, please reply back to this email.</div>
     <div>Assuring you of our best services always,</div>
     <div>Yours sincerely</div>

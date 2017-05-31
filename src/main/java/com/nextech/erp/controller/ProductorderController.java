@@ -277,9 +277,18 @@ public class ProductorderController {
 						.addEntity(productorderassociation);
 			}
 		}
-		downloadPDF(request, response, productorder);
+		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
+		for (Productorderassociation productorderassociation : productorderassociations) {
+			Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
+			ProductOrderData productOrderData = new ProductOrderData();
+			productOrderData.setProductName(product.getName());
+			productOrderData.setQuantity(productorderassociation.getQuantity());
+			productOrderData.setRate(product.getRatePerUnit());
+			productOrderDatas.add(productOrderData);
+		}
+		downloadPDF(request, response, productorder,productOrderDatas);
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<ProductOrderData> productOrderDatas) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -292,7 +301,7 @@ public class ProductorderController {
 	    try {
 
 	   CreatePDFProductOrder ceCreatePDFProductOrder = new CreatePDFProductOrder();
-	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder);
+	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder,productOrderDatas);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productorder);
 	        OutputStream os = response.getOutputStream();

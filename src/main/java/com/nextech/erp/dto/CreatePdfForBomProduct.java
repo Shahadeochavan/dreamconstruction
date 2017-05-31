@@ -18,12 +18,13 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.nextech.erp.model.Bom;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Productorderassociation;
-import com.nextech.erp.service.ProductorderService;
-import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.service.BomService;
 
-public class CreatePDFProductOrder {
+public class CreatePdfForBomProduct {
+
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 
@@ -32,12 +33,9 @@ public class CreatePDFProductOrder {
 	 */
 	
 	@Autowired
-	ProductorderassociationService productorderassociationService;
-	
-	@Autowired
-	ProductorderService productorderService;
+	BomService bomService;
 
-	public Document createPDF(String file, Productorder productorder,List<ProductOrderData> productOrderDatas)
+	public Document createPDF(String file, List<Bom> boList)
 			throws Exception {
 
 		Document document = null;
@@ -51,7 +49,7 @@ public class CreatePDFProductOrder {
 
 			addTitlePage(document);
 
-			createTable(document, productorder,productOrderDatas);
+			createTable(document, boList);
 
 			document.close();
 
@@ -86,14 +84,19 @@ public class CreatePDFProductOrder {
 		preface.add(new Paragraph("S.No,47/6B,Opp,Yena Bunglow ,"));
 		preface.add(new Paragraph("Beside Manglam Chembers,Paud Road ,"));
 		preface.add(new Paragraph("Kothrud,Pune:411038 "));
-		
+	
+
+		preface.setAlignment(Element.ALIGN_JUSTIFIED);
+		preface.setIndentationRight(20);
+		preface.add(new Paragraph("Kothrud,Pune:411038 "));
+		preface.setSpacingAfter(10);
+		preface.add(new Paragraph("Kothrud,Pune:411038fgfg "));
 
 		creteEmptyLine(preface, 1);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		preface.add(new Paragraph("Product Order Invoice Date :"
 				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
 		document.add(preface);
-
 
 	}
 
@@ -103,16 +106,15 @@ public class CreatePDFProductOrder {
 		}
 	}
 
-	private void createTable(Document document, Productorder productorder,List<ProductOrderData> productOrderDatas)
+	private void createTable(Document document, List<Bom> boList)
 			throws Exception {
-
-
+		
 		Paragraph paragraph = new Paragraph();
 		creteEmptyLine(paragraph, 2);
 		document.add(paragraph);
-		PdfPTable table = new PdfPTable(4);
+		PdfPTable table = new PdfPTable(2);
 
-		PdfPCell c1 = new PdfPCell(new Phrase("Product Name"));
+		PdfPCell c1 = new PdfPCell(new Phrase("BOM ID"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		c1.setBackgroundColor(BaseColor.WHITE);
 		table.addCell(c1);
@@ -123,30 +125,14 @@ public class CreatePDFProductOrder {
 		table.addCell(c1);
 		table.setHeaderRows(1);
 
-		c1 = new PdfPCell(new Phrase("Rate"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-		
-		c1 = new PdfPCell(new Phrase("Amount"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-		
-		for (ProductOrderData productOrderData : productOrderDatas) {
-			table.setWidthPercentage(100);
-			table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-			table.addCell(productOrderData.getProductName());
-			table.addCell(Long.toString(productOrderData.getQuantity()));
-			table.addCell(Long.toString(productOrderData.getRate()));
-			long amount = productOrderData.getQuantity()*productOrderData.getRate();
-			table.addCell(Long.toString(amount));
-		}
-	
-		document.add(table);
+     for (Bom bom : boList) {
+ 	  table.setWidthPercentage(100);
+	 table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
+	 table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
+	 table.addCell(bom.getBomId());
+	 table.addCell(Long.toString(bom.getQuantity()));
+    }
+     document.add(table);	
 	}
 
 }

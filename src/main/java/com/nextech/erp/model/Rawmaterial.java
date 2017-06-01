@@ -56,7 +56,7 @@ public class Rawmaterial implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
-	private List<Bom> boms;
+	private List<BOMRMVendorAssociation> bomrmVendorAssociations;
 
 	//bi-directional many-to-one association to Productrawmaterialassociation
 	@JsonIgnore
@@ -342,25 +342,25 @@ public class Rawmaterial implements Serializable {
 
 		return storeoutrm;
 	}
-	public List<Bom> getBoms() {
-		return this.boms;
+	public List<BOMRMVendorAssociation> getBOMRMVendorAssociations() {
+		return this.bomrmVendorAssociations;
 	}
 
-	public void setBoms(List<Bom> boms) {
-		this.boms = boms;
+	public void setBOMRMVendorAssociations(List<BOMRMVendorAssociation> BOMRMVendorAssociations) {
+		this.bomrmVendorAssociations = BOMRMVendorAssociations;
 	}
 
-	public Bom addBom(Bom bom) {
-		getBoms().add(bom);
-		bom.setRawmaterial(this);
+	public BOMRMVendorAssociation addBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
+		getBOMRMVendorAssociations().add(BOMRMVendorAssociation);
+		BOMRMVendorAssociation.setRawmaterial(this);
 
-		return bom;
+		return BOMRMVendorAssociation;
 	}
 
-	public Bom removeBom(Bom bom) {
-		getBoms().remove(bom);
-		bom.setRawmaterial(null);
+	public BOMRMVendorAssociation removeBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
+		getBOMRMVendorAssociations().remove(BOMRMVendorAssociation);
+		BOMRMVendorAssociation.setRawmaterial(null);
 
-		return bom;
+		return BOMRMVendorAssociation;
 	}
 }

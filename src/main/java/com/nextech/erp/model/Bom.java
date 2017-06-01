@@ -4,7 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
+import java.util.List;
 
 
 /**
@@ -31,12 +34,6 @@ public class Bom implements Serializable {
 
 	private boolean isactive;
 
-	private long pricePerUnit;
-	
-	private long cost;
-
-	private long quantity;
-
 	@Column(name="updated_by")
 	private String updatedBy;
 
@@ -47,16 +44,11 @@ public class Bom implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bom", cascade = CascadeType.ALL)
+	private List<BOMRMVendorAssociation> bomrmVendorAssociations;
 
-	//bi-directional many-to-one association to Rawmaterial
-	@ManyToOne
-	@JoinColumn(name="rawmaterialid")
-	private Rawmaterial rawmaterial;
-
-	//bi-directional many-to-one association to Vendor
-	@ManyToOne
-	@JoinColumn(name="vendorid")
-	private Vendor vendor;
 
 	public Bom() {
 	}
@@ -104,22 +96,6 @@ public class Bom implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public long getPricePerUnit() {
-		return this.pricePerUnit;
-	}
-
-	public void setPricePerUnit(long pricePerUnit) {
-		this.pricePerUnit = pricePerUnit;
-	}
-
-	public long getQuantity() {
-		return this.quantity;
-	}
-
-	public void setQuantity(long quantity) {
-		this.quantity = quantity;
-	}
-
 	public String getUpdatedBy() {
 		return this.updatedBy;
 	}
@@ -144,26 +120,25 @@ public class Bom implements Serializable {
 		this.product = product;
 	}
 
-	public Rawmaterial getRawmaterial() {
-		return this.rawmaterial;
+	public List<BOMRMVendorAssociation> getBOMRMVendorAssociations() {
+		return this.bomrmVendorAssociations;
 	}
 
-	public void setRawmaterial(Rawmaterial rawmaterial) {
-		this.rawmaterial = rawmaterial;
+	public void setBOMRMVendorAssociations(List<BOMRMVendorAssociation> BOMRMVendorAssociations) {
+		this.bomrmVendorAssociations = BOMRMVendorAssociations;
 	}
 
-	public Vendor getVendor() {
-		return this.vendor;
+	public BOMRMVendorAssociation addBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
+		getBOMRMVendorAssociations().add(BOMRMVendorAssociation);
+		BOMRMVendorAssociation.setBom(this);
+
+		return BOMRMVendorAssociation;
 	}
 
-	public void setVendor(Vendor vendor) {
-		this.vendor = vendor;
-	}
-	public long getCost() {
-		return cost;
-	}
-	public void setCost(long cost) {
-		this.cost = cost;
-	}
+	public BOMRMVendorAssociation removeBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
+		getBOMRMVendorAssociations().remove(BOMRMVendorAssociation);
+		BOMRMVendorAssociation.setBom(null);
 
+		return BOMRMVendorAssociation;
+	}
 }

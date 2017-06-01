@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -29,18 +31,25 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.BomModelPart;
+import com.nextech.erp.dto.BomRMVendorModel;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.CreatePdfForBomProduct;
+import com.nextech.erp.dto.ProductOrderAssociationModel;
+import com.nextech.erp.model.BOMRMVendorAssociation;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.service.BOMRMVendorAssociationService;
 import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ProductService;
+import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
@@ -59,7 +68,13 @@ public class BomController {
 	RawmaterialService rawmaterialService;
 	
 	@Autowired
+	BOMRMVendorAssociationService bOMRMVendorAssociationService;
+	
+	@Autowired
 	VendorService vendorService;
+	
+	@Autowired
+	RMVAssoService rMVAssoService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response,
@@ -95,7 +110,13 @@ public class BomController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			createMultipleBom(bomDTO, request.getAttribute("current_user").toString());
+			
+			// TODO save call bom
+						Bom bom = saveBom(bomDTO, request, response);
+
+						// TODO add product order association
+						addBomRMVendorAsso(bomDTO, bom, request, response);
+			
 
 			return new UserStatus(1, "Bom added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -110,17 +131,6 @@ public class BomController {
 			System.out.println("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
-		}
-	}
-
-	private void createMultipleBom(BomDTO bomDTO,String currentUser) throws Exception{
-		for(BomModelPart bomModelParts : bomDTO.getBomModelParts()){
-			Bom bom =  setMultipleBom(bomModelParts);
-			bom.setProduct(productService.getEntityById(Product.class,bomDTO.getProduct()));
-			bom.setBomId(bomDTO.getBomId());
-			bom.setCreatedBy((currentUser));
-			bom.setIsactive(true);
-			bomService.addEntity(bom);
 		}
 	}
 
@@ -158,7 +168,7 @@ public class BomController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		  downloadPDF(request, response, bomList);
+		//  downloadPDF(request, response, bomList);
 		return bomList;
 	}
 
@@ -190,33 +200,73 @@ public class BomController {
 
 		return boList;
 	}
-	@RequestMapping(value = "bomPdfList/{PRODUCT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Bom> getBomPdfByProductId(@PathVariable("PRODUCT-ID") long productId,HttpServletRequest request, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "downloadBomPdf/{PRODUCT-ID}/{BOM-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody void getBomPdfByProductIdAndBomId(@PathVariable("PRODUCT-ID") long productId,@PathVariable("BOM-ID") long bomId,HttpServletRequest request, HttpServletResponse response) throws IOException {
 
 		List<Bom> boList = null;
+		List<BomRMVendorModel> bomRMVendorModels = new ArrayList<BomRMVendorModel>();
 		try {
 			// TODO afterwards you need to change it from properties
-			boList = bomService.getBomListByProductId(productId);
-
+			boList = bomService.getBomListByProductIdAndBomId(productId, bomId);
+			for (Bom bom : boList) {
+				List<BOMRMVendorAssociation> bOMRMVendorAssociations = bOMRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
+				for (BOMRMVendorAssociation bomrmVendorAssociation : bOMRMVendorAssociations) {
+					BomRMVendorModel bomRMVendorModel  = new BomRMVendorModel();
+					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomrmVendorAssociation.getRawmaterial().getId());
+					Vendor vendor = vendorService.getEntityById(Vendor.class, bomrmVendorAssociation.getVendor().getId());
+					Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getEntityById(Rawmaterialvendorassociation.class, rawmaterial.getId());
+					bomRMVendorModel.setRmName(rawmaterial.getName());
+					bomRMVendorModel.setVendorName(vendor.getCompanyName());
+					bomRMVendorModel.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
+					bomRMVendorModel.setQuantity(bomrmVendorAssociation.getQuantity());
+					bomRMVendorModel.setAmount(bomrmVendorAssociation.getQuantity()*rawmaterialvendorassociation.getPricePerUnit());
+					bomRMVendorModels.add(bomRMVendorModel);
+					
+				}
+				
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    downloadPDF(request, response, boList);
-		return boList;
+    downloadPDF(request, response, bomRMVendorModels);
+//		return boList;
 	}
 	
-	private Bom setMultipleBom(BomModelPart bomModelPart) throws Exception {
+	
+	private Bom saveBom(BomDTO bomDTO,HttpServletRequest request,HttpServletResponse response)
+			throws Exception {
 		Bom bom = new Bom();
-		Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomModelPart.getRawmaterial().getId());
-		Vendor vendor = vendorService.getEntityById(Vendor.class, bomModelPart.getVendor().getId());
-		bom.setQuantity(bomModelPart.getQuantity());
-		bom.setVendor(vendor);
-		bom.setRawmaterial(rawmaterial);
-		bom.setPricePerUnit(bomModelPart.getPricePerUnit());
-		bom.setCost(bomModelPart.getQuantity()*bomModelPart.getPricePerUnit());
+		bom.setBomId(bomDTO.getBomId());
+		bom.setProduct(productService.getEntityById(Product.class,bomDTO.getProduct()));
+		bom.setIsactive(true);
+		bom.setCreatedBy(request.getAttribute("current_user").toString());
+		bomService.addEntity(bom);
 		return bom;
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,List<Bom> boList) throws IOException {
+	
+	private void addBomRMVendorAsso(BomDTO bomDTO,Bom bom,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		List<BomModelPart> bomModelParts = bomDTO.getBomModelParts();
+		if (bomModelParts != null	&& !bomModelParts.isEmpty()) {
+			for (BomModelPart bomModelPart : bomModelParts) {
+				
+				BOMRMVendorAssociation bomrmVendorAssociation = new BOMRMVendorAssociation();
+				bomrmVendorAssociation.setBom(bom);
+				Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomModelPart.getRawmaterial().getId());
+				Vendor vendor = vendorService.getEntityById(Vendor.class, bomModelPart.getVendor().getId());
+				bomrmVendorAssociation.setQuantity(bomModelPart.getQuantity());
+				bomrmVendorAssociation.setRawmaterial(rawmaterial);
+				bomrmVendorAssociation.setVendor(vendor);
+				bomrmVendorAssociation.setPricePerUnit(bomModelPart.getPricePerUnit());
+				bomrmVendorAssociation.setCost(bomModelPart.getQuantity()*bomModelPart.getPricePerUnit());
+				bomrmVendorAssociation.setCreatedBy(request.getAttribute("current_user").toString());
+				bomrmVendorAssociation.setIsactive(true);
+				bOMRMVendorAssociationService.addEntity(bomrmVendorAssociation);
+			}
+		}
+	}
+
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,List<BomRMVendorModel> bomRMVendorModels) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -229,13 +279,13 @@ public class BomController {
 	    try {
 
 	    	CreatePdfForBomProduct createPdfForBomProduct = new CreatePdfForBomProduct();
-	    	createPdfForBomProduct.createPDF(temperotyFilePath+"\\"+fileName,boList);
+	    	createPdfForBomProduct.createPDF(temperotyFilePath+"\\"+fileName,bomRMVendorModels);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 	        OutputStream os = response.getOutputStream();
 	        baos.writeTo(os);
 	        os.flush();
-
+	        
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }

@@ -44,6 +44,7 @@
 				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
 				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
 				<value>com.nextech.erp.model.Client</value>
+				<value>com.nextech.erp.model.BOMRMVendorAssociation</value>
 				<value>com.nextech.erp.model.Bom</value>
 				<value>com.nextech.erp.model.Dailyproduction</value>
 				<value>com.nextech.erp.model.Securitycheckout</value>
@@ -234,6 +235,9 @@
 	
 		<bean id="bomDao" class="com.nextech.erp.daoImpl.BomDaoImpl" />
 	<bean id="bomService" class="com.nextech.erp.serviceImpl.BomServiceImpl" />
+	
+		<bean id="bOMRMVendorAssociationDao" class="com.nextech.erp.daoImpl.BOMRMVendorAssociationDaoImpl" />
+	<bean id="bOMRMVendorAssociationService" class="com.nextech.erp.serviceImpl.BOMRMVendorAssociationServiceImpl" />
 
 	<bean id="mailService" class="com.nextech.erp.serviceImpl.MailServiceImpl" />
 

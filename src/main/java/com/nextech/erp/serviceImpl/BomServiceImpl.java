@@ -17,5 +17,11 @@ public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService{
 		// TODO Auto-generated method stub
 		return bomDao.getBomListByProductId(productID);
 	}
+	@Override
+	public List<Bom> getBomListByProductIdAndBomId(long productId, long bomId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return bomDao.getBomListByProductIdAndBomId(productId, bomId);
+	}
 
 }

@@ -18,9 +18,6 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
-import com.nextech.erp.model.Bom;
-import com.nextech.erp.model.Product;
-import com.nextech.erp.model.Productorder;
 import com.nextech.erp.service.BomService;
 
 public class CreatePdfForBomProduct {
@@ -35,7 +32,7 @@ public class CreatePdfForBomProduct {
 	@Autowired
 	BomService bomService;
 
-	public Document createPDF(String file, List<Bom> boList)
+	public Document createPDF(String file, List<BomRMVendorModel> bomRMVendorModels)
 			throws Exception {
 
 		Document document = null;
@@ -49,7 +46,7 @@ public class CreatePdfForBomProduct {
 
 			addTitlePage(document);
 
-			createTable(document, boList);
+			createTable(document, bomRMVendorModels);
 
 			document.close();
 
@@ -106,31 +103,59 @@ public class CreatePdfForBomProduct {
 		}
 	}
 
-	private void createTable(Document document, List<Bom> boList)
+	private void createTable(Document document, List<BomRMVendorModel> bomRMVendorModels)
 			throws Exception {
 		
 		Paragraph paragraph = new Paragraph();
 		creteEmptyLine(paragraph, 2);
 		document.add(paragraph);
-		PdfPTable table = new PdfPTable(2);
+		PdfPTable table = new PdfPTable(6);
 
-		PdfPCell c1 = new PdfPCell(new Phrase("BOM ID"));
+		PdfPCell c1 = new PdfPCell(new Phrase("RM NAME"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		c1.setBackgroundColor(BaseColor.WHITE);
 		table.addCell(c1);
 
-		c1 = new PdfPCell(new Phrase("Quantity"));
+		c1 = new PdfPCell(new Phrase("VENDOR NAME"));
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		c1.setBackgroundColor(BaseColor.WHITE);
+		table.addCell(c1);
+		table.setHeaderRows(1);
+		
+		c1 = new PdfPCell(new Phrase("PRODUCT NAME"));
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		c1.setBackgroundColor(BaseColor.WHITE);
+		table.addCell(c1);
+		table.setHeaderRows(1);
+		
+		c1 = new PdfPCell(new Phrase("PRICE PER UNIT"));
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		c1.setBackgroundColor(BaseColor.WHITE);
+		table.addCell(c1);
+		table.setHeaderRows(1);
+		
+		c1 = new PdfPCell(new Phrase("QUANTITY"));
+		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
+		c1.setBackgroundColor(BaseColor.WHITE);
+		table.addCell(c1);
+		table.setHeaderRows(1);
+		
+		c1 = new PdfPCell(new Phrase("AMOUNT"));
 		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
 		c1.setBackgroundColor(BaseColor.WHITE);
 		table.addCell(c1);
 		table.setHeaderRows(1);
 
-     for (Bom bom : boList) {
+     for (BomRMVendorModel bomRMVendorModel : bomRMVendorModels) {
  	  table.setWidthPercentage(100);
 	 table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
 	 table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-	 table.addCell(bom.getBomId());
-	 table.addCell(Long.toString(bom.getQuantity()));
+	 table.addCell(bomRMVendorModel.getRmName());
+	 table.addCell(bomRMVendorModel.getVendorName());
+	 table.addCell(bomRMVendorModel.getProductName());
+	 table.addCell(Float.toString(bomRMVendorModel.getPricePerUnit()));
+	 table.addCell(Long.toString(bomRMVendorModel.getQuantity()));
+	 table.addCell(Float.toString(bomRMVendorModel.getAmount()));
     }
      document.add(table);	
 	}

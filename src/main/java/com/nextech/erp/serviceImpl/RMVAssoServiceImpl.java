@@ -21,9 +21,9 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 	}
 
 	@Override
-	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) throws Exception {
 		// TODO Auto-generated method stub
-		return null;
+		return rMVAssoDao.getRawmaterialvendorassociationListByRMId(id);
 	}
 	
 }

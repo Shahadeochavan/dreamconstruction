@@ -7,5 +7,7 @@ import com.nextech.erp.model.Bom;
 public interface BomDao extends SuperDao<Bom>{
 	
 	public List<Bom> getBomListByProductId(long productID) throws Exception;
+	
+	public List<Bom> getBomListByProductIdAndBomId(long productId,long bomId) throws Exception;
 
 }

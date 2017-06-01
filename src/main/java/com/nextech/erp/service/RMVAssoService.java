@@ -8,6 +8,6 @@ public interface RMVAssoService extends CRUDService<Rawmaterialvendorassociation
 	
 	public Rawmaterialvendorassociation getRMVAssoByVendorIdRMId(long vendorId,long rmId) throws Exception;
 
-	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id);
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) throws Exception;
 	
 }

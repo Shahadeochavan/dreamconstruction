@@ -6,24 +6,24 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
 import com.nextech.erp.dao.BOMRMVendorAssociationDao;
-import com.nextech.erp.model.BOMRMVendorAssociation;
+import com.nextech.erp.model.Bomrmvendorassociation;
 
 public class BOMRMVendorAssociationDaoImpl extends
-		SuperDaoImpl<BOMRMVendorAssociation> implements
+		SuperDaoImpl<Bomrmvendorassociation> implements
 		BOMRMVendorAssociationDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<BOMRMVendorAssociation> getBomRMVendorByBomId(long bomId)
+	public List<Bomrmvendorassociation> getBomRMVendorByBomId(long bomId)
 			throws Exception {
 		// TODO Auto-generated method stub
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session
-				.createCriteria(BOMRMVendorAssociation.class);
+				.createCriteria(Bomrmvendorassociation.class);
 		criteria.add(Restrictions.eq("bom.id", bomId));
 		criteria.add(Restrictions.eq("isactive", true));
-		return (List<BOMRMVendorAssociation>) (criteria.list().size() > 0 ? criteria
+		return (List<Bomrmvendorassociation>) (criteria.list().size() > 0 ? criteria
 				.list() : null);
 	}
 }

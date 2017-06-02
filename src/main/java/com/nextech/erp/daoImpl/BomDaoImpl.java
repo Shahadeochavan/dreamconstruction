@@ -17,7 +17,7 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 		session = sessionFactory.openSession();
 		@SuppressWarnings("deprecation")
 		Criteria criteria = session.createCriteria(Bom.class);
-		criteria.add(Restrictions.eq("bom.id", productID));
+		criteria.add(Restrictions.eq("product.id", productID));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Bom>) (criteria.list().size() > 0 ? criteria.list() : null);
 	}

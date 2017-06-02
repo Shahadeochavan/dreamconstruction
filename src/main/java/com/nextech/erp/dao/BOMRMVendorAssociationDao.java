@@ -2,10 +2,10 @@ package com.nextech.erp.dao;
 
 import java.util.List;
 
-import com.nextech.erp.model.BOMRMVendorAssociation;
+import com.nextech.erp.model.Bomrmvendorassociation;
 
-public interface BOMRMVendorAssociationDao extends SuperDao<BOMRMVendorAssociation> {
+public interface BOMRMVendorAssociationDao extends SuperDao<Bomrmvendorassociation> {
 	
-	public List<BOMRMVendorAssociation> getBomRMVendorByBomId(long bomId) throws Exception;
+	public List<Bomrmvendorassociation> getBomRMVendorByBomId(long bomId) throws Exception;
 
 }

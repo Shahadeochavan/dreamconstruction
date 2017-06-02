@@ -5,15 +5,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.BOMRMVendorAssociationDao;
-import com.nextech.erp.model.BOMRMVendorAssociation;
+import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.service.BOMRMVendorAssociationService;
 
-public class BOMRMVendorAssociationServiceImpl extends CRUDServiceImpl<BOMRMVendorAssociation> implements BOMRMVendorAssociationService {
+public class BOMRMVendorAssociationServiceImpl extends CRUDServiceImpl<Bomrmvendorassociation> implements BOMRMVendorAssociationService {
 
 	@Autowired
 	BOMRMVendorAssociationDao bOMRMVendorAssociationDao;
 	@Override
-	public List<BOMRMVendorAssociation> getBomRMVendorByBomId(long bomId)
+	public List<Bomrmvendorassociation> getBomRMVendorByBomId(long bomId)
 			throws Exception {
 		// TODO Auto-generated method stub
 		return bOMRMVendorAssociationDao.getBomRMVendorByBomId(bomId);

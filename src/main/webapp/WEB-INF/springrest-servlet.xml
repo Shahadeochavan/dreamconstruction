@@ -44,7 +44,7 @@
 				<value>com.nextech.erp.model.Rawmaterialorderhistory</value>
 				<value>com.nextech.erp.model.Rawmaterialinventoryhistory</value>
 				<value>com.nextech.erp.model.Client</value>
-				<value>com.nextech.erp.model.BOMRMVendorAssociation</value>
+				<value>com.nextech.erp.model.Bomrmvendorassociation</value>
 				<value>com.nextech.erp.model.Bom</value>
 				<value>com.nextech.erp.model.Dailyproduction</value>
 				<value>com.nextech.erp.model.Securitycheckout</value>

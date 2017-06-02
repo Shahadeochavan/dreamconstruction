@@ -56,7 +56,7 @@ public class Rawmaterial implements Serializable {
 	
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "rawmaterial", cascade = CascadeType.ALL)
-	private List<BOMRMVendorAssociation> bomrmVendorAssociations;
+	private List<Bomrmvendorassociation> bomrmvendorassociations;
 
 	//bi-directional many-to-one association to Productrawmaterialassociation
 	@JsonIgnore
@@ -342,25 +342,25 @@ public class Rawmaterial implements Serializable {
 
 		return storeoutrm;
 	}
-	public List<BOMRMVendorAssociation> getBOMRMVendorAssociations() {
-		return this.bomrmVendorAssociations;
+	public List<Bomrmvendorassociation> getBomrmvendorassociations() {
+		return this.bomrmvendorassociations;
 	}
 
-	public void setBOMRMVendorAssociations(List<BOMRMVendorAssociation> BOMRMVendorAssociations) {
-		this.bomrmVendorAssociations = BOMRMVendorAssociations;
+	public void setBomrmvendorassociations(List<Bomrmvendorassociation> bomrmvendorassociations) {
+		this.bomrmvendorassociations = bomrmvendorassociations;
 	}
 
-	public BOMRMVendorAssociation addBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
-		getBOMRMVendorAssociations().add(BOMRMVendorAssociation);
-		BOMRMVendorAssociation.setRawmaterial(this);
+	public Bomrmvendorassociation addBomrmvendorassociation(Bomrmvendorassociation bomrmvendorassociation) {
+		getBomrmvendorassociations().add(bomrmvendorassociation);
+		bomrmvendorassociation.setRawmaterial(this);
 
-		return BOMRMVendorAssociation;
+		return bomrmvendorassociation;
 	}
 
-	public BOMRMVendorAssociation removeBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
-		getBOMRMVendorAssociations().remove(BOMRMVendorAssociation);
-		BOMRMVendorAssociation.setRawmaterial(null);
+	public Bomrmvendorassociation removeBomrmvendorassociation(Bomrmvendorassociation bomrmvendorassociation) {
+		getBomrmvendorassociations().remove(bomrmvendorassociation);
+		bomrmvendorassociation.setRawmaterial(null);
 
-		return BOMRMVendorAssociation;
+		return bomrmvendorassociation;
 	}
 }

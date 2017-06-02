@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -35,7 +34,7 @@ import com.nextech.erp.dto.BomRMVendorModel;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.CreatePdfForBomProduct;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
-import com.nextech.erp.model.BOMRMVendorAssociation;
+import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
@@ -75,6 +74,7 @@ public class BomController {
 	
 	@Autowired
 	RMVAssoService rMVAssoService;
+	
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response,
@@ -209,14 +209,16 @@ public class BomController {
 			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductIdAndBomId(productId, bomId);
 			for (Bom bom : boList) {
-				List<BOMRMVendorAssociation> bOMRMVendorAssociations = bOMRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
-				for (BOMRMVendorAssociation bomrmVendorAssociation : bOMRMVendorAssociations) {
+				List<Bomrmvendorassociation> bOMRMVendorAssociations = bOMRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
+				for (Bomrmvendorassociation bomrmVendorAssociation : bOMRMVendorAssociations) {
 					BomRMVendorModel bomRMVendorModel  = new BomRMVendorModel();
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomrmVendorAssociation.getRawmaterial().getId());
 					Vendor vendor = vendorService.getEntityById(Vendor.class, bomrmVendorAssociation.getVendor().getId());
+					Product product = productService.getEntityById(Product.class, bom.getProduct().getId());
 					Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getEntityById(Rawmaterialvendorassociation.class, rawmaterial.getId());
 					bomRMVendorModel.setRmName(rawmaterial.getName());
 					bomRMVendorModel.setVendorName(vendor.getCompanyName());
+					bomRMVendorModel.setProductName(product.getName());
 					bomRMVendorModel.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 					bomRMVendorModel.setQuantity(bomrmVendorAssociation.getQuantity());
 					bomRMVendorModel.setAmount(bomrmVendorAssociation.getQuantity()*rawmaterialvendorassociation.getPricePerUnit());
@@ -250,7 +252,7 @@ public class BomController {
 		if (bomModelParts != null	&& !bomModelParts.isEmpty()) {
 			for (BomModelPart bomModelPart : bomModelParts) {
 				
-				BOMRMVendorAssociation bomrmVendorAssociation = new BOMRMVendorAssociation();
+				Bomrmvendorassociation bomrmVendorAssociation = new Bomrmvendorassociation();
 				bomrmVendorAssociation.setBom(bom);
 				Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomModelPart.getRawmaterial().getId());
 				Vendor vendor = vendorService.getEntityById(Vendor.class, bomModelPart.getVendor().getId());
@@ -272,7 +274,7 @@ public class BomController {
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
 
-	    String fileName = "ProductOrder.pdf";
+	    String fileName = "bom.pdf";
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 

@@ -44,14 +44,15 @@ public class Bom implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="productid")
 	private Product product;
-	
+
+	//bi-directional many-to-one association to Bomrmvendorassociation
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "bom", cascade = CascadeType.ALL)
-	private List<BOMRMVendorAssociation> bomrmVendorAssociations;
-
+	private List<Bomrmvendorassociation> bomrmvendorassociations;
 
 	public Bom() {
 	}
+	
 	public Bom(int id) {
 		this.id=id;
 	}
@@ -120,25 +121,26 @@ public class Bom implements Serializable {
 		this.product = product;
 	}
 
-	public List<BOMRMVendorAssociation> getBOMRMVendorAssociations() {
-		return this.bomrmVendorAssociations;
+	public List<Bomrmvendorassociation> getBomrmvendorassociations() {
+		return this.bomrmvendorassociations;
 	}
 
-	public void setBOMRMVendorAssociations(List<BOMRMVendorAssociation> BOMRMVendorAssociations) {
-		this.bomrmVendorAssociations = BOMRMVendorAssociations;
+	public void setBomrmvendorassociations(List<Bomrmvendorassociation> bomrmvendorassociations) {
+		this.bomrmvendorassociations = bomrmvendorassociations;
 	}
 
-	public BOMRMVendorAssociation addBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
-		getBOMRMVendorAssociations().add(BOMRMVendorAssociation);
-		BOMRMVendorAssociation.setBom(this);
+	public Bomrmvendorassociation addBomrmvendorassociation(Bomrmvendorassociation bomrmvendorassociation) {
+		getBomrmvendorassociations().add(bomrmvendorassociation);
+		bomrmvendorassociation.setBom(this);
 
-		return BOMRMVendorAssociation;
+		return bomrmvendorassociation;
 	}
 
-	public BOMRMVendorAssociation removeBOMRMVendorAssociation(BOMRMVendorAssociation BOMRMVendorAssociation) {
-		getBOMRMVendorAssociations().remove(BOMRMVendorAssociation);
-		BOMRMVendorAssociation.setBom(null);
+	public Bomrmvendorassociation removeBomrmvendorassociation(Bomrmvendorassociation bomrmvendorassociation) {
+		getBomrmvendorassociations().remove(bomrmvendorassociation);
+		bomrmvendorassociation.setBom(null);
 
-		return BOMRMVendorAssociation;
+		return bomrmvendorassociation;
 	}
+
 }

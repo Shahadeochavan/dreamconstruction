@@ -72,6 +72,24 @@ public class RawmaterialorderController {
 	@Autowired
 	MailService mailService;
 
+	private String generateInvoiceId(){
+		String year="";
+		Date currentDate = new Date();
+		if(currentDate.getMonth()+1 > 3){
+			int str = currentDate.getYear()+1900;
+			int stri = str + 1;
+			String strDate = stri+"";
+			year = str+"/"+strDate.substring(2);
+		}else{
+			int str = currentDate.getYear()+1899;
+			int stri = str + 1;
+			String strDate = stri+"";
+			year = str+"/"+strDate.substring(2);
+		}
+		year = "EK/PUN/"+year+"/";
+		return year;
+	}
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
 			@Valid @RequestBody Rawmaterialorder rawmaterialorder,
@@ -83,7 +101,11 @@ public class RawmaterialorderController {
 			}
 			rawmaterialorder.setIsactive(true);
 			rawmaterialorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			rawmaterialorderService.addEntity(rawmaterialorder);
+			
+			Long id = rawmaterialorderService.addEntity(rawmaterialorder);
+			String invoiceId = generateInvoiceId()+id;
+			rawmaterialorder.setName(invoiceId);
+			rawmaterialorderService.updateEntity(rawmaterialorder);
 			return new UserStatus(1, "Rawmaterialorder added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -109,7 +131,10 @@ public class RawmaterialorderController {
 			}
 			//TODO save call raw material order
 			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
-
+			Long id = rawmaterialorderService.addEntity(rawmaterialorder);
+			String invoiceId = generateInvoiceId()+id;
+			rawmaterialorder.setName(invoiceId);
+			rawmaterialorderService.updateEntity(rawmaterialorder);
 			//TODO add raw material association
 			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
 

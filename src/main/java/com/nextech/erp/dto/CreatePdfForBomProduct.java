@@ -125,7 +125,7 @@ public class CreatePdfForBomProduct {
 	
 		   insertCell(table, "", Element.ALIGN_LEFT, 6, bfBold12);
 		   //create section heading by cell merging
-		   insertCell(table, "BOM DETAILS ...", Element.ALIGN_LEFT, 6, bfBold12);
+		 //  insertCell(table, "BOM DETAILS ...", Element.ALIGN_LEFT, 6, bfBold12);
 
      for (BomRMVendorModel bomRMVendorModel : bomRMVendorModels) {
 	  insertCell(table,bomRMVendorModel.getRmName() , Element.ALIGN_CENTER, 1, bf12);

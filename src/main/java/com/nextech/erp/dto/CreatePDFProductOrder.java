@@ -2,10 +2,13 @@ package com.nextech.erp.dto;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -13,6 +16,7 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -23,6 +27,7 @@ import com.nextech.erp.service.ProductorderassociationService;
 public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
+	private static float total = 0;
 
 	/**
 	 * @param args
@@ -69,24 +74,28 @@ public class CreatePDFProductOrder {
 		document.addCreator("Java Honk");
 	}
 
-	private static void addTitlePage(Document document)
+	private  void addTitlePage(Document document)
 			throws DocumentException {
-
 		Paragraph preface = new Paragraph();
-		creteEmptyLine(preface, 1);
-		preface.add(new Paragraph("RETAIL INVOICE", TIME_ROMAN));
-
-		creteEmptyLine(preface, 1);
-		 document.setMargins(36, 72, 108, 180);
-		preface.add(new Paragraph("Nextech Services Pvt.LTd"));
-		preface.add(new Paragraph("Office:18,3rd Floor Vasantika Aparment"));
-		preface.add(new Paragraph("S.No,47/6B,Opp,Yena Bunglow ,"));
-		preface.add(new Paragraph("Beside Manglam Chembers,Paud Road ,"));
-		preface.add(new Paragraph("Kothrud,Pune:411038 "));
-		
-
-		creteEmptyLine(preface, 1);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
+		  //specify column widths
+		   float[] columnWidths = {5f};
+		   //create PDF table with the given widths
+		   PdfPTable table = new PdfPTable(columnWidths);
+		   // set table width a percentage of the page width
+		   PdfPCell cell =  new PdfPCell();
+		   cell.setFixedHeight(35f);
+		   table.addCell(cell);
+		   table.setWidthPercentage(100f);
+		   document.add(table);
+		   
+		   insertCell(table,"E.K.ELECTRONICS PVT.LTD" , Element.ALIGN_CENTER, 1, bf12);
+		   table.setHeaderRows(1);
+		   document.add(table);
+		   
+		  creteEmptyLine(preface, 1); 
+		 
+		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		preface.add(new Paragraph("Product Order Invoice Date :"
 				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
 		document.add(preface);
@@ -103,47 +112,56 @@ public class CreatePDFProductOrder {
 	private void createTable(Document document, Productorder productorder,List<ProductOrderData> productOrderDatas)
 			throws Exception {
 
+		  Paragraph paragraph = new Paragraph();
+		 creteEmptyLine(paragraph, 2);
+		 document.add(paragraph);
+		  DecimalFormat df = new DecimalFormat("0.00");
+		  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
+		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12); 
+		  //specify column widths
+		   float[] columnWidths = {1.5f, 1.5f, 1.5f, 1.5f};
+		   //create PDF table with the given widths
+		   PdfPTable table = new PdfPTable(columnWidths);
+		   // set table width a percentage of the page width
+		   table.setWidthPercentage(100f);
 
-		Paragraph paragraph = new Paragraph();
-		creteEmptyLine(paragraph, 2);
-		document.add(paragraph);
-		PdfPTable table = new PdfPTable(4);
-
-		PdfPCell c1 = new PdfPCell(new Phrase("Product Name"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-
-		c1 = new PdfPCell(new Phrase("Quantity"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-
-		c1 = new PdfPCell(new Phrase("Rate"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-		
-		c1 = new PdfPCell(new Phrase("Amount"));
-		c1.setHorizontalAlignment(Element.ALIGN_CENTER);
-		c1.setBackgroundColor(BaseColor.WHITE);
-		table.addCell(c1);
-		table.setHeaderRows(1);
-		
-		for (ProductOrderData productOrderData : productOrderDatas) {
-			table.setWidthPercentage(100);
-			table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-			table.getDefaultCell().setVerticalAlignment(Element.ALIGN_MIDDLE);
-			table.addCell(productOrderData.getProductName());
-			table.addCell(Long.toString(productOrderData.getQuantity()));
-			table.addCell(Long.toString(productOrderData.getRate()));
-			long amount = productOrderData.getQuantity()*productOrderData.getRate();
-			table.addCell(Long.toString(amount));
-		}
+		   //insert column headings
+		   insertCell(table, "Product Name", Element.ALIGN_RIGHT, 1, bfBold12);
+		   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bfBold12);
+		   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bfBold12);
+		   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
+		   table.setHeaderRows(1);
 	
-		document.add(table);
-	}
+		   //insertCell(table, "", Element.ALIGN_LEFT, 4, bfBold12);
+		   //create section heading by cell merging
+		  // insertCell(table, "PRODUCT ORDER DETAILS ...", Element.ALIGN_LEFT, 4, bfBold12);
 
-}
+     for (ProductOrderData productOrderData : productOrderDatas) {
+	  insertCell(table,productOrderData.getProductName() , Element.ALIGN_CENTER, 1, bf12);
+	    insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_CENTER, 1, bf12);
+	    insertCell(table, (Long.toString(productOrderData.getRate())), Element.ALIGN_CENTER, 1, bf12);
+	    insertCell(table, (Long.toString(productOrderData.getAmount())), Element.ALIGN_CENTER, 1, bf12);
+	    total = total+productOrderData.getAmount();
+    }
+     insertCell(table, "Total", Element.ALIGN_CENTER, 3, bfBold12);
+     insertCell(table, df.format(total), Element.ALIGN_CENTER, 1, bfBold12);
+     document.add(table);
+  }
+
+	 private void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
+	  
+	  //create a new cell with the specified Text and Font
+	  PdfPCell cell = new PdfPCell(new Phrase(text.trim(), font));
+	  //set the cell alignment
+	  cell.setHorizontalAlignment(align);
+	  //set the cell column span in case you want to merge two or more cells
+	  cell.setColspan(colspan);
+	  //in case there is no text and you wan to create an empty row
+	  if(text.trim().equalsIgnoreCase("")){
+	   cell.setMinimumHeight(15f);
+	  }
+	  //add the call to the table
+	  table.addCell(cell);
+	  
+	 }
+}	

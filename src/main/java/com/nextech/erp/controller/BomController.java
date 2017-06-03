@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.BOMModelData;
 import com.nextech.erp.dto.BomDTO;
 import com.nextech.erp.dto.BomModelPart;
 import com.nextech.erp.dto.BomRMVendorModel;
@@ -51,6 +52,7 @@ import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.VendorService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -159,7 +161,7 @@ public class BomController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Bom> getUnit(HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public @ResponseBody List<Bom> getBom(HttpServletRequest request,HttpServletResponse response) throws IOException {
 
 		List<Bom> bomList = null;
 		try {
@@ -170,6 +172,28 @@ public class BomController {
 		}
 		//  downloadPDF(request, response, bomList);
 		return bomList;
+	}
+	
+	@RequestMapping(value = "/BomCompletedList", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getBomCompleted(HttpServletRequest request,HttpServletResponse response) throws IOException {
+
+		List<Bom> bomList = null;
+		List<BOMModelData> bomModelDatas = new ArrayList<BOMModelData>(); 
+		try {
+			bomList = bomService.getEntityList(Bom.class);
+			for (Bom bom : bomList) {
+				Product product = productService.getEntityById(Product.class, bom.getProduct().getId());
+				BOMModelData bomModelData = new BOMModelData();
+				bomModelData.setPartNumber(product.getPartNumber());
+				bomModelData.setId(product.getId());
+				bomModelDatas.add(bomModelData);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		//  downloadPDF(request, response, bomList);
+		return new Response(1, bomModelDatas);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

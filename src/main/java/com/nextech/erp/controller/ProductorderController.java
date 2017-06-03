@@ -279,11 +279,12 @@ public class ProductorderController {
 		}
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
 		for (Productorderassociation productorderassociation : productorderassociations) {
-			Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
+			Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
 			productOrderData.setProductName(product.getName());
 			productOrderData.setQuantity(productorderassociation.getQuantity());
 			productOrderData.setRate(product.getRatePerUnit());
+			productOrderData.setAmount(product.getRatePerUnit()*productorderassociation.getQuantity());
 			productOrderDatas.add(productOrderData);
 		}
 		downloadPDF(request, response, productorder,productOrderDatas);
@@ -357,7 +358,7 @@ public class ProductorderController {
 		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
 		for (Productorderassociation productorderassociation : productorderassociations) {
-			Product product = productService.getProductListByProductId(productorderassociation.getProduct().getId());
+			Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
 			productOrderData.setProductName(product.getName());
 			productOrderData.setQuantity(productorderassociation.getQuantity());

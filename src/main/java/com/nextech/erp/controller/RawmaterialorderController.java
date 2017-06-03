@@ -131,8 +131,7 @@ public class RawmaterialorderController {
 			}
 			//TODO save call raw material order
 			Rawmaterialorder rawmaterialorder = saveRMOrder(rawmaterialOrderAssociationModel, request, response);
-			Long id = rawmaterialorderService.addEntity(rawmaterialorder);
-			String invoiceId = generateInvoiceId()+id;
+			String invoiceId = generateInvoiceId()+rawmaterialorder.getId();
 			rawmaterialorder.setName(invoiceId);
 			rawmaterialorderService.updateEntity(rawmaterialorder);
 			//TODO add raw material association

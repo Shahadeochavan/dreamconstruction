@@ -147,7 +147,7 @@ public class VendorController {
 
 		  mail.setMailCc((request.getAttribute("current_user").toString()));
 		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-		  Notification notification = notificationService.getEntityById(Notification.class, notificationuserassociation.getNotification().getId());
+		  Notification notification = notificationService.getEntityById(Notification.class,10);
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
@@ -155,6 +155,8 @@ public class VendorController {
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());
 	        model.put("lastName", vendor.getLastName());
+	        model.put("email", vendor.getEmail());
+	        model.put("contactNumber", vendor.getContactNumberMobile());
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);

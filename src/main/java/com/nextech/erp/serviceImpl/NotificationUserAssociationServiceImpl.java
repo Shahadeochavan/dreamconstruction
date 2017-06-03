@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.nextech.erp.dao.NotificationUserassociationDao;
@@ -16,6 +18,13 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 			throws Exception {
 		// TODO Auto-generated method stub
 		return notificationUserassociationDao.getNotifiactionByUserId(userId);
+	}
+
+	@Override
+	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
+			long userId) throws Exception {
+		// TODO Auto-generated method stub
+		return notificationUserassociationDao.getNotificationuserassociationByUserId(userId);
 	}
 
 }

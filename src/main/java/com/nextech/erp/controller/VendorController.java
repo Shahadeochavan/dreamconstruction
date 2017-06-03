@@ -108,6 +108,7 @@ public class VendorController {
 			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.updateEntity(vendor);
+			mailSending(vendor, request, response);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();

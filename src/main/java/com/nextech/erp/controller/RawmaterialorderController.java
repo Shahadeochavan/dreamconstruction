@@ -290,6 +290,10 @@ public class RawmaterialorderController {
 				rawmaterialorderassociationService.addEntity(rawmaterialorderassociation);
 			}
 		}
+		
+		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations){
+			
+		}
 	}
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder) throws IOException {
 

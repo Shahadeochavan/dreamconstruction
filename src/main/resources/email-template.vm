@@ -1,4 +1,3 @@
-
 <html>
 <head>
 </head>
@@ -62,6 +61,7 @@
                                               </tr>
 											#set ( $row = 1 ) 
 											#set ( $rmtotal = 0) 
+											#set($total=0)
 											#foreach ($rmOrderModelData in $rmOrderModelDatas ) 
 												#if ( $row % 2 == 0 ) 
 													#set ($color="#CBDCFF") 
@@ -75,17 +75,27 @@
                                            <td align="left">$rmOrderModelData.description</td>
                                            <td align="center">$rmOrderModelData.quantity</td>
                                            <td align="center">$rmOrderModelData.pricePerUnit</td>
-                                              <td align="center"> #set ( $rmOrderDataTotal = $rmOrderModelData.pricePerUnit * $rmOrderModelData.quantity )
+                                           <td align="center"> #set ( $rmOrderDataTotal = $rmOrderModelData.pricePerUnit * $rmOrderModelData.quantity )
                                             $rmOrderDataTotal
                                           </td>
                                        </tr>
 												#set ( $rmtotal = $rmtotal + $rmOrderDataTotal ) 
+												  
 												#set ( $row = $row + 1 ) 
 											#end
 											<tr bgcolor="#E3EEFF">
-												<td colspan="4" align="left"><strong> Total </strong> </td>
+												<td colspan="4" align="left"><strong>Sub Total </strong> </td>
 												<td align="center">$rmtotal</td> 
 											</tr>
+											  <tr bgcolor="#E3EEFF">
+                                                <td colspan="4" align="left"><strong> Tax  </strong></td>
+                                               <td align="center">${tax}</td>
+                                             </tr>
+											  <tr bgcolor="#E3EEFF">
+											   #set ( $total = $rmtotal + $tax)
+                                                <td colspan="4" align="left"><strong> Total </strong></td>
+                                                <td align="center">$total</td>
+                                            </tr>
 										</table>
 										<div style align="left">
 											<div>In case of any further assistance or clarification
@@ -95,6 +105,7 @@
 											<div>${signature}</div>
 											<div>${location}</div>
 										</div>
+									
 									</td>
 								</tr>
 							</table>

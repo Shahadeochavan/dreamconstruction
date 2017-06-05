@@ -52,7 +52,7 @@ public class ProductRMAssoController {
 	@Autowired
 	ProductRMAssoService productRMAssoService;
 
-	@Autowired
+	@Autowired 
 	private MessageSource messageSource;
 
 	@Autowired
@@ -218,9 +218,9 @@ public class ProductRMAssoController {
 						RMVendorData rawRmVendorData = new RMVendorData();
 						Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
 						Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialvendorassociation.getVendor().getId());
-						rawRmVendorData.setRawmaterial(rawmaterial);
+						//rawRmVendorData.setRawmaterial(rawmaterial);
 						rawRmVendorData.setVendor(vendor);
-						rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
+					//	rawRmVendorData.setQuantity(productrawmaterialassociation.getQuantity());
 						rmVendorDatas.add(rawRmVendorData);
 				}
 			}

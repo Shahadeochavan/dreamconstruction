@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,7 +31,7 @@ public class CreatePDF {
 
 	@Autowired
 	RawmaterialorderService rawmaterialorderService;
-	public  Document createPDF(String file,Rawmaterialorder rawmaterialorder) throws Exception {
+	public  Document createPDF(String file,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 
 		Document document = null;
 
@@ -43,7 +44,7 @@ public class CreatePDF {
 
 			addTitlePage(document);
 
-			createTable(document, rawmaterialorder);
+			createTable(document, rawmaterialorder,rmOrderModelDatas);
 
 			document.close();
 
@@ -90,7 +91,7 @@ public class CreatePDF {
 		}
 	}
 
-	private  void createTable(Document document,Rawmaterialorder rawmaterialorder) throws Exception {
+	private  void createTable(Document document,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 	//	List<Rawmaterialorder> rawmaterialorders = rawmaterialorderService.getEntityList(Rawmaterialorder.class);
 		Paragraph paragraph = new Paragraph();
 		creteEmptyLine(paragraph, 2);

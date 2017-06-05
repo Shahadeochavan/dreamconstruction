@@ -8,6 +8,7 @@ public class RMOrderModelData {
 	private long quantity;
 	private float amount;
 	private String description;
+	private float tax;
 
 	public String getVendorName() {
 		return vendorName;
@@ -55,6 +56,14 @@ public class RMOrderModelData {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public float getTax() {
+		return tax;
+	}
+
+	public void setTax(float tax) {
+		this.tax = tax;
 	}
 
 }

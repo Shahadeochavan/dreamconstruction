@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.itextpdf.text.BaseColor;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -17,12 +18,14 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Font.FontFamily;
+import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
+import com.sun.org.apache.bcel.internal.generic.RET;
 
 public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
@@ -77,24 +80,31 @@ public class CreatePDFProductOrder {
 	private  void addTitlePage(Document document)
 			throws DocumentException {
 		Paragraph preface = new Paragraph();
-		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
+		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 
+		   Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
 		  //specify column widths
 		   float[] columnWidths = {5f};
 		   //create PDF table with the given widths
 		   PdfPTable table = new PdfPTable(columnWidths);
 		   // set table width a percentage of the page width
 		   PdfPCell cell =  new PdfPCell();
-		   cell.setFixedHeight(35f);
-		   table.addCell(cell);
-		   table.setWidthPercentage(100f);
-		   document.add(table);
 		   
-		   insertCell(table,"E.K.ELECTRONICS PVT.LTD" , Element.ALIGN_CENTER, 1, bf12);
-		   table.setHeaderRows(1);
-		   document.add(table);
+		   Rectangle rect= new Rectangle(36, 820, 564, 710);
+	        rect.setBorder(2);
+	        rect.setBorder(Rectangle.BOX);
+	        rect.setBorderWidth(1);
+	        rect.setBorderColor(BaseColor.BLACK);
+	        document.add(rect);
 		   
-		  creteEmptyLine(preface, 1); 
-		 
+		   preface.setAlignment(Element.ALIGN_CENTER);
+		   creteEmptyLine(preface, 1); 
+		   document.add(new Chunk(    "E.K.ELECTRONICS PVT.LTD", bf12));
+		   document.add(new Paragraph("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220 ", font3));
+		   document.add(new Paragraph("Email:sachi@eksgpl.com/purchase@eksgpl.com ", font3));
+		   document.add(new Paragraph("PURCHASE ORDER", bf12));
+		   document.add(preface);
+		   
+		  
 		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		preface.add(new Paragraph("Product Order Invoice Date :"
 				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
@@ -146,6 +156,7 @@ public class CreatePDFProductOrder {
      insertCell(table, "Total", Element.ALIGN_CENTER, 3, bfBold12);
      insertCell(table, df.format(total), Element.ALIGN_CENTER, 1, bfBold12);
      document.add(table);
+     
   }
 
 	 private void insertCell(PdfPTable table, String text, int align, int colspan, Font font){

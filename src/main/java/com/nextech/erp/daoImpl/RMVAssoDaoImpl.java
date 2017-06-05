@@ -1,5 +1,7 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -27,6 +29,12 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 		criteria.add(Restrictions.eq("vendor.id", vendorId));
 		Rawmaterialvendorassociation rawmaterialorderassociation = (Rawmaterialvendorassociation) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
 		return rawmaterialorderassociation;
+	}
+
+	@Override
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

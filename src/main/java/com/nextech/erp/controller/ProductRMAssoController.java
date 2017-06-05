@@ -290,13 +290,13 @@ public class ProductRMAssoController {
 			@PathVariable("id") long id) {
 
 		try {
-			Productrawmaterialassociation productrawmaterialassociation = productRMAssoService
-					.getEntityById(Productrawmaterialassociation.class, id);
-			productrawmaterialassociation.setIsactive(false);
-			productRMAssoService
-					.updateEntity(productrawmaterialassociation);
-			return new UserStatus(1,
-					"Productrawmaterialassociation deleted Successfully !");
+			List<Productrawmaterialassociation> productrawmaterialassociation = productRMAssoService.getProductRMAssoListByProductId(id);
+			for (Productrawmaterialassociation productrawmaterialassociation2 : productrawmaterialassociation) {
+				productrawmaterialassociation2.setIsactive(false);
+				productRMAssoService.updateEntity(productrawmaterialassociation2);
+			}
+			
+			return new UserStatus(1,"Productrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

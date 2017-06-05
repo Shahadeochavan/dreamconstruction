@@ -5,6 +5,7 @@ public class ProductinPlanPRMAssoData {
 	private String name;
 	private long rawmaterial;
 	private long quantityRequired;
+	private long inventoryQuantity;
 	public String getName() {
 		return name;
 	}
@@ -23,6 +24,10 @@ public class ProductinPlanPRMAssoData {
 	public void setRawmaterial(long rawmaterial) {
 		this.rawmaterial = rawmaterial;
 	}
-
-
+	public long getInventoryQuantity() {
+		return inventoryQuantity;
+	}
+	public void setInventoryQuantity(long inventoryQuantity) {
+		this.inventoryQuantity = inventoryQuantity;
+	}
 }

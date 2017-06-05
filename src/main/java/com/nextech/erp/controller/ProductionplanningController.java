@@ -29,6 +29,7 @@ import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
@@ -36,6 +37,7 @@ import com.nextech.erp.service.ProductinventoryhistoryService;
 import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
@@ -69,6 +71,9 @@ public class ProductionplanningController {
 	@Autowired
 	RawmaterialService rawmaterialService;
 
+	@Autowired
+	RawmaterialinventoryService rawmaterialinventoryService;
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductionplanning(@Valid @RequestBody Productionplanning productionplanning,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -269,12 +274,14 @@ public class ProductionplanningController {
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
-				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
-				if(productorderassociations !=null && !productorderassociations.isEmpty()){
-					for (Productorderassociation productorderassociation : productorderassociations) {
-						if(productorderassociation.getRemainingQuantity() > 0){
-							isProductRemaining = true;
-							break;
+				if(productionplanning.getTargetQuantity() > 0){
+					List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+					if(productorderassociations !=null && !productorderassociations.isEmpty()){
+						for (Productorderassociation productorderassociation : productorderassociations) {
+							if(productorderassociation.getRemainingQuantity() > 0){
+								isProductRemaining = true;
+								break;
+							}
 						}
 					}
 				}
@@ -334,9 +341,10 @@ public class ProductionplanningController {
 					ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
 
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
-
-					productinPlanPRMAssoData.setName(rawmaterial.getName());
+					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterial().getId());
+					productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
 					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
+					productinPlanPRMAssoData.setInventoryQuantity(rawmaterialinventory.getQuantityAvailable());
 					productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
 					productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);
 

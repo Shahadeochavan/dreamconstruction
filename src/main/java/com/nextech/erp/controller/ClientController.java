@@ -61,13 +61,13 @@ public class ClientController {
 			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
 
 			} else {
-				return new UserStatus(1, messageSource.getMessage(
+				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.COMPANY_NAME_EXIT, null, null));
 
 			}
 			if (clientService.getClientByEmail(client.getEmailid()) == null) {
 			} else {
-				return new UserStatus(1, messageSource.getMessage(
+				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
 			client.setCreatedBy(Long.parseLong(request.getAttribute(

@@ -10,7 +10,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Element;
@@ -18,14 +17,12 @@ import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.Font.FontFamily;
-import com.itextpdf.text.Rectangle;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
-import com.sun.org.apache.bcel.internal.generic.RET;
 
 public class CreatePDFProductOrder {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
@@ -89,22 +86,34 @@ public class CreatePDFProductOrder {
 		   // set table width a percentage of the page width
 		   PdfPCell cell =  new PdfPCell();
 		   
-		   Rectangle rect= new Rectangle(36, 820, 564, 710);
+		 /*  Rectangle rect= new Rectangle(36, 820, 564, 710);
 	        rect.setBorder(2);
 	        rect.setBorder(Rectangle.BOX);
 	        rect.setBorderWidth(1);
 	        rect.setBorderColor(BaseColor.BLACK);
-	        document.add(rect);
-		   
-		   preface.setAlignment(Element.ALIGN_CENTER);
-		   creteEmptyLine(preface, 1); 
-		   document.add(new Chunk(    "E.K.ELECTRONICS PVT.LTD", bf12));
-		   document.add(new Paragraph("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220 ", font3));
-		   document.add(new Paragraph("Email:sachi@eksgpl.com/purchase@eksgpl.com ", font3));
-		   document.add(new Paragraph("PURCHASE ORDER", bf12));
+	        document.add(rect);*/
+		   creteEmptyLine(preface, 2);
 		   document.add(preface);
-		   
-		  
+		   PdfPTable table1 = new PdfPTable(1);
+		     table1.setWidthPercentage(100);
+		     table1.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
+		     document.add(table1);
+		     
+		     PdfPTable table2 = new PdfPTable(1);
+		     table2.setWidthPercentage(100);
+		     table2.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
+		     document.add(table2);
+		     
+		     PdfPTable table3 = new PdfPTable(1);
+		     table3.setWidthPercentage(100);
+		     table3.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
+		     document.add(table3);
+		     
+		     PdfPTable table4 = new PdfPTable(1);
+		     table4.setWidthPercentage(100);
+		     table4.addCell(getCell("PURCHASE ORDER", PdfPCell.ALIGN_CENTER));
+		     document.add(table4);
+		     
 		 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		preface.add(new Paragraph("Product Order Invoice Date :"
 				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
@@ -141,10 +150,6 @@ public class CreatePDFProductOrder {
 		   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
 		   table.setHeaderRows(1);
-	
-		   //insertCell(table, "", Element.ALIGN_LEFT, 4, bfBold12);
-		   //create section heading by cell merging
-		  // insertCell(table, "PRODUCT ORDER DETAILS ...", Element.ALIGN_LEFT, 4, bfBold12);
 
      for (ProductOrderData productOrderData : productOrderDatas) {
 	  insertCell(table,productOrderData.getProductName() , Element.ALIGN_CENTER, 1, bf12);
@@ -156,7 +161,34 @@ public class CreatePDFProductOrder {
      insertCell(table, "Total", Element.ALIGN_CENTER, 3, bfBold12);
      insertCell(table, df.format(total), Element.ALIGN_CENTER, 1, bfBold12);
      document.add(table);
+     Font bf123 = new Font(FontFamily.TIMES_ROMAN, 12,Font.BOLD); 
+     document.add(new Paragraph("Terms & Conditions", bf123));
+     document.add(new Paragraph("Payment Terms                        60 Days on receipt of matrial", bf12));
+     document.add(new Paragraph("Inspection                           At our works after receipt of material", bf12));
+     document.add(new Paragraph("Sale Tax                             As applicable", bf12));
+     document.add(new Paragraph("Excise Duty                          As applicable", bf12));
+     document.add(new Paragraph("Delivery                             At our Ranjangon factory", bf12));
+     document.add(new Paragraph("freight                              Nil", bf12));
+     document.add(new Paragraph("Quality                              Supply material of high quality only to avoid rejection", bf12));
+     document.add(new Paragraph("Note", bf123));
+     document.add(new Paragraph("1. Please send duplicate bill mentioned with our P.O and item code", bf12));
+     document.add(new Paragraph("2. Bill & challan must be issued in favor of M/s EK Electronics pvt.ltd. at above address", bf12));
+     document.add(new Paragraph("3. Please make sure all material should be rohs compliance ", bf12));
+     document.add(paragraph);
      
+     PdfPTable table1 = new PdfPTable(1);
+     table1.setWidthPercentage(100);
+     table1.addCell(getCell("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT));
+     document.add(table1);
+     
+     creteEmptyLine(paragraph, 1);
+     document.add(paragraph);
+     
+     PdfPTable table2 = new PdfPTable(1);
+     table2.setWidthPercentage(100);
+     table2.addCell(getCell("Authorised Signatory", PdfPCell.ALIGN_RIGHT));
+     document.add(table2);
+    
   }
 
 	 private void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
@@ -175,4 +207,19 @@ public class CreatePDFProductOrder {
 	  table.addCell(cell);
 	  
 	 }
+	 public PdfPCell getCell(String text, int alignment) {
+		    PdfPCell cell = new PdfPCell(new Phrase(text));
+		    cell.setPadding(0);
+		    cell.setHorizontalAlignment(alignment);
+		    cell.setBorder(PdfPCell.NO_BORDER);
+		    return cell;
+		}
+	 
+	 public PdfPCell getCell1(String text, int alignment,Font bf12) {
+		    PdfPCell cell = new PdfPCell(new Phrase(text,bf12));
+		    cell.setPadding(0);
+		    cell.setHorizontalAlignment(alignment);
+		    cell.setBorder(PdfPCell.NO_BORDER);
+		    return cell;
+		}
 }	

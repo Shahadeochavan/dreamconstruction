@@ -249,10 +249,12 @@ public class ProductRMAssoController {
 					productRMAssociationModelParts = multplePRMAsso.get(productrawmaterialassociation.getProduct().getId());
 				}
 				ProductRMAssociationModelParts productRMAssociationModelPart = new ProductRMAssociationModelParts();
+				Product product = productService.getEntityById(Product.class, productrawmaterialassociation.getProduct().getId());
 				productRMAssociationModelPart.setQuantity(productrawmaterialassociation.getQuantity());
 				productRMAssociationModelPart.setRawmaterial(productrawmaterialassociation.getRawmaterial());
+				//productRMAssociationModelPart.setPartNumber(product.getPartNumber());
 				productRMAssociationModelParts.add(productRMAssociationModelPart);
-				Product product = productService.getEntityById(Product.class, productrawmaterialassociation.getProduct().getId());
+				
 				multplePRMAsso.put(productrawmaterialassociation.getProduct().getId(), productRMAssociationModelParts);
 			}
 			 Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();

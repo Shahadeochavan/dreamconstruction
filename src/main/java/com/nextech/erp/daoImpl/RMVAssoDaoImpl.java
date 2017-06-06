@@ -8,7 +8,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import com.nextech.erp.dao.RMVAssoDao;
+import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 
 public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
@@ -34,7 +36,12 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 	@Override
 	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationListByRMId(long id) {
 		// TODO Auto-generated method stub
-		return null;
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("rawmaterial.id", id));
+		return (criteria.list().size() > 0 ? (List<Rawmaterialvendorassociation>)criteria.list() : null);
 	}
 
 }

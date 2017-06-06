@@ -24,18 +24,9 @@ background: rgb(120, 129, 178);
 <body>
 <p style="font-weight: bold;">Dear ${firstName} ${lastName},</p>
     <p>Greetings from Nextech Services!</p>
-    <table>
-    <tr>
-      <th>User Id</th>
-      <th>Password</th>
-      <th>Email Id</th>
-    </tr>
-    <tr>
-    <td>${userId}</td>
-    <td>${password}</td>
-    <td>${email}</td>
-    </tr>
-    </table>
+    <div>YOUR USER ID:${userId}</div>
+    <div>PASSWORD :${password}</div>
+    <div>EMAIL :${email}</div>
      <p>In case of any further assistance or clarification on this issue, please reply back to this email.</p>
     <p>Assuring you of our best services always,</p>
     <div>Yours sincerely</div>

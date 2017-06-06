@@ -404,6 +404,7 @@ public class RawmaterialorderController {
 	        model.put("address", vendor.getAddress());
 	        model.put("companyName", vendor.getCompanyName());
 	        model.put("tax", rawmaterialorder.getTax());
+	        model.put("mailFrom", notification.getName());
 	/*        model.put("createdDate",rawmaterialorder.getCreateDate());
 	        model.put("quantity",rawmaterialorder.getQuantity());
 	        model.put("totalPrice", rawmaterialorder.getTotalprice());

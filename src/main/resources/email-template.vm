@@ -8,10 +8,8 @@
 				<table>
 					<tr>
 						<td>
-							<p style="font-weight: bold;">Invoice Number
-								${invoiceNumber},</p>
 							<p style="font-weight: bold;">From :</p>
-							<div>${mailfrom},</div>
+							<div>${mailFrom},</div>
 							<div>Office:18,3rd Floor Vasantika Aparment</div>
 							<div>S.No,47/6B,Opp.yena Banglow beside,manglam chemmbers,</div>
 							<div>Paud Road,kothrud pune:411038</div>
@@ -84,16 +82,16 @@
 												#set ( $row = $row + 1 ) 
 											#end
 											<tr bgcolor="#E3EEFF">
-												<td colspan="4" align="left"><strong>Sub Total </strong> </td>
+												<td colspan="5" align="left"><strong>Sub Total </strong> </td>
 												<td align="center">$rmtotal</td> 
 											</tr>
 											  <tr bgcolor="#E3EEFF">
-                                                <td colspan="4" align="left"><strong> Tax  </strong></td>
+                                                <td colspan="5" align="left"><strong> Tax  </strong></td>
                                                <td align="center">${tax}</td>
                                              </tr>
 											  <tr bgcolor="#E3EEFF">
 											   #set ( $total = $rmtotal + $tax)
-                                                <td colspan="4" align="left"><strong> Total </strong></td>
+                                                <td colspan="5" align="left"><strong> Total </strong></td>
                                                 <td align="center">$total</td>
                                             </tr>
 										</table>

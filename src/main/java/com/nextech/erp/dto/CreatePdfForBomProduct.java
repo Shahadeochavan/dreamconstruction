@@ -70,24 +70,33 @@ public class CreatePdfForBomProduct {
 		document.addCreator("Java Honk");
 	}
 
-	private static void addTitlePage(Document document)
+	private  void addTitlePage(Document document)
 			throws DocumentException {
 
 		Paragraph preface = new Paragraph();
 		creteEmptyLine(preface, 1);
 		preface.add(new Paragraph("BOM INVOICE", TIME_ROMAN));
+		
+		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 
+		   Font bf112 = new Font(FontFamily.TIMES_ROMAN, 15,Font.BOLD); 
+		   Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
+		   
+		  PdfPTable table00 = new PdfPTable(1);
+		   table00.setWidthPercentage(100);
+		   PdfPTable table1 = new PdfPTable(1);
+		     table1.setWidthPercentage(100);
+		     table1.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
+		     table1.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
+		     table1.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
+		     table1.addCell(getCell1("PURCHASE ORDER", PdfPCell.ALIGN_CENTER,bf112));
+		     table00.addCell(table1);
+		     document.add(table00);
 
-		creteEmptyLine(preface, 1);
-		 document.setMargins(36, 72, 108, 180);
-		 preface = new Paragraph("Nextech Services Pvt.LTd " +
-			     "Office:18,3rd Floor Vasantika Aparment " +
-			     "S.No,47/6B,Opp,Yena Bunglow ,"+"Beside Manglam Chembers,Paud Road ,"+"Kothrud,Pune:411038 ");
-
-		creteEmptyLine(preface, 1);
+/*		creteEmptyLine(preface, 1);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		preface.add(new Paragraph("BOM Invoice Date :"
 				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
-		document.add(preface);
+		document.add(preface);*/
 
 	}
 
@@ -101,8 +110,6 @@ public class CreatePdfForBomProduct {
 			throws Exception {
 		
 		Paragraph paragraph = new Paragraph();
-		creteEmptyLine(paragraph, 2);
-		document.add(paragraph);
 		DecimalFormat df = new DecimalFormat("0.00");
 
 		  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
@@ -123,7 +130,7 @@ public class CreatePdfForBomProduct {
 		   insertCell(table, "AMOUNT", Element.ALIGN_RIGHT, 1, bfBold12);
 		   table.setHeaderRows(1);
 	
-		   insertCell(table, "", Element.ALIGN_LEFT, 6, bfBold12);
+		 //  insertCell(table, "", Element.ALIGN_LEFT, 6, bfBold12);
 		   //create section heading by cell merging
 		 //  insertCell(table, "BOM DETAILS ...", Element.ALIGN_LEFT, 6, bfBold12);
 
@@ -158,4 +165,29 @@ public class CreatePdfForBomProduct {
 	  table.addCell(cell);
 	  
 	 }
+	 
+	 public PdfPCell getCell(String text, int alignment) {
+		    PdfPCell cell = new PdfPCell(new Phrase(text));
+		    cell.setPadding(0);
+		    cell.setExtraParagraphSpace(1);
+		    cell.setHorizontalAlignment(alignment);
+		    cell.setBorder(PdfPCell.NO_BORDER);
+		    return cell;
+		}
+	 
+	 public PdfPCell getCell1(String text, int alignment,Font bf12) {
+		    PdfPCell cell = new PdfPCell(new Phrase(text,bf12));
+		    cell.setPadding(0);
+		    cell.setHorizontalAlignment(alignment);
+		    cell.setBorder(PdfPCell.NO_BORDER);
+		    return cell;
+		}
+	 public PdfPCell getCell2(String text, int alignment,Font font) {
+		    PdfPCell cell = new PdfPCell(new Phrase(text));
+		    cell.setPadding(0);
+		    cell.setExtraParagraphSpace(1);
+		    cell.setVerticalAlignment(alignment);
+		    cell.setBorder(PdfPCell.NO_BORDER);
+		    return cell;
+		}
 }

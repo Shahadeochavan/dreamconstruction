@@ -266,6 +266,7 @@ public class ProductorderController {
 
 	private void addProductOrderAsso(ProductOrderAssociationModel productOrderAssociationModel,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
+		Client client = clientService.getEntityById(Client.class, productOrderAssociationModel.getClient());
 		if (productorderassociations != null
 				&& !productorderassociations.isEmpty()) {
 			for (Productorderassociation productorderassociation : productorderassociations) {
@@ -287,9 +288,9 @@ public class ProductorderController {
 			productOrderData.setAmount(product.getRatePerUnit()*productorderassociation.getQuantity());
 			productOrderDatas.add(productOrderData);
 		}
-		downloadPDF(request, response, productorder,productOrderDatas);
+		downloadPDF(request, response, productorder,productOrderDatas,client);
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<ProductOrderData> productOrderDatas) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<ProductOrderData> productOrderDatas,Client client) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -302,7 +303,7 @@ public class ProductorderController {
 	    try {
 
 	   CreatePDFProductOrder ceCreatePDFProductOrder = new CreatePDFProductOrder();
-	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder,productOrderDatas);
+	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder,productOrderDatas,client);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productorder);
 	        OutputStream os = response.getOutputStream();

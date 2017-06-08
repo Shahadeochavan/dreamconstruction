@@ -147,6 +147,7 @@ public class CreatePDFProductOrder {
 		 document.add(paragraph);*/
 		  DecimalFormat df = new DecimalFormat("0.00");
 		  Font bf123 = new Font(FontFamily.TIMES_ROMAN, 14,Font.BOLD); 
+		  Font bf112 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
 		  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12); 
 		  //specify column widths
@@ -207,10 +208,10 @@ public class CreatePDFProductOrder {
      table6.addCell(getCell2("At our Ranjangon factory", PdfPCell.ALIGN_LEFT,bf12));
      table6.addCell(getCell2("Nil ", PdfPCell.ALIGN_LEFT,bf12));
      table6.addCell(getCell2("Supply material of high quality only to avoid rejection ", PdfPCell.ALIGN_LEFT,bf12));
-     table6.addCell(getCell2("1)PDIR REPORT ", PdfPCell.ALIGN_LEFT,bf12));
-     table6.addCell(getCell2("2)MATERIAL TEST REPORT ", PdfPCell.ALIGN_LEFT,bf12));
-     table6.addCell(getCell2("3)ROHS ", PdfPCell.ALIGN_LEFT,bf12));
-     table6.addCell(getCell2("4)MSDS ", PdfPCell.ALIGN_LEFT,bf12));
+     table6.addCell(getCell2("1)PDIR REPORT ", PdfPCell.ALIGN_LEFT,bf112));
+     table6.addCell(getCell2("2)MATERIAL TEST REPORT ", PdfPCell.ALIGN_LEFT,bf112));
+     table6.addCell(getCell2("3)ROHS ", PdfPCell.ALIGN_LEFT,bf112));
+     table6.addCell(getCell2("4)MSDS ", PdfPCell.ALIGN_LEFT,bf112));
      
      table00.addCell(table5);
      table00.addCell(table6);
@@ -223,7 +224,7 @@ public class CreatePDFProductOrder {
     PdfPTable table1 = new PdfPTable(1);
      table1.setWidthPercentage(100);
      table1.addCell(getCell12("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT,bf123));
-     table1.addCell(getCell12("Authorised Signture", PdfPCell.ALIGN_RIGHT,bf123));
+     table1.addCell(getCell12("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf123));
      table11.addCell(table1);
      document.add(table11);
     

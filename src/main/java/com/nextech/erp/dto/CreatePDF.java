@@ -2,8 +2,10 @@ package com.nextech.erp.dto;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -21,9 +23,12 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.RawmaterialorderService;
 
 public class CreatePDF {
+	public String x;
+	public String y;
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 	private static float SUB_TOTAL = 0;
@@ -33,7 +38,7 @@ public class CreatePDF {
 
 	@Autowired
 	RawmaterialorderService rawmaterialorderService;
-	public  Document createPDF(String file,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
+	public  Document createPDF(String file,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor) throws Exception {
 
 		Document document = null;
 
@@ -44,7 +49,7 @@ public class CreatePDF {
 
 			addMetaData(document);
 
-			addTitlePage(document);
+			addTitlePage(document,vendor);
 
 			createTable(document, rawmaterialorder,rmOrderModelDatas);
 
@@ -67,7 +72,7 @@ public class CreatePDF {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document)
+	private  void addTitlePage(Document document,Vendor vendor)
 			throws DocumentException {
 
 		Paragraph preface = new Paragraph();
@@ -82,13 +87,17 @@ public class CreatePDF {
 		  
 		   creteEmptyLine(preface, 2);
 		   document.add(preface);
-		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		   
-		    PdfPTable table00 = new PdfPTable(3);
-		    table00.setWidthPercentage(100); 
+		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		    
+		    float[] columnWidths1 = {40f, 30f,30f};
+			   //create PDF table with the given widths
+		     PdfPTable table00 = new PdfPTable(columnWidths1);
+		     table00.setWidthPercentage(100f);
 		   
 		     PdfPTable table1 = new PdfPTable(1);
 		     table1.setWidthPercentage(100);
+		     table1.addCell(getCell("From :", PdfPCell.ALIGN_LEFT,bf12));
+		     table1.addCell(getCell(" ", PdfPCell.ALIGN_LEFT,bf12));
 		     table1.addCell(getCell("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_LEFT,bf12));
 		     table1.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_LEFT,font3));
 		     table1.addCell(getCell("Email:account@ekelectronics.co.in", PdfPCell.ALIGN_LEFT,font3));
@@ -111,16 +120,14 @@ public class CreatePDF {
 		     table13.addCell(pdtable);
 		     table13.addCell(pdtable1);
 		     
-		      
 		     table00.addCell(table1);
 		     table00.addCell(table12);
 		     table00.addCell(table13);
 		     document.add(table00);
 		     
-		     
 		     PdfPTable table14 = new PdfPTable(3);
 		     table14.setWidthPercentage(100);
-		     
+		 
 		     PdfPTable table15 = new PdfPTable(1);
 		     table15.addCell(getCell("Renge : "+"V(Shirur)", PdfPCell.ALIGN_LEFT,bf12));
 		     table15.addCell(getCell("Ice House,41/A Sasoon Road pune 411001", PdfPCell.ALIGN_LEFT,font3));
@@ -131,15 +138,15 @@ public class CreatePDF {
 		     PdfPTable table16 = new PdfPTable(1);
 		     table16.addCell(getCell("To", PdfPCell.ALIGN_LEFT,bf12));
 		     table16.addCell(getCell("Name and address of consignee", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Haier Appliances (India) Pvt.Ltd", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("B-3 Ranjangaon Growth Center MIDC Ranjangaon Tal Shirur 412 209 ", PdfPCell.ALIGN_LEFT,font3));
-		     table16.addCell(getCell("Tel.02138-670251-53 Fax 02138-670254 ", PdfPCell.ALIGN_LEFT,font3));
-		     table16.addCell(getCell("Customer ECC No:-"+"AABCH3162L XM001", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Renge:-"+"Ranjangaon I", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Divison:-"+"North Shirur Divison", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Commissionerate:-"+"PUNE IV", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Your VAT/TIN No:-"+"27980256V", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Your CST TIN No:-"+"2982538C", PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell(vendor.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell(vendor.getAddress(), PdfPCell.ALIGN_LEFT,font3));
+		     table16.addCell(getCell("Tel."+vendor.getContactNumberOffice(), PdfPCell.ALIGN_LEFT,font3));
+		     table16.addCell(getCell("Customer ECC No:-"+vendor.getCustomerEccNumber(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Renge:-"+vendor.getRenge(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Divison:-"+vendor.getDivison(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Commissionerate:-"+vendor.getCommisionerate(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Your VAT/TIN No:-"+vendor.getVatNo(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Your CST TIN No:-"+vendor.getCst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
 		     PdfPTable table17 = new PdfPTable(1);
 		     table17.addCell(getCell("Category of consignee :-", PdfPCell.ALIGN_LEFT,bf12));
@@ -174,14 +181,7 @@ public class CreatePDF {
 		     lasttable.addCell(subtable1);
 		     lasttable.addCell(subtable12);
 		     document.add(lasttable);
-		     
-/*
-		creteEmptyLine(preface, 1);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		preface.add(new Paragraph("Raw Matrial Order Creadted Date :"
-				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
-		document.add(preface);
-*/
+		    
 	}
 
 	private static void creteEmptyLine(Paragraph paragraph, int number) {
@@ -191,7 +191,6 @@ public class CreatePDF {
 	}
 
 	private  void createTable(Document document,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
-	//	List<Rawmaterialorder> rawmaterialorders = rawmaterialorderService.getEntityList(Rawmaterialorder.class);
               DecimalFormat df = new DecimalFormat("0.00");
 			  Font bf123 = new Font(FontFamily.TIMES_ROMAN, 14,Font.BOLD); 
 			  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
@@ -228,22 +227,26 @@ public class CreatePDF {
 	      total = SUB_TOTAL+rawmaterialorder.getTax();
 	     insertCell(table, (Float.toString(total)), Element.ALIGN_RIGHT, 1, bfBold12);
 	     document.add(table);
-	     
-	     PdfPTable lasttable = new PdfPTable(2);
+	      int n=123;
+	     numberCount(n, y, x,document);
+/*	     PdfPTable lasttable = new PdfPTable(2);
 	     lasttable.setWidthPercentage(100);
 	     
 	     PdfPTable subtable = new PdfPTable(1);
 	     subtable.addCell(getCell1("Total centeral excise dutey payable (In fig)", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable.addCell(getCell1("Sixteen Thousan", PdfPCell.ALIGN_LEFT,bf12));
+	     subtable.addCell(getCell1(x, PdfPCell.ALIGN_LEFT,bf12));
 	 
 	     PdfPTable subtable1 = new PdfPTable(1);
 	     subtable1.addCell(getCell1("Grand Total", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable1.addCell(getCell1("One lack sixtey", PdfPCell.ALIGN_LEFT,bf1));
+	     subtable1.addCell(getCell1(y, PdfPCell.ALIGN_LEFT,bf1));
 	    
 	     lasttable.addCell(subtable);
 	     lasttable.addCell(subtable1);
-	     document.add(lasttable);
+	     document.add(lasttable);*/
 	     
+	     
+	     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+	     Date date = new Date();
 	     PdfPTable lasttable1 = new PdfPTable(2);
 	     lasttable1.setWidthPercentage(100);
 	     
@@ -253,18 +256,14 @@ public class CreatePDF {
 	 
 	     PdfPTable subtable12 = new PdfPTable(1);
 	     subtable12.addCell(getCell1("Serial No in PLA/RG-23", PdfPCell.ALIGN_LEFT,bf12));
-	     subtable12.addCell(getCell1("Date & Time of invoice"+"8/6/2017", PdfPCell.ALIGN_LEFT,bf12));
-	     subtable12.addCell(getCell1("Date & Time of removal"+"8/6/2017", PdfPCell.ALIGN_LEFT,bf12));
+	     subtable12.addCell(getCell1("Date & Time of invoice :"+dateFormat.format(date), PdfPCell.ALIGN_LEFT,bf12));
+	     subtable12.addCell(getCell1("Date & Time of removal :"+dateFormat.format(date), PdfPCell.ALIGN_LEFT,bf12));
 	    
 	     lasttable1.addCell(subtable11);
 	     lasttable1.addCell(subtable12);
 	     document.add(lasttable1);
 	     
-	     
 	     float[] columnWidths1 = {65f, 35f};
-		   //create PDF table with the given widths
-	     
-	     
 	     PdfPTable lasttable10 = new PdfPTable(columnWidths1);
 	     lasttable10.setWidthPercentage(100f);
 	     
@@ -287,6 +286,9 @@ public class CreatePDF {
 	     lasttable10.addCell(subtable110);
 	     lasttable10.addCell(subtable120);
 	     document.add(lasttable10);
+	     Paragraph preface = new Paragraph();
+	     creteEmptyLine(preface, 1);
+	     document.add(preface);
 	     
 	     
 
@@ -327,10 +329,54 @@ public class CreatePDF {
 	 public PdfPCell getCell2(String text, int alignment,Font font) {
 		    PdfPCell cell = new PdfPCell(new Phrase(text));
 		    cell.setPadding(0);
-		    cell.setExtraParagraphSpace(20);
 		    cell.setVerticalAlignment(alignment);
+		    cell.setHorizontalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
 		    return cell;
 		}
-
+	 
+		public void numberCount(int n,String ch,String totalWordCount,Document document) throws DocumentException{
+		    if(n <= 0)   {                
+		        System.out.println("Enter numbers greater than 0");
+		     }
+		     else
+		     {
+		    	 CreatePDF createPDF = new CreatePDF();
+		    	 createPDF.pw((n/1000000000)," Hundred",totalWordCount, document);
+		    	 createPDF.pw((n/10000000)%100," crore",totalWordCount,document);
+		    	 createPDF.pw(((n/100000)%100)," lakh",totalWordCount,document);
+		    	 createPDF.pw(((n/1000)%100)," thousand",totalWordCount,document);
+		    	 createPDF.pw(((n/100)%10)," hundred",totalWordCount,document);
+		    	 createPDF.pw((n%100)," ",totalWordCount,document);
+		      }
+		    }
+		  public void pw(int n,String ch,String totalWordCount,Document document) throws DocumentException
+		  {
+			  Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
+		    String[]  one={" "," one"," two"," three"," four"," five"," six"," seven"," eight"," Nine"," ten"," eleven"," twelve"," thirteen"," fourteen","fifteen"," sixteen"," seventeen"," eighteen"," nineteen"};
+		 
+		    String ten[]={" "," "," twenty"," thirty"," forty"," fifty"," sixty","seventy"," eighty"," ninety"};
+		 
+		    if(n > 19) { System.out.print("nu"+ten[n/10]+" "+one[n%10]);} 
+		    else { System.out.print(one[n]);
+		    totalWordCount=one[n];
+		    }
+		    if(n > 0)System.out.print(ch);
+		    if(totalWordCount==one[n]){
+		    PdfPTable lasttable = new PdfPTable(2);
+		     lasttable.setWidthPercentage(100);
+		     
+		     PdfPTable subtable = new PdfPTable(1);
+		     subtable.addCell(getCell1("Total centeral excise dutey payable (In fig)", PdfPCell.ALIGN_LEFT,bf1));
+		     subtable.addCell(getCell1(one[n], PdfPCell.ALIGN_LEFT,bf1));
+		 
+		     PdfPTable subtable1 = new PdfPTable(1);
+		     subtable1.addCell(getCell1("Grand Total", PdfPCell.ALIGN_LEFT,bf1));
+		     subtable1.addCell(getCell1(one[n], PdfPCell.ALIGN_LEFT,bf1));
+		    
+		     lasttable.addCell(subtable);
+		     lasttable.addCell(subtable1);
+		     document.add(lasttable);
+		    }
+		  }
 }

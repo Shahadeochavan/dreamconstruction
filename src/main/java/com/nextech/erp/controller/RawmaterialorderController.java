@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,11 +32,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import sun.security.acl.WorldGroupImpl;
+
 import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
+import com.nextech.erp.dto.WordCount;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
@@ -101,7 +105,7 @@ public class RawmaterialorderController {
 		year = "EK/PUN/"+year+"/";
 		return year;
 	}
-	
+	String s;
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialorder(
 			@Valid @RequestBody Rawmaterialorder rawmaterialorder,
@@ -295,6 +299,8 @@ public class RawmaterialorderController {
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialOrderAssociationModel.getRawmaterialorderassociations();
 		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
 		
+		Vendor vendor = vendorService.getEntityById(Vendor.class, rawmaterialOrderAssociationModel.getVendor());
+		
 		if(rawmaterialorderassociations !=null && !rawmaterialorderassociations.isEmpty()){
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
 				rawmaterialorderassociation.setRawmaterialorder(rawmaterialorder);
@@ -317,9 +323,13 @@ public class RawmaterialorderController {
 			rmOrderModelData.setDescription(rawmaterialorder.getName());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-		downloadPDF(request, response, rawmaterialorder,rmOrderModelDatas);
+	int n =2333;
+
+	WordCount wordCount = new WordCount();
+	//	numberCount(n, s, wordCount);
+		downloadPDF(request, response, rawmaterialorder,rmOrderModelDatas,vendor);
 	}
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -332,7 +342,7 @@ public class RawmaterialorderController {
 	    try {
 
 	   CreatePDF createPDF = new CreatePDF();
-	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas);
+	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas,vendor);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas);
 	        OutputStream os = response.getOutputStream();
@@ -349,7 +359,40 @@ public class RawmaterialorderController {
 	    }
 
 	}
-
+	
+	public void numberCount(int n,String ch,WordCount totalWordCount){
+	    if(n <= 0)   {                
+	        System.out.println("Enter numbers greater than 0");
+	     }
+	     else
+	     {
+	    	pw((n/1000000000)," Hundred",totalWordCount);
+	        pw((n/10000000)%100," crore",totalWordCount);
+	        pw(((n/100000)%100)," lakh",totalWordCount);
+	        pw(((n/1000)%100)," thousand",totalWordCount);
+	        pw(((n/100)%10)," hundred",totalWordCount);
+	        pw((n%100)," ",totalWordCount);
+	      }
+	    }
+	
+	  public void pw(int n,String ch,WordCount totalWordCount)
+	  {
+		  List<WordCount> wordCounts = new ArrayList<WordCount>();
+	    String[]  one={" "," one"," two"," three"," four"," five"," six"," seven"," eight"," Nine"," ten"," eleven"," twelve"," thirteen"," fourteen","fifteen"," sixteen"," seventeen"," eighteen"," nineteen"};
+	 
+	    String ten[]={" "," "," twenty"," thirty"," forty"," fifty"," sixty","seventy"," eighty"," ninety"};
+	 
+	    if(n > 19) { System.out.print("nu"+ten[n/10]+" "+one[n%10]);} 
+	    else { System.out.print(one[n]);
+	    StringBuffer sb = new StringBuffer();
+	    String stringIs =  one[n];
+	     totalWordCount.setWordCount(stringIs);
+	    System.out.println("tota value is   :"+totalWordCount);
+	    }
+	    if(n > 0)System.out.print(ch);
+	    totalWordCount.setCharacter(ch);
+	    wordCounts.add(totalWordCount);
+	  }
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
 
 

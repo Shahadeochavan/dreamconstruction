@@ -32,14 +32,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import sun.security.acl.WorldGroupImpl;
 
 import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
-import com.nextech.erp.dto.WordCount;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
@@ -325,7 +323,6 @@ public class RawmaterialorderController {
 		}
 	int n =2333;
 
-	WordCount wordCount = new WordCount();
 	//	numberCount(n, s, wordCount);
 		downloadPDF(request, response, rawmaterialorder,rmOrderModelDatas,vendor);
 	}
@@ -360,41 +357,7 @@ public class RawmaterialorderController {
 
 	}
 	
-	public void numberCount(int n,String ch,WordCount totalWordCount){
-	    if(n <= 0)   {                
-	        System.out.println("Enter numbers greater than 0");
-	     }
-	     else
-	     {
-	    	pw((n/1000000000)," Hundred",totalWordCount);
-	        pw((n/10000000)%100," crore",totalWordCount);
-	        pw(((n/100000)%100)," lakh",totalWordCount);
-	        pw(((n/1000)%100)," thousand",totalWordCount);
-	        pw(((n/100)%10)," hundred",totalWordCount);
-	        pw((n%100)," ",totalWordCount);
-	      }
-	    }
-	
-	  public void pw(int n,String ch,WordCount totalWordCount)
-	  {
-		  List<WordCount> wordCounts = new ArrayList<WordCount>();
-	    String[]  one={" "," one"," two"," three"," four"," five"," six"," seven"," eight"," Nine"," ten"," eleven"," twelve"," thirteen"," fourteen","fifteen"," sixteen"," seventeen"," eighteen"," nineteen"};
-	 
-	    String ten[]={" "," "," twenty"," thirty"," forty"," fifty"," sixty","seventy"," eighty"," ninety"};
-	 
-	    if(n > 19) { System.out.print("nu"+ten[n/10]+" "+one[n%10]);} 
-	    else { System.out.print(one[n]);
-	    StringBuffer sb = new StringBuffer();
-	    String stringIs =  one[n];
-	     totalWordCount.setWordCount(stringIs);
-	    System.out.println("tota value is   :"+totalWordCount);
-	    }
-	    if(n > 0)System.out.print(ch);
-	    totalWordCount.setCharacter(ch);
-	    wordCounts.add(totalWordCount);
-	  }
 	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
-
 
 		Status status = statusService.getEntityById(Status.class, rawmaterialorder.getStatus().getId());
 		Notification notification = notificationService.getNotifiactionByStatus(status.getId());

@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,8 +26,8 @@ import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.RawmaterialorderService;
 
 public class CreatePDF {
-	public String x;
-	public String y;
+
+	public static String answer = "";
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 	private static float SUB_TOTAL = 0;
@@ -88,6 +87,12 @@ public class CreatePDF {
 		   creteEmptyLine(preface, 2);
 		   document.add(preface);
 		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		   PdfPTable pdfPTable = new PdfPTable(1);
+		   pdfPTable.setWidthPercentage(100);
+		   pdfPTable.addCell(getCell("TAX INVOICE", PdfPCell.ALIGN_CENTER,bf12));
+		   document.add(pdfPTable);
+		   
+		   
 		    
 		    float[] columnWidths1 = {40f, 30f,30f};
 			   //create PDF table with the given widths
@@ -223,27 +228,40 @@ public class CreatePDF {
 	     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bfBold12);
 	     insertCell(table, (Float.toString(rawmaterialorder.getTax())), Element.ALIGN_RIGHT, 1, bfBold12);
 	     insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
-	     float total=0;
-	      total = SUB_TOTAL+rawmaterialorder.getTax();
+	     int total=0;
+	      total = (int) (SUB_TOTAL+rawmaterialorder.getTax());
 	     insertCell(table, (Float.toString(total)), Element.ALIGN_RIGHT, 1, bfBold12);
 	     document.add(table);
-	      int n=123;
-	     numberCount(n, y, x,document);
-/*	     PdfPTable lasttable = new PdfPTable(2);
-	     lasttable.setWidthPercentage(100);
+	     
+
+			if(total <= 0)   {                
+				System.out.println("Enter numbers greater than 0");
+			} else {
+				CreatePDF a = new CreatePDF();
+				a.pw((total/1000000000)," Hundred");
+				a.pw((total/10000000)%100," Crore");
+				a.pw(((total/100000)%100)," Lakh");
+				a.pw(((total/1000)%100)," Thousand");
+				a.pw(((total/100)%10)," Hundred");
+				a.pw((total%100)," ");
+				answer = answer.trim();
+				System.out.println("Final Answer : " +answer);
+			
+           PdfPTable lasttable = new PdfPTable(2);
+	       lasttable.setWidthPercentage(100);
 	     
 	     PdfPTable subtable = new PdfPTable(1);
 	     subtable.addCell(getCell1("Total centeral excise dutey payable (In fig)", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable.addCell(getCell1(x, PdfPCell.ALIGN_LEFT,bf12));
+	     subtable.addCell(getCell1(answer, PdfPCell.ALIGN_LEFT,bf12));
 	 
 	     PdfPTable subtable1 = new PdfPTable(1);
 	     subtable1.addCell(getCell1("Grand Total", PdfPCell.ALIGN_LEFT,bf1));
-	     subtable1.addCell(getCell1(y, PdfPCell.ALIGN_LEFT,bf1));
+	     subtable1.addCell(getCell1(answer, PdfPCell.ALIGN_LEFT,bf1));
 	    
 	     lasttable.addCell(subtable);
 	     lasttable.addCell(subtable1);
-	     document.add(lasttable);*/
-	     
+	     document.add(lasttable);
+			}
 	     
 	     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 	     Date date = new Date();
@@ -276,12 +294,12 @@ public class CreatePDF {
 	    		 + "payable on the sale has been paid or shall be paid", PdfPCell.ALIGN_LEFT,bf1));
 	 
 	     PdfPTable subtable120 = new PdfPTable(1);
-	     subtable120.addCell(getCell1("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT,bf12));
+	     subtable120.addCell(getCell1("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT,bf123));
 	     subtable120.addCell(getCell1(" ", PdfPCell.ALIGN_RIGHT,bf12));
 	     subtable120.addCell(getCell1(" ", PdfPCell.ALIGN_RIGHT,bf12));
 	     subtable120.addCell(getCell1(" ", PdfPCell.ALIGN_RIGHT,bf12));
 	     subtable120.addCell(getCell1(" ", PdfPCell.ALIGN_RIGHT,bf12));
-	     subtable120.addCell(getCell1("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf12));
+	     subtable120.addCell(getCell1("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf123));
 	    
 	     lasttable10.addCell(subtable110);
 	     lasttable10.addCell(subtable120);
@@ -334,49 +352,20 @@ public class CreatePDF {
 		    cell.setBorder(PdfPCell.NO_BORDER);
 		    return cell;
 		}
-	 
-		public void numberCount(int n,String ch,String totalWordCount,Document document) throws DocumentException{
-		    if(n <= 0)   {                
-		        System.out.println("Enter numbers greater than 0");
-		     }
-		     else
-		     {
-		    	 CreatePDF createPDF = new CreatePDF();
-		    	 createPDF.pw((n/1000000000)," Hundred",totalWordCount, document);
-		    	 createPDF.pw((n/10000000)%100," crore",totalWordCount,document);
-		    	 createPDF.pw(((n/100000)%100)," lakh",totalWordCount,document);
-		    	 createPDF.pw(((n/1000)%100)," thousand",totalWordCount,document);
-		    	 createPDF.pw(((n/100)%10)," hundred",totalWordCount,document);
-		    	 createPDF.pw((n%100)," ",totalWordCount,document);
-		      }
-		    }
-		  public void pw(int n,String ch,String totalWordCount,Document document) throws DocumentException
-		  {
-			  Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
-		    String[]  one={" "," one"," two"," three"," four"," five"," six"," seven"," eight"," Nine"," ten"," eleven"," twelve"," thirteen"," fourteen","fifteen"," sixteen"," seventeen"," eighteen"," nineteen"};
-		 
-		    String ten[]={" "," "," twenty"," thirty"," forty"," fifty"," sixty","seventy"," eighty"," ninety"};
-		 
-		    if(n > 19) { System.out.print("nu"+ten[n/10]+" "+one[n%10]);} 
-		    else { System.out.print(one[n]);
-		    totalWordCount=one[n];
-		    }
-		    if(n > 0)System.out.print(ch);
-		    if(totalWordCount==one[n]){
-		    PdfPTable lasttable = new PdfPTable(2);
-		     lasttable.setWidthPercentage(100);
-		     
-		     PdfPTable subtable = new PdfPTable(1);
-		     subtable.addCell(getCell1("Total centeral excise dutey payable (In fig)", PdfPCell.ALIGN_LEFT,bf1));
-		     subtable.addCell(getCell1(one[n], PdfPCell.ALIGN_LEFT,bf1));
-		 
-		     PdfPTable subtable1 = new PdfPTable(1);
-		     subtable1.addCell(getCell1("Grand Total", PdfPCell.ALIGN_LEFT,bf1));
-		     subtable1.addCell(getCell1(one[n], PdfPCell.ALIGN_LEFT,bf1));
-		    
-		     lasttable.addCell(subtable);
-		     lasttable.addCell(subtable1);
-		     document.add(lasttable);
-		    }
-		  }
+		public void pw(int n,String ch)
+		{
+			String  one[]={" "," one"," two"," three"," four"," five"," six"," seven"," eight"," Nine"," ten"," eleven"," twelve"," thirteen"," fourteen","fifteen"," sixteen"," seventeen"," eighteen"," nineteen"};
+			String ten[]={" "," "," twenty"," thirty"," forty"," fifty"," sixty","seventy"," eighty"," ninety"};
+
+			if(n > 19) {
+				answer += ten[n/10]+" "+one[n%10];
+			} else { 
+				String S=one[n];
+				answer += S;
+			}
+
+			if(n > 0) {
+				answer += ch;
+			}
+		}
 }

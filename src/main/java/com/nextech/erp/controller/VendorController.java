@@ -108,7 +108,7 @@ public class VendorController {
 			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.updateEntity(vendor);
-			mailSending(vendor, request, response);
+			mailSendingUpdate(vendor, request, response);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,6 +149,27 @@ public class VendorController {
 		  mail.setMailCc((request.getAttribute("current_user").toString()));
 		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
 		  Notification notification = notificationService.getEntityById(Notification.class,10);
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(vendor.getEmail());
+	        mail.setMailSubject(notification.getSubject());
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
+	        model.put("email", vendor.getEmail());
+	        model.put("contactNumber", vendor.getContactNumberMobile());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail, notification);
+	}
+	private void mailSendingUpdate(Vendor vendor,HttpServletRequest request,HttpServletResponse response) throws Exception{
+		  Mail mail = new Mail();
+
+		  mail.setMailCc((request.getAttribute("current_user").toString()));
+		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
+		  Notification notification = notificationService.getEntityById(Notification.class,12);
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());

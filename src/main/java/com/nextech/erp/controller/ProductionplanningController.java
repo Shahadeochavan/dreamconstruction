@@ -8,7 +8,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductinPlanPRMAssoData;
 import com.nextech.erp.dto.ProductionPlan;
@@ -38,6 +36,7 @@ import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 import com.nextech.erp.util.DateUtil;
@@ -70,9 +69,14 @@ public class ProductionplanningController {
 
 	@Autowired
 	RawmaterialService rawmaterialService;
+	
+	@Autowired
+	StatusService statusService;
 
 	@Autowired
 	RawmaterialinventoryService rawmaterialinventoryService;
+	
+	private static final int PRODUCTION_PLAN_READY_TO_START = 46;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductionplanning(@Valid @RequestBody Productionplanning productionplanning,
@@ -158,8 +162,20 @@ public class ProductionplanningController {
 
 	@RequestMapping(value = "/updateProductionPlan", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
+		
 		try {
-			productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList, request, response);
+			for (ProductionPlan productionPlan : productionplanningList) {
+				Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productionPlan.getProductId());
+				if(PRODUCTION_PLAN_READY_TO_START==productionplanning.getStatus().getId()){
+					productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList, request, response);
+				}else{
+					System.out.println("Today's Production Plan already new production plan");
+					return new UserStatus(1,"Today's Production Plan already new production plan");
+					
+				}
+				
+			}
+			
 			return new UserStatus(1, "Productionplanning update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -77,6 +78,8 @@ public class BomController {
 	@Autowired
 	RMVAssoService rMVAssoService;
 	
+	
+	
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUnit(@Valid @RequestBody Bom bom,HttpServletRequest request,HttpServletResponse response,
@@ -115,6 +118,10 @@ public class BomController {
 			
 			// TODO save call bom
 						Bom bom = saveBom(bomDTO, request, response);
+						
+						String bomId = generateBomId()+bom.getId();
+						bom.setBomId(bomId);
+						bomService.updateEntity(bom);
 
 						// TODO add product order association
 						addBomRMVendorAsso(bomDTO, bom, request, response);
@@ -347,6 +354,10 @@ public class BomController {
 		}
 		return baos;
 	}
-
+	private String generateBomId(){
+		String bom="";
+		bom = "BOM000";
+		return bom;
+	}
 }
 

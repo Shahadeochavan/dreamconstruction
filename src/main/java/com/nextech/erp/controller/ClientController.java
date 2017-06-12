@@ -112,6 +112,7 @@ public class ClientController {
 					"current_user").toString()));
 			client.setIsactive(true);
 			clientService.updateEntity(client);
+			mailSendingUpdate(client, request, response);
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
@@ -153,13 +154,36 @@ public class ClientController {
 
 		  mail.setMailCc((request.getAttribute("current_user").toString()));
 		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-		  Notification notification = notificationService.getEntityById(Notification.class, notificationuserassociation.getNotification().getId());
+		  Notification notification = notificationService.getEntityById(Notification.class, 13);
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", client.getCompanyname());
+	        model.put("email", client.getEmailid());
+	        model.put("contactNumber", client.getContactnumber());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail, notification);
+	}
+	
+	private void mailSendingUpdate(Client client,HttpServletRequest request, HttpServletResponse response) throws Exception{
+		  Mail mail = new Mail();
+
+		  mail.setMailCc((request.getAttribute("current_user").toString()));
+		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
+		  Notification notification = notificationService.getEntityById(Notification.class, 14);
+	        mail.setMailFrom(notification.getBeanClass());
+	        mail.setMailTo(client.getEmailid());
+	        mail.setMailSubject(notification.getSubject());
+
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", client.getCompanyname());
+	        model.put("email", client.getEmailid());
+	        model.put("contactNumber", client.getContactnumber());
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);

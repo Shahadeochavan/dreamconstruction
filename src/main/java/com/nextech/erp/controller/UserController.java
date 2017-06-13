@@ -33,12 +33,15 @@ import com.nextech.erp.model.Authorization;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Page;
+import com.nextech.erp.model.Report;
+import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.ReportusertypeassociationService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.UserTypeService;
 import com.nextech.erp.service.UsertypepageassociationService;
@@ -70,7 +73,10 @@ public class UserController {
 	NotificationUserAssociationService notificationUserAssService;
 
 	@Autowired
-	NotificationService notificationService;;
+	NotificationService notificationService;
+	
+	@Autowired
+	ReportusertypeassociationService reportusertypeassociationService;
 
 	@Autowired
 	MailService mailService;
@@ -149,11 +155,16 @@ public class UserController {
 						Usertype.class, user2.getUsertype().getId());
 				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService
 						.getPagesByUsertype(usertype.getId());
+				List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService.getReportByUsertype(usertype.getId());
 				List<Page> pages = new ArrayList<Page>();
+				List<Report> reports = new ArrayList<Report>();
+				for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
+					reports.add(reportusertypeassociation.getReport());
+				}
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
-				return new UserStatus(1, "User logged in Successfully !", pages,user2);
+				return new UserStatus(1, "User logged in Successfully !", pages,reports);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());

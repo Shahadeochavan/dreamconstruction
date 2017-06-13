@@ -33,8 +33,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
+
 import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
@@ -312,7 +314,7 @@ public class RawmaterialorderController {
 		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations){
 			RMOrderModelData rmOrderModelData = new RMOrderModelData();
 			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterial().getId());
-			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService.getEntityById(Rawmaterialvendorassociation.class, rawmaterial.getId());
+			Rawmaterialvendorassociation rawmaterialvendorassociation = rmvAssoService.getRMVAssoByRMId(rawmaterial.getId());
 			rmOrderModelData.setRmName(rawmaterial.getPartNumber());
 			rmOrderModelData.setQuantity(rawmaterialorderassociation.getQuantity());
 			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
@@ -321,9 +323,6 @@ public class RawmaterialorderController {
 			rmOrderModelData.setDescription(rawmaterialorder.getName());
 			rmOrderModelDatas.add(rmOrderModelData);
 		}
-	int n =2333;
-
-	//	numberCount(n, s, wordCount);
 		downloadPDF(request, response, rawmaterialorder,rmOrderModelDatas,vendor);
 	}
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor) throws IOException {
@@ -338,7 +337,7 @@ public class RawmaterialorderController {
 
 	    try {
 
-	   CreatePDF createPDF = new CreatePDF();
+	   CreatePDFProductOrder createPDF = new CreatePDFProductOrder();
 	   createPDF.createPDF(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas,vendor);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,rawmaterialorder,rmOrderModelDatas);

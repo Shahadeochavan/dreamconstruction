@@ -22,6 +22,8 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 
@@ -40,7 +42,7 @@ public class CreatePDFProductOrder {
 	@Autowired
 	ProductorderService productorderService;
 
-	public Document createPDF(String file, Productorder productorder,List<ProductOrderData> productOrderDatas,Client client)
+	public Document createPDF(String file,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor)
 			throws Exception {
 
 		Document document = null;
@@ -52,9 +54,9 @@ public class CreatePDFProductOrder {
 
 			addMetaData(document);
 
-			addTitlePage(document,client);
+			addTitlePage(document,vendor,rawmaterialorder);
 
-			createTable(document, productorder,productOrderDatas);
+			createTable(document, rawmaterialorder,rmOrderModelDatas);
 
 			document.close();
 
@@ -75,7 +77,7 @@ public class CreatePDFProductOrder {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document,Client client)
+	private  void addTitlePage(Document document,Vendor vendor,Rawmaterialorder rawmaterialorder)
 			throws DocumentException {
 		Paragraph preface = new Paragraph();
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 
@@ -114,12 +116,12 @@ public class CreatePDFProductOrder {
 		     table5.addCell(getCell2(" ", PdfPCell.ALIGN_LEFT,font3));
 		    
 		     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		     String  vat = client.getVatNo();
-		     String cst =client.getCst();
-		     String ecc =client.getCustomerEccNumber();
+		     String  vat = vendor.getVatNo();
+		     String cst =vendor.getCst();
+		     String ecc =vendor.getCustomerEccNumber();
 		     PdfPTable table6 = new PdfPTable(1);
 		     table6.setWidthPercentage(100);
-		     table6.addCell(getCell2("P.O.No:"+"12364", PdfPCell.ALIGN_LEFT,font3));
+		     table6.addCell(getCell2("P.O.No:"+rawmaterialorder.getName(), PdfPCell.ALIGN_LEFT,font3));
 		     table6.addCell(getCell2("Date :"+ simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,font3));
 		     table6.addCell(getCell2("VAT TIN NO :"+vat, PdfPCell.ALIGN_LEFT,font3));
 		     table6.addCell(getCell2("CST TIN NO :"+cst, PdfPCell.ALIGN_LEFT,font3));
@@ -139,7 +141,7 @@ public class CreatePDFProductOrder {
 		}
 	}
 
-	private void createTable(Document document, Productorder productorder,List<ProductOrderData> productOrderDatas)
+	private void createTable(Document document,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas)
 			throws Exception {
 
 		  Paragraph paragraph = new Paragraph();
@@ -164,12 +166,12 @@ public class CreatePDFProductOrder {
 		   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
 		   table.setHeaderRows(1);
 
-     for (ProductOrderData productOrderData : productOrderDatas) {
-	  insertCell(table,productOrderData.getProductName() , Element.ALIGN_RIGHT, 1, bf12);
-	    insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_RIGHT, 1, bf12);
-	    insertCell(table, (Long.toString(productOrderData.getRate())), Element.ALIGN_RIGHT, 1, bf12);
-	    insertCell(table, (Long.toString(productOrderData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
-	    total = total+productOrderData.getAmount();
+     for (RMOrderModelData rmOrderModelData : rmOrderModelDatas) {
+	  insertCell(table,rmOrderModelData.getDescription() , Element.ALIGN_RIGHT, 1, bf12);
+	    insertCell(table,(Long.toString(rmOrderModelData.getQuantity())), Element.ALIGN_RIGHT, 1, bf12);
+	    insertCell(table, (Float.toString(rmOrderModelData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf12);
+	    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
+	    total = total+rmOrderModelData.getAmount();
     }
      insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
      insertCell(table, df.format(total), Element.ALIGN_RIGHT, 1, bfBold12);

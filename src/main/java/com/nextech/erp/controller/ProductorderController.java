@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
@@ -302,7 +303,7 @@ public class ProductorderController {
 
 	    try {
 
-	   CreatePDFProductOrder ceCreatePDFProductOrder = new CreatePDFProductOrder();
+	   CreatePDF ceCreatePDFProductOrder = new CreatePDF();
 	   ceCreatePDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productorder,productOrderDatas,client);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,productorder);

@@ -44,4 +44,16 @@ public class RMVAssoDaoImpl extends SuperDaoImpl<Rawmaterialvendorassociation>
 		return (criteria.list().size() > 0 ? (List<Rawmaterialvendorassociation>)criteria.list() : null);
 	}
 
+	@Override
+	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialvendorassociation.class);
+		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
+		Rawmaterialvendorassociation rawmaterialorderassociation = (Rawmaterialvendorassociation) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
+		return rawmaterialorderassociation;
+	}
+
 }

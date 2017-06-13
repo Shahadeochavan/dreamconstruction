@@ -57,6 +57,12 @@
 				<value>com.nextech.erp.model.Notificationuserassociation</value>
 				<value>com.nextech.erp.model.Storeoutrm</value>
 				<value>com.nextech.erp.model.Storeoutrmassociation</value>
+				<value>com.nextech.erp.model.Report</value>
+				<value>com.nextech.erp.model.Reportinputassociation</value>
+				<value>com.nextech.erp.model.Reportinputparameter</value>
+				<value>com.nextech.erp.model.Reportoutputassociation</value>
+				<value>com.nextech.erp.model.Reportoutputparameter</value>
+				<value>com.nextech.erp.model.Reportusertypeassociation</value>
 				<value>com.nextech.erp.model.Rawmaterialorderinvoiceassociation
 				</value>
 				<value>com.nextech.erp.model.Qualitycheckrawmaterial</value>
@@ -240,6 +246,12 @@
 	<bean id="bOMRMVendorAssociationService" class="com.nextech.erp.serviceImpl.BOMRMVendorAssociationServiceImpl" />
 
 	<bean id="mailService" class="com.nextech.erp.serviceImpl.MailServiceImpl" />
+	
+		<bean id="reportusertypeassociationDao" class="com.nextech.erp.daoImpl.ReportusertypeassociationDaoImpl" />
+	<bean id="reportusertypeassociationService" class="com.nextech.erp.serviceImpl.ReportusertypeassociationServiceImpl" />
+	
+			<bean id="reportDao" class="com.nextech.erp.daoImpl.ReportDaoImpl" />
+	<bean id="reportService" class="com.nextech.erp.serviceImpl.ReportServiceImpl" />
 
 
 </beans>

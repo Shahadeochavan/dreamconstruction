@@ -21,6 +21,8 @@ import com.itextpdf.text.Font.FontFamily;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.nextech.erp.model.Client;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.RawmaterialorderService;
@@ -37,7 +39,7 @@ public class CreatePDF {
 
 	@Autowired
 	RawmaterialorderService rawmaterialorderService;
-	public  Document createPDF(String file,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas,Vendor vendor) throws Exception {
+	public  Document createPDF(String file,Productorder productorder,List<ProductOrderData> productOrderDatas,Client client) throws Exception {
 
 		Document document = null;
 
@@ -48,9 +50,9 @@ public class CreatePDF {
 
 			addMetaData(document);
 
-			addTitlePage(document,vendor);
+			addTitlePage(document,client,productorder);
 
-			createTable(document, rawmaterialorder,rmOrderModelDatas);
+			createTable(document, productorder,productOrderDatas);
 
 			document.close();
 
@@ -71,7 +73,7 @@ public class CreatePDF {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document,Vendor vendor)
+	private  void addTitlePage(Document document,Client client,Productorder productorder)
 			throws DocumentException {
 
 		Paragraph preface = new Paragraph();
@@ -110,7 +112,7 @@ public class CreatePDF {
 		     table1.addCell(getCell("Certificate  No :"+"710304", PdfPCell.ALIGN_LEFT,font3));
 		     
 		     PdfPTable table12 = new PdfPTable(1);
-		     table12.addCell(getCell("Invoice No -"+"271", PdfPCell.ALIGN_LEFT,bf12));
+		     table12.addCell(getCell("Invoice No -"+productorder.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
 		     table12.addCell(getCell("[see rule 11 of Central Excise rule 2002", PdfPCell.ALIGN_LEFT,font3));
 		     
 		     PdfPTable table13 = new PdfPTable(2);
@@ -143,15 +145,15 @@ public class CreatePDF {
 		     PdfPTable table16 = new PdfPTable(1);
 		     table16.addCell(getCell("To", PdfPCell.ALIGN_LEFT,bf12));
 		     table16.addCell(getCell("Name and address of consignee", PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell(vendor.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell(vendor.getAddress(), PdfPCell.ALIGN_LEFT,font3));
-		     table16.addCell(getCell("Tel."+vendor.getContactNumberOffice(), PdfPCell.ALIGN_LEFT,font3));
-		     table16.addCell(getCell("Customer ECC No:-"+vendor.getCustomerEccNumber(), PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Renge:-"+vendor.getRenge(), PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Divison:-"+vendor.getDivison(), PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Commissionerate:-"+vendor.getCommisionerate(), PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Your VAT/TIN No:-"+vendor.getVatNo(), PdfPCell.ALIGN_LEFT,bf12));
-		     table16.addCell(getCell("Your CST TIN No:-"+vendor.getCst(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell(client.getCompanyname(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell(client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
+		     table16.addCell(getCell("Tel."+client.getContactnumber(), PdfPCell.ALIGN_LEFT,font3));
+		     table16.addCell(getCell("Customer ECC No:-"+client.getCustomerEccNumber(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Renge:-"+client.getRenge(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Divison:-"+client.getDivision(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Commissionerate:-"+client.getCommisionerate(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Your VAT/TIN No:-"+client.getVatNo(), PdfPCell.ALIGN_LEFT,bf12));
+		     table16.addCell(getCell("Your CST TIN No:-"+client.getCst(), PdfPCell.ALIGN_LEFT,bf12));
 		     
 		     PdfPTable table17 = new PdfPTable(1);
 		     table17.addCell(getCell("Category of consignee :-", PdfPCell.ALIGN_LEFT,bf12));
@@ -195,7 +197,7 @@ public class CreatePDF {
 		}
 	}
 
-	private  void createTable(Document document,Rawmaterialorder rawmaterialorder,List<RMOrderModelData> rmOrderModelDatas) throws Exception {
+	private  void createTable(Document document,Productorder productorder,List<ProductOrderData> productOrderDatas) throws Exception {
               DecimalFormat df = new DecimalFormat("0.00");
 			  Font bf123 = new Font(FontFamily.TIMES_ROMAN, 14,Font.BOLD); 
 			  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
@@ -216,20 +218,23 @@ public class CreatePDF {
 			   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
 			   table.setHeaderRows(1);
 
-	     for (RMOrderModelData rmOrderModelData : rmOrderModelDatas) {
-		  insertCell(table,rmOrderModelData.getRmName() , Element.ALIGN_RIGHT, 1, bf12);
-		    insertCell(table,(Long.toString(rmOrderModelData.getQuantity())), Element.ALIGN_RIGHT, 1, bf12);
-		    insertCell(table, (Float.toString(rmOrderModelData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf12);
-		    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
-		    SUB_TOTAL = SUB_TOTAL+rmOrderModelData.getAmount();
+	     for (ProductOrderData productOrderData : productOrderDatas) {
+		  insertCell(table,productOrderData.getProductName() , Element.ALIGN_RIGHT, 1, bf12);
+		    insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_RIGHT, 1, bf12);
+		    insertCell(table, (Float.toString(productOrderData.getRate())), Element.ALIGN_RIGHT, 1, bf12);
+		    insertCell(table, (Float.toString(productOrderData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);
+		    SUB_TOTAL = SUB_TOTAL+productOrderData.getAmount();
 	    }
 	     insertCell(table, "Sub Total", Element.ALIGN_RIGHT, 3, bfBold12);
 	     insertCell(table, df.format(SUB_TOTAL), Element.ALIGN_RIGHT, 1, bfBold12);
 	     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bfBold12);
-	     insertCell(table, (Float.toString(rawmaterialorder.getTax())), Element.ALIGN_RIGHT, 1, bfBold12);
+	     float tax =0;
+	     tax = 18/SUB_TOTAL;
+	     tax =100*tax;
+	     insertCell(table, (Float.toString(tax)), Element.ALIGN_RIGHT, 1, bfBold12);
 	     insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
 	     int total=0;
-	      total = (int) (SUB_TOTAL+rawmaterialorder.getTax());
+	      total = (int) (SUB_TOTAL+tax);
 	     insertCell(table, (Float.toString(total)), Element.ALIGN_RIGHT, 1, bfBold12);
 	     document.add(table);
 	     

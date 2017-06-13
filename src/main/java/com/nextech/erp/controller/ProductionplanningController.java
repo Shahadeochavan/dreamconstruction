@@ -164,18 +164,8 @@ public class ProductionplanningController {
 	public @ResponseBody UserStatus updateProductionplanningForCurrentMonth(@RequestBody List<ProductionPlan> productionplanningList,HttpServletRequest request,HttpServletResponse response) {
 		
 		try {
-			for (ProductionPlan productionPlan : productionplanningList) {
-				Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productionPlan.getProductId());
-				if(PRODUCTION_PLAN_READY_TO_START==productionplanning.getStatus().getId()){
-					productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList, request, response);
-				}else{
-					System.out.println("Today's Production Plan already new production plan");
-					return new UserStatus(1,"Today's Production Plan already new production plan");
-					
-				}
-				
-			}
-			
+	
+			productionplanningService.updateProductionplanningForCurrentMonth(productionplanningList, request, response);
 			return new UserStatus(1, "Productionplanning update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -244,10 +234,19 @@ public class ProductionplanningController {
 
 		List<Productionplanning> productionplanningList = null;
 		List<Product> productList = null;
+		List<Productorderassociation> productorderassociations =null;
 		try {
 			productList = productService.getEntityList(Product.class);
-			productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
-
+			for (Product product : productList) {
+				productorderassociations = productorderassociationService.getProductorderassociationByProdcutId(product.getId());
+						if(productorderassociations !=null&& !productorderassociations.isEmpty()){
+							for (Productorderassociation productorderassociation : productorderassociations) {
+								if(product.getId()==productorderassociation.getProduct().getId()){
+								productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
+							    }
+							}
+					  }
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

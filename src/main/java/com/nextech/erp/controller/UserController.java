@@ -1,5 +1,6 @@
 package com.nextech.erp.controller;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -164,7 +165,10 @@ public class UserController {
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
-				return new UserStatus(1, "User logged in Successfully !", pages,reports);
+				HashMap<String, Object> result = new HashMap<String, Object>();
+				result.put("pages", pages);
+				result.put("reports", reports);
+				return new UserStatus(1, "User logged in Successfully !", result,user2);
 			}
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());

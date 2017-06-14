@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ReportColumn;
+import com.nextech.erp.model.Reportinputassociation;
+import com.nextech.erp.service.ReptInpAssoService;
 import com.nextech.erp.status.UserStatus;
 
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
@@ -44,6 +47,16 @@ public class ReportController {
 	
 	@Autowired
 	SessionFactory sessionFactory;
+	
+	@Autowired
+	ReptInpAssoService reptInpAssoService;
+	
+	@RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")
+	public List<Reportinputassociation> inputParameters(@PathVariable("id") long id, final HttpServletRequest request,final HttpServletResponse response) throws Exception {
+			 List<Reportinputassociation> list = reptInpAssoService.getReportInputParametersByReportId(id);
+		return list;
+	}
+	
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")
 	public UserStatus login(@PathVariable("id") long id, final HttpServletRequest request,final HttpServletResponse response) throws Exception {
 		Connection connection = null;

@@ -260,7 +260,8 @@ public class ProductRMAssoController {
 			 Set<Entry<Long, List<ProductRMAssociationModelParts>>> multplePRMAssoEntries =  multplePRMAsso.entrySet();
 			for(Entry<Long, List<ProductRMAssociationModelParts>> multplePRMAssoEntry : multplePRMAssoEntries){
 				ProductRMAssociationModel productRMAssociationModel = new ProductRMAssociationModel();
-				productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());
+				Product product = productService.getEntityById(Product.class, multplePRMAssoEntry.getKey());
+				productRMAssociationModel.setName(product.getPartNumber());
 				//productRMAssociationModel.setName(multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setProductRMAssociationModelParts(multplePRMAssoEntry.getValue());
 				productRMAssociationModels.add(productRMAssociationModel);

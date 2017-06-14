@@ -19,8 +19,9 @@ import java.util.List;
 public class Reportinputparameter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	private int id;
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -31,10 +32,10 @@ public class Reportinputparameter implements Serializable {
 	@Column(name="display_name")
 	private String displayName;
 
-	@Column(name="input_typer")
-	private String inputTyper;
+	@Column(name="input_type")
+	private String inputType;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private String isQueryParameter;
 
@@ -53,8 +54,11 @@ public class Reportinputparameter implements Serializable {
 
 	public Reportinputparameter() {
 	}
+	public Reportinputparameter(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
@@ -86,19 +90,19 @@ public class Reportinputparameter implements Serializable {
 		this.displayName = displayName;
 	}
 
-	public String getInputTyper() {
-		return this.inputTyper;
+	public String getInputType() {
+		return this.inputType;
 	}
 
-	public void setInputTyper(String inputTyper) {
-		this.inputTyper = inputTyper;
+	public void setInputType(String inputType) {
+		this.inputType = inputType;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

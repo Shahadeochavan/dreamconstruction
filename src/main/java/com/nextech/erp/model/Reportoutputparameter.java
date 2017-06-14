@@ -19,8 +19,9 @@ import java.util.List;
 public class Reportoutputparameter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	private int id;
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	private long id;
 
 	@Column(name="created_by")
 	private int createdBy;
@@ -31,7 +32,7 @@ public class Reportoutputparameter implements Serializable {
 	@Column(name="display_name")
 	private String displayName;
 
-	private byte isactive;
+	private boolean isactive;
 
 	private String name;
 
@@ -48,12 +49,15 @@ public class Reportoutputparameter implements Serializable {
 
 	public Reportoutputparameter() {
 	}
+	public Reportoutputparameter(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -81,11 +85,11 @@ public class Reportoutputparameter implements Serializable {
 		this.displayName = displayName;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

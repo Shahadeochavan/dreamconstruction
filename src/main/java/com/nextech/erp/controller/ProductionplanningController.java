@@ -234,19 +234,10 @@ public class ProductionplanningController {
 
 		List<Productionplanning> productionplanningList = null;
 		List<Product> productList = null;
-		List<Productorderassociation> productorderassociations =null;
 		try {
 			productList = productService.getEntityList(Product.class);
-			for (Product product : productList) {
-				productorderassociations = productorderassociationService.getProductorderassociationByProdcutId(product.getId());
-						if(productorderassociations !=null&& !productorderassociations.isEmpty()){
-							for (Productorderassociation productorderassociation : productorderassociations) {
-								if(product.getId()==productorderassociation.getProduct().getId()){
 								productionplanningList = productionplanningService.createProductionPlanMonthYear( productList, month_year, request, response);
-							    }
-							}
-					  }
-				}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -281,14 +272,15 @@ public class ProductionplanningController {
 		return productionplanning;
 	}
 
-	@RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date) {
+	@RequestMapping(value = "getProductionPlanReadyListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> getProductionPlanRradyDate(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
 		try {
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
+				if(productionplanning.getStatus().getId()==46){
 				if(productionplanning.getTargetQuantity() > 0){
 					List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
 					if(productorderassociations !=null && !productorderassociations.isEmpty()){
@@ -300,6 +292,7 @@ public class ProductionplanningController {
 						}
 					}
 				}
+				}
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
@@ -310,6 +303,40 @@ public class ProductionplanningController {
 
 		return productionplanningFinalList;
 	}
+	
+	
+	@RequestMapping(value = "getProductionPlanListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productionplanning> getProductionPlanDate1(@PathVariable("date") String date) {
+
+		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
+		try {
+			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
+			for (Productionplanning productionplanning : productionplannings) {
+				boolean isProductRemaining = false;
+				if(productionplanning.getStatus().getId()==34){
+				if(productionplanning.getTargetQuantity() > 0){
+					List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+					if(productorderassociations !=null && !productorderassociations.isEmpty()){
+						for (Productorderassociation productorderassociation : productorderassociations) {
+							if(productorderassociation.getRemainingQuantity() > 0){
+								isProductRemaining = true;
+								break;
+							}
+						}
+					}
+				}
+				}
+				if(isProductRemaining)
+					productionplanningFinalList.add(productionplanning);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return productionplanningFinalList;
+	}
+	
 
 	@RequestMapping(value = "getProductionPlanByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> getProductionPlanDate(@PathVariable("date") String date) {

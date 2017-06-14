@@ -1,7 +1,9 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.sql.Timestamp;
 
 
@@ -14,8 +16,9 @@ import java.sql.Timestamp;
 public class Reportinputassociation implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	private int id;
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY) 
+	private long id;
 
 	@Column(name="created_by")
 	private String createdBy;
@@ -23,7 +26,7 @@ public class Reportinputassociation implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	private byte isactive;
+	private boolean isactive;
 
 	@Column(name="updated_by")
 	private String updatedBy;
@@ -43,12 +46,16 @@ public class Reportinputassociation implements Serializable {
 
 	public Reportinputassociation() {
 	}
+	
+	public Reportinputassociation(int id) {
+		this.id=id;
+	}
 
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -68,11 +75,11 @@ public class Reportinputassociation implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	public byte getIsactive() {
+	public boolean getIsactive() {
 		return this.isactive;
 	}
 
-	public void setIsactive(byte isactive) {
+	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
 

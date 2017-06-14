@@ -88,7 +88,7 @@ public class CreatePdfForBomProduct {
 		     table1.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
 		     table1.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
 		     table1.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
-		     table1.addCell(getCell1("PURCHASE ORDER", PdfPCell.ALIGN_CENTER,bf112));
+		     table1.addCell(getCell1("BOM", PdfPCell.ALIGN_CENTER,bf112));
 		     table00.addCell(table1);
 		     document.add(table00);
 

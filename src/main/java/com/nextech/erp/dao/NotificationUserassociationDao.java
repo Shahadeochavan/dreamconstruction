@@ -9,5 +9,7 @@ public interface NotificationUserassociationDao extends SuperDao<Notificationuse
 	public Notificationuserassociation getNotifiactionByUserId(long userId) throws Exception;
 	
 	List<Notificationuserassociation> getNotificationuserassociationByUserId(long userId) throws Exception;
+	
+	List<Notificationuserassociation> getNotificationuserassociationBynotificationId(long notificationId) throws Exception;
 
 }

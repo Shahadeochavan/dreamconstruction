@@ -47,4 +47,17 @@ public class NotificationUserassociationDaoImpl extends
 				.list() : null);
 	}
 
+	@Override
+	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
+			long notificationId) throws Exception {
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session
+				.createCriteria(Notificationuserassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("user.id", notificationId));
+		return (criteria.list().size() > 0 ? (List<Notificationuserassociation>) criteria
+				.list() : null);
+	}
+
 }

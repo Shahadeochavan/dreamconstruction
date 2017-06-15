@@ -28,4 +28,11 @@ public class NotificationUserAssociationServiceImpl extends CRUDServiceImpl<Noti
 		return notificationUserassociationDao.getNotificationuserassociationByUserId(userId);
 	}
 
+	@Override
+	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
+			long notificationId) throws Exception {
+		// TODO Auto-generated method stub
+		return notificationUserassociationDao.getNotificationuserassociationBynotificationId(notificationId);
+	}
+
 }

@@ -39,6 +39,7 @@ import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.dto.ProductOrderData;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
@@ -46,6 +47,7 @@ import com.nextech.erp.model.Status;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
@@ -73,6 +75,9 @@ public class ProductorderController {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	NotificationUserAssociationService notificationUserAssociationService;
 	
 	@Autowired
 	ProductService productService;
@@ -323,6 +328,7 @@ public class ProductorderController {
 		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
 		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
 		Client client = clientService.getEntityById(Client.class,productorder.getClient().getId());
+
 		//TODO mail sending
         mailSending(notification, productorder, client,fileName);
 
@@ -359,6 +365,7 @@ public class ProductorderController {
 	private void mailSending(Notification notification,Productorder productorder,Client client,String fileName) throws Exception{
 		List<Productorderassociation>  productorderassociations= productorderassociationService.getProductorderassociationByOrderId(productorder.getId());
 		List<ProductOrderData> productOrderDatas = new ArrayList<ProductOrderData>();
+		List<Notificationuserassociation> notificationuserassociations  = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
 		for (Productorderassociation productorderassociation : productorderassociations) {
 			Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 			ProductOrderData productOrderData = new ProductOrderData();
@@ -368,10 +375,12 @@ public class ProductorderController {
 			productOrderDatas.add(productOrderData);
 		}
 		  Mail mail = new Mail();
-	        mail.setMailFrom(notification.getBeanClass());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+	        mail.setMailFrom(Boolean.toString(notificationuserassociation.getTo()));
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 	        mail.setAttachment(fileName);
+		  }     
 	        Map < String, Object > model = new HashMap < String, Object >();
 	            model.put("companyName", client.getCompanyname());
 	            model.put("mailfrom", notification.getName());

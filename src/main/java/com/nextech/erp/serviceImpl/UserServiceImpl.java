@@ -47,4 +47,10 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		// TODO Auto-generated method stub
 		return userdao.getUserByFirstNamLastName(firstName, lastName);
 	}
+
+	@Override
+	public User getUserByNotifictionId(long notificatinId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

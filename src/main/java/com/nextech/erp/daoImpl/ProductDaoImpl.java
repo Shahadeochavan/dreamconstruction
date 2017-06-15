@@ -34,4 +34,10 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 		return product;
 	}
 
+	@Override
+	public Product getProductListByProductId(long productId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

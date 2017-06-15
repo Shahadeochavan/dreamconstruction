@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
-
 import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;

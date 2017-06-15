@@ -96,4 +96,11 @@ public class ProductorderassociationDaoImpl extends
 		criteria.add(Restrictions.eq("isactive", true));
 		return  (criteria.list().size() > 0 ? criteria.list() : null);
 	}
+
+	@Override
+	public Productorderassociation getProductorderassociationByProductId(
+			long pId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

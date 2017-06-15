@@ -67,11 +67,11 @@ public class VendorController {
 			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 
 			} else {
-				return new UserStatus(1, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}
 			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
 			} else {
-				return new UserStatus(1,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
 			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);

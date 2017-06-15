@@ -55,4 +55,11 @@ ProductorderassociationDao productorderassociationDao;
 		return productorderassociationDao.getProductOrderAssoByOrderId(orderId);
 	}
 
+	@Override
+	public Productorderassociation getProductorderassociationByProductId(
+			long pId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

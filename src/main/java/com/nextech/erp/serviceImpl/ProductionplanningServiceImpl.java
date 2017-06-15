@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dao.ProductionplanningDao;
@@ -33,7 +34,7 @@ import com.nextech.erp.service.ProductionplanningService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.StatusService;
-
+@Service
 public class ProductionplanningServiceImpl extends
 		CRUDServiceImpl<Productionplanning> implements
 		ProductionplanningService {

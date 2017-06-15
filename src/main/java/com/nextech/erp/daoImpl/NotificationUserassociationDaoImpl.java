@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.NotificationUserassociationDao;
-import com.nextech.erp.model.Dispatch;
-import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 
+@Repository
+@Transactional
 public class NotificationUserassociationDaoImpl extends
 		SuperDaoImpl<Notificationuserassociation> implements
 		NotificationUserassociationDao {

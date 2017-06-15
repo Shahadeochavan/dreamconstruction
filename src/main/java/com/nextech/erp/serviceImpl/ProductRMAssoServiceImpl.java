@@ -3,11 +3,12 @@ package com.nextech.erp.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductRMAssoDao;
 import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.service.ProductRMAssoService;
-
+@Service
 public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterialassociation> implements ProductRMAssoService {
 
 	@Autowired

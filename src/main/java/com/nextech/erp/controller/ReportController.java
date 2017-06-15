@@ -8,14 +8,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +28,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ReportColumn;
+import com.nextech.erp.dto.ReportInputDTO;
+import com.nextech.erp.dto.ReportInputDataDTO;
 import com.nextech.erp.model.Reportinputassociation;
+import com.nextech.erp.model.Reportinputparameter;
 import com.nextech.erp.service.ReptInpAssoService;
 import com.nextech.erp.status.UserStatus;
 
@@ -33,6 +41,7 @@ import net.sf.dynamicreports.report.builder.component.Components;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
 
+@SuppressWarnings("deprecation")
 @RestController
 @RequestMapping("/report")
 public class ReportController {
@@ -51,10 +60,36 @@ public class ReportController {
 	@Autowired
 	ReptInpAssoService reptInpAssoService;
 	
+	 @Transactional
+	@SuppressWarnings({"rawtypes", "unchecked" })
 	@RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")
-	public List<Reportinputassociation> inputParameters(@PathVariable("id") long id, final HttpServletRequest request,final HttpServletResponse response) throws Exception {
-			 List<Reportinputassociation> list = reptInpAssoService.getReportInputParametersByReportId(id);
-		return list;
+	public ReportInputDTO inputParameters(@PathVariable("id") long id, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		ReportInputDTO inputDTO = new ReportInputDTO();
+		List<Reportinputassociation> list = reptInpAssoService.getReportInputParametersByReportId(id);
+		if (list != null && list.size() > 0) {
+			for (Reportinputassociation reportinputassociation : list) {
+				Reportinputparameter reportinputparameter = reportinputassociation.getReportinputparameter();
+				if (reportinputparameter != null && reportinputparameter.isQueryParameter()) {
+					Query query1 = sessionFactory.openSession().createSQLQuery(reportinputparameter.getQuery());
+					query1.setResultTransformer(Criteria.ALIAS_TO_ENTITY_MAP);
+					List results = query1.list();
+					List<ReportInputDataDTO> dataDTOs = new ArrayList<ReportInputDataDTO>();
+					for (Object object : results) {
+						Map<String, Object> data = (Map<String, Object>) object;
+						ReportInputDataDTO dto = new ReportInputDataDTO();
+						dto.setName(data.get("Name") + "");
+						dto.setId(data.get("ID") + "");
+						dataDTOs.add(dto);
+					}
+					inputDTO.setData(dataDTOs);
+				}
+				inputDTO.setDispalyName(reportinputparameter.getDisplayName());
+				inputDTO.setInputType(reportinputparameter.getInputType());
+				inputDTO.setId(reportinputparameter.getId());
+			}
+		} 
+		return inputDTO;
 	}
 	
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")

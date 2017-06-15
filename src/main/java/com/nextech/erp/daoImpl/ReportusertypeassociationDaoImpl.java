@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ReportusertypeassociationDao;
 import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.Usertypepageassociation;
 
+@Repository
+@Transactional
 public class ReportusertypeassociationDaoImpl extends SuperDaoImpl<Reportusertypeassociation> implements ReportusertypeassociationDao {
 
 	@Override

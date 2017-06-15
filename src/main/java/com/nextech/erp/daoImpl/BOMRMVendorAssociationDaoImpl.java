@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.BOMRMVendorAssociationDao;
 import com.nextech.erp.model.Bomrmvendorassociation;
 
+@Repository
+@Transactional
 public class BOMRMVendorAssociationDaoImpl extends
 		SuperDaoImpl<Bomrmvendorassociation> implements
 		BOMRMVendorAssociationDao {

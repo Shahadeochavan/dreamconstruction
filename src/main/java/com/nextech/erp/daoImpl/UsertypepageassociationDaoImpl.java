@@ -8,10 +8,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.UsertypepageassociationDao;
 import com.nextech.erp.model.Usertypepageassociation;
 
+@Repository
+@Transactional
 public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageassociation> implements UsertypepageassociationDao {
 
 	@Autowired

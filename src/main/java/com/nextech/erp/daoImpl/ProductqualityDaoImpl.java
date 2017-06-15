@@ -4,9 +4,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.nextech.erp.dao.ProductqualityDao;
 import com.nextech.erp.model.Productquality;
 
+@Repository
+@Transactional
 public class ProductqualityDaoImpl extends SuperDaoImpl<Productquality> implements ProductqualityDao{
 
 	@SuppressWarnings("unchecked")

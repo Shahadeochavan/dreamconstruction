@@ -2,10 +2,14 @@ package com.nextech.erp.daoImpl;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.model.Product;
 
+@Repository
+@Transactional
 public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao {
 
 	@Override

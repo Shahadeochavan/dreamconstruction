@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.SuperDao;
 import com.nextech.erp.service.CRUDService;
 
+@Service
 public class CRUDServiceImpl<T> implements CRUDService<T> {
 
 	@Qualifier("superDao")

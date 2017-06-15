@@ -3,11 +3,12 @@ package com.nextech.erp.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.BomDao;
 import com.nextech.erp.model.Bom;
 import com.nextech.erp.service.BomService;
-
+@Service
 public class BomServiceImpl extends CRUDServiceImpl<Bom> implements BomService{
 
 	@Autowired

@@ -2,10 +2,16 @@ package com.nextech.erp.daoImpl;
 
 
 import org.hibernate.Criteria;
+
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.QualitycheckrawmaterialDao;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
+
+@Repository
+@Transactional
 public class QualitycheckrawmaterialDaoImpl extends
 		SuperDaoImpl<Qualitycheckrawmaterial> implements
 		QualitycheckrawmaterialDao {

@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ProductinventoryDao;
 import com.nextech.erp.model.Productinventory;
 
+@Repository
+@Transactional
 public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		implements ProductinventoryDao {
 

@@ -37,7 +37,7 @@ public class Reportinputparameter implements Serializable {
 
 	private boolean isactive;
 
-	private String isQueryParameter;
+	private boolean isQueryParameter;
 
 	private String query;
 
@@ -105,15 +105,15 @@ public class Reportinputparameter implements Serializable {
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
-
-	public String getIsQueryParameter() {
-		return this.isQueryParameter;
+	
+	public boolean isQueryParameter() {
+		return isQueryParameter;
 	}
-
-	public void setIsQueryParameter(String isQueryParameter) {
+	
+	public void setQueryParameter(boolean isQueryParameter) {
 		this.isQueryParameter = isQueryParameter;
 	}
-
+	
 	public String getQuery() {
 		return this.query;
 	}

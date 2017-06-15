@@ -4,12 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductorderassociationDao;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.service.ProductorderassociationService;
-
+@Service
 public class ProductorderassociationServiceImpl extends CRUDServiceImpl<Productorderassociation> implements
 		ProductorderassociationService {
 @Autowired

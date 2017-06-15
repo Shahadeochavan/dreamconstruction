@@ -4,10 +4,14 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.BomDao;
 import com.nextech.erp.model.Bom;
 
+@Repository
+@Transactional
 public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 
 	@SuppressWarnings("unchecked")

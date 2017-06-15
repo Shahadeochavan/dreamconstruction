@@ -1,11 +1,12 @@
 package com.nextech.erp.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ReportusertypeassociationDao;
 import com.nextech.erp.model.Reportoutputassociation;
 import com.nextech.erp.service.ReptOptAssoService;
-
+@Service
 public class ReptOptAssoServiceImpl extends CRUDServiceImpl<Reportoutputassociation> implements ReptOptAssoService {
 
 	

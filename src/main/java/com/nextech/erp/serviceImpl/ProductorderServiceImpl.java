@@ -3,11 +3,12 @@ package com.nextech.erp.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.service.ProductorderService;
-
+@Service
 public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> implements ProductorderService {
 
 	@Autowired

@@ -6,10 +6,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ClientDao;
 import com.nextech.erp.model.Client;
 
+@Repository
+@Transactional
 public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 	@Autowired
 	SessionFactory sessionFactory;

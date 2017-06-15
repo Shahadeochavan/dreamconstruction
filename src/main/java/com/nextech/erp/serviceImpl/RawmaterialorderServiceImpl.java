@@ -3,11 +3,12 @@ package com.nextech.erp.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.RawmaterialorderDao;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.service.RawmaterialorderService;
-
+@Service
 public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorder> implements RawmaterialorderService{
 
 	@Autowired

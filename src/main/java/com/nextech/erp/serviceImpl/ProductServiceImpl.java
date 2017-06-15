@@ -1,6 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.ProductDao;
 import com.nextech.erp.dao.ProductorderDao;
@@ -8,7 +9,7 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.service.ProductService;
-
+@Service
 public class ProductServiceImpl extends CRUDServiceImpl<Product> implements ProductService {
 
 	@Autowired

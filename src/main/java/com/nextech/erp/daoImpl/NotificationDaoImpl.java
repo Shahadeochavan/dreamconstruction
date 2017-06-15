@@ -2,10 +2,14 @@ package com.nextech.erp.daoImpl;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.NotificationDao;
 import com.nextech.erp.model.Notification;
 
+@Repository
+@Transactional
 public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements NotificationDao{
 
 	@Override

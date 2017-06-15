@@ -4,11 +4,12 @@ package com.nextech.erp.serviceImpl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.nextech.erp.dao.DispatchDao;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.service.DispatchService;
-
+@Service
 public class DispatchServiceImpl extends CRUDServiceImpl<Dispatch> implements DispatchService {
 
 	@Autowired

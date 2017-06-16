@@ -26,10 +26,12 @@ import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
@@ -45,6 +47,9 @@ public class VendorController {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	UserService userService;
 
 
 	@Autowired
@@ -146,13 +151,21 @@ public class VendorController {
 	private void mailSending(Vendor vendor,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		  Mail mail = new Mail();
 
-		  mail.setMailCc((request.getAttribute("current_user").toString()));
-		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-		  Notification notification = notificationService.getEntityById(Notification.class,10);
-	        mail.setMailFrom(notification.getBeanClass());
+		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				   mail.setMailFrom(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			
+		}
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
-
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());
 	        model.put("lastName", vendor.getLastName());
@@ -167,10 +180,19 @@ public class VendorController {
 	private void mailSendingUpdate(Vendor vendor,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		  Mail mail = new Mail();
 
-		  mail.setMailCc((request.getAttribute("current_user").toString()));
-		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-		  Notification notification = notificationService.getEntityById(Notification.class,12);
-	        mail.setMailFrom(notification.getBeanClass());
+		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				   mail.setMailFrom(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			
+		}
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
 

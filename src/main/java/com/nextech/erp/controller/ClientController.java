@@ -3,10 +3,12 @@ package com.nextech.erp.controller;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -18,15 +20,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.User;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -45,6 +50,9 @@ public class ClientController {
 
 	@Autowired
 	NotificationUserAssociationService notificationUserAssService;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	MailService mailService;
@@ -152,10 +160,19 @@ public class ClientController {
 	private void mailSending(Client client,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		  Mail mail = new Mail();
 
-		  mail.setMailCc((request.getAttribute("current_user").toString()));
-		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-		  Notification notification = notificationService.getEntityById(Notification.class, 13);
-	        mail.setMailFrom(notification.getBeanClass());
+		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				   mail.setMailFrom(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			
+		}
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 
@@ -173,10 +190,19 @@ public class ClientController {
 	private void mailSendingUpdate(Client client,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		  Mail mail = new Mail();
 
-		  mail.setMailCc((request.getAttribute("current_user").toString()));
-		  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-		  Notification notification = notificationService.getEntityById(Notification.class, 14);
-	        mail.setMailFrom(notification.getBeanClass());
+		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				   mail.setMailFrom(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			
+		}
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 

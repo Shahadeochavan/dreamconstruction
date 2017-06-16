@@ -32,30 +32,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
-
-import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.dto.RawmaterialOrderAssociationModel;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.RMVAssoService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
+import com.sun.corba.se.spi.servicecontext.UEInfoServiceContext;
 
 @Controller
 @RequestMapping("/rawmaterialorder")
@@ -78,6 +80,12 @@ public class RawmaterialorderController {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	NotificationUserAssociationService notificationUserAssociationService;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	MailService mailService;
@@ -393,8 +401,20 @@ public class RawmaterialorderController {
 		return baos;
 	}
 
-	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas){
+	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor,String fileName,List<RMOrderModelData> rmOrderModelDatas) throws Exception{
+		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
 		  Mail mail = new Mail();
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class,notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				  mail.setMailFrom(user.getEmail());
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			  
+		}
 	        mail.setMailFrom(notification.getBeanClass());
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
@@ -410,12 +430,6 @@ public class RawmaterialorderController {
 	        model.put("companyName", vendor.getCompanyName());
 	        model.put("tax", rawmaterialorder.getTax());
 	        model.put("mailFrom", notification.getName());
-	/*        model.put("createdDate",rawmaterialorder.getCreateDate());
-	        model.put("quantity",rawmaterialorder.getQuantity());
-	        model.put("totalPrice", rawmaterialorder.getTotalprice());
-	        model.put("otherCharges", rawmaterialorder.getOtherCharges());
-	        model.put("actualPrice", rawmaterialorder.getActualPrice());
-	        model.put("tax", rawmaterialorder.getTax());*/
 	        model.put("signature", "www.NextechServices.in");
 	        mail.setModel(model);
 

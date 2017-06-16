@@ -44,6 +44,7 @@ import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.User;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -52,6 +53,7 @@ import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -81,6 +83,9 @@ public class ProductorderController {
 	
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	MailService mailService;
@@ -376,7 +381,14 @@ public class ProductorderController {
 		}
 		  Mail mail = new Mail();
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-	        mail.setMailFrom(Boolean.toString(notificationuserassociation.getTo()));
+		   User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+		 if(notificationuserassociation.getToo()==true){
+			 mail.setMailFrom(user.getEmail()); 
+		 }else if(notificationuserassociation.getBcc()==true){
+			 mail.setMailBcc(user.getEmail());
+		 }else if(notificationuserassociation.getCc()==true){
+			 mail.setMailCc(user.getEmail());
+		 }
 	        mail.setMailTo(client.getEmailid());
 	        mail.setMailSubject(notification.getSubject());
 	        mail.setAttachment(fileName);

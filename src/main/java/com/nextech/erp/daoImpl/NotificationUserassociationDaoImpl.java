@@ -55,7 +55,7 @@ public class NotificationUserassociationDaoImpl extends
 		Criteria criteria = session
 				.createCriteria(Notificationuserassociation.class);
 		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("user.id", notificationId));
+		criteria.add(Restrictions.eq("notification.id", notificationId));
 		return (criteria.list().size() > 0 ? (List<Notificationuserassociation>) criteria
 				.list() : null);
 	}

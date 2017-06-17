@@ -23,8 +23,6 @@ import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Productorder;
-import com.nextech.erp.model.Rawmaterialorder;
-import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.RawmaterialorderService;
 
 public class CreatePDF {

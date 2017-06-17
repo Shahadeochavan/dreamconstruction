@@ -97,10 +97,4 @@ public class ProductorderassociationDaoImpl extends
 		return  (criteria.list().size() > 0 ? criteria.list() : null);
 	}
 
-	@Override
-	public Productorderassociation getProductorderassociationByProductId(
-			long pId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

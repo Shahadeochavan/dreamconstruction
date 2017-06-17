@@ -8,6 +8,11 @@ public class ERPConstants {
     public static String STATUS_NEW_PRODUCT_ORDER="newProductOrder";
     public static String STATUS_NEW_RM_ORDER="newRMOrder";
     public static String EMAIL_ALREADY_EXIT="emailExit";
+    public static String VENDOR_ADDED_SUCCESSFULLY="vendorAddedSuccessfully";
+    public static String VENDOR_UPDATE_SUCCESSFULLY="vendorUpdateSuccessfully";
+    public static String CLIENT_ADDED_SUCCESSFULLY="clientAddedSuccessfully";
+    public static String CLIENT_UPDATE_SUCCESSFULLY="clientUpdateSuccessfully";
+    public static String DISPATCHED_SUCCESSFULLY="dispatchedSuccessfully";
     public static String COMPANY_NAME_EXIT="companyName";
     public static String STATUS_RAW_MATERIAL_ORDER_COMPLETE="rmOrderComplete";
     public static String CLIENT_ADDED="clientAdded";
@@ -30,6 +35,7 @@ public class ERPConstants {
     public static  String STATUS_RAW_MATERIAL_ORDER_INCOMPLETE = "statusRMOrderIncomplete";
     public static  String PROD_PLAN_IN_PROGRESS = "ProdPlanInProgress";
     public static  String PROD_PLAN_NEW = "ProdPlanNew";
+    public static String PRODUCTION_PLAN_READY_TO_START ="productionPlanReadyToStart";
     public static  String PROD_PLAN_COMPLETE = "ProdPlanComplete";
     public static  String STATUS_QUALITY_CHECK_PENDING = "statusQualityCheckPending";
     public static String STATUS_QUALITY_CHECK_INPROGRESS="statusQualityCheckInprogess";

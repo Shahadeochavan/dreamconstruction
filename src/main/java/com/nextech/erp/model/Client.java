@@ -1,15 +1,8 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -27,19 +20,14 @@ public class Client implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
-	@NotBlank(message="{address should not be blank}")
-	@Size(min = 2, max = 255, message = "{address sholud be greater than 2 or less than 255 characters}")
 	private String address;
 
-	@NotBlank(message="{company name  should not be blank}")
-	@Size(min = 2, max = 255, message = "{company name sholud be greater than 2 or less than 255 characters}")
+	private String commisionerate;
+
 	private String companyname;
 
-	@NotBlank(message="{contact number  should not be blank}")
-	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String contactnumber;
 
-	@Size(min = 2, max = 255, message = "{contactpersonname  sholud be greater than 2 or less than 255 characters}")
 	private String contactpersonname;
 
 	@Column(name="created_by")
@@ -48,30 +36,40 @@ public class Client implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
+	private String cst;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
+	@Column(name="customer_ecc_number")
+	private String customerEccNumber;
+
 	private String description;
 
-	@Email(message="{email should be enter valid")
+	private String division;
+
 	private String emailid;
 
 	private boolean isactive;
+	private String  renge;
 
+	//private String range;
+//add code
 	@Column(name="updated_by")
 	private long updatedBy;
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
 
+	@Column(name="vat_no")
+	private String vatNo;
+
 	//bi-directional many-to-one association to Productorder
+
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
 	private List<Productorder> productorders;
 
 	public Client() {
 	}
-	public Client(int id) {
+	public Client(int id ) {
 		this.id=id;
 	}
 
@@ -89,6 +87,14 @@ public class Client implements Serializable {
 
 	public void setAddress(String address) {
 		this.address = address;
+	}
+
+	public String getCommisionerate() {
+		return this.commisionerate;
+	}
+
+	public void setCommisionerate(String commisionerate) {
+		this.commisionerate = commisionerate;
 	}
 
 	public String getCompanyname() {
@@ -131,12 +137,36 @@ public class Client implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	public String getCst() {
+		return this.cst;
+	}
+
+	public void setCst(String cst) {
+		this.cst = cst;
+	}
+
+	public String getCustomerEccNumber() {
+		return this.customerEccNumber;
+	}
+
+	public void setCustomerEccNumber(String customerEccNumber) {
+		this.customerEccNumber = customerEccNumber;
+	}
+
 	public String getDescription() {
 		return this.description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getDivision() {
+		return this.division;
+	}
+
+	public void setDivision(String division) {
+		this.division = division;
 	}
 
 	public String getEmailid() {
@@ -154,7 +184,23 @@ public class Client implements Serializable {
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
 	}
+	
+	
 
+	/*public String getRange() {
+		return this.range;
+	}
+
+	public void setRange(String range) {
+		this.range = range;
+	}*/
+
+	public String getRenge() {
+		return renge;
+	}
+	public void setRenge(String renge) {
+		this.renge = renge;
+	}
 	public long getUpdatedBy() {
 		return this.updatedBy;
 	}
@@ -169,6 +215,14 @@ public class Client implements Serializable {
 
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public String getVatNo() {
+		return this.vatNo;
+	}
+
+	public void setVatNo(String vatNo) {
+		this.vatNo = vatNo;
 	}
 
 	public List<Productorder> getProductorders() {

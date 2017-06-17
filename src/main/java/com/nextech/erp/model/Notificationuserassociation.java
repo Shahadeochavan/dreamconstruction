@@ -9,7 +9,7 @@ import java.sql.Timestamp;
 
 /**
  * The persistent class for the notificationuserassociation database table.
- *
+ * 
  */
 @Entity
 @NamedQuery(name="Notificationuserassociation.findAll", query="SELECT n FROM Notificationuserassociation n")
@@ -20,7 +20,9 @@ public class Notificationuserassociation implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
-	private String cc;
+	private boolean bcc;
+
+	private boolean cc;
 
 	@Column(name="created_by")
 	private long createdBy;
@@ -29,6 +31,8 @@ public class Notificationuserassociation implements Serializable {
 	private Timestamp createdDate;
 
 	private boolean isactive;
+
+	private boolean too;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -48,7 +52,7 @@ public class Notificationuserassociation implements Serializable {
 
 	public Notificationuserassociation() {
 	}
-
+	
 	public Notificationuserassociation(int id) {
 		this.id=id;
 	}
@@ -61,11 +65,19 @@ public class Notificationuserassociation implements Serializable {
 		this.id = id;
 	}
 
-	public String getCc() {
+	public boolean getBcc() {
+		return this.bcc;
+	}
+
+	public void setBcc(boolean bcc) {
+		this.bcc = bcc;
+	}
+
+	public boolean getCc() {
 		return this.cc;
 	}
 
-	public void setCc(String cc) {
+	public void setCc(boolean cc) {
 		this.cc = cc;
 	}
 
@@ -91,6 +103,14 @@ public class Notificationuserassociation implements Serializable {
 
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
+	}
+
+	public boolean getToo() {
+		return this.too;
+	}
+
+	public void setToo(boolean too) {
+		this.too = too;
 	}
 
 	public long getUpdatedBy() {

@@ -1,53 +1,36 @@
 package com.nextech.erp.model;
 
 import java.io.Serializable;
-
 import javax.persistence.*;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
-import org.hibernate.validator.constraints.NotEmpty;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.sql.Timestamp;
 import java.util.List;
-
-
 /**
  * The persistent class for the vendor database table.
  * 
  */
+
 @Entity
 @NamedQuery(name="Vendor.findAll", query="SELECT v FROM Vendor v")
 public class Vendor implements Serializable {
 	private static final long serialVersionUID = 1L;
-	
 
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
-	
-	@NotBlank(message="{address should not be blank}")
-	@Size(min = 2, max = 255, message = "{address sholud be greater than 2 or less than 255 characters}")
+
 	private String address;
 
-	@NotBlank(message="{city should not be blank}")
-	@Size(min = 2, max = 255, message = "{city sholud be greater than 2 or less than 255 characters}")
 	private String city;
 
-	@NotBlank(message="{company name  should not be blank}")
-	@Size(min = 2, max = 255, message = "{company name sholud be greater than 2 or less than 255 characters}")
+	private String commisionerate;
+
 	@Column(name="company_name")
 	private String companyName;
 
-	@NotBlank(message="{contact number  should not be blank}")
-	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	@Column(name="contact_number_mobile")
 	private String contactNumberMobile;
 
-	@NotBlank(message="{office contact number should not be blank}")
-	@Size(min = 10, max = 10, message = "{office contact number should be 10 digits}")
 	@Column(name="contact_number_office")
 	private String contactNumberOffice;
 
@@ -57,33 +40,30 @@ public class Vendor implements Serializable {
 	@Column(name="created_date")
 	private Timestamp createdDate;
 
-	@NotBlank(message="{description should not be blank}")
-	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
+	private String cst;
+
+	@Column(name="customer_ecc_number")
+	private String customerEccNumber;
+
 	private String description;
 
-	//@Email(message="{email should be enter valid")
-	 @NotEmpty
-	 @Email
+	private String divison;
+
 	private String email;
 
-	 @NotEmpty
-	//@NotBlank(message="{first Name should not be blank}")
-	@Size(min = 2, max = 255,message = "{Size.vendor.firstName}")
 	@Column(name="first_name")
 	private String firstName;
 
 	private boolean isactive;
 
-	@NotBlank(message="{last Name should not be blank}")
-	@Size(min = 2, max = 255, message = "{last Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="last_name")
 	private String lastName;
 
-	@NotBlank(message="{postalcode should not be blank}")
 	private String postalcode;
 
-	@NotBlank(message="{state should not be blank}")
-	@Size(min = 2, max = 255, message = "{state sholud be greater than 2 or less than 255 characters}")
+
+	private String renge; 
+	
 	private String state;
 
 	@Column(name="updated_by")
@@ -91,6 +71,13 @@ public class Vendor implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
+
+	@Column(name="vat_no")
+	private String vatNo;
+
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
+	private List<Bomrmvendorassociation> bomrmvendorassociations;
 
 	//bi-directional many-to-one association to Rawmaterialorder
 	@JsonIgnore
@@ -130,6 +117,14 @@ public class Vendor implements Serializable {
 
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+	public String getCommisionerate() {
+		return this.commisionerate;
+	}
+
+	public void setCommisionerate(String commisionerate) {
+		this.commisionerate = commisionerate;
 	}
 
 	public String getCompanyName() {
@@ -172,12 +167,36 @@ public class Vendor implements Serializable {
 		this.createdDate = createdDate;
 	}
 
+	public String getCst() {
+		return this.cst;
+	}
+
+	public void setCst(String cst) {
+		this.cst = cst;
+	}
+
+	public String getCustomerEccNumber() {
+		return this.customerEccNumber;
+	}
+
+	public void setCustomerEccNumber(String customerEccNumber) {
+		this.customerEccNumber = customerEccNumber;
+	}
+
 	public String getDescription() {
 		return this.description;
 	}
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getDivison() {
+		return this.divison;
+	}
+
+	public void setDivison(String divison) {
+		this.divison = divison;
 	}
 
 	public String getEmail() {
@@ -219,7 +238,23 @@ public class Vendor implements Serializable {
 	public void setPostalcode(String postalcode) {
 		this.postalcode = postalcode;
 	}
+	
+	
 
+//	public String getRange() {
+//		return this.range;
+//	}
+//
+//	public void setRange(String range) {
+//		this.range = range;
+//	}
+
+	public String getRenge() {
+		return renge;
+	}
+	public void setRenge(String renge) {
+		this.renge = renge;
+	}
 	public String getState() {
 		return this.state;
 	}
@@ -242,6 +277,36 @@ public class Vendor implements Serializable {
 
 	public void setUpdatedDate(Timestamp updatedDate) {
 		this.updatedDate = updatedDate;
+	}
+
+	public String getVatNo() {
+		return this.vatNo;
+	}
+
+	public void setVatNo(String vatNo) {
+		this.vatNo = vatNo;
+	}
+
+	public List<Bomrmvendorassociation> getBomrmvendorassociations() {
+		return this.bomrmvendorassociations;
+	}
+
+	public void setBomrmvendorassociations(List<Bomrmvendorassociation> bomrmvendorassociations) {
+		this.bomrmvendorassociations = bomrmvendorassociations;
+	}
+
+	public Bomrmvendorassociation addBomrmvendorassociation(Bomrmvendorassociation bomrmvendorassociation) {
+		getBomrmvendorassociations().add(bomrmvendorassociation);
+		bomrmvendorassociation.setVendor(this);
+
+		return bomrmvendorassociation;
+	}
+
+	public Bomrmvendorassociation removeBomrmvendorassociation(Bomrmvendorassociation bomrmvendorassociation) {
+		getBomrmvendorassociations().remove(bomrmvendorassociation);
+		bomrmvendorassociation.setVendor(null);
+
+		return bomrmvendorassociation;
 	}
 
 	public List<Rawmaterialorder> getRawmaterialorders() {

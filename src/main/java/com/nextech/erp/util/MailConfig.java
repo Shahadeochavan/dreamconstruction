@@ -1,4 +1,4 @@
-package com.nextech.erp.model;
+package com.nextech.erp.util;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -13,8 +13,8 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.ui.velocity.VelocityEngineFactory;
 
 @Configuration
-@ComponentScan(basePackages = "com.nextech.erp")
-public class ApplicationConfig {
+@ComponentScan(basePackages = "com.nextech.erp.util")
+public class MailConfig {
 
     @Bean
     public JavaMailSender getMailSender() {

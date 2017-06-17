@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderhistory;
@@ -32,9 +33,11 @@ import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.RawmaterialorderhistoryService;
@@ -42,6 +45,7 @@ import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
@@ -75,8 +79,15 @@ public class RawmaterialorderinvoiceController {
 
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	NotificationUserAssociationService notificationUserAssociationService;
+	
 	@Autowired
 	VendorService vendorService;
+	
+	@Autowired
+	UserService userService;
 
 	@Autowired
 	MailService mailService;
@@ -278,9 +289,20 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 
-	private void mailSending(Notification notification,Vendor vendor){
+	private void mailSending(Notification notification,Vendor vendor) throws Exception{
 		  Mail mail = new Mail();
-	        mail.setMailFrom(notification.getBeanClass());
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				   mail.setMailFrom(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			
+		}
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
 

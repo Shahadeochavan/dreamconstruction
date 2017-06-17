@@ -232,7 +232,6 @@ public class ProductionplanningController {
 
 	@RequestMapping(value = "createProductionPlanMonthYear/{MONTH-YEAR}", method = RequestMethod.POST, headers = "Accept=application/json")
 	public @ResponseBody List<Productionplanning> createProductionPlanMonthYear(@PathVariable("MONTH-YEAR") String month_year,HttpServletRequest request,HttpServletResponse response) {
-
 		List<Productionplanning> productionplanningList = null;
 		List<Product> productList = null;
 		try {

@@ -208,6 +208,22 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			if (userservice.getUserByUserId(user.getUserid()) == null) {
+
+			} else {
+				return new UserStatus(2, messageSource.getMessage(
+						ERPConstants.USER_ID, null, null));
+			}
+			if (userservice.getUserByEmail(user.getEmail()) == null) {
+			} else {
+				return new UserStatus(2, messageSource.getMessage(
+						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+			}
+			if (userservice.getUserByMobile(user.getMobile()) == null) {
+			} else {
+				return new UserStatus(2, messageSource.getMessage(
+						ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+			}
 			user.setIsactive(true);
 			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.updateEntity(user);
@@ -267,11 +283,19 @@ public class UserController {
 	private void mailSending(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
 			  Mail mail = new Mail();
 
-				  mail.setMailCc((request.getAttribute("current_user").toString()));
-				  Notificationuserassociation notificationuserassociation = notificationUserAssService.getNotifiactionByUserId(Long.parseLong(mail.getMailCc()));
-				  Notification notification = notificationService.getEntityById(Notification.class, notificationuserassociation.getNotification().getId());
-
-				    mail.setMailFrom(notification.getBeanClass());
+			  Notification notification = notificationService.getEntityById(Notification.class,5);
+			  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
+			  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+				  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
+				  if(notificationuserassociation.getToo()==true){
+					   mail.setMailFrom(user1.getEmail()); 
+				  }else if(notificationuserassociation.getBcc()==true){
+					  mail.setMailBcc(user1.getEmail());
+				  }else if(notificationuserassociation.getCc()==true){
+					  mail.setMailCc(user1.getEmail());
+				  }
+				
+			}
 			        mail.setMailSubject(notification.getSubject());
 			        mail.setMailTo(user.getEmail());
 			        Map < String, Object > model = new HashMap < String, Object > ();

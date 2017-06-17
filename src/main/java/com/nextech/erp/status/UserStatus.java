@@ -1,13 +1,11 @@
 package com.nextech.erp.status;
 
 
-import com.nextech.erp.model.User;
-
 public class UserStatus {
 	private int code;
 	private String message;
 	private Object data;
-	private User user;
+	private Object user;
 
 	public UserStatus() {
 	}
@@ -16,7 +14,7 @@ public class UserStatus {
 		this.message = message;
 	}
 	
-	public UserStatus(int code, String message,Object data, User user) {
+	public UserStatus(int code, String message,Object data, Object user) {
 		this.code = code;
 		this.message = message;
 		this.data = data;
@@ -31,13 +29,6 @@ public class UserStatus {
 		this.code=code;
 		this.data=data;
 	}
-	
-
-
-//	public UserStatus(int code, Object data) {
-//		this.code = code;
-//		this.data = data;
-//	}
 	
 	public int getCode() {
 		return code;
@@ -58,14 +49,13 @@ public class UserStatus {
 	public Object getData() {
 		return data;
 	}
-
-	public void setData(Object data) {
-		this.data = data;
-	}
-
-	public User getUser() {
+	public Object getUser() {
 		return user;
 	}
+	public void setUser(Object user) {
+		this.user = user;
+	}
+
 
 
 }

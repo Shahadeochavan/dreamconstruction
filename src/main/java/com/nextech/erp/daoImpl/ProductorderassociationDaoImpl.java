@@ -97,4 +97,17 @@ public class ProductorderassociationDaoImpl extends
 		return  (criteria.list().size() > 0 ? criteria.list() : null);
 	}
 
+	@Override
+	public Productorderassociation getProdcutAssoByProdcutId(long prodcutId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productorderassociation.class);
+		criteria.add(Restrictions.eq("product.id", prodcutId));
+		criteria.add(Restrictions.eq("isactive", true));
+		Productorderassociation productorderassociation = (Productorderassociation) (criteria.list().size() > 0 ? criteria.list().get(0) : null);
+		return productorderassociation;
+	}
+
 }

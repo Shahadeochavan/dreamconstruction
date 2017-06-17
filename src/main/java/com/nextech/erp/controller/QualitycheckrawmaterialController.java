@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Qualitycheckrawmaterial;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
@@ -38,9 +39,11 @@ import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
+import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
 import com.nextech.erp.service.QualitycheckrawmaterialService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
@@ -52,6 +55,7 @@ import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.RawmaterialorderinvoiceassociationService;
 import com.nextech.erp.service.RmorderinvoiceintakquantityService;
 import com.nextech.erp.service.StatusService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
 
@@ -93,6 +97,12 @@ public class QualitycheckrawmaterialController {
 
 	@Autowired
 	MailService mailService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired 
+	NotificationUserAssociationService notificationUserAssociationService;
 
 	@Autowired
 	RawmaterialorderinvoiceassociationService rawmaterialorderinvoiceassociationService;
@@ -365,13 +375,21 @@ public class QualitycheckrawmaterialController {
 		}
 		return rmorderinvoiceintakquantities;
 	}
-	private void mailSending(Notification notification,Vendor vendor){
+	private void mailSending(Notification notification,Vendor vendor) throws Exception{
 		  Mail mail = new Mail();
-	        mail.setMailFrom(notification.getBeanClass());
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				   mail.setMailFrom(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+		}
 	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
-
-
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());
 	        model.put("lastName", vendor.getLastName());

@@ -169,6 +169,8 @@ public class ProductionplanningServiceImpl extends
 			int myMonth=cal.get(Calendar.MONTH);
 
 			while (myMonth==cal.get(Calendar.MONTH)) {
+				List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(product.getId());
+				if(productorderassociations !=null&&!productorderassociations.isEmpty()){
 				productionplanning = new Productionplanning();
 				productionplanning.setProduct(product);
 				productionplanning.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -179,7 +181,7 @@ public class ProductionplanningServiceImpl extends
 						productionplanning.getProduct().getId(),
 						productionplanning.getDate())== null){
 					productionplanningDao.add(productionplanning);
-				}else{
+				} }else{
 					System.out.println("production plan already exit");
 
 				}

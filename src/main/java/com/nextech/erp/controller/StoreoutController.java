@@ -82,7 +82,7 @@ public class StoreoutController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, storeOutDTO.getProductId());
+			Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, storeOutDTO.getProductionPlanId());
 			Storeout storeout = new Storeout();
 			storeout.setQuantityRequired(storeOutDTO.getQuantityRequired());
 			storeout.setDescription(storeOutDTO.getDescription());
@@ -92,6 +92,8 @@ public class StoreoutController {
 			storeout.setIsactive(true);
 			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			storeoutService.addEntity(storeout);
+			productionplanning.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))));
+			productionplanningService.updateEntity(productionplanning);
 			for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
 
 			    Storeoutrm storeoutrm = setStoreParts(storeOutPart);

@@ -51,7 +51,6 @@ public class VendorController {
 	@Autowired
 	UserService userService;
 
-
 	@Autowired
 	NotificationUserAssociationService notificationUserAssService;
 
@@ -110,6 +109,15 @@ public class VendorController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateVendor(@RequestBody Vendor vendor,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+
+			} else {
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+			}
+			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+			} else {
+				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+			}
 			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.updateEntity(vendor);

@@ -103,6 +103,7 @@
 		<property name="basenames">
 			<list>
 				<value>classpath:properties/common</value>
+				<value>classpath:properties/email</value>
 				<value>classpath:properties/url</value>
 			</list>
 		</property>

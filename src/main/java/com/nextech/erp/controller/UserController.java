@@ -227,6 +227,7 @@ public class UserController {
 			user.setIsactive(true);
 			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.updateEntity(user);
+			mailSendingUpdate(user, request, response);
 			return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -288,7 +289,7 @@ public class UserController {
 			  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 				  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
 				  if(notificationuserassociation.getToo()==true){
-					   mail.setMailFrom(user1.getEmail()); 
+					  mail.setMailTo(user.getEmail());
 				  }else if(notificationuserassociation.getBcc()==true){
 					  mail.setMailBcc(user1.getEmail());
 				  }else if(notificationuserassociation.getCc()==true){
@@ -297,7 +298,6 @@ public class UserController {
 				
 			}
 			        mail.setMailSubject(notification.getSubject());
-			        mail.setMailTo(user.getEmail());
 			        Map < String, Object > model = new HashMap < String, Object > ();
 			        model.put("firstName", user.getFirstName());
 			        model.put("lastName", user.getLastName());
@@ -307,7 +307,35 @@ public class UserController {
 			        model.put("location", "Pune");
 			        model.put("signature", "www.NextechServices.in");
 			        mail.setModel(model);
-
 			        mailService.sendEmailWithoutPdF(mail, notification);
+}
+	
+	private void mailSendingUpdate(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
+		  Mail mail = new Mail();
+
+		  Notification notification = notificationService.getEntityById(Notification.class,5);
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getToo()==true){
+				  mail.setMailTo(user.getEmail());
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user1.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user1.getEmail());
+			  }
+			
+		}
+		        mail.setMailSubject(notification.getSubject());
+		        Map < String, Object > model = new HashMap < String, Object > ();
+		        model.put("firstName", user.getFirstName());
+		        model.put("lastName", user.getLastName());
+		        model.put("userId", user.getUserid());
+		        model.put("password", user.getPassword());
+		        model.put("email", user.getEmail());
+		        model.put("location", "Pune");
+		        model.put("signature", "www.NextechServices.in");
+		        mail.setModel(model);
+		        mailService.sendEmailWithoutPdF(mail, notification);
 }
 }

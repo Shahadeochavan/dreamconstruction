@@ -295,7 +295,7 @@ public class RawmaterialorderinvoiceController {
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getToo()==true){
-				   mail.setMailFrom(user.getEmail()); 
+				  mail.setMailTo(vendor.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
 				  mail.setMailBcc(user.getEmail());
 			  }else if(notificationuserassociation.getCc()==true){
@@ -303,10 +303,7 @@ public class RawmaterialorderinvoiceController {
 			  }
 			
 		}
-	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
-
-
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());
 	        model.put("lastName", vendor.getLastName());

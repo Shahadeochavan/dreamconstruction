@@ -39,4 +39,10 @@ public class RawmaterialServiceImpl extends CRUDServiceImpl<Rawmaterial> impleme
 		// TODO Auto-generated method stub
 		return rawmaterialDao.getRawmaterialByVenodrId(id);
 	}
+
+	@Override
+	public Rawmaterial getRMByRMId(long id) throws Exception {
+		// TODO Auto-generated method stub
+		return rawmaterialDao.getRMByRMId(id);
+	}
 }

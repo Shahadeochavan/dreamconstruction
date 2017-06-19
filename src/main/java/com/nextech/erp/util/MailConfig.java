@@ -5,6 +5,8 @@ import java.util.Properties;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.exception.VelocityException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -12,9 +14,16 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.ui.velocity.VelocityEngineFactory;
 
+import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.constants.ERPEmailConstants;
+
 @Configuration
 @ComponentScan(basePackages = "com.nextech.erp.util")
 public class MailConfig {
+	
+	
+	@Autowired
+	private MessageSource messageSource;
 
     @Bean
     public JavaMailSender getMailSender() {
@@ -22,8 +31,8 @@ public class MailConfig {
 
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("shahadeochavan@gmail.com");
-        mailSender.setPassword("shahadeo909");
+        mailSender.setUsername(messageSource.getMessage(ERPEmailConstants.EMAIL_ID_SENDING_FROM, null, null));
+        mailSender.setPassword(messageSource.getMessage(ERPEmailConstants.EMAIL_PASSWORD, null, null));
 
         Properties javaMailProperties = new Properties();
         javaMailProperties.put("mail.smtp.starttls.enable", "true");

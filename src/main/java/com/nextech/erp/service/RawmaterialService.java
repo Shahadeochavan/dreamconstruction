@@ -10,4 +10,6 @@ public interface RawmaterialService extends CRUDService<Rawmaterial>{
 	List<Rawmaterial> getRawMaterialByRMOrderId(Long id) throws Exception;
 	
 	List<Rawmaterialvendorassociation> getRawmaterialByVenodrId(long id) throws Exception;
+	
+	public Rawmaterial getRMByRMId(long id) throws Exception;
 }

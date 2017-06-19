@@ -381,7 +381,7 @@ public class ProductorderController {
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 		   User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 		 if(notificationuserassociation.getToo()==true){
-			 mail.setMailTo(user.getEmail()); 
+			 mail.setMailTo(client.getEmailid()); 
 		 }else if(notificationuserassociation.getBcc()==true){
 			 mail.setMailBcc(user.getEmail());
 		 }else if(notificationuserassociation.getCc()==true){

@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,5 +18,12 @@ public class QualitycheckrawmaterialServiceImpl extends CRUDServiceImpl<Qualityc
 	public Qualitycheckrawmaterial getQualitycheckrawmaterialByInvoiceIdAndRMId(long invoiceId, long rmID) throws Exception {
 		
 		return qualitycheckrawmaterialDao.getQualitycheckrawmaterialByInvoiceIdAndRMId(invoiceId, rmID);
+	}
+
+	@Override
+	public List<Qualitycheckrawmaterial> getQualitycheckrawmaterialByInvoiceId(
+			long invoiceId) throws Exception {
+		// TODO Auto-generated method stub
+		return qualitycheckrawmaterialDao.getQualitycheckrawmaterialByInvoiceId(invoiceId);
 	}
 }

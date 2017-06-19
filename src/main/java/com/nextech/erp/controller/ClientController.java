@@ -116,9 +116,23 @@ public class ClientController {
 	public @ResponseBody UserStatus updateClient(@RequestBody Client client,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
+			
+			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+
+			} else {
+				return new UserStatus(2, messageSource.getMessage(
+						ERPConstants.COMPANY_NAME_EXIT, null, null));
+
+			}
+			if (clientService.getClientByEmail(client.getEmailid()) == null) {
+			} else {
+				return new UserStatus(2, messageSource.getMessage(
+						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+			}
 			client.setUpdatedBy(Long.parseLong(request.getAttribute(
 					"current_user").toString()));
 			client.setIsactive(true);
+			
 			clientService.updateEntity(client);
 			mailSendingUpdate(client, request, response);
 			return new UserStatus(1, messageSource.getMessage(
@@ -165,7 +179,7 @@ public class ClientController {
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getToo()==true){
-				   mail.setMailFrom(user.getEmail()); 
+				   mail.setMailTo(client.getEmailid()); 
 			  }else if(notificationuserassociation.getBcc()==true){
 				  mail.setMailBcc(user.getEmail());
 			  }else if(notificationuserassociation.getCc()==true){
@@ -173,7 +187,7 @@ public class ClientController {
 			  }
 			
 		}
-	        mail.setMailTo(client.getEmailid());
+	     
 	        mail.setMailSubject(notification.getSubject());
 
 	        Map < String, Object > model = new HashMap < String, Object > ();
@@ -195,7 +209,7 @@ public class ClientController {
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getToo()==true){
-				   mail.setMailFrom(user.getEmail()); 
+				  mail.setMailTo(client.getEmailid());
 			  }else if(notificationuserassociation.getBcc()==true){
 				  mail.setMailBcc(user.getEmail());
 			  }else if(notificationuserassociation.getCc()==true){
@@ -203,7 +217,7 @@ public class ClientController {
 			  }
 			
 		}
-	        mail.setMailTo(client.getEmailid());
+	     
 	        mail.setMailSubject(notification.getSubject());
 
 	        Map < String, Object > model = new HashMap < String, Object > ();

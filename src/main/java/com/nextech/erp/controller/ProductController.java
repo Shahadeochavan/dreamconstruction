@@ -97,6 +97,15 @@ public class ProductController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProduct(@RequestBody Product product,HttpServletRequest request,HttpServletResponse response) {
 		try {
+			if (productService.getProductByName(product.getName()) == null) {
+
+			} else {
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
+			}
+			if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
+			} else {
+				return new UserStatus(1, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
+			}
 			product.setIsactive(true);
 			product.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productService.updateEntity(product);

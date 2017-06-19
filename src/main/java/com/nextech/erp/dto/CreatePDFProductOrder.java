@@ -81,6 +81,7 @@ public class CreatePDFProductOrder {
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 
 		   Font bf112 = new Font(FontFamily.TIMES_ROMAN, 15,Font.BOLD); 
 		   Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
+		   Font bf = new Font(FontFamily.TIMES_ROMAN, 12,Font.BOLD); 
 		  //specify column widths
 		   float[] columnWidths = {5f};
 		   //create PDF table with the given widths
@@ -107,11 +108,8 @@ public class CreatePDFProductOrder {
 		     
 		     PdfPTable table5 = new PdfPTable(1);
 		     table5.setWidthPercentage(100);
-		     table5.addCell(getCell2("SUSHIL INDUSTRIES", PdfPCell.ALIGN_LEFT,font3));
-		     table5.addCell(getCell2("PLOT NO.D-72,73,74,M.I.D.C", PdfPCell.ALIGN_LEFT,font3));
-		     table5.addCell(getCell2("RANJANGAON PUNE 412220", PdfPCell.ALIGN_LEFT,font3));
-		     table5.addCell(getCell2(" ", PdfPCell.ALIGN_LEFT,font3));
-		     table5.addCell(getCell2(" ", PdfPCell.ALIGN_LEFT,font3));
+		     table5.addCell(getCell2(vendor.getCompanyName(), PdfPCell.ALIGN_LEFT,font3));
+		     table5.addCell(getCell2(vendor.getAddress(), PdfPCell.ALIGN_LEFT,font3));
 		    
 		     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
 		     String  vat = vendor.getVatNo();
@@ -119,11 +117,11 @@ public class CreatePDFProductOrder {
 		     String ecc =vendor.getCustomerEccNumber();
 		     PdfPTable table6 = new PdfPTable(1);
 		     table6.setWidthPercentage(100);
-		     table6.addCell(getCell2("P.O.No:"+rawmaterialorder.getName(), PdfPCell.ALIGN_LEFT,font3));
-		     table6.addCell(getCell2("Date :"+ simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,font3));
-		     table6.addCell(getCell2("VAT TIN NO :"+vat, PdfPCell.ALIGN_LEFT,font3));
-		     table6.addCell(getCell2("CST TIN NO :"+cst, PdfPCell.ALIGN_LEFT,font3));
-		     table6.addCell(getCell2("ECC NO :"+ecc, PdfPCell.ALIGN_LEFT,font3));
+		     table6.addCell(getCell2("P.O.No:"+rawmaterialorder.getName(), PdfPCell.ALIGN_LEFT,bf));
+		     table6.addCell(getCell2("Date :"+ simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf));
+		     table6.addCell(getCell2("VAT TIN NO :"+vat, PdfPCell.ALIGN_LEFT,bf));
+		     table6.addCell(getCell2("CST TIN NO :"+cst, PdfPCell.ALIGN_LEFT,bf));
+		     table6.addCell(getCell2("ECC NO :"+ecc, PdfPCell.ALIGN_LEFT,bf));
 		  
 		     table0.addCell(table5);
 		     table0.addCell(table6);
@@ -158,14 +156,14 @@ public class CreatePDFProductOrder {
 		   table.setWidthPercentage(100f);
 
 		   //insert column headings
-		   insertCell(table, "Product Name", Element.ALIGN_RIGHT, 1, bfBold12);
+		   insertCell(table, "Item Description", Element.ALIGN_RIGHT, 1, bfBold12);
 		   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bfBold12);
 		   table.setHeaderRows(1);
 
      for (RMOrderModelData rmOrderModelData : rmOrderModelDatas) {
-	  insertCell(table,rmOrderModelData.getDescription() , Element.ALIGN_RIGHT, 1, bf12);
+	  insertCell(table,rmOrderModelData.getRmName() , Element.ALIGN_RIGHT, 1, bf12);
 	    insertCell(table,(Long.toString(rmOrderModelData.getQuantity())), Element.ALIGN_RIGHT, 1, bf12);
 	    insertCell(table, (Float.toString(rmOrderModelData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf12);
 	    insertCell(table, (Float.toString(rmOrderModelData.getAmount())), Element.ALIGN_RIGHT, 1, bf12);

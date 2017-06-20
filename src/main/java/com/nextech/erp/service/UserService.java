@@ -20,5 +20,7 @@ public interface UserService extends CRUDService<User>{
 	
 	public User getUserByNotifictionId(long notificatinId) throws Exception;
 	
+	public String getEmailUserById(long id) throws Exception;
+	
 	
 }

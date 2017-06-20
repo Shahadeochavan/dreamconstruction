@@ -1,13 +1,16 @@
 package com.nextech.erp.daoImpl;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.UserDao;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.User;
 
 @Repository
@@ -71,5 +74,18 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
+	}
+
+	@Override
+	public String getEmailUserById(long id) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(User.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("id", id));
+		String user = criteria.list().size() > 0 ? (String) criteria.list().get(0): null;
+		return user;
+		
 	}
 }

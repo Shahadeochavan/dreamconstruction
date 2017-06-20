@@ -30,11 +30,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.dto.ProductOrderData;
+import com.nextech.erp.dto.UserEmail;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
@@ -387,7 +389,7 @@ public class ProductorderController {
 		 }else if(notificationuserassociation.getCc()==true){
 			 mail.setMailCc(user.getEmail());
 		 }
-	        mail.setMailTo(client.getEmailid());
+	  
 	        mail.setMailSubject(notification.getSubject());
 	        mail.setAttachment(fileName);
 		  }     

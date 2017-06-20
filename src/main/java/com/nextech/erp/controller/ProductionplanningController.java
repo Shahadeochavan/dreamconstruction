@@ -280,7 +280,8 @@ public class ProductionplanningController {
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
-				if(productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))){
+				if(productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))||
+						productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
 				if(productionplanning.getTargetQuantity() > 0){
 					List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
 					if(productorderassociations !=null && !productorderassociations.isEmpty()){

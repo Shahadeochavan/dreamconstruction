@@ -80,7 +80,6 @@ public class VendorController {
 			vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.addEntity(vendor);
-
 			mailSending(vendor, request, response);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {

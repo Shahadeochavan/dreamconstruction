@@ -47,6 +47,7 @@ public class NotificationUserassociationDaoImpl extends
 				.list() : null);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
 			long notificationId) throws Exception {

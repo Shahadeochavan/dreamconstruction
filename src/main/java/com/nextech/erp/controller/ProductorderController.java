@@ -36,7 +36,6 @@ import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.dto.ProductOrderData;
-import com.nextech.erp.dto.UserEmail;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;

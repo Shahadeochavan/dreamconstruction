@@ -288,7 +288,7 @@ public class UserController {
 			  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 			  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 				  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
-				  if(notificationuserassociation.getToo()==true){
+				  if(notificationuserassociation.getTo()==true){
 					  mail.setMailTo(user.getEmail());
 				  }else if(notificationuserassociation.getBcc()==true){
 					  mail.setMailBcc(user1.getEmail());
@@ -317,7 +317,7 @@ public class UserController {
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
-			  if(notificationuserassociation.getToo()==true){
+			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(user.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
 				  mail.setMailBcc(user1.getEmail());

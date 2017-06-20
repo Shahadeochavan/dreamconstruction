@@ -31,8 +31,9 @@ public class Notificationuserassociation implements Serializable {
 	private Timestamp createdDate;
 
 	private boolean isactive;
-
-	private boolean too;
+	
+	@Column(name="too")
+	private boolean to;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -105,12 +106,12 @@ public class Notificationuserassociation implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public boolean getToo() {
-		return this.too;
+	public boolean getTo() {
+		return this.to;
 	}
 
-	public void setToo(boolean too) {
-		this.too = too;
+	public void setTo(boolean to) {
+		this.to = to;
 	}
 
 	public long getUpdatedBy() {

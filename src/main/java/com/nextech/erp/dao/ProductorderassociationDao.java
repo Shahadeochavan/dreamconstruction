@@ -20,4 +20,6 @@ public interface ProductorderassociationDao extends SuperDao<Productorderassocia
 	public List<Productorderassociation> getProductOrderAssoByOrderId(long orderId) throws Exception;
 	
 	public Productorderassociation getProdcutAssoByProdcutId(long prodcutId) throws Exception;
+	
+	public Productorderassociation getProdcutAssoByOrder(long orderId) throws Exception;
 }

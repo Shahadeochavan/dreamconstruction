@@ -27,6 +27,7 @@ import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.User;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
@@ -117,18 +118,28 @@ public class ClientController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			
-			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
-
-			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.COMPANY_NAME_EXIT, null, null));
-
-			}
-			if (clientService.getClientByEmail(client.getEmailid()) == null) {
-			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
-			}
+			Client oldClientInfo = clientService.getEntityById(Client.class, client.getId());
+			System.out.println(oldClientInfo);
+			if(client.getCompanyname().equals(oldClientInfo.getCompanyname())){  
+				
+				System.out.println(client); 
+				
+			} else { 
+				if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+			    }else{  
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+				}
+			 }
+            if(client.getEmailid().equals(oldClientInfo.getEmailid())){  
+				
+				System.out.println(client); 
+				
+			} else { 
+				if (clientService.getClientByEmail(client.getEmailid()) == null) {
+			    }else{  
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				}
+			 }
 			client.setUpdatedBy(Long.parseLong(request.getAttribute(
 					"current_user").toString()));
 			client.setIsactive(true);
@@ -177,7 +188,7 @@ public class ClientController {
 		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_ADDED_SUCCESSFULLY, null, null)));
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
 				   mail.setMailTo(client.getEmailid()); 
 			  }else if(notificationuserassociation.getBcc()==true){
@@ -207,7 +218,7 @@ public class ClientController {
 		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.CLIENT_UPDATE_SUCCESSFULLY, null, null)));
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(client.getEmailid());
 			  }else if(notificationuserassociation.getBcc()==true){

@@ -15,5 +15,7 @@ public interface UserDao extends SuperDao<User>{
 	
 	public User getUserByFirstNamLastName(String firstName,String lastName) throws Exception;
 	
-	public String getEmailUserById(long id) throws Exception;
+	public User getEmailUserById(long id) throws Exception;
+	
+	public User getUserByContact(String contact) throws Exception;
 }

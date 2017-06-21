@@ -49,7 +49,7 @@ public class RMVAssoController {
 			else
 				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.VENDOR_RM_ASSO_EXIT, null, null));
-			return new UserStatus(2,
+			return new UserStatus(1,
 					"Rawmaterialvendorassociation added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

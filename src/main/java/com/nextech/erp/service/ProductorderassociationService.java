@@ -22,5 +22,7 @@ public interface ProductorderassociationService extends CRUDService<Productorder
 	
 	public Productorderassociation getProdcutAssoByProdcutId(long prodcutId) throws Exception;
 	
+	public Productorderassociation getProdcutAssoByOrder(long orderId) throws Exception;
+	
 	
 }

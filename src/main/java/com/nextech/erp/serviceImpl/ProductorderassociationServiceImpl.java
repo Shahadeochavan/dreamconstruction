@@ -62,5 +62,12 @@ ProductorderassociationDao productorderassociationDao;
 		return productorderassociationDao.getProdcutAssoByProdcutId(prodcutId);
 	}
 
+	@Override
+	public Productorderassociation getProdcutAssoByOrder(long orderId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return productorderassociationDao.getProdcutAssoByOrder(orderId);
+	}
+
 
 }

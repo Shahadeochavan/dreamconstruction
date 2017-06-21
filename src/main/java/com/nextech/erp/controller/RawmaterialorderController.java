@@ -405,7 +405,7 @@ public class RawmaterialorderController {
 		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
 		  Mail mail = new Mail();
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class,notificationuserassociation.getUser().getId());
+			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
 				   mail.setMailTo(vendor.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){

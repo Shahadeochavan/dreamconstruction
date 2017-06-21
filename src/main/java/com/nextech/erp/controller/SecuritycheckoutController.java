@@ -84,10 +84,10 @@ public class SecuritycheckoutController {
 			String prefix="";
 			String send="";
 			for(SecurityCheckOutPart securityCheckOutPart : securityCheckOutDTO.getSecurityCheckOutParts()){
-				Productorderassociation  productorderassociation = productorderassociationService.getEntityById(Productorderassociation.class, securityCheckOutPart.getProductId());
+				Productorderassociation  productorderassociation = productorderassociationService.getProdcutAssoByOrder(securitycheckout.getPoNo());
 				stringBuilder.append(prefix);
 				prefix=",";
-				stringBuilder.append(productorderassociation.getProduct().getId());
+				stringBuilder.append(securityCheckOutPart.getProductId());
 				send = stringBuilder.toString();
 				securitycheckout.setDispatch(send);
 

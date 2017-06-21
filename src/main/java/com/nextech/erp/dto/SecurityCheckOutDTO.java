@@ -10,7 +10,7 @@ public class SecurityCheckOutDTO {
 	private String driver_Name;
 	private Date createDate;
 	private Time intime;
-	private int invoice_No;
+	private String invoice_No;
 	private Time outtime;
 	private int poNo;
 	private String vehicleNo;
@@ -40,15 +40,6 @@ public class SecurityCheckOutDTO {
 	public void setIntime(Time intime) {
 		this.intime = intime;
 	}
-
-	public int getInvoice_No() {
-		return invoice_No;
-	}
-
-	public void setInvoice_No(int invoice_No) {
-		this.invoice_No = invoice_No;
-	}
-
 	public Time getOuttime() {
 		return outtime;
 	}
@@ -96,6 +87,14 @@ public class SecurityCheckOutDTO {
 
 	public void setCreateDate(Date createDate) {
 		this.createDate = createDate;
+	}
+
+	public String getInvoice_No() {
+		return invoice_No;
+	}
+
+	public void setInvoice_No(String invoice_No) {
+		this.invoice_No = invoice_No;
 	}
 
 }

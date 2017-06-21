@@ -39,6 +39,7 @@ import com.nextech.erp.model.Reportusertypeassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Usertype;
 import com.nextech.erp.model.Usertypepageassociation;
+import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
@@ -208,22 +209,38 @@ public class UserController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			if (userservice.getUserByUserId(user.getUserid()) == null) {
-
-			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.USER_ID, null, null));
-			}
-			if (userservice.getUserByEmail(user.getEmail()) == null) {
-			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
-			}
-			if (userservice.getUserByMobile(user.getMobile()) == null) {
-			} else {
-				return new UserStatus(2, messageSource.getMessage(
-						ERPConstants.CONTACT_NUMBER_EXIT, null, null));
-			}
+			User oldUserInfo = userservice.getEntityById(User.class, user.getId());
+			System.out.println(oldUserInfo);
+			if(user.getUserid().equals(oldUserInfo.getUserid())){  
+				
+				System.out.println(user); 
+				
+			} else { 
+				if (userservice.getUserByUserId(user.getUserid()) == null) {
+			    }else{  
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID, null, null));
+				}
+			 }
+            if(user.getEmail().equals(oldUserInfo.getEmail())){  
+				
+				System.out.println(user); 
+				
+			} else { 
+				if (userservice.getUserByEmail(user.getEmail()) == null) {
+			    }else{  
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				}
+			 }           
+            if(user.getMobile().equals(oldUserInfo.getMobile())){  
+				
+        				System.out.println(user); 
+        				
+        			} else { 
+        				if (userservice.getUserByContact(user.getMobile()) == null) {
+        			    }else{  
+        				return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+        				}
+        			 } 
 			user.setIsactive(true);
 			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.updateEntity(user);
@@ -287,7 +304,7 @@ public class UserController {
 			  Notification notification = notificationService.getEntityById(Notification.class,5);
 			  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 			  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-				  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
+				  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());
 				  if(notificationuserassociation.getTo()==true){
 					  mail.setMailTo(user.getEmail());
 				  }else if(notificationuserassociation.getBcc()==true){
@@ -316,7 +333,7 @@ public class UserController {
 		  Notification notification = notificationService.getEntityById(Notification.class,5);
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user1 = userservice.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(user.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){

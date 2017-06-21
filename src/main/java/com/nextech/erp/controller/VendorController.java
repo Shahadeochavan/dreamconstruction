@@ -108,15 +108,28 @@ public class VendorController {
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateVendor(@RequestBody Vendor vendor,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
-
-			} else {
+			Vendor oldVendorInfo = vendorService.getEntityById(Vendor.class, vendor.getId());
+			System.out.println(oldVendorInfo);
+			if(vendor.getCompanyName().equals(oldVendorInfo.getCompanyName())){  
+				
+				System.out.println(vendor); 
+				
+			} else { 
+				if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
-			}
-			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
-			} else {
-				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
-			}
+				}
+			 }
+            if(vendor.getEmail().equals(oldVendorInfo.getEmail())){  
+				
+				System.out.println(vendor); 
+				
+			} else { 
+				if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+			    }else{  
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				}
+			 }
 			vendor.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			vendor.setIsactive(true);
 			vendorService.updateEntity(vendor);
@@ -161,7 +174,7 @@ public class VendorController {
 		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_ADDED_SUCCESSFULLY, null, null)));
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(vendor.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
@@ -190,7 +203,7 @@ public class VendorController {
 		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.VENDOR_UPDATE_SUCCESSFULLY, null, null)));
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
+			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
 				  mail.setMailTo(vendor.getEmail()); 
 			  }else if(notificationuserassociation.getBcc()==true){

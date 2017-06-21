@@ -55,8 +55,15 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	}
 
 	@Override
-	public String getEmailUserById(long id) throws Exception {
+	public User getEmailUserById(long id) throws Exception {
 		// TODO Auto-generated method stub
 		return userdao.getEmailUserById(id);
 	}
+
+	@Override
+	public User getUserByContact(String contact) throws Exception {
+		// TODO Auto-generated method stub
+		return userdao.getUserByContact(contact);
+	}
+	
 }

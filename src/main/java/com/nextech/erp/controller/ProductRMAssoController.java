@@ -262,6 +262,7 @@ public class ProductRMAssoController {
 				ProductRMAssociationModel productRMAssociationModel = new ProductRMAssociationModel();
 				Product product = productService.getEntityById(Product.class, multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setName(product.getPartNumber());
+				productRMAssociationModel.setProduct(multplePRMAssoEntry.getKey());
 				//productRMAssociationModel.setName(multplePRMAssoEntry.getKey());
 				productRMAssociationModel.setProductRMAssociationModelParts(multplePRMAssoEntry.getValue());
 				productRMAssociationModels.add(productRMAssociationModel);

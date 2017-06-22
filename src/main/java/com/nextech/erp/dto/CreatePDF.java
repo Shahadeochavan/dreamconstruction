@@ -196,7 +196,7 @@ public class CreatePDF {
 	}
 
 	private  void createTable(Document document,Productorder productorder,List<ProductOrderData> productOrderDatas) throws Exception {
-              DecimalFormat df = new DecimalFormat("0.00");
+              DecimalFormat df = new DecimalFormat("0.0");
 			  Font bf123 = new Font(FontFamily.TIMES_ROMAN, 14,Font.BOLD); 
 			  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
 			   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12); 
@@ -227,8 +227,8 @@ public class CreatePDF {
 	     insertCell(table, df.format(SUB_TOTAL), Element.ALIGN_RIGHT, 1, bfBold12);
 	     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bfBold12);
 	     float tax =0;
-	     tax = 18/SUB_TOTAL;
-	     tax =100*tax;
+	     tax = 18*SUB_TOTAL;
+	     tax =tax/100;
 	     insertCell(table, (Float.toString(tax)), Element.ALIGN_RIGHT, 1, bfBold12);
 	     insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
 	     int total=0;

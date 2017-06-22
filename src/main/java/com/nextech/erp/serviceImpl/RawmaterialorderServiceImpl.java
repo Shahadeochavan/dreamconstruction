@@ -47,5 +47,12 @@ public class RawmaterialorderServiceImpl extends CRUDServiceImpl<Rawmaterialorde
 		return rawmaterialorderDao.getRawmaterialByName(name);
 	}
 
+	@Override
+	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,
+			long statusId1, long statusId2) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
 

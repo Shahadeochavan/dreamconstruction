@@ -18,5 +18,7 @@ public interface RawmaterialorderDao extends SuperDao<Rawmaterialorder> {
 			throws Exception;
 
 	public List<Rawmaterialorder> getRawmaterialByName(String  name)throws Exception;
+	
+	public List<Rawmaterialorder> getRawmaterialorderByVendorId(long vendorId,long statusId1, long statusId2) throws Exception;
 
 }

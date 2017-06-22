@@ -210,11 +210,7 @@ public class UserController {
 	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			User oldUserInfo = userservice.getEntityById(User.class, user.getId());
-			System.out.println(oldUserInfo);
 			if(user.getUserid().equals(oldUserInfo.getUserid())){  
-				
-				System.out.println(user); 
-				
 			} else { 
 				if (userservice.getUserByUserId(user.getUserid()) == null) {
 			    }else{  
@@ -222,25 +218,20 @@ public class UserController {
 				}
 			 }
             if(user.getEmail().equals(oldUserInfo.getEmail())){  
-				
-				System.out.println(user); 
-				
 			} else { 
 				if (userservice.getUserByEmail(user.getEmail()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }           
-            if(user.getMobile().equals(oldUserInfo.getMobile())){  
-				
-        				System.out.println(user); 
-        				
-        			} else { 
-        				if (userservice.getUserByContact(user.getMobile()) == null) {
-        			    }else{  
-        				return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_EXIT, null, null));
-        				}
-        			 } 
+			if (user.getMobile().equals(oldUserInfo.getMobile())) {
+			} else {
+				if (userservice.getUserByMobile(user.getMobile()) == null) {
+				} else {
+					return new UserStatus(2, messageSource.getMessage(
+							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+				}
+			}
 			user.setIsactive(true);
 			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			userservice.updateEntity(user);
@@ -330,7 +321,7 @@ public class UserController {
 	private void mailSendingUpdate(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
 		  Mail mail = new Mail();
 
-		  Notification notification = notificationService.getEntityById(Notification.class,5);
+		  Notification notification = notificationService.getEntityById(Notification.class,16);
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());

@@ -357,22 +357,22 @@ public class QualitycheckrawmaterialController {
 	}
 
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(
+	public @ResponseBody List<Qualitycheckrawmaterial> getRmorderinvoiceintakquantityByRMOInvoiceId(
 			@PathVariable("id") long id) {
-		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = null;
+		List<Qualitycheckrawmaterial> qualitycheckrawmaterials = null;
 		try {
-			rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
+			qualitycheckrawmaterials = qualitycheckrawmaterialService.getQualitycheckrawmaterialByInvoiceId(id);
 			System.out.println("list size "
-					+ rmorderinvoiceintakquantities.size());
-			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
-				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
+					+ qualitycheckrawmaterials.size());
+			for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
+				/*Rawmaterial rawmaterial = rawmaterialService.getEntityById(
 						Rawmaterial.class, rmorderinvoiceintakquantity
-								.getRawmaterial().getId());
+								.getRawmaterial().getId());*/
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return rmorderinvoiceintakquantities;
+		return qualitycheckrawmaterials;
 	}
 	private void mailSending(Notification notification,Vendor vendor) throws Exception{
 		  Mail mail = new Mail();
@@ -380,7 +380,7 @@ public class QualitycheckrawmaterialController {
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
 			  if(notificationuserassociation.getTo()==true){
-				   mail.setMailFrom(user.getEmail()); 
+				  mail.setMailTo(vendor.getEmail());
 			  }else if(notificationuserassociation.getBcc()==true){
 				  mail.setMailBcc(user.getEmail());
 			  }else if(notificationuserassociation.getCc()==true){

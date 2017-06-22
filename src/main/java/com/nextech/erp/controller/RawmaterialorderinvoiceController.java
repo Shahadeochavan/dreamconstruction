@@ -191,7 +191,7 @@ public class RawmaterialorderinvoiceController {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
-					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_ORDER_COMPLETE, null, null)));
+					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null)));
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null&& !rawmaterialorderinvoices.isEmpty()) {

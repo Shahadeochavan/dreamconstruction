@@ -120,20 +120,14 @@ public class ClientController {
 			
 			Client oldClientInfo = clientService.getEntityById(Client.class, client.getId());
 			System.out.println(oldClientInfo);
-			if(client.getCompanyname().equals(oldClientInfo.getCompanyname())){  
-				
-				System.out.println(client); 
-				
+			if(client.getCompanyname().equals(oldClientInfo.getCompanyname())){  	
 			} else { 
 				if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(client.getEmailid().equals(oldClientInfo.getEmailid())){  
-				
-				System.out.println(client); 
-				
+            if(client.getEmailid().equals(oldClientInfo.getEmailid())){  			
 			} else { 
 				if (clientService.getClientByEmail(client.getEmailid()) == null) {
 			    }else{  

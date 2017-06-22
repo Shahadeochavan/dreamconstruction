@@ -110,20 +110,14 @@ public class VendorController {
 		try {
 			Vendor oldVendorInfo = vendorService.getEntityById(Vendor.class, vendor.getId());
 			System.out.println(oldVendorInfo);
-			if(vendor.getCompanyName().equals(oldVendorInfo.getCompanyName())){  
-				
-				System.out.println(vendor); 
-				
+			if(vendor.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
 			} else { 
 				if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(vendor.getEmail().equals(oldVendorInfo.getEmail())){  
-				
-				System.out.println(vendor); 
-				
+            if(vendor.getEmail().equals(oldVendorInfo.getEmail())){  	
 			} else { 
 				if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
 			    }else{  

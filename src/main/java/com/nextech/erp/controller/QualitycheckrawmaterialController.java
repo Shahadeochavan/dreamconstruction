@@ -6,12 +6,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -355,9 +353,27 @@ public class QualitycheckrawmaterialController {
 		rmIdQuantityMap.put(rmId, quantity);
 
 	}
-
 	@RequestMapping(value = "listrm/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Qualitycheckrawmaterial> getRmorderinvoiceintakquantityByRMOInvoiceId(
+	public @ResponseBody List<Rmorderinvoiceintakquantity> getRmorderinvoiceintakquantityByRMOInvoiceId(
+			@PathVariable("id") long id) {
+		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = null;
+		try {
+			rmorderinvoiceintakquantities = rmorderinvoiceintakquantityService.getRmorderinvoiceintakquantityByRMOInvoiceId(id);
+			System.out.println("list size "
+					+ rmorderinvoiceintakquantities.size());
+			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
+				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
+						Rawmaterial.class, rmorderinvoiceintakquantity
+								.getRawmaterial().getId());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rmorderinvoiceintakquantities;
+	}
+	
+	@RequestMapping(value = "listrmGoodQuantity/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Qualitycheckrawmaterial> getRmorderinvoiceintakquantity(
 			@PathVariable("id") long id) {
 		List<Qualitycheckrawmaterial> qualitycheckrawmaterials = null;
 		try {
@@ -365,9 +381,9 @@ public class QualitycheckrawmaterialController {
 			System.out.println("list size "
 					+ qualitycheckrawmaterials.size());
 			for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-				/*Rawmaterial rawmaterial = rawmaterialService.getEntityById(
-						Rawmaterial.class, rmorderinvoiceintakquantity
-								.getRawmaterial().getId());*/
+				Rawmaterial rawmaterial = rawmaterialService.getEntityById(
+						Rawmaterial.class, qualitycheckrawmaterial
+								.getRawmaterial().getId());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

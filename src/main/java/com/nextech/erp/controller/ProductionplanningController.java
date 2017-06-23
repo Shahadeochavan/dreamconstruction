@@ -380,16 +380,18 @@ public class ProductionplanningController {
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productionplanning.getProduct().getId());
 				if(productrawmaterialassociations !=null && !productrawmaterialassociations.isEmpty()){
 				for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
-
 					ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
-
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
 					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterial().getId());
+				    if(rawmaterialinventory==null){
+					return new Response(1,"Please Add RM In RM Inventory");
+				    }else{
 					productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
 					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
 					productinPlanPRMAssoData.setInventoryQuantity(rawmaterialinventory.getQuantityAvailable());
 					productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
 					productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);
+				}
 
 				}
 				}

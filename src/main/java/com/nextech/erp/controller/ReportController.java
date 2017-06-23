@@ -63,12 +63,13 @@ public class ReportController {
 	 @Transactional
 	@SuppressWarnings({"rawtypes", "unchecked" })
 	@RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")
-	public ReportInputDTO inputParameters(@PathVariable("id") long id, final HttpServletRequest request,
+	public List<ReportInputDTO> inputParameters(@PathVariable("id") long id, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
-		ReportInputDTO inputDTO = new ReportInputDTO();
+		List<ReportInputDTO> reportInputDTOs = new ArrayList<ReportInputDTO>();
 		List<Reportinputassociation> list = reptInpAssoService.getReportInputParametersByReportId(id);
 		if (list != null && list.size() > 0) {
 			for (Reportinputassociation reportinputassociation : list) {
+				ReportInputDTO inputDTO = new ReportInputDTO();
 				Reportinputparameter reportinputparameter = reportinputassociation.getReportinputparameter();
 				if (reportinputparameter != null && reportinputparameter.isQueryParameter()) {
 					Query query1 = sessionFactory.openSession().createSQLQuery(reportinputparameter.getQuery());
@@ -84,12 +85,13 @@ public class ReportController {
 					}
 					inputDTO.setData(dataDTOs);
 				}
-				inputDTO.setDispalyName(reportinputparameter.getDisplayName());
+				inputDTO.setDisplayName(reportinputparameter.getDisplayName());
 				inputDTO.setInputType(reportinputparameter.getInputType());
 				inputDTO.setId(reportinputparameter.getId());
+				reportInputDTOs.add(inputDTO);
 			}
 		} 
-		return inputDTO;
+		return reportInputDTOs;
 	}
 	
 	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")

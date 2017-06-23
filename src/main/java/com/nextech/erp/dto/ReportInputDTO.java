@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ReportInputDTO {
 	private long id;
-	private String dispalyName;
+	private String displayName;
 	private String inputType;
 	private List<ReportInputDataDTO> data;
 
@@ -14,11 +14,11 @@ public class ReportInputDTO {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getDispalyName() {
-		return dispalyName;
+	public String getDisplayName() {
+		return displayName;
 	}
-	public void setDispalyName(String dispalyName) {
-		this.dispalyName = dispalyName;
+	public void setDisplayName(String displayName) {
+		this.displayName = displayName;
 	}
 	public String getInputType() {
 		return inputType;

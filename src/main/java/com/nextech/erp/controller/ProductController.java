@@ -140,7 +140,7 @@ public class ProductController {
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(product.getId());
 				if(productrawmaterialassociations==null){
 					ProductNewAssoicatedList productNewAssoicatedList = new ProductNewAssoicatedList();
-					productNewAssoicatedList.setProductId(product.getId());
+					productNewAssoicatedList.setId(product.getId());
 					productNewAssoicatedList.setPartNumber(product.getPartNumber());
 					productNewAssoicatedLists.add(productNewAssoicatedList);
 				}

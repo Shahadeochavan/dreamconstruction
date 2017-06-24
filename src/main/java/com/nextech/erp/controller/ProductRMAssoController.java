@@ -294,11 +294,11 @@ public class ProductRMAssoController {
 			@PathVariable("id") long id) {
 
 		try {
-			List<Productrawmaterialassociation> productrawmaterialassociation = productRMAssoService.getProductRMAssoListByProductId(id);
-			for (Productrawmaterialassociation productrawmaterialassociation2 : productrawmaterialassociation) {
-				productrawmaterialassociation2.setIsactive(false);
-				productRMAssoService.updateEntity(productrawmaterialassociation2);
-			}
+			Productrawmaterialassociation productrawmaterialassociation = productRMAssoService.getEntityById(Productrawmaterialassociation.class, id);
+//			for (Productrawmaterialassociation productrawmaterialassociation2 : productrawmaterialassociation) {
+				productrawmaterialassociation.setIsactive(false);
+				productRMAssoService.updateEntity(productrawmaterialassociation);
+//			}
 			
 			return new UserStatus(1,"Productrawmaterialassociation deleted Successfully !");
 		} catch (Exception e) {

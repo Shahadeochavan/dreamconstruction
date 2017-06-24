@@ -306,6 +306,25 @@ public class ProductRMAssoController {
 		}
 
 	}
+	
+	@RequestMapping(value = "delete/multiple/{productId}", method = RequestMethod.DELETE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus deleteProductrawmaterialassociationByProductId(
+			@PathVariable("productId") long productId) {
+
+		try {
+			List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productId);
+			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+				//Remove all Product RM Associations
+				//productRMAssoService.deleteEntity(Productrawmaterialassociation.class, productrawmaterialassociation.getId());
+				deleteProductrawmaterialassociation(productrawmaterialassociation.getId());
+			}
+			
+			return new UserStatus(1,"Product Raw Material Associations deleted Successfully !");
+		} catch (Exception e) {
+			return new UserStatus(0, e.toString());
+		}
+
+	}
 
 	private Productrawmaterialassociation setMultipleRM(ProductRMAssociationModelParts productRMAssociationModelParts) throws Exception {
 		Productrawmaterialassociation productrawmaterialassociation = new Productrawmaterialassociation();

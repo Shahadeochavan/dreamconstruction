@@ -92,18 +92,16 @@ public class StoreoutController {
 			storeout.setIsactive(true);
 			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			storeoutService.addEntity(storeout);
-			productionplanning.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))));
-			productionplanningService.updateEntity(productionplanning);
-			for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
-
-			    Storeoutrm storeoutrm = setStoreParts(storeOutPart);
-				   Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
-
-				   // to check RM id is equal
+			
+				for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
+	
+				    Storeoutrm storeoutrm = setStoreParts(storeOutPart);
+					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
+				   //  TODO : Check RM id is present in the Inventory . But what happens if RM is not added to Inventory?
 				   if(rawmaterialinventory.getRawmaterial().getId()==storeoutrm.getRawmaterial().getId()){
-
-				   // to check RM inventory quantity and storeout quantity
-					   if(rawmaterialinventory.getQuantityAvailable()>=storeoutrm.getQuantityDispatched()){
+	
+					   // to check RM inventory quantity and storeout quantity
+					   if(rawmaterialinventory.getQuantityAvailable() >= storeoutrm.getQuantityDispatched()){
 						   storeoutrm.setDescription(storeOutDTO.getDescription());
 						   storeoutrm.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 						   storeoutrm.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
@@ -111,24 +109,28 @@ public class StoreoutController {
 					   }else{
 							return new UserStatus(1,messageSource.getMessage(ERPConstants.TO_CHECK_QUANTITY_IN_RMINVENTORY, null, null));
 					   }
+				   	
+					   Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
+					   storeoutrmassociation.setStoreout(storeout);
+					   storeoutrmassociation.setStoreoutrm(storeoutrm);
+					   storeoutrmassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+					   storeoutrmassociation.setIsactive(true);
+					   storeoutrmassociationService.addEntity(storeoutrmassociation);
+			
+					   if(rawmaterialinventory.getRawmaterial().getId()== storeoutrm.getRawmaterial().getId()){
+						   rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()-storeoutrm.getQuantityDispatched());
+					   }
+				   		// TODO : Why Do we need to set RM Inventory Active Here?
+//					   rawmaterialinventory.setIsactive(true);
+//					   rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+					   rawmaterialinventoryService.updateEntity(rawmaterialinventory);
+				   }else{
+					   // Please add RM to Inventory
 				   }
-
-
-			   Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
-			   storeoutrmassociation.setStoreout(storeout);
-			   storeoutrmassociation.setStoreoutrm(storeoutrm);
-			   storeoutrmassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			   storeoutrmassociation.setIsactive(true);
-			   storeoutrmassociationService.addEntity(storeoutrmassociation);
-
-
-		   if(rawmaterialinventory.getRawmaterial().getId()==storeoutrm.getRawmaterial().getId())
-			   rawmaterialinventory.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable()-storeoutrm.getQuantityDispatched());
-			   rawmaterialinventory.setIsactive(true);
-			   rawmaterialinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			   rawmaterialinventoryService.updateEntity(rawmaterialinventory);
-
 			}
+			//TODO : Update the Production Plan Status	
+			productionplanning.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))));
+			productionplanningService.updateEntity(productionplanning);	
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");

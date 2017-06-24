@@ -273,36 +273,38 @@ public class ProductionplanningController {
 	}
 
 	@RequestMapping(value = "getProductionPlanReadyListByDate/{date}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productionplanning> getProductionPlanRradyDate(@PathVariable("date") String date) {
+	public @ResponseBody Response getProductionPlanReadyDate(@PathVariable("date") String date) {
 
 		List<Productionplanning> productionplanningFinalList = new ArrayList<Productionplanning>();
 		try {
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
-				if(productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))||
+				if(productionplanning.getStatus().getId() == Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))||
 						productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
-				if(productionplanning.getTargetQuantity() > 0){
-					List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
-					if(productorderassociations !=null && !productorderassociations.isEmpty()){
-						for (Productorderassociation productorderassociation : productorderassociations) {
-							if(productorderassociation.getRemainingQuantity() > 0){
-								isProductRemaining = true;
-								break;
+					if(productionplanning.getTargetQuantity() > 0){
+						List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+						if(productorderassociations !=null && !productorderassociations.isEmpty()){
+							for (Productorderassociation productorderassociation : productorderassociations) {
+								if(productorderassociation.getRemainingQuantity() > 0){
+									isProductRemaining = true;
+									break;
+								}
 							}
 						}
 					}
-				}
+				}else{
+					return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
 				}
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		return productionplanningFinalList;
+		return new Response(1,"Success",productionplanningFinalList);
 	}
 	
 	

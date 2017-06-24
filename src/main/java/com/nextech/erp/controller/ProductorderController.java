@@ -36,21 +36,26 @@ import com.nextech.erp.dto.CreatePDF;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.dto.ProductOrderData;
+import com.nextech.erp.dto.ProductRMAssociationModel;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
+import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.ProductorderassociationService;
+import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.service.StatusService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
@@ -88,6 +93,12 @@ public class ProductorderController {
 
 	@Autowired
 	MailService mailService;
+	
+	@Autowired
+	ProductRMAssoService productRMAssoService;
+	
+	@Autowired
+	RawmaterialinventoryService rawMaterialInventoryService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductorder(
@@ -133,6 +144,10 @@ public class ProductorderController {
 
 			// TODO add product order association
 			addProductOrderAsso(productOrderAssociationModel, productorder, request, response);
+			
+			//TODO Check Inventory for Products
+			
+			checkInventoryStatus(productOrderAssociationModel);
 
 			return new UserStatus(1,
 					"Multiple Productorder added Successfully !");
@@ -149,6 +164,35 @@ public class ProductorderController {
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
+	}
+	
+	public void checkInventoryStatus(ProductOrderAssociationModel productOrderAssociationModel) throws Exception{
+		HashMap<Long,Long> rawMaterialQtyMap = new HashMap<Long, Long>();
+		List<Long> rmIds = new ArrayList<Long>();
+		List<Productorderassociation> productorderassociations = productOrderAssociationModel.getOrderproductassociations();
+		
+		for(Productorderassociation productorderassociation : productorderassociations){
+			List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productorderassociation.getProduct().getId());
+			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+				long requiredQuantity = productrawmaterialassociation.getQuantity() * productorderassociation.getQuantity();
+					if(rawMaterialQtyMap.containsKey(productrawmaterialassociation.getRawmaterial())){
+						long existingQuantity = rawMaterialQtyMap.get(productrawmaterialassociation.getRawmaterial());
+						rawMaterialQtyMap.put(productrawmaterialassociation.getRawmaterial().getId(), existingQuantity + requiredQuantity);
+					}else{
+						rawMaterialQtyMap.put(productrawmaterialassociation.getRawmaterial().getId(), requiredQuantity);
+					}
+					if(!rmIds.contains(productrawmaterialassociation.getRawmaterial().getId())){
+						rmIds.add(productrawmaterialassociation.getRawmaterial().getId());
+					}
+			}
+		}
+		
+		for(Long rmId : rmIds){
+			Rawmaterialinventory rmInventory = rawMaterialInventoryService.getByRMId(rmId);
+			long inventoryQuantity = rmInventory.getQuantityAvailable();
+			System.out.println(rmId + " Quantity Required : " + rawMaterialQtyMap.get(rmId) + " Inventory Quantity : " + inventoryQuantity);
+		}
+		
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")

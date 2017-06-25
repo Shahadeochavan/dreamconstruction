@@ -24,6 +24,7 @@ public class ERPConstants {
     public static String CLIENT_DELETE="deleteClinet";
     public static String RM_QUALITY_CHECK="rawMaterilQualityCheck";
     public static String INFO_QUALITY_CHECK="infoProvideForQualityCheck";
+    public static String QC_RM_ORDER_NOT_FOUND="rmOrderNotFound";
     public static String PRODUCT_RM_ASSO_EXIT="productRMExit";
     public static String VENDOR_RM_ASSO_EXIT="vendorRMExit";
     public static String PRODUCT_INVENTORY_ASSO_EXIT="productInventoryExit";

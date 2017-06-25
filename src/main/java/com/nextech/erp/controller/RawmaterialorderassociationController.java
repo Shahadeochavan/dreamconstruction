@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
+import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
 @Controller
@@ -102,16 +103,19 @@ public class RawmaterialorderassociationController {
 	}
 
 	@RequestMapping(value = "getRMForRMOrder/{RMOrderId}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Rawmaterialorderassociation> getRawmaterialorderassociationByRMOId(
-			@PathVariable("RMOrderId") long id) {
+	public @ResponseBody Response getRawmaterialorderassociationByRMOId(
+			@PathVariable("RMOrderId") long id) throws Exception {
 		List<Rawmaterialorderassociation> rawmaterialorderassociations = null;
-		try {
-			 rawmaterialorderassociations = rawmaterialorderassociationService
-					.getRMOrderRMAssociationByRMOrderId(id);
-		} catch (Exception e) {
-			e.printStackTrace();
+		String message = "Success";
+		int code = 1;
+		rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(id);
+		if(rawmaterialorderassociations == null || rawmaterialorderassociations.size() == 0){
+			 message = "Invalid RM Order Data";
+			 code = 0;
+			 System.out.println("There are no raw materials for the RM Order. Hence this RM Order is invalid");
 		}
-		return rawmaterialorderassociations;
+		Response response = new Response(code, message, rawmaterialorderassociations);
+		return response;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")

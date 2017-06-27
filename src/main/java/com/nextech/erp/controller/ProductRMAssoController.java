@@ -305,8 +305,13 @@ public class ProductRMAssoController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",products);
+		Response response = null; 
+		if(products == null){
+			response = new Response(0,"Please add Product RM Association to Create BOM", products);
+		}else{
+			response = new Response(1,"Success", products);
+		}
+		return response;
 	}
 	
 	

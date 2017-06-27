@@ -3,6 +3,8 @@ package com.nextech.erp.dto;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +23,11 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.erp.service.BomService;
 
 public class CreatePdfForBomProduct {
-
+	public static String answer = "";
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-	private static float total = 0;
-
+	private static int total = 0;
+	private static float tax = 0;
 	/**
 	 * @param args
 	 */
@@ -33,7 +35,7 @@ public class CreatePdfForBomProduct {
 	@Autowired
 	BomService bomService;
 
-	public Document createPDF(String file, List<BomRMVendorModel> bomRMVendorModels)
+	public Document createPDF(String file, List<BomRMVendorModel> bomRMVendorModels,ProductBomDTO productBomDTO)
 			throws Exception {
 
 		Document document = null;
@@ -45,7 +47,7 @@ public class CreatePdfForBomProduct {
 
 			addMetaData(document);
 
-			addTitlePage(document);
+			addTitlePage(document,productBomDTO);
 
 			createTable(document, bomRMVendorModels);
 
@@ -68,7 +70,7 @@ public class CreatePdfForBomProduct {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document)
+	private  void addTitlePage(Document document,ProductBomDTO productBomDTO)
 			throws DocumentException {
 
 		Paragraph preface = new Paragraph();
@@ -77,7 +79,7 @@ public class CreatePdfForBomProduct {
 		
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 20,Font.BOLD); 
 		   Font bf112 = new Font(FontFamily.TIMES_ROMAN, 15,Font.BOLD); 
-		   Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 12);
+		   Font bf113 = new Font(FontFamily.TIMES_ROMAN, 12,Font.BOLD); 
 		   
 		  PdfPTable table00 = new PdfPTable(1);
 		   table00.setWidthPercentage(100);
@@ -86,15 +88,18 @@ public class CreatePdfForBomProduct {
 		     table1.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
 		     table1.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
 		     table1.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
-		     table1.addCell(getCell1("BOM", PdfPCell.ALIGN_CENTER,bf112));
+		     table1.addCell(getCell1("BILL OF MATERIAL(BOM)", PdfPCell.ALIGN_LEFT,bf112));
 		     table00.addCell(table1);
 		     document.add(table00);
-
-/*		creteEmptyLine(preface, 1);
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
-		preface.add(new Paragraph("BOM Invoice Date :"
-				+ simpleDateFormat.format(new Date()), TIME_ROMAN_SMALL));
-		document.add(preface);*/
+		     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+		     PdfPTable table12 = new PdfPTable(1);
+		      table12.setWidthPercentage(100);
+			   PdfPTable table = new PdfPTable(1);
+			   table.addCell(getCell1("PRODUCT PART NUMBER :"+productBomDTO.getProductPartNumber(), PdfPCell.ALIGN_LEFT,bf113));
+			   table.addCell(getCell1("CLIENT PART NUMBER :"+productBomDTO.getClinetPartNumber(), PdfPCell.ALIGN_LEFT,bf113));
+			   table.addCell(getCell1("BOM CREATED DATE :"+ simpleDateFormat.format(productBomDTO.getCreatedDate()), PdfPCell.ALIGN_LEFT,bf113));
+			   table12.addCell(table);
+			   document.add(table12);
 
 	}
 
@@ -113,7 +118,7 @@ public class CreatePdfForBomProduct {
 		  Font bfBold12 = new Font(FontFamily.TIMES_ROMAN, 12, Font.BOLD, new BaseColor(0, 0, 0)); 
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 12); 
 		  //specify column widths
-		   float[] columnWidths = {1.5f, 1.5f, 1.5f, 1.5f,1.5f,1.5f};
+		   float[] columnWidths = {1.5f, 1.5f, 1.5f, 1.5f,1.5f};
 		   //create PDF table with the given widths
 		   PdfPTable table = new PdfPTable(columnWidths);
 		   // set table width a percentage of the page width
@@ -122,7 +127,6 @@ public class CreatePdfForBomProduct {
 		   //insert column headings
 		   insertCell(table, "RM NAME", Element.ALIGN_RIGHT, 1, bfBold12);
 		   insertCell(table, "VENDOR NAME", Element.ALIGN_LEFT, 1, bfBold12);
-		   insertCell(table, "PRODUCT NAME", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "PRICE PER UNIT", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "QUANTITY", Element.ALIGN_LEFT, 1, bfBold12);
 		   insertCell(table, "AMOUNT", Element.ALIGN_RIGHT, 1, bfBold12);
@@ -133,20 +137,38 @@ public class CreatePdfForBomProduct {
 		 //  insertCell(table, "BOM DETAILS ...", Element.ALIGN_LEFT, 6, bfBold12);
 
      for (BomRMVendorModel bomRMVendorModel : bomRMVendorModels) {
-	  insertCell(table,bomRMVendorModel.getRmName() , Element.ALIGN_CENTER, 1, bf12);
+	  insertCell(table,bomRMVendorModel.getDescription() , Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, bomRMVendorModel.getVendorName(), Element.ALIGN_CENTER, 1, bf12);
-	    insertCell(table, bomRMVendorModel.getProductName(), Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, (Float.toString(bomRMVendorModel.getPricePerUnit())), Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, (Long.toString(bomRMVendorModel.getQuantity())), Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, (Float.toString(bomRMVendorModel.getAmount())), Element.ALIGN_CENTER, 1, bf12);
-	    total = total+bomRMVendorModel.getAmount();
-	  
+	    total = (int) (total+bomRMVendorModel.getAmount());
+	    tax = 18*total;
+	     tax =tax/100;
     }
-     insertCell(table, "Total", Element.ALIGN_CENTER, 5, bfBold12);
+     total = (int) (total+tax);
+     insertCell(table, "Other Charges", Element.ALIGN_CENTER, 4, bfBold12);
+     insertCell(table, "  ", Element.ALIGN_CENTER, 1, bfBold12);
+     insertCell(table, "Tax", Element.ALIGN_CENTER, 4, bfBold12);
+     insertCell(table, Float.toString(tax), Element.ALIGN_CENTER, 1, bfBold12);
+     insertCell(table, "Total", Element.ALIGN_CENTER, 4, bfBold12);
      insertCell(table, df.format(total), Element.ALIGN_CENTER, 1, bfBold12);
-     document.add(table);
+		if(total <= 0)   {                
+			System.out.println("Enter numbers greater than 0");
+		} else {
+			CreatePdfForBomProduct a = new CreatePdfForBomProduct();
+			a.pw((total/1000000000)," Hundred");
+			a.pw((total/10000000)%100," Crore");
+			a.pw(((total/100000)%100)," Lakh");
+			a.pw(((total/1000)%100)," Thousand");
+			a.pw(((total/100)%10)," Hundred");
+			a.pw((total%100)," ");
+			answer = answer.trim();
+			 System.out.println("Final Answer : " +answer);
+		   insertCell(table, answer, Element.ALIGN_LEFT, 4, bfBold12);
+           document.add(table);
 	}
-
+	}
 	 private void insertCell(PdfPTable table, String text, int align, int colspan, Font font){
 	  
 	  //create a new cell with the specified Text and Font
@@ -187,5 +209,21 @@ public class CreatePdfForBomProduct {
 		    cell.setVerticalAlignment(alignment);
 		    cell.setBorder(PdfPCell.NO_BORDER);
 		    return cell;
+		}
+		public void pw(int n,String ch)
+		{
+			String  one[]={" "," one"," two"," three"," four"," five"," six"," seven"," eight"," Nine"," ten"," eleven"," twelve"," thirteen"," fourteen","fifteen"," sixteen"," seventeen"," eighteen"," nineteen"};
+			String ten[]={" "," "," twenty"," thirty"," forty"," fifty"," sixty","seventy"," eighty"," ninety"};
+
+			if(n > 19) {
+				answer += ten[n/10]+" "+one[n%10];
+			} else { 
+				String S=one[n];
+				answer += S;
+			}
+
+			if(n > 0) {
+				answer += ch;
+			}
 		}
 }

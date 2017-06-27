@@ -114,7 +114,7 @@ public class ProductorderController {
 			productorder.setIsactive(true);
 			productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			productorderService.addEntity(productorder);
-			return new UserStatus(1, "Productorder added Successfully !");
+			return new UserStatus(1, "Product Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
@@ -150,7 +150,7 @@ public class ProductorderController {
 			checkInventoryStatus(productOrderAssociationModel);
 
 			return new UserStatus(1,
-					"Multiple Productorder added Successfully !");
+					"Multiple Product Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -234,7 +234,7 @@ public class ProductorderController {
 			productorder.setStatus(statusService.getEntityById(Status.class,
 					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 			productorderService.updateEntity(productorder);
-			return new UserStatus(1, "Productorder update Successfully !");
+			return new UserStatus(1, "Product Order update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -298,7 +298,7 @@ public class ProductorderController {
 					Productorder.class, id);
 			productorder.setIsactive(false);
 			productorderService.updateEntity(productorder);
-			return new UserStatus(1, "Productorder deleted Successfully !");
+			return new UserStatus(1, "Product Order deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

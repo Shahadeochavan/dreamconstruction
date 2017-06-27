@@ -1,6 +1,7 @@
 package com.nextech.erp.controller;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.dto.QualityCheckRMDTO;
 import com.nextech.erp.exceptions.InvalidRMQuantityInQC;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
@@ -136,6 +138,7 @@ public class QualitycheckrawmaterialController {
 			Rawmaterialorderinvoice rawmaterialorderinvoiceNew = rawmaterialorderinvoiceService.getEntityById(Rawmaterialorderinvoice.class,rawmaterialorderinvoice.getId());
 			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoiceNew.getPo_No());
 			List<Qualitycheckrawmaterial> qualitycheckrawmaterials = rawmaterialorderinvoice.getQualitycheckrawmaterials();
+			List<QualityCheckRMDTO>  qualityCheckRMDTOs = new ArrayList<QualityCheckRMDTO>();
 			if( rawmaterialorder == null ){
 				System.out.println("==== RM Order not found for this Invoice : " + rawmaterialorderinvoiceNew.getInvoice_No() + " . So need to clear out this Invoice");
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
@@ -149,6 +152,11 @@ public class QualitycheckrawmaterialController {
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId());
 					//TODO save Quality check
 					long qualityCheckId = saveQualityCheckRawMaterial(qualitycheckrawmaterial, rawmaterialorderinvoiceNew, rawmaterial, request, response);
+					QualityCheckRMDTO qualityCheckRMDTO = new QualityCheckRMDTO();
+					qualityCheckRMDTO.setDescription(rawmaterial.getDescription());
+					qualityCheckRMDTO.setGoodQuantity(qualitycheckrawmaterial.getGoodQuantity());
+					qualityCheckRMDTO.setIntakeQuantity(qualitycheckrawmaterial.getIntakeQuantity());
+					qualityCheckRMDTOs.add(qualityCheckRMDTO);
 					//if qualityCheckId value is 0 that means this is duplicate entry
 					if(qualityCheckId != 0 ){
 						//TODO update raw material invoice
@@ -177,7 +185,7 @@ public class QualitycheckrawmaterialController {
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoiceNew.getVendorname()));
 
 			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
-			mailSending(notification, vendor);
+			mailSending(notification, vendor,qualityCheckRMDTOs,rawmaterialorder);
 
 
 			// TODO  call to trigger notification (will do it later )
@@ -405,7 +413,7 @@ public class QualitycheckrawmaterialController {
 		}
 		return qualitycheckrawmaterials;
 	}
-	private void mailSending(Notification notification,Vendor vendor) throws Exception{
+	private void mailSending(Notification notification,Vendor vendor,List<QualityCheckRMDTO> qualityCheckRMDTOs,Rawmaterialorder rawmaterialorder) throws Exception{
 		  Mail mail = new Mail();
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
@@ -422,6 +430,7 @@ public class QualitycheckrawmaterialController {
 	        mail.setMailSubject(notification.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());
+	        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
 	        model.put("lastName", vendor.getLastName());
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");

@@ -96,7 +96,7 @@ public class StoreoutController {
 				for(StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()){
 	
 				    Storeoutrm storeoutrm = setStoreParts(storeOutPart);
-					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getEntityById(Rawmaterialinventory.class, storeoutrm.getRawmaterial().getId());
+					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(storeoutrm.getRawmaterial().getId());
 				   //  TODO : Check RM id is present in the Inventory . But what happens if RM is not added to Inventory?
 				   if(rawmaterialinventory.getRawmaterial().getId()==storeoutrm.getRawmaterial().getId()){
 	

@@ -35,6 +35,7 @@ import com.nextech.erp.dto.BomModelPart;
 import com.nextech.erp.dto.BomRMVendorModel;
 import com.nextech.erp.dto.CreatePDFProductOrder;
 import com.nextech.erp.dto.CreatePdfForBomProduct;
+import com.nextech.erp.dto.ProductBomDTO;
 import com.nextech.erp.dto.ProductOrderAssociationModel;
 import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Bom;
@@ -257,6 +258,7 @@ public class BomController {
 
 		List<Bom> boList = null;
 		List<BomRMVendorModel> bomRMVendorModels = new ArrayList<BomRMVendorModel>();
+		ProductBomDTO productBomDTO = new ProductBomDTO();
 		try {
 			// TODO afterwards you need to change it from properties
 			boList = bomService.getBomListByProductIdAndBomId(productId, bomId);
@@ -267,13 +269,16 @@ public class BomController {
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, bomrmVendorAssociation.getRawmaterial().getId());
 					Vendor vendor = vendorService.getEntityById(Vendor.class, bomrmVendorAssociation.getVendor().getId());
 					Product product = productService.getEntityById(Product.class, bom.getProduct().getId());
-					Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getEntityById(Rawmaterialvendorassociation.class, rawmaterial.getId());
-					bomRMVendorModel.setRmName(rawmaterial.getName());
+					Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
+					bomRMVendorModel.setDescription(rawmaterial.getDescription());
 					bomRMVendorModel.setVendorName(vendor.getCompanyName());
 					bomRMVendorModel.setProductName(product.getName());
 					bomRMVendorModel.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 					bomRMVendorModel.setQuantity(bomrmVendorAssociation.getQuantity());
 					bomRMVendorModel.setAmount(bomrmVendorAssociation.getQuantity()*rawmaterialvendorassociation.getPricePerUnit());
+					productBomDTO.setClinetPartNumber(product.getClientpartnumber());
+					productBomDTO.setProductPartNumber(product.getPartNumber()); 
+					productBomDTO.setCreatedDate(bom.getCreatedDate());
 					bomRMVendorModels.add(bomRMVendorModel);
 					
 				}
@@ -283,7 +288,7 @@ public class BomController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-    downloadPDF(request, response, bomRMVendorModels);
+    downloadPDF(request, response, bomRMVendorModels,productBomDTO);
 //		return boList;
 	}
 	
@@ -320,7 +325,7 @@ public class BomController {
 		}
 	}
 
-	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,List<BomRMVendorModel> bomRMVendorModels) throws IOException {
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,List<BomRMVendorModel> bomRMVendorModels,ProductBomDTO productBomDTO) throws IOException {
 
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
@@ -333,7 +338,7 @@ public class BomController {
 	    try {
 
 	    	CreatePdfForBomProduct createPdfForBomProduct = new CreatePdfForBomProduct();
-	    	createPdfForBomProduct.createPDF(temperotyFilePath+"\\"+fileName,bomRMVendorModels);
+	    	createPdfForBomProduct.createPDF(temperotyFilePath+"\\"+fileName,bomRMVendorModels,productBomDTO);
 	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 	        OutputStream os = response.getOutputStream();

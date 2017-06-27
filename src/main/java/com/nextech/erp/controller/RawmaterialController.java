@@ -20,9 +20,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Productinventory;
 import com.nextech.erp.model.Rawmaterial;
+import com.nextech.erp.model.Rawmaterialinventory;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.service.RawmaterialService;
+import com.nextech.erp.service.RawmaterialinventoryService;
 import com.nextech.erp.status.UserStatus;
 @Controller
 @RequestMapping("/rawmaterial")
@@ -30,6 +34,9 @@ public class RawmaterialController {
 
 	@Autowired
 	RawmaterialService rawmaterialService;
+	
+	@Autowired
+	RawmaterialinventoryService rawmaterialinventoryService;
 
 	@Autowired
 	private MessageSource messageSource;
@@ -45,6 +52,7 @@ public class RawmaterialController {
 			rawmaterial.setIsactive(true);
 			rawmaterial.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialService.addEntity(rawmaterial);
+			addRMInventory(rawmaterial, Long.parseLong(request.getAttribute("current_user").toString()));
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_ADD, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -132,5 +140,13 @@ public class RawmaterialController {
 			e.printStackTrace();
 		}
 		return rawmaterialList;
+	}
+	private void addRMInventory(Rawmaterial rawmaterial,long userId) throws Exception{
+		Rawmaterialinventory rawmaterialinventory = new Rawmaterialinventory();
+		rawmaterialinventory.setRawmaterial(rawmaterial);
+		rawmaterialinventory.setQuantityAvailable(0);
+		rawmaterialinventory.setCreatedBy(userId);
+		rawmaterialinventory.setIsactive(true);
+		rawmaterialinventoryService.addEntity(rawmaterialinventory);
 	}
 }

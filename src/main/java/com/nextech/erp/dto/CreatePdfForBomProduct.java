@@ -143,11 +143,10 @@ public class CreatePdfForBomProduct {
 	    insertCell(table, (Long.toString(bomRMVendorModel.getQuantity())), Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, (Float.toString(bomRMVendorModel.getAmount())), Element.ALIGN_CENTER, 1, bf12);
 	    total = (int) (total+bomRMVendorModel.getAmount());
-	    
 	    tax = 18*total;
 	     tax =tax/100;
-	  
     }
+     total = (int) (total+tax);
      insertCell(table, "Other Charges", Element.ALIGN_CENTER, 4, bfBold12);
      insertCell(table, "  ", Element.ALIGN_CENTER, 1, bfBold12);
      insertCell(table, "Tax", Element.ALIGN_CENTER, 4, bfBold12);

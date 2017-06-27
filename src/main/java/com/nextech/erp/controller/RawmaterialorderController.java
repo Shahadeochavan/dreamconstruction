@@ -161,7 +161,7 @@ public class RawmaterialorderController {
 			//TODO add raw material association
 			addRMOrderAsso(rawmaterialorder,rawmaterialOrderAssociationModel, request, response);
 
-			return new UserStatus(1, "Multiple Rawmaterialorder added Successfully !");
+			return new UserStatus(1, "Multiple Rawmaterial Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -198,7 +198,7 @@ public class RawmaterialorderController {
 			rawmaterialorder.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			rawmaterialorder.setIsactive(true);
 			rawmaterialorderService.updateEntity(rawmaterialorder);
-			return new UserStatus(1, "Rawmaterialorder update Successfully !");
+			return new UserStatus(1, "Rawmaterial Order update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -260,7 +260,7 @@ public class RawmaterialorderController {
 					.getEntityById(Rawmaterialorder.class,id);
 			rawmaterialorder.setIsactive(false);
 			rawmaterialorderService.updateEntity(rawmaterialorder);
-			return new UserStatus(1, "Rawmaterialorder deleted Successfully !");
+			return new UserStatus(1, "Rawmaterial Order deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

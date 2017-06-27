@@ -24,13 +24,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.dto.RMOrderModelData;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialorderhistory;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 import com.nextech.erp.model.Rawmaterialorderinvoiceassociation;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.Rmorderinvoiceintakquantity;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
@@ -38,6 +41,8 @@ import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.RMVAssoService;
+import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialorderService;
 import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.service.RawmaterialorderhistoryService;
@@ -82,6 +87,12 @@ public class RawmaterialorderinvoiceController {
 	
 	@Autowired
 	NotificationUserAssociationService notificationUserAssociationService;
+	
+	@Autowired
+	RMVAssoService rMVAssoService;
+	
+	@Autowired
+	RawmaterialService rawmaterialService;
 	
 	@Autowired
 	VendorService vendorService;
@@ -215,12 +226,14 @@ public class RawmaterialorderinvoiceController {
 			long inid = rawmaterialorderinvoiceservice
 					.addEntity(rawmaterialorderinvoice);
 			System.out.println("inid " + inid);
+			
+			Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoice.getPo_No());
 
 			Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
 			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
 			//TODO mail sending
-	        mailSending(notification, vendor);
+	        mailSending(notification, rawmaterialorder, vendor);
 
 		}else{
 			message = messageSource.getMessage(ERPConstants.RM_ORDER_INVOICE_EXIT, null, null);
@@ -289,7 +302,7 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
 
-	private void mailSending(Notification notification,Vendor vendor) throws Exception{
+/*	private void mailSending(Notification notification,Vendor vendor) throws Exception{
 		  Mail mail = new Mail();
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
@@ -312,5 +325,48 @@ public class RawmaterialorderinvoiceController {
 	        mail.setModel(model);
 
 		mailService.sendEmailWithoutPdF(mail,notification);
+	}*/
+	
+	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
+		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+		List<RMOrderModelData> rmOrderModelDatas = new ArrayList<RMOrderModelData>();
+		  Mail mail = new Mail();
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getTo()==true){
+				   mail.setMailTo(vendor.getEmail());
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			  
+		} 
+		  List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderRMAssociationByRMOrderId(rawmaterialorder.getId());
+		for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+			RMOrderModelData rmOrderModelData = new RMOrderModelData();
+			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterial().getId());
+			Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
+			rmOrderModelData.setAmount(rawmaterialorder.getTotalprice());
+			rmOrderModelData.setDescription(rawmaterial.getDescription());
+			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
+			rmOrderModelData.setQuantity(rawmaterialorderassociation.getQuantity());
+			rmOrderModelData.setTax(rawmaterialorder.getTax());
+			rmOrderModelDatas.add(rmOrderModelData);
+		}
+	        mail.setMailSubject(notification.getSubject());
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", vendor.getFirstName());
+	        model.put("lastName", vendor.getLastName());
+	        model.put("location", "Pune");
+	        model.put("rmOrderModelDatas",rmOrderModelDatas);
+	        model.put("address", vendor.getAddress());
+	        model.put("companyName", vendor.getCompanyName());
+	        model.put("tax", rawmaterialorder.getTax());
+	        model.put("mailFrom", notification.getName());
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+
+		mailService.sendEmailWithoutPdF(mail, notification);
 	}
 }

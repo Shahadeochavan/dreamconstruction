@@ -23,21 +23,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ReportColumn;
+import com.nextech.erp.dto.InputParameter;
 import com.nextech.erp.dto.ReportInputDTO;
 import com.nextech.erp.dto.ReportInputDataDTO;
+import com.nextech.erp.dto.ReportQueryDataDTO;
+import com.nextech.erp.model.Report;
 import com.nextech.erp.model.Reportinputassociation;
 import com.nextech.erp.model.Reportinputparameter;
+import com.nextech.erp.model.Reportoutputassociation;
+import com.nextech.erp.service.ReportService;
 import com.nextech.erp.service.ReptInpAssoService;
+import com.nextech.erp.service.ReptInpParaService;
+import com.nextech.erp.service.ReptOptAssoService;
+import com.nextech.erp.service.ReptOptParaService;
 import com.nextech.erp.status.UserStatus;
 
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
+import net.sf.dynamicreports.report.base.datatype.AbstractDataType;
 import net.sf.dynamicreports.report.builder.DynamicReports;
+import net.sf.dynamicreports.report.builder.column.Columns;
 import net.sf.dynamicreports.report.builder.component.Components;
+import net.sf.dynamicreports.report.builder.datatype.DataTypes;
 import net.sf.dynamicreports.report.constant.HorizontalAlignment;
 import net.sf.dynamicreports.report.exception.DRException;
 
@@ -60,12 +72,65 @@ public class ReportController {
 
 	@Autowired
 	ReptInpAssoService reptInpAssoService;
+	
+	@Autowired
+	ReptInpParaService inpParaService;
 
+	@Autowired
+	ReportService reportService;
+	
+	@Autowired
+	ReptOptAssoService reptOptAssoService;
+	
+	@Autowired
+	ReptOptParaService reptOptParaService;
+	
 	@Transactional
 	@RequestMapping(value = "/query", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
-	public List<ReportInputDTO> fetchReport(@PathVariable("id") long id, final HttpServletRequest request,
+	public List<ReportInputDTO> fetchReport( @RequestBody ReportQueryDataDTO reportQueryDataDTO, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
-		
+		Report report = reportService.getEntityById(Report.class, reportQueryDataDTO.getReportId());
+		String query = report.getReportQuery();
+		if(reportQueryDataDTO != null && reportQueryDataDTO.getData()!=null && !reportQueryDataDTO.getData().isEmpty()){
+			for (InputParameter inputParameter : reportQueryDataDTO.getData()) {
+				Reportinputparameter reportinputparameter = inpParaService.getEntityById(Reportinputparameter.class, inputParameter.getId());
+				if(reportinputparameter.getInputType().equals("LIST")){
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue());
+				}
+				else if(reportinputparameter.getInputType().equals("TEXT")){
+					query = query.replace("%"+inputParameter.getId()+"%", "\""+inputParameter.getValue()+"\"");
+				}
+				else if(reportinputparameter.getInputType().equals("DATE")){
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue());
+				}
+				else {
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue());
+				}
+			}
+		}
+		List<Reportoutputassociation> reportoutputassociations = reptOptAssoService.getReportOutputParametersByReportId(reportQueryDataDTO.getReportId());
+		JasperReportBuilder jasperReportBuilder = DynamicReports.report();
+		if(reportoutputassociations != null && !reportoutputassociations.isEmpty()){
+			for (Reportoutputassociation reportoutputassociation : reportoutputassociations) {
+				AbstractDataType<?, ?> dataTypes = null;
+				if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("TEXT")){
+					dataTypes = DataTypes.stringType();
+				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("LONG")){
+					dataTypes = DataTypes.integerType();
+				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("DATE")){
+					dataTypes = DataTypes.dateType();
+				}
+				jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), dataTypes));
+			}
+			
+		}
+		Connection connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry().getService(ConnectionProvider.class).getConnection();
+		jasperReportBuilder.title(Components.text(report.getReport_Name()).setHorizontalAlignment(HorizontalAlignment.CENTER));
+		File f = new File(report.getReportLocation());
+		if(!f.exists())
+			f.mkdirs();
+		jasperReportBuilder.setDataSource(query, connection);
+		downloadReport(jasperReportBuilder, reportQueryDataDTO.getReportType(), report.getReportLocation() + report.getFileName(), response);
 		return null;
 	}
 
@@ -147,6 +212,7 @@ public class ReportController {
 			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
 			response.setHeader("Content-Length", String.valueOf(file.length()));
 			FileCopyUtils.copy(in, response.getOutputStream());
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

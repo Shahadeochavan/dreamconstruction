@@ -6,6 +6,7 @@ public class ReportInputDTO {
 	private long id;
 	private String displayName;
 	private String inputType;
+	private Object value;
 	private List<ReportInputDataDTO> data;
 
 	public long getId() {
@@ -31,5 +32,11 @@ public class ReportInputDTO {
 	}
 	public void setData(List<ReportInputDataDTO> data) {
 		this.data = data;
+	}
+	public Object getValue() {
+		return value;
+	}
+	public void setValue(Object value) {
+		this.value = value;
 	}
 }

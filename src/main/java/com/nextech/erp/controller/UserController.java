@@ -157,12 +157,12 @@ public class UserController {
 						Usertype.class, user2.getUsertype().getId());
 				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService
 						.getPagesByUsertype(usertype.getId());
-			//	List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService.getReportByUsertype(usertype.getId());
+				List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService.getReportByUsertype(usertype.getId());
 				List<Page> pages = new ArrayList<Page>();
 				List<Report> reports = new ArrayList<Report>();
-			/*	for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
+				for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
 					reports.add(reportusertypeassociation.getReport());
-				}*/
+				}
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}

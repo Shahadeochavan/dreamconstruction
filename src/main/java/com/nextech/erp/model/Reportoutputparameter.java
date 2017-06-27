@@ -36,6 +36,8 @@ public class Reportoutputparameter implements Serializable {
 
 	private String name;
 
+	private String datatype;
+	
 	@Column(name="updated_by")
 	private int updatedBy;
 
@@ -137,6 +139,12 @@ public class Reportoutputparameter implements Serializable {
 		reportoutputassociation.setReportoutputparameter(null);
 
 		return reportoutputassociation;
+	}
+	public String getDatatype() {
+		return datatype;
+	}
+	public void setDatatype(String datatype) {
+		this.datatype = datatype;
 	}
 
 }

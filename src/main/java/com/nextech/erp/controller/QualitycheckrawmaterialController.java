@@ -145,21 +145,16 @@ public class QualitycheckrawmaterialController {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.QC_RM_ORDER_NOT_FOUND, null, null));
 			}else if (qualitycheckrawmaterials != null && !qualitycheckrawmaterials.isEmpty()) {
 				for (Qualitycheckrawmaterial qualitycheckrawmaterial : qualitycheckrawmaterials) {
-					
 					//TODO why are we getting raw material from Raw Material service
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, qualitycheckrawmaterial.getRawmaterial().getId());
-
 					//TODO save Quality check
 					long qualityCheckId = saveQualityCheckRawMaterial(qualitycheckrawmaterial, rawmaterialorderinvoiceNew, rawmaterial, request, response);
 					//if qualityCheckId value is 0 that means this is duplicate entry
 					if(qualityCheckId != 0 ){
-
 						//TODO update raw material invoice
 						updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
-
 						//TODO update raw material order
 						updateRMOrderRemainingQuantity(qualitycheckrawmaterial, rawmaterialorder, request, response);
-
 						updateRMIdQuantityMap(qualitycheckrawmaterial.getRawmaterial().getId(), qualitycheckrawmaterial.getIntakeQuantity() - qualitycheckrawmaterial.getGoodQuantity());
 						message = messageSource.getMessage(ERPConstants.RM_QUALITY_CHECK, null, null);
 					}else{
@@ -220,17 +215,13 @@ public class QualitycheckrawmaterialController {
 					Rawmaterial rawmaterial = rawmaterialService.getRMByRMId(qualitycheckrawmaterial.getRawmaterial().getId());
 					//TODO save Quality check
 					//if qualityCheckId value is 0 that means this is duplicate entry
-						// TODO  update inventory
-						Rawmaterialinventory rawmaterialinventory = updateInventory(qualitycheckrawmaterial, rawmaterial, request, response);
-
-						// TODO  call to inventory history
-						addRMInventoryHistory(qualitycheckrawmaterial, rawmaterialinventory, request, response);
-
-
-
-						//TODO update raw material invoice
-						updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
-			  }
+					// TODO  update inventory
+					Rawmaterialinventory rawmaterialinventory = updateInventory(qualitycheckrawmaterial, rawmaterial, request, response);
+					// TODO  call to inventory history
+					addRMInventoryHistory(qualitycheckrawmaterial, rawmaterialinventory, request, response);
+					//TODO update raw material invoice
+					updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
+				}
 			}
 			// TODO  call to trigger notification (will do it later )
 			return new UserStatus(1,"Store Quality Check information save succesfully");

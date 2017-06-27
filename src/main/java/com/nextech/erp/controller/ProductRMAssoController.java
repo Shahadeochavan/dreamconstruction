@@ -288,6 +288,28 @@ public class ProductRMAssoController {
 
 		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productrawmaterialassociationList);
 	}
+	
+	@RequestMapping(value = "getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getProductList() {
+
+		List<Long> productrawmaterialassociationList = null;
+		List<Long> productIdList = new ArrayList<Long>();
+		List<Product> products = null;
+		try {
+			productrawmaterialassociationList = productRMAssoService.getProductList();
+//			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociationList){
+//				productIdList.add(productrawmaterialassociation.getProduct().getId());
+//			}
+			
+			 products = productService.getProductList(productrawmaterialassociationList);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",products);
+	}
+	
+	
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductrawmaterialassociation(

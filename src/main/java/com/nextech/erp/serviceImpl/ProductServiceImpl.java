@@ -1,5 +1,7 @@
 package com.nextech.erp.serviceImpl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,11 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	public Product getProductListByProductId(long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Product> getProductList(List<Long> productIdList) {
+		// TODO Auto-generated method stub
+		return productDao.getProductList(productIdList);
 	}
 }

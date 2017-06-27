@@ -94,7 +94,7 @@ public class ReportController {
 					}
 					inputDTO.setData(dataDTOs);
 				}
-				inputDTO.setDispalyName(reportinputparameter.getDisplayName());
+				inputDTO.setDisplayName(reportinputparameter.getDisplayName());
 				inputDTO.setInputType(reportinputparameter.getInputType());
 				inputDTO.setId(reportinputparameter.getId());
 				reprtInputList.add(inputDTO);

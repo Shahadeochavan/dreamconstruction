@@ -20,6 +20,7 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.jdbc.connections.spi.ConnectionProvider;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -190,6 +191,11 @@ public class ReportController {
 		return null;
 	}
 
+	@Scheduled(initialDelay=10000, fixedRate=60000)
+	private void executeSchedular(){
+		System.out.println("Executed Scheduled method.");
+	}
+	
 	private void downloadReport(JasperReportBuilder report, long reportType, String fileName,
 			HttpServletResponse response) {
 		try {

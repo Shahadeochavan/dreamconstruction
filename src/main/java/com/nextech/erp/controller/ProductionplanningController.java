@@ -386,7 +386,7 @@ public class ProductionplanningController {
 					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
 					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterial().getId());
 				    if(rawmaterialinventory==null){
-					return new Response(1,"Please Add RM In RM Inventory");
+				    	return new Response(0,"Please Add RM In RM Inventory");
 				    }else{
 					productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
 					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());

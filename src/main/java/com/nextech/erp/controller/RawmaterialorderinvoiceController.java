@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.exceptions.RMOrderInvoiceExistsException;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
 import com.nextech.erp.model.Rawmaterialorder;
@@ -121,6 +122,9 @@ public class RawmaterialorderinvoiceController {
 						"Rawmaterialorderinvoice added Successfully !");
 
 
+		} catch(RMOrderInvoiceExistsException rmOrderInvoiceExistsException){
+			rmOrderInvoiceExistsException.printStackTrace();
+			return new UserStatus(0, rmOrderInvoiceExistsException.getCause().getMessage());
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -191,7 +195,7 @@ public class RawmaterialorderinvoiceController {
 		List<Rawmaterialorderinvoice> rawmaterialorderinvoiceList = null;
 		try {
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceservice
-					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null)));
+					.getRawmaterialorderinvoiceByStatusId(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_READY_STORE_IN, null, null)));
 			rawmaterialorderinvoiceList = new ArrayList<Rawmaterialorderinvoice>();
 			System.out.println("list size " + rawmaterialorderinvoices.size());
 			if (rawmaterialorderinvoices != null&& !rawmaterialorderinvoices.isEmpty()) {
@@ -205,7 +209,7 @@ public class RawmaterialorderinvoiceController {
 		return rawmaterialorderinvoiceList;
 	}
 
-	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	private String saveRMOrderInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws RMOrderInvoiceExistsException,Exception{
 		String message = "";
 		if (rawmaterialorderinvoiceservice.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(rawmaterialorderinvoice.getInvoice_No(),
 				rawmaterialorderinvoice.getVendorname(),rawmaterialorderinvoice.getPo_No())== null) {
@@ -224,6 +228,7 @@ public class RawmaterialorderinvoiceController {
 
 		}else{
 			message = messageSource.getMessage(ERPConstants.RM_ORDER_INVOICE_EXIT, null, null);
+			throw new RMOrderInvoiceExistsException(message);
 		}
 		return message;
 	}

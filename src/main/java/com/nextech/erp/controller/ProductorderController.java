@@ -189,8 +189,13 @@ public class ProductorderController {
 		
 		for(Long rmId : rmIds){
 			Rawmaterialinventory rmInventory = rawMaterialInventoryService.getByRMId(rmId);
-			long inventoryQuantity = rmInventory.getQuantityAvailable();
-			System.out.println(rmId + " Quantity Required : " + rawMaterialQtyMap.get(rmId) + " Inventory Quantity : " + inventoryQuantity);
+			if(rmInventory != null){
+				long inventoryQuantity = rmInventory.getQuantityAvailable();
+				System.out.println(rmId + " Quantity Required : " + rawMaterialQtyMap.get(rmId) + " Inventory Quantity : " + inventoryQuantity);
+			}else{
+				System.out.println("RM Inventory is not added for RM Id : " +  rmId);
+			}
+			
 		}
 		
 	}
@@ -342,7 +347,7 @@ public class ProductorderController {
 			productOrderData.setAmount(product.getRatePerUnit()*productorderassociation.getQuantity());
 			productOrderDatas.add(productOrderData);
 		}
-		downloadPDF(request, response, productorder,productOrderDatas,client);
+		//downloadPDF(request, response, productorder,productOrderDatas,client);
 	}
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<ProductOrderData> productOrderDatas,Client client) throws IOException {
 

@@ -152,7 +152,7 @@ public class QualitycheckrawmaterialController {
 					//if qualityCheckId value is 0 that means this is duplicate entry
 					if(qualityCheckId != 0 ){
 						//TODO update raw material invoice
-						updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
+						updateRawMaterialInvoice(ERPConstants.STATUS_READY_STORE_IN,rawmaterialorderinvoiceNew, request, response);
 						//TODO update raw material order
 						updateRMOrderRemainingQuantity(qualitycheckrawmaterial, rawmaterialorder, request, response);
 						updateRMIdQuantityMap(qualitycheckrawmaterial.getRawmaterial().getId(), qualitycheckrawmaterial.getIntakeQuantity() - qualitycheckrawmaterial.getGoodQuantity());
@@ -220,7 +220,7 @@ public class QualitycheckrawmaterialController {
 					// TODO  call to inventory history
 					addRMInventoryHistory(qualitycheckrawmaterial, rawmaterialinventory, request, response);
 					//TODO update raw material invoice
-					updateRawMaterialInvoice(rawmaterialorderinvoiceNew, request, response);
+					updateRawMaterialInvoice(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD,rawmaterialorderinvoiceNew, request, response);
 				}
 			}
 			// TODO  call to trigger notification (will do it later )
@@ -262,10 +262,10 @@ public class QualitycheckrawmaterialController {
 		return isOrderComplete ? STATUS_RAW_MATERIAL_ORDER_COMPLETE : STATUS_RAW_MATERIAL_ORDER_INCOMPLETE;
 	}
 
-	private void updateRawMaterialInvoice(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	private void updateRawMaterialInvoice(String invoiceStatus,Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		
 		//TODO why status RM ADD? Why can't we update status as RM Order Invoice QC Complete?
-		Status statusInventoryAdd = statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_RAW_MATERIAL_INVENTORY_ADD, null, null)));
+		Status statusInventoryAdd = statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(invoiceStatus, null, null)));
 		rawmaterialorderinvoice.setStatus(statusInventoryAdd);
 		rawmaterialorderinvoice.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);

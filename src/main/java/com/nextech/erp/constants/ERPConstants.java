@@ -4,6 +4,7 @@ public class ERPConstants {
 	public static String COUNT="count";
 	public static String SESSIONTIMEOUT="sessionTimeout";
 	public static String FIRSTNAME="firstName";
+	public static String STATUS_READY_STORE_IN="readyStoreIn";
     public static String STATUS_RAW_MATERIAL_INVENTORY_ADD="statusRMInventoryAdd";
     public static String STATUS_NEW_PRODUCT_ORDER="newProductOrder";
     public static String STATUS_NEW_RM_ORDER="newRMOrder";

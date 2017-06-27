@@ -202,6 +202,27 @@ public class BomController {
 		//  downloadPDF(request, response, bomList);
 		return new Response(1, bomModelDatas);
 	}
+	
+	@RequestMapping(value = "/getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getProductList() throws IOException {
+
+		List<Product> products = null;
+		List<Long> productIdList = null; 
+		Response response = null;
+		try {
+			productIdList = bomService.getProductList();
+			products = productService.getProductList(productIdList);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if(products == null){
+			response = new Response(0,"Please add Product RM Association to Create BOM", products);
+		}else{
+			response = new Response(1,"Success", products);
+		}
+		return response;
+	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteClient(@PathVariable("id") long id) {

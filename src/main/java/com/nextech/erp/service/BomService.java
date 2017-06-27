@@ -10,4 +10,6 @@ public interface BomService extends CRUDService<Bom> {
 	
 	public List<Bom> getBomListByProductIdAndBomId(long productId,long bomId) throws Exception;
 
+	public List<Long> getProductList();
+
 }

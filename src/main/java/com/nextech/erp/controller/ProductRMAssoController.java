@@ -292,16 +292,11 @@ public class ProductRMAssoController {
 	@RequestMapping(value = "getProductList", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Response getProductList() {
 
-		List<Long> productrawmaterialassociationList = null;
 		List<Long> productIdList = new ArrayList<Long>();
 		List<Product> products = null;
 		try {
-			productrawmaterialassociationList = productRMAssoService.getProductList();
-//			for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociationList){
-//				productIdList.add(productrawmaterialassociation.getProduct().getId());
-//			}
-			
-			 products = productService.getProductList(productrawmaterialassociationList);
+			productIdList = productRMAssoService.getProductList();
+			products = productService.getProductList(productIdList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

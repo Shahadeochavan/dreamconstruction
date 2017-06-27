@@ -49,24 +49,33 @@ public class ReportController {
 	private static final String APPLICATION_XLS = "application/xls";
 	private static final String APPLICATION_SCV = "application/csv";
 	private static final String APPLICATION_PDF = "application/pdf";
-	
+	private static final String APPLICATION_JSON = "application/json";
+
 	private static final long XLS = 1;
 	private static final long CSV = 2;
 	private static final long PDF = 3;
-	
+
 	@Autowired
 	SessionFactory sessionFactory;
-	
+
 	@Autowired
 	ReptInpAssoService reptInpAssoService;
-	
-	 @Transactional
-	@SuppressWarnings({"rawtypes", "unchecked" })
-	@RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")
+
+	@Transactional
+	@RequestMapping(value = "/query", method = RequestMethod.POST , produces = APPLICATION_JSON, headers = "Accept=application/json")
+	public List<ReportInputDTO> fetchReport(@PathVariable("id") long id, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
+		
+		return null;
+	}
+
+	@Transactional
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@RequestMapping(value = "/inputParameters/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
 	public List<ReportInputDTO> inputParameters(@PathVariable("id") long id, final HttpServletRequest request,
 			final HttpServletResponse response) throws Exception {
-		List<ReportInputDTO> reportInputDTOs = new ArrayList<ReportInputDTO>();
 		List<Reportinputassociation> list = reptInpAssoService.getReportInputParametersByReportId(id);
+		List<ReportInputDTO> reprtInputList = new ArrayList<ReportInputDTO>();
 		if (list != null && list.size() > 0) {
 			for (Reportinputassociation reportinputassociation : list) {
 				ReportInputDTO inputDTO = new ReportInputDTO();
@@ -85,20 +94,22 @@ public class ReportController {
 					}
 					inputDTO.setData(dataDTOs);
 				}
-				inputDTO.setDisplayName(reportinputparameter.getDisplayName());
+				inputDTO.setDispalyName(reportinputparameter.getDisplayName());
 				inputDTO.setInputType(reportinputparameter.getInputType());
 				inputDTO.setId(reportinputparameter.getId());
-				reportInputDTOs.add(inputDTO);
+				reprtInputList.add(inputDTO);
 			}
-		} 
-		return reportInputDTOs;
+		}
+		return reprtInputList;
 	}
-	
-	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV , headers = "Accept=application/json")
-	public UserStatus login(@PathVariable("id") long id, final HttpServletRequest request,final HttpServletResponse response) throws Exception {
+
+	@RequestMapping(value = "/users/{id}", method = RequestMethod.GET, produces = APPLICATION_SCV, headers = "Accept=application/json")
+	public UserStatus login(@PathVariable("id") long id, final HttpServletRequest request,
+			final HttpServletResponse response) throws Exception {
 		Connection connection = null;
 		try {
-			connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry().getService(ConnectionProvider.class).getConnection();
+			connection = sessionFactory.getSessionFactoryOptions().getServiceRegistry()
+					.getService(ConnectionProvider.class).getConnection();
 			JasperReportBuilder report = DynamicReports.report();
 			report.addColumn(ReportColumn.USER_ID);
 			report.addColumn(ReportColumn.FIRST_NAME);
@@ -106,37 +117,36 @@ public class ReportController {
 			report.title(Components.text(ReportColumn.USER_REPORT).setHorizontalAlignment(HorizontalAlignment.CENTER));
 			report.setDataSource(ReportColumn.USER_REPORT_QUERY, connection);
 			String fileName = ReportColumn.USER_REPORT_PATH;
-			
+
 			downloadReport(report, id, fileName, response);
 		} catch (SQLException e1) {
 			e1.printStackTrace();
-		} 
+		}
 		return null;
 	}
-	
-	private void downloadReport(JasperReportBuilder report,long reportType, String fileName, HttpServletResponse response){
+
+	private void downloadReport(JasperReportBuilder report, long reportType, String fileName,
+			HttpServletResponse response) {
 		try {
-			if(reportType == XLS){
-				fileName = fileName+".xls";
+			if (reportType == XLS) {
+				fileName = fileName + ".xls";
 				report.toXls(new FileOutputStream(fileName));
 				response.setContentType(APPLICATION_XLS);
-			}
-			else if(reportType == CSV){
-				fileName = fileName+".csv";
+			} else if (reportType == CSV) {
+				fileName = fileName + ".csv";
 				report.toCsv(new FileOutputStream(fileName));
 				response.setContentType(APPLICATION_SCV);
-			}
-			else if(reportType == PDF){
-				fileName = fileName+".pdf";
+			} else if (reportType == PDF) {
+				fileName = fileName + ".pdf";
 				report.toPdf(new FileOutputStream(fileName));
 				response.setContentType(APPLICATION_PDF);
 			}
 			File file = new File(fileName);
-	        InputStream in = new FileInputStream(file);
-	        
-	        response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
-	        response.setHeader("Content-Length", String.valueOf(file.length()));
-	        FileCopyUtils.copy(in, response.getOutputStream());
+			InputStream in = new FileInputStream(file);
+
+			response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+			response.setHeader("Content-Length", String.valueOf(file.length()));
+			FileCopyUtils.copy(in, response.getOutputStream());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

@@ -381,21 +381,23 @@ public class ProductionplanningController {
 			for(Productionplanning productionplanning : productionplanningList){
 				List<Productrawmaterialassociation> productrawmaterialassociations = productRMAssoService.getProductRMAssoListByProductId(productionplanning.getProduct().getId());
 				if(productrawmaterialassociations !=null && !productrawmaterialassociations.isEmpty()){
-				for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
-					ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
-					Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
-					Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterial().getId());
-				    if(rawmaterialinventory==null){
-				    	return new Response(0,"Please Add RM In RM Inventory");
-				    }else{
-					productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
-					productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
-					productinPlanPRMAssoData.setInventoryQuantity(rawmaterialinventory.getQuantityAvailable());
-					productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
-					productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);
-				}
-
-				}
+					for(Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations){
+						ProductinPlanPRMAssoData productinPlanPRMAssoData = new ProductinPlanPRMAssoData();
+						Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
+						Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterial().getId());
+					    if(rawmaterialinventory==null){
+					    	return new Response(0,"Please Add RM In RM Inventory");
+					    }else{
+						productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
+						productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
+						productinPlanPRMAssoData.setInventoryQuantity(rawmaterialinventory.getQuantityAvailable());
+						productinPlanPRMAssoData.setQuantityRequired(productrawmaterialassociation.getQuantity());
+						productinPlanPRMAssoDataList.add(productinPlanPRMAssoData);
+					}
+	
+					}
+				}else{
+					return new Response(0,"Please Add Product Raw Material Association for doing RM Store Out");
 				}
 			}
 		} catch (Exception e) {

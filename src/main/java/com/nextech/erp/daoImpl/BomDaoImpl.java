@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.BomDao;
 import com.nextech.erp.model.Bom;
+import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productrawmaterialassociation;
 
 @Repository
@@ -53,6 +54,18 @@ public class BomDaoImpl extends SuperDaoImpl<Bom> implements BomDao{
 		criteria.setProjection(Projections.distinct(Projections.property("product.id")));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Long>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
+
+	@Override
+	public Bom getBomByProductId(long productID) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Bom.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("product.id", productID));
+		Bom bom = criteria.list().size() > 0 ? (Bom) criteria.list().get(0) : null;
+		return bom;
 	}
 
 }

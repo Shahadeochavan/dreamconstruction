@@ -426,7 +426,6 @@ public class QualitycheckrawmaterialController {
 				  mail.setMailCc(user.getEmail());
 			  }
 		}
-	        mail.setMailTo(vendor.getEmail());
 	        mail.setMailSubject(notification.getSubject());
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());

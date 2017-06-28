@@ -11,5 +11,7 @@ public interface BomDao extends SuperDao<Bom>{
 	public List<Bom> getBomListByProductIdAndBomId(long productId,long bomId) throws Exception;
 
 	public List<Long> getProductList();
+	
+	public Bom  getBomByProductId(long productID) throws Exception;
 
 }

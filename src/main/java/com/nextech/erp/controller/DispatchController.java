@@ -1,14 +1,25 @@
 package com.nextech.erp.controller;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -21,10 +32,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.CreatePDF;
+import com.nextech.erp.dto.CreatePdfForDispatchProduct;
 import com.nextech.erp.dto.DispatchDTO;
+import com.nextech.erp.dto.DispatchProductDTO;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.dto.Part;
+import com.nextech.erp.dto.ProductOrderData;
+import com.nextech.erp.model.Bom;
+import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Dispatch;
 import com.nextech.erp.model.Notification;
@@ -36,6 +54,8 @@ import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Status;
 import com.nextech.erp.model.User;
+import com.nextech.erp.service.BOMRMVendorAssociationService;
+import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.DispatchService;
 import com.nextech.erp.service.MailService;
@@ -65,6 +85,12 @@ public class DispatchController {
 
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	BomService bomService;
+	
+	@Autowired
+	BOMRMVendorAssociationService bomRMVendorAssociationService;
 
 	@Autowired
 	ProductorderassociationService productorderassociationService;
@@ -98,6 +124,7 @@ public class DispatchController {
 
 	private static final int STATUS_PRODUCT_ORDER_INCOMPLETE = 32;
 	private static final int STATUS_PRODUCT_ORDER_COMPLETE = 31;
+	private static float TOTAL_COST = 0;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addDispatch(
@@ -135,6 +162,7 @@ public class DispatchController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			List<DispatchProductDTO> dispatchProductDTOs = new ArrayList<DispatchProductDTO>();
 			for (Part part : dispatchDTO.getParts()) {
 				Dispatch dispatch = setPart(part);
 				Productinventory productinventory = productinventoryService
@@ -163,6 +191,19 @@ public class DispatchController {
 									Long.parseLong(messageSource.getMessage(
 											ERPConstants.ORDER_DISPATCHED,
 											null, null))));
+							Product product = productService.getEntityById(Product.class,productorderassociation.getProduct().getId());
+							Bom bom = bomService.getBomByProductId(product.getId());
+							List<Bomrmvendorassociation> bomrmvendorassociations = bomRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
+							for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+							DispatchProductDTO  dispatchProductDTO = new DispatchProductDTO();
+							dispatchProductDTO.setClientPartNumber(product.getClientpartnumber());
+							dispatchProductDTO.setProductName(product.getPartNumber());
+							dispatchProductDTO.setQuantityDispatched(dispatch.getQuantity());
+							dispatchProductDTO.setDescription(dispatchDTO.getDescription());
+							TOTAL_COST = TOTAL_COST+bomrmvendorassociation.getCost();
+							dispatchProductDTO.setTotalCost(TOTAL_COST);
+							dispatchProductDTOs.add(dispatchProductDTO);
+							}
 							dispatchservice.addEntity(dispatch);
 						}
 					}
@@ -189,7 +230,8 @@ public class DispatchController {
 			Productorder productorder = productorderService.getEntityById(Productorder.class, dispatchDTO.getOrderId());
 			Client client = clientService.getEntityById(Client.class,productorder.getClient().getId());
 			Status status = statusService.getEntityById(Status.class,productorder.getStatus().getId());
-			mailSending(productorder, request, response, client, status);
+		//	mailSending(productorder, request, response, client, status);
+			downloadPDF(request, response, productorder, dispatchProductDTOs, client,dispatchDTO);
 			return new UserStatus(1, "Dispatch added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -365,7 +407,7 @@ public class DispatchController {
 								null, null))));
 		productinventoryhistoryService.addEntity(productinventoryhistory);
 	}
-
+	
 	private Dispatch setPart(Part part) throws Exception {
 		Dispatch dispatch = new Dispatch();
 		dispatch.setProduct(productService.getEntityById(Product.class,
@@ -375,7 +417,7 @@ public class DispatchController {
 		return dispatch;
 	}
 //TODO
-	private void mailSending(Productorder productorder,HttpServletRequest request, HttpServletResponse response,Client client, Status status) throws NumberFormatException,Exception {
+	private void mailSending(Productorder productorder,HttpServletRequest request, HttpServletResponse response,Client client, Status status,String fileName,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws NumberFormatException,Exception {
 		Mail mail = new Mail();
 
 		Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.DISPATCHED_SUCCESSFULLY, null, null)));
@@ -391,13 +433,83 @@ public class DispatchController {
 			  }
 			
 		}
+	   mail.setAttachment(fileName);
 		mail.setMailSubject(notification.getSubject());
 		mail.setMailTo(client.getEmailid());
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("firstName", client.getCompanyname());
+		model.put("mailfrom", "Nextech");
+		model.put("address", client.getAddress());
+		model.put("dispatchProductDTOs", dispatchProductDTOs);
+		model.put("invoiceNo", dispatchDTO.getInvoiceNo());
+		model.put("discription", dispatchDTO.getDescription());
 		model.put("location", "Pune");
 		model.put("signature", "www.NextechServices.in");
 		mail.setModel(model);
-		mailService.sendEmailWithoutPdF(mail, notification);
+		mailService.sendEmail(mail, notification);
+	}
+	
+	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<DispatchProductDTO> dispatchProductDTOs,Client client,DispatchDTO dispatchDTO) throws IOException {
+
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+
+	    String fileName = "Dispatch.pdf";
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+
+	    try {
+
+	   CreatePdfForDispatchProduct createPdfForDispatchProduct = new CreatePdfForDispatchProduct();
+	   createPdfForDispatchProduct.createPDF(temperotyFilePath+"\\"+fileName,productorder,dispatchProductDTOs,client,dispatchDTO);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        baos = convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName,request, response, productorder,dispatchProductDTOs,dispatchDTO);
+	        OutputStream os = response.getOutputStream();
+	        baos.writeTo(os);
+	        os.flush();
+
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+
+	}
+
+	private ByteArrayOutputStream convertPDFToByteArrayOutputStream(String fileName,HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<DispatchProductDTO> dispatchProductDTOs,DispatchDTO dispatchDTO) throws Exception {
+
+
+		Status status = statusService.getEntityById(Status.class, productorder.getStatus().getId());
+		Client client = clientService.getEntityById(Client.class,productorder.getClient().getId());
+
+		//TODO mail sending
+        mailSending(productorder, request, response, client, status, fileName,dispatchProductDTOs,dispatchDTO);
+
+		InputStream inputStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+
+			inputStream = new FileInputStream(fileName);
+			byte[] buffer = new byte[1024];
+			baos = new ByteArrayOutputStream();
+
+			int bytesRead;
+			while ((bytesRead = inputStream.read(buffer)) != -1) {
+				baos.write(buffer, 0, bytesRead);
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (inputStream != null) {
+				try {
+					inputStream.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return baos;
 	}
 }

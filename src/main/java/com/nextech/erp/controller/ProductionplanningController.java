@@ -316,19 +316,19 @@ public class ProductionplanningController {
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
-				if(productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_NEW, null, null))){
-				if(productionplanning.getTargetQuantity() > 0){
-					List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
-					if(productorderassociations !=null && !productorderassociations.isEmpty()){
-						for (Productorderassociation productorderassociation : productorderassociations) {
-							if(productorderassociation.getRemainingQuantity() > 0){
-								isProductRemaining = true;
-								break;
+//				if(productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_NEW, null, null))){
+					if(productionplanning.getTargetQuantity() > 0){
+						List<Productorderassociation> productorderassociations = productorderassociationService.getIncompleteProductOrderAssoByProdutId(productionplanning.getProduct().getId());
+						if(productorderassociations !=null && !productorderassociations.isEmpty()){
+							for (Productorderassociation productorderassociation : productorderassociations) {
+								if(productorderassociation.getRemainingQuantity() > 0){
+									isProductRemaining = true;
+									break;
+								}
 							}
 						}
 					}
-				}
-				}
+//				}
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}

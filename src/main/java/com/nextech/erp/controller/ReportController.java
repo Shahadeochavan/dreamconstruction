@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -44,9 +45,9 @@ import com.nextech.erp.service.ReptInpParaService;
 import com.nextech.erp.service.ReptOptAssoService;
 import com.nextech.erp.service.ReptOptParaService;
 import com.nextech.erp.status.UserStatus;
+import com.nextech.erp.util.DateUtil;
 
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder;
-import net.sf.dynamicreports.report.base.datatype.AbstractDataType;
 import net.sf.dynamicreports.report.builder.DynamicReports;
 import net.sf.dynamicreports.report.builder.column.Columns;
 import net.sf.dynamicreports.report.builder.component.Components;
@@ -96,16 +97,16 @@ public class ReportController {
 			for (InputParameter inputParameter : reportQueryDataDTO.getData()) {
 				Reportinputparameter reportinputparameter = inpParaService.getEntityById(Reportinputparameter.class, inputParameter.getId());
 				if(reportinputparameter.getInputType().equals("LIST")){
-					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue());
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
 				}
 				else if(reportinputparameter.getInputType().equals("TEXT")){
 					query = query.replace("%"+inputParameter.getId()+"%", "\""+inputParameter.getValue()+"\"");
 				}
 				else if(reportinputparameter.getInputType().equals("DATE")){
-					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue());
+					query = query.replace("%"+inputParameter.getId()+"%", "'"+DateUtil.convertToString(DateUtil.convertToDate(inputParameter.getValue().toString()))+"'");
 				}
 				else {
-					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue());
+					query = query.replace("%"+inputParameter.getId()+"%", inputParameter.getValue().toString());
 				}
 			}
 		}
@@ -113,15 +114,14 @@ public class ReportController {
 		JasperReportBuilder jasperReportBuilder = DynamicReports.report();
 		if(reportoutputassociations != null && !reportoutputassociations.isEmpty()){
 			for (Reportoutputassociation reportoutputassociation : reportoutputassociations) {
-				AbstractDataType<?, ?> dataTypes = null;
 				if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("TEXT")){
-					dataTypes = DataTypes.stringType();
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.stringType()));
 				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("LONG")){
-					dataTypes = DataTypes.integerType();
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.integerType()));
 				}else if(reportoutputassociation.getReportoutputparameter().getDatatype().equals("DATE")){
-					dataTypes = DataTypes.dateType();
+					jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), DataTypes.dateType()));
 				}
-				jasperReportBuilder.addColumn(Columns.column(reportoutputassociation.getReportoutputparameter().getDisplayName(), reportoutputassociation.getReportoutputparameter().getName(), dataTypes));
+				
 			}
 			
 		}

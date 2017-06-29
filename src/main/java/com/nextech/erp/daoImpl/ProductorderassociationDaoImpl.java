@@ -67,6 +67,8 @@ public class ProductorderassociationDaoImpl extends
 				.createCriteria(Productorderassociation.class);
 		criteria.add(Restrictions.eq("product.id", productId));
 		criteria.add(Restrictions.eq("isactive", true));
+		
+		//TODO Should we add Status check here in Criteria?
 		criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
 		return  (criteria.list().size() > 0 ? criteria.list() : null);
 	}

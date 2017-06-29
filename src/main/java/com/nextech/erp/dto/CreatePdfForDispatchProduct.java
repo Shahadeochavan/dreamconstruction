@@ -28,8 +28,9 @@ public class CreatePdfForDispatchProduct {
 	public static String answer = "";
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-	private static float TOTAL_QUANTITY = 0;
+	private static float SUB_TOTAL = 0;
 	private static float tax = 0;
+	private static float total = 0;
 	/**
 	 * @param args
 	 */
@@ -143,10 +144,19 @@ public class CreatePdfForDispatchProduct {
 	    insertCell(table, dispatchProductDTO.getProductName(), Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, dispatchProductDTO.getClientPartNumber(), Element.ALIGN_CENTER, 1, bf12);
 	    insertCell(table, (Long.toString(dispatchProductDTO.getQuantityDispatched())), Element.ALIGN_CENTER, 1, bf12);
-	    TOTAL_QUANTITY = TOTAL_QUANTITY+dispatchProductDTO.getQuantityDispatched();
+	    insertCell(table, (Float.toString(dispatchProductDTO.getTotalCost())), Element.ALIGN_CENTER, 1, bf12);
+	    SUB_TOTAL = SUB_TOTAL+dispatchProductDTO.getTotalCost();
+	    tax = 18*SUB_TOTAL;
+	     tax =tax/100;
+	     
     }
-     insertCell(table, "Total Quantity", Element.ALIGN_RIGHT, 2, bfBold12);
-     insertCell(table, Float.toString(TOTAL_QUANTITY), Element.ALIGN_CENTER, 1, bfBold12);
+     total = tax+SUB_TOTAL;
+     insertCell(table, "Sub Total", Element.ALIGN_RIGHT, 3, bfBold12);
+     insertCell(table, Float.toString(SUB_TOTAL), Element.ALIGN_CENTER, 1, bfBold12);
+     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bfBold12);
+     insertCell(table, Float.toString(tax), Element.ALIGN_CENTER, 1, bfBold12);
+     insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bfBold12);
+     insertCell(table, Float.toString(total), Element.ALIGN_CENTER, 1, bfBold12);
      document.add(table);
 	}
 	 private void insertCell(PdfPTable table, String text, int align, int colspan, Font font){

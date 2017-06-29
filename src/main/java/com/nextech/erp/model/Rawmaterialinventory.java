@@ -27,6 +27,9 @@ public class Rawmaterialinventory implements Serializable {
 
 	@Column(name="created_date")
 	private Timestamp createdDate;
+	
+	private long minimum_quantity;
+	private long maximum_quantity;
 
 	private boolean isactive;
 
@@ -89,6 +92,18 @@ public class Rawmaterialinventory implements Serializable {
 		this.isactive = isactive;
 	}
 
+	public long getMinimum_quantity() {
+		return minimum_quantity;
+	}
+	public void setMinimum_quantity(long minimum_quantity) {
+		this.minimum_quantity = minimum_quantity;
+	}
+	public long getMaximum_quantity() {
+		return maximum_quantity;
+	}
+	public void setMaximum_quantity(long maximum_quantity) {
+		this.maximum_quantity = maximum_quantity;
+	}
 	public long getQuantityAvailable() {
 		return this.quantityAvailable;
 	}

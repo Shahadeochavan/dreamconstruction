@@ -124,7 +124,7 @@ public class DispatchController {
 
 	private static final int STATUS_PRODUCT_ORDER_INCOMPLETE = 32;
 	private static final int STATUS_PRODUCT_ORDER_COMPLETE = 31;
-	private static float TOTAL_COST = 0;
+	
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addDispatch(
@@ -194,16 +194,17 @@ public class DispatchController {
 							Product product = productService.getEntityById(Product.class,productorderassociation.getProduct().getId());
 							Bom bom = bomService.getBomByProductId(product.getId());
 							List<Bomrmvendorassociation> bomrmvendorassociations = bomRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
-							for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+							float totalCost = 0;
 							DispatchProductDTO  dispatchProductDTO = new DispatchProductDTO();
 							dispatchProductDTO.setClientPartNumber(product.getClientpartnumber());
 							dispatchProductDTO.setProductName(product.getPartNumber());
 							dispatchProductDTO.setQuantityDispatched(dispatch.getQuantity());
 							dispatchProductDTO.setDescription(dispatchDTO.getDescription());
-							TOTAL_COST = TOTAL_COST+bomrmvendorassociation.getCost();
-							dispatchProductDTO.setTotalCost(TOTAL_COST);
-							dispatchProductDTOs.add(dispatchProductDTO);
+							for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+							totalCost = totalCost+bomrmvendorassociation.getCost();
+							dispatchProductDTO.setTotalCost(totalCost);
 							}
+							dispatchProductDTOs.add(dispatchProductDTO);
 							dispatchservice.addEntity(dispatch);
 						}
 					}

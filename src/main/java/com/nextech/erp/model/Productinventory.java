@@ -33,6 +33,8 @@ public class Productinventory implements Serializable {
 	@Size(min = 4, max = 255, message = "{description sholud be greater than 4 or less than 255 characters}")
 	private String description;
 
+	private long minimum_quantity;
+	private long maximum_quantity;
 	private boolean isactive;
 
 	/*@NotBlank(message="{name should not be blank}")
@@ -158,6 +160,18 @@ public class Productinventory implements Serializable {
 		this.product = product;
 	}
 
+	public long getMinimum_quantity() {
+		return minimum_quantity;
+	}
+	public void setMinimum_quantity(long minimum_quantity) {
+		this.minimum_quantity = minimum_quantity;
+	}
+	public long getMaximum_quantity() {
+		return maximum_quantity;
+	}
+	public void setMaximum_quantity(long maximum_quantity) {
+		this.maximum_quantity = maximum_quantity;
+	}
 	public List<Productinventoryhistory> getProductinventoryhistories() {
 		return this.productinventoryhistories;
 	}

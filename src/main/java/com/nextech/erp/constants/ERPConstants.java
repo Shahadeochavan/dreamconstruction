@@ -62,7 +62,8 @@ public class ERPConstants {
    public static String TO_CHECK_QUANTITY_IN_PRODUCTINVENTORY="checkquantityInProductInventory";
    public static String TO_CHECK_QUANTITY_IN_RMINVENTORY="checkquantityInRMInventory";
 
-
+   public static String STORE_OUT_PARTIAL="STORE_OUT_PARTIAL";
+   public static String STORE_OUT_COMPLETE="STORE_OUT_COMPLETE";
 
 
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 import com.nextech.erp.dto.Mail;
@@ -23,6 +24,7 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 	@Autowired
 	VelocityEngine velocityEngine;
 
+	@Async
 	public void sendEmail( Mail mail,Notification notification) {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 
@@ -59,6 +61,7 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 		return content.toString();
 	}
 
+	@Async
 	public void sendEmailWithoutPdF( Mail mail,Notification notification) {
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
 
@@ -82,6 +85,7 @@ public class MailServiceImpl extends CRUDServiceImpl<Notification> implements Ma
 		}
 	}
 
+	@Async
 	@Override
 	public void sendEmailVendor(Mail mail) {
 		// TODO Auto-generated method stub

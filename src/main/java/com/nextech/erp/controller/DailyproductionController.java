@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
-import com.nextech.erp.dto.ProductinPlanCurrentDateList;
-import com.nextech.erp.dto.ProductionPlanCurrentDate;
+import com.nextech.erp.dto.DailyProductionPlanDTO;
+import com.nextech.erp.dto.TodaysProductionPlanDTO;
 import com.nextech.erp.model.Dailyproduction;
 import com.nextech.erp.model.Productionplanning;
 import com.nextech.erp.model.Status;
@@ -53,14 +53,14 @@ public class DailyproductionController {
 	ProductionplanningService productionplanningService;
 
 	@RequestMapping(value = "/dailyproductionSave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addDailyproduction(@Valid @RequestBody ProductionPlanCurrentDate productionPlanCurrentDate,HttpServletRequest request,HttpServletResponse response,
+	public @ResponseBody UserStatus addDailyproduction(@Valid @RequestBody TodaysProductionPlanDTO todaysProductionPlanDTO,HttpServletRequest request,HttpServletResponse response,
 			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			for(ProductinPlanCurrentDateList productinPlanCurrentDateList : productionPlanCurrentDate.getProductinPlanCurrentDateLists()){
-				Dailyproduction dailyproduction = setProductinPlanCurrentDate(productinPlanCurrentDateList);
+			for(DailyProductionPlanDTO dailyProductionPlanDTO : todaysProductionPlanDTO.getDailyProductionPlanDTOs()){
+				Dailyproduction dailyproduction = setProductinPlanCurrentDate(dailyProductionPlanDTO);
 				dailyproduction.setIsactive(true);	
 				dailyproduction.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dailyproduction.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_PENDING, null, null))));
@@ -137,12 +137,12 @@ public class DailyproductionController {
 		}
 	}
 	
-	private Dailyproduction setProductinPlanCurrentDate(ProductinPlanCurrentDateList productinPlanCurrentDateList) throws Exception {
+	private Dailyproduction setProductinPlanCurrentDate(DailyProductionPlanDTO dailyProductionPlanDTO) throws Exception {
 		Dailyproduction dailyproduction = new Dailyproduction();
-		dailyproduction.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, productinPlanCurrentDateList.getProductionPlanId()));
-		dailyproduction.setTargetQuantity(productinPlanCurrentDateList.getTargetQuantity());
-		dailyproduction.setAchivedQuantity(productinPlanCurrentDateList.getAchivedQuantity());
-		dailyproduction.setRemark(productinPlanCurrentDateList.getRemark());
+		dailyproduction.setProductionplanning(productionplanningService.getEntityById(Productionplanning.class, dailyProductionPlanDTO.getProductionPlanId()));
+		dailyproduction.setTargetQuantity(dailyProductionPlanDTO.getTargetQuantity());
+		dailyproduction.setAchivedQuantity(dailyProductionPlanDTO.getAchivedQuantity());
+		dailyproduction.setRemark(dailyProductionPlanDTO.getRemark());
 		dailyproduction.setIsactive(true);
 		return dailyproduction;
 	}

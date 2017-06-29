@@ -11,6 +11,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -125,5 +126,8 @@ public class ProductinventoryController {
 
 	}
 
-
+	@Scheduled(initialDelay=10000, fixedRate=60000)
+	private void executeSchedular(){
+		System.out.println("Product Inventory Check");
+	}
 }

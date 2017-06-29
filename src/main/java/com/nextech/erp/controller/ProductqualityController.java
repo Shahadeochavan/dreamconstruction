@@ -243,9 +243,9 @@ public class ProductqualityController {
 
 	private void updateProductionPlanningForQualityCheck(Productquality productquality,long userId) throws Exception {
 		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
-		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()-productquality.getGoodQuantity());
+		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()-(productquality.getGoodQuantity() + productquality.getRejectedQuantity()));
 		productionplanning.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity()+productquality.getGoodQuantity());
-		productionplanning.setFailQuantity(productquality.getRejectedQuantity());
+		productionplanning.setFailQuantity(productionplanning.getQualityCheckedQuantity() + productquality.getRejectedQuantity());
 		productionplanning.setUpdatedBy(userId);
 		productionplanningService.updateEntity(productionplanning);
 	}

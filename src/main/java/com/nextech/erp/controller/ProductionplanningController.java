@@ -280,6 +280,7 @@ public class ProductionplanningController {
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanByDate(DateUtil.convertToDate(date));
 			for (Productionplanning productionplanning : productionplannings) {
 				boolean isProductRemaining = false;
+				//TODO Can we add this if condition below to Query along with condition target quantity?
 				if(productionplanning.getStatus().getId() == Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))||
 						productionplanning.getStatus().getId()==Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))){
 					if(productionplanning.getTargetQuantity() > 0){
@@ -386,7 +387,7 @@ public class ProductionplanningController {
 						Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, productrawmaterialassociation.getRawmaterial().getId());
 						Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(productrawmaterialassociation.getRawmaterial().getId());
 					    if(rawmaterialinventory==null){
-					    	return new Response(0,"Please Add RM In RM Inventory");
+					    	return new Response(0,"Please Add RM In RM Inventory",null);
 					    }else{
 						productinPlanPRMAssoData.setName(rawmaterial.getPartNumber());
 						productinPlanPRMAssoData.setRawmaterial(productrawmaterialassociation.getRawmaterial().getId());
@@ -404,7 +405,7 @@ public class ProductionplanningController {
 			e.printStackTrace();
 		}
 
-		return new Response(1,"Productionplanning List and Productrawmaterialassociation List",productinPlanPRMAssoDataList);
+		return new Response(1,"Success",productinPlanPRMAssoDataList);
 	}
 
 

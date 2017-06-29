@@ -430,6 +430,8 @@ public class QualitycheckrawmaterialController {
 	        Map < String, Object > model = new HashMap < String, Object > ();
 	        model.put("firstName", vendor.getFirstName());
 	        model.put("qualityCheckRMDTOs", qualityCheckRMDTOs);
+	        model.put("address", vendor.getAddress());
+	        model.put("companyName", vendor.getCompanyName());
 	        model.put("lastName", vendor.getLastName());
 	        model.put("location", "Pune");
 	        model.put("signature", "www.NextechServices.in");

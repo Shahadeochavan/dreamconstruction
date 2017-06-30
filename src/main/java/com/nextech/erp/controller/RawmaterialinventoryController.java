@@ -144,7 +144,7 @@ public class RawmaterialinventoryController {
 		}
 
 	}
-	@Scheduled(initialDelay=10000, fixedRate=60000)
+	@Scheduled(initialDelay=600000, fixedRate=600000)
 	private void executeSchedular() throws Exception{
 		List<Rawmaterialinventory> rawmaterialinventoryList = null;
 		System.out.println("RM Inventory Check");
@@ -167,7 +167,7 @@ public class RawmaterialinventoryController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	//mailSendingRMInventroy(rmInventoryDTOs);
+	mailSendingRMInventroy(rmInventoryDTOs);
 	}
 	
 	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception{

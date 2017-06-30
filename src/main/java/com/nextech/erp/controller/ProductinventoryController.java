@@ -157,7 +157,7 @@ public class ProductinventoryController {
 
 	}
 
-	@Scheduled(initialDelay=10000, fixedRate=60000)
+	@Scheduled(initialDelay=600000, fixedRate=600000)
 	private void executeSchedular() throws Exception{
 		System.out.println("Product Inventory Check");
 		List<Productinventory> productinventoryList = null;
@@ -181,7 +181,7 @@ public class ProductinventoryController {
 			e.printStackTrace();
 		}
 		System.out.println(productInventoryDTOs);
-		//mailSendingProductInventroy(productInventoryDTOs);
+		mailSendingProductInventroy(productInventoryDTOs);
 	}
 	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
 		  Mail mail = new Mail();

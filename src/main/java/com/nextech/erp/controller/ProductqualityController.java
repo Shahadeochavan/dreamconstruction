@@ -253,9 +253,9 @@ public class ProductqualityController {
 	private void updateProductionPlanningForStore(Productquality productquality,long userId) throws Exception {
 		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, productquality.getProductionplanning().getId());
 		productionplanning.setQualityCheckedQuantity(productionplanning.getQualityCheckedQuantity()-productquality.getGoodQuantity());
-		productionplanning.setAchivedQuantity(productionplanning.getAchivedQuantity()+productquality.getGoodQuantity());
+		productionplanning.setCompletedQuantity(productionplanning.getCompletedQuantity()+productquality.getGoodQuantity());
 		productionplanning.setUpdatedBy(userId);
-		if(productionplanning.getTargetQuantity() >= productionplanning.getAchivedQuantity()){
+		if(productionplanning.getTargetQuantity() >= productionplanning.getCompletedQuantity()){
 			productionplanning.setStatus(statusService.getEntityById(Status.class,  Long.parseLong(messageSource.getMessage(ERPConstants.PROD_PLAN_COMPLETE, null, null))));
 		}
 		productionplanningService.updateEntity(productionplanning);

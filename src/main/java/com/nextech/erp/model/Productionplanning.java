@@ -24,8 +24,8 @@ public class Productionplanning implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY) 
 	private long id;
 
-	@Column(name="achived_quantity")
-	private long achivedQuantity;
+	@Column(name="completed_quantity")
+	private long completedQuantity;
 
 	@Column(name="created_by")
 	private long createdBy;
@@ -101,16 +101,24 @@ public class Productionplanning implements Serializable {
 		this.id = id;
 	}
 
-	public long getAchivedQuantity() {
+/*	public long getAchivedQuantity() {
 		return this.achivedQuantity;
 	}
 
 	public void setAchivedQuantity(long achivedQuantity) {
 		this.achivedQuantity = achivedQuantity;
-	}
+	}*/
 
 	public long getCreatedBy() {
 		return this.createdBy;
+	}
+
+	public long getCompletedQuantity() {
+		return completedQuantity;
+	}
+
+	public void setCompletedQuantity(long completedQuantity) {
+		this.completedQuantity = completedQuantity;
 	}
 
 	public void setCreatedBy(long createdBy) {

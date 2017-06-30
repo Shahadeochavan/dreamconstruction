@@ -141,7 +141,7 @@ public class ProductionplanningServiceImpl extends
 	private ProductProductionPlan getProductProductionPlanBean(
 			Productionplanning productionplanning) {
 		ProductProductionPlan productProductionPlan = new ProductProductionPlan();
-		productProductionPlan.setAchived_quantity(productionplanning.getAchivedQuantity());
+		productProductionPlan.setAchived_quantity(productionplanning.getCompletedQuantity());
 		productProductionPlan.setDispatch_quantity(productionplanning.getDispatchQuantity());
 		productProductionPlan.setTarget_quantity(productionplanning.getTargetQuantity());
 		productProductionPlan.setProductionDate(productionplanning.getDate());
@@ -218,7 +218,7 @@ public class ProductionplanningServiceImpl extends
 				cal.set(Calendar.SECOND, 59);
 				Date productionDateEnd = cal.getTime();
 				Productionplanning productionplanning = productionplanningDao.getProductionPlanningByDateAndProductId(productionDateStart, productionDateEnd, productionPlan.getProductId());
-				productionplanning.setAchivedQuantity(productProductionPlan.getAchived_quantity());
+				productionplanning.setCompletedQuantity(productProductionPlan.getAchived_quantity());
 				productionplanning.setDispatchQuantity(productProductionPlan.getDispatch_quantity());
 				productionplanning.setTargetQuantity(productProductionPlan.getTarget_quantity());
 				Productorderassociation productorderassociation = productorderassociationDao.getById(Productorderassociation.class, productionplanning.getProduct().getId());

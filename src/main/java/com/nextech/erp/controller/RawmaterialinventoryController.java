@@ -1,6 +1,9 @@
 package com.nextech.erp.controller;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +24,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.dto.Mail;
+import com.nextech.erp.dto.RMInventoryDTO;
+import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
+import com.nextech.erp.model.User;
+import com.nextech.erp.service.MailService;
+import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
+import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
 @RestController
@@ -34,6 +48,22 @@ public class RawmaterialinventoryController {
 
 	@Autowired
 	private MessageSource messageSource;
+	
+	@Autowired
+	NotificationService notificationService;
+	
+	@Autowired
+	NotificationUserAssociationService notificationUserAssociationService;
+	
+	@Autowired
+	UserService userService;
+	
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	RawmaterialService rawmaterialService;
+	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addRawmaterialinventory(
 			@Valid @RequestBody Rawmaterialinventory rawmaterialinventory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
@@ -48,7 +78,7 @@ public class RawmaterialinventoryController {
 				rawmaterialinventoryService.addEntity(rawmaterialinventory);
 			}
 			else
-				return new UserStatus(1, messageSource.getMessage(
+				return new UserStatus(0, messageSource.getMessage(
 						ERPConstants.RAW_MATERIAL_INVENTORY, null, null));
 			return new UserStatus(1, "Rawmaterialinventory added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -115,7 +145,55 @@ public class RawmaterialinventoryController {
 
 	}
 	@Scheduled(initialDelay=10000, fixedRate=60000)
-	private void executeSchedular(){
+	private void executeSchedular() throws Exception{
+		List<Rawmaterialinventory> rawmaterialinventoryList = null;
 		System.out.println("RM Inventory Check");
+		List<RMInventoryDTO> rmInventoryDTOs = new ArrayList<RMInventoryDTO>();
+		try { 
+			rawmaterialinventoryList = rawmaterialinventoryService.getEntityList(Rawmaterialinventory.class);
+			for (Rawmaterialinventory rawmaterialinventory : rawmaterialinventoryList) {
+				Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialinventory.getRawmaterial().getId());
+				if(rawmaterialinventory.getQuantityAvailable()>=rawmaterialinventory.getMinimum_quantity()){
+
+				}else{
+					RMInventoryDTO  rmInventoryDTO = new RMInventoryDTO();
+					rmInventoryDTO.setRmPartNumber(rawmaterial.getPartNumber());
+					rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());
+					rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimum_quantity());
+					rmInventoryDTOs.add(rmInventoryDTO);
+					System.out.println("less quantity available in rm inventory");
+					//mailSendingRMInventroy();
+				}
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	//mailSendingRMInventroy(rmInventoryDTOs);
+	}
+	
+	private void mailSendingRMInventroy(List<RMInventoryDTO> rmInventoryDTOs) throws Exception{
+		  Mail mail = new Mail();
+		  Notification notification = notificationService.getEntityById(Notification.class,18);
+		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
+		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+			  User   user = userService.getEmailUserById(notificationuserassociation.getUser().getId());
+			  if(notificationuserassociation.getTo()==true){
+				  mail.setMailTo(user.getEmail()); 
+			  }else if(notificationuserassociation.getBcc()==true){
+				  mail.setMailBcc(user.getEmail());
+			  }else if(notificationuserassociation.getCc()==true){
+				  mail.setMailCc(user.getEmail());
+			  }
+			
+		}
+	        mail.setMailSubject(notification.getSubject());
+	        Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", "Prashant");
+	        model.put("rmInventoryDTOs", rmInventoryDTOs);
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        mail.setModel(model);
+		mailService.sendEmailWithoutPdF(mail, notification);
 	}
 }

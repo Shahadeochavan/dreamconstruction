@@ -35,6 +35,8 @@ public class Dailyproduction implements Serializable {
 
 	@Column(name="target_quantity")
 	private int targetQuantity;
+	
+	private long repaired_quantity;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -143,6 +145,12 @@ public class Dailyproduction implements Serializable {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+	public long getRepaired_quantity() {
+		return repaired_quantity;
+	}
+	public void setRepaired_quantity(long repaired_quantity) {
+		this.repaired_quantity = repaired_quantity;
 	}
 
 }

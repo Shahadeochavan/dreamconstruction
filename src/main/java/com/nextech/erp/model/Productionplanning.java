@@ -56,6 +56,10 @@ public class Productionplanning implements Serializable {
 	@Column(name="fail_quantity")
 	private long failQuantity;
 	
+	private long storeOut_quantity;
+	
+	private long repaired_quantity;
+	
 	private String remark;
 
 	@Column(name="target_quantity")
@@ -169,6 +173,14 @@ public class Productionplanning implements Serializable {
 		return this.lagQuantity;
 	}
 
+	public long getStoreOut_quantity() {
+		return storeOut_quantity;
+	}
+
+	public void setStoreOut_quantity(long storeOut_quantity) {
+		this.storeOut_quantity = storeOut_quantity;
+	}
+
 	public void setLagQuantity(long lagQuantity) {
 		this.lagQuantity = lagQuantity;
 	}
@@ -187,6 +199,14 @@ public class Productionplanning implements Serializable {
 
 	public void setTargetQuantity(long targetQuantity) {
 		this.targetQuantity = targetQuantity;
+	}
+
+	public long getRepaired_quantity() {
+		return repaired_quantity;
+	}
+
+	public void setRepaired_quantity(long repaired_quantity) {
+		this.repaired_quantity = repaired_quantity;
 	}
 
 	public long getUpdatedBy() {

@@ -7,6 +7,7 @@ public class StoreOutDTO {
 	private long productId;
 	private long statusId;
 	private long quantityRequired;
+	private boolean isSelectedStoreOut;
 	private List<StoreOutPart> storeOutParts;
 	private String description;
 
@@ -56,6 +57,14 @@ public class StoreOutDTO {
 
 	public void setQuantityRequired(long quantityRequired) {
 		this.quantityRequired = quantityRequired;
+	}
+
+	public boolean isSelectedStoreOut() {
+		return isSelectedStoreOut;
+	}
+
+	public void setSelectedStoreOut(boolean isSelectedStoreOut) {
+		this.isSelectedStoreOut = isSelectedStoreOut;
 	}
 
 }

@@ -167,16 +167,12 @@ public class ProductinventoryController {
 			for (Productinventory productinventory : productinventoryList) {
 				Product product = productService.getEntityById(Product.class, productinventory.getProduct().getId());
 				ProductInventoryDTO productInventoryDTO = new ProductInventoryDTO();
-				System.out.println("quantity is"+productinventory.getQuantityavailable());
 				if(productinventory.getQuantityavailable()>=productinventory.getMinimum_quantity()){
 				}else{
-					System.out.println("send email");
 					productInventoryDTO.setInventoryQuantity(productinventory.getQuantityavailable());
 					productInventoryDTO.setProductPartNumber(product.getPartNumber());
 					productInventoryDTO.setMinimum_quantity(productinventory.getMinimum_quantity());
 					productInventoryDTOs.add(productInventoryDTO);
-					System.out.println("inventory quantity is"+product.getPartNumber());
-					//mailSendingProductInventroy();
 				}
 				
 			}

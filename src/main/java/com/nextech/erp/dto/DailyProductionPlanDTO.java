@@ -5,6 +5,7 @@ public class DailyProductionPlanDTO {
 	private long productId;
 	private int targetQuantity;
 	private int achivedQuantity;
+	private int repairedQuantity;
 	private String remark;
 	public long getProductionPlanId() {
 		return productionPlanId;
@@ -36,7 +37,11 @@ public class DailyProductionPlanDTO {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
-	
+	public int getRepairedQuantity() {
+		return repairedQuantity;
+	}
+	public void setRepairedQuantity(int repairedQuantity) {
+		this.repairedQuantity = repairedQuantity;
+	}
 
 }

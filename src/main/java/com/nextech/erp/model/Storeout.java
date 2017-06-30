@@ -32,6 +32,8 @@ public class Storeout implements Serializable {
 	private String description;
 
 	private boolean isactive;
+	
+	private boolean isSelectedStoreOut;
 
 	private long quantityRequired;
 
@@ -106,6 +108,15 @@ public class Storeout implements Serializable {
 
 	public void setIsactive(boolean isactive) {
 		this.isactive = isactive;
+	}
+
+	
+	public boolean isSelectedStoreOut() {
+		return isSelectedStoreOut;
+	}
+
+	public void setSelectedStoreOut(boolean isSelectedStoreOut) {
+		this.isSelectedStoreOut = isSelectedStoreOut;
 	}
 
 	public long getQuantityRequired() {

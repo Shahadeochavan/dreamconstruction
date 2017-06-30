@@ -90,6 +90,7 @@ public class StoreoutController {
 					Long.parseLong(messageSource.getMessage(ERPConstants.ADDED_STORE_OUT, null, null))));
 			storeout.setIsactive(true);
 			storeout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+			storeout.setSelectedStoreOut(storeOutDTO.isSelectedStoreOut());
 			storeoutService.addEntity(storeout);
 
 			for (StoreOutPart storeOutPart : storeOutDTO.getStoreOutParts()) {
@@ -107,7 +108,7 @@ public class StoreoutController {
 						else if(storeOutPart.getQuantityRequired()<storeOutPart.getQuantityDispatched())
 							storeoutrm.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STORE_OUT_PARTIAL, null, null))));
 					} else {
-						return new UserStatus(1,messageSource.getMessage(ERPConstants.TO_CHECK_QUANTITY_IN_RMINVENTORY, null, null));
+						return new UserStatus(0,messageSource.getMessage(ERPConstants.TO_CHECK_QUANTITY_IN_RMINVENTORY, null, null));
 					}
 
 					Storeoutrmassociation storeoutrmassociation = new Storeoutrmassociation();
@@ -125,6 +126,9 @@ public class StoreoutController {
 			}
 			productionplanning.setStatus(statusService.getEntityById(Status.class,
 					Long.parseLong(messageSource.getMessage(ERPConstants.PRODUCTION_PLAN_READY_TO_START, null, null))));
+			if(!storeOutDTO.isSelectedStoreOut()){
+				productionplanning.setStoreOut_quantity(productionplanning.getStoreOut_quantity() + storeOutDTO.getQuantityRequired());
+			}
 			productionplanningService.updateEntity(productionplanning);
 			return new UserStatus(1, "Storeout added Successfully !");
 		} catch (ConstraintViolationException cve) {

@@ -161,8 +161,6 @@ public class RawmaterialinventoryController {
 					rmInventoryDTO.setQuantityAvailable(rawmaterialinventory.getQuantityAvailable());
 					rmInventoryDTO.setMinimumQuantity(rawmaterialinventory.getMinimum_quantity());
 					rmInventoryDTOs.add(rmInventoryDTO);
-					System.out.println("less quantity available in rm inventory");
-					//mailSendingRMInventroy();
 				}
 			}
 		} catch (Exception e) {

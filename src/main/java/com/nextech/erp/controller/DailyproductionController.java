@@ -61,15 +61,15 @@ public class DailyproductionController {
 			}
 			for(DailyProductionPlanDTO dailyProductionPlanDTO : todaysProductionPlanDTO.getDailyProductionPlanDTOs()){
 				Dailyproduction dailyproduction = setProductinPlanCurrentDate(dailyProductionPlanDTO);
-				dailyproduction.setIsactive(true);	
+				dailyproduction.setIsactive(true);
+				dailyproduction.setRepaired_quantity(dailyProductionPlanDTO.getRepairedQuantity());
 				dailyproduction.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				dailyproduction.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_QUALITY_CHECK_PENDING, null, null))));
 		       	dailyproductionservice.addEntity(dailyproduction);
-		       	
 		       	//TODO update production plan daily
 		       	//need not to change status every time. once it is changed don't execute below method.
 		       	//we will be marking production plan complete from store's call.
-		      	updateProductionPlan(dailyproduction, request, response);
+		      	updateProductionPlan(dailyproduction, dailyProductionPlanDTO.getRepairedQuantity(), request, response);
 			}
 			return new UserStatus(1, "Dailyproduction added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -147,9 +147,11 @@ public class DailyproductionController {
 		return dailyproduction;
 	}
 	
-	private void updateProductionPlan(Dailyproduction dailyproduction,HttpServletRequest request, HttpServletResponse response) throws Exception{
+	private void updateProductionPlan(Dailyproduction dailyproduction,int repairedQuantity,HttpServletRequest request, HttpServletResponse response) throws Exception{
 		Productionplanning productionplanning = productionplanningService.getEntityById(Productionplanning.class, dailyproduction.getProductionplanning().getId());
-		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()+dailyproduction.getAchivedQuantity());
+		productionplanning.setQualityPendingQuantity(productionplanning.getQualityPendingQuantity()+dailyproduction.getAchivedQuantity() + repairedQuantity);
+		productionplanning.setRepaired_quantity(productionplanning.getRepaired_quantity() + repairedQuantity);
+		productionplanning.setFailQuantity(productionplanning.getFailQuantity() >= repairedQuantity ? productionplanning.getFailQuantity() - repairedQuantity : productionplanning.getFailQuantity());
 		productionplanning.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productionplanning.setUpdatedDate(new Timestamp(new Date().getTime()));
 		productionplanningService.updateEntity(productionplanning);

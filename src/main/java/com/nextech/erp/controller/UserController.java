@@ -167,12 +167,12 @@ public class UserController {
 					}
 					result.put("reports", reports);
 				}
+				if(usertypepageassociations !=null){
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
-				
 				result.put("pages", pages);
-				
+				}
 				return new UserStatus(1, "User logged in Successfully !", result,user2);
 			}
 		} catch (AuthenticationException authException) {

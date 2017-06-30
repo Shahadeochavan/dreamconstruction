@@ -158,17 +158,21 @@ public class UserController {
 				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService
 						.getPagesByUsertype(usertype.getId());
 				List<Reportusertypeassociation> reportusertypeassociations = reportusertypeassociationService.getReportByUsertype(usertype.getId());
+				HashMap<String, Object> result = new HashMap<String, Object>();
 				List<Page> pages = new ArrayList<Page>();
 				List<Report> reports = new ArrayList<Report>();
-				for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
-					reports.add(reportusertypeassociation.getReport());
+				if(reportusertypeassociations !=null){
+					for (Reportusertypeassociation reportusertypeassociation : reportusertypeassociations) {
+						reports.add(reportusertypeassociation.getReport());
+					}
+					result.put("reports", reports);
 				}
 				for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
 					pages.add(usertypepageassociation.getPage());
 				}
-				HashMap<String, Object> result = new HashMap<String, Object>();
+				
 				result.put("pages", pages);
-				result.put("reports", reports);
+				
 				return new UserStatus(1, "User logged in Successfully !", result,user2);
 			}
 		} catch (AuthenticationException authException) {

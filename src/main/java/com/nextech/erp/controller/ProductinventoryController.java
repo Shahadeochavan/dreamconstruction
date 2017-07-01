@@ -176,8 +176,9 @@ public class ProductinventoryController {
 				}
 				
 			}
-			if(productInventoryDTOs != null&& productInventoryDTOs.isEmpty()){
-				System.out.println(productInventoryDTOs);
+			if(productInventoryDTOs != null&& ! productInventoryDTOs.isEmpty()){
+				System.out.println("value  of product  inventroy"+productInventoryDTOs);
+				System.out.println();
 				mailSendingProductInventroy(productInventoryDTOs);	
 			}
 		} catch (Exception e) {

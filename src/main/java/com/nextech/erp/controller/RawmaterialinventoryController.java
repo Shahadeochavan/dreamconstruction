@@ -163,7 +163,7 @@ public class RawmaterialinventoryController {
 					rmInventoryDTOs.add(rmInventoryDTO);
 				}
 			}
-			if(rmInventoryDTOs != null&& rmInventoryDTOs.isEmpty()){
+			if(rmInventoryDTOs != null&& ! rmInventoryDTOs.isEmpty()){
 				mailSendingRMInventroy(rmInventoryDTOs);
 			}
 		} catch (Exception e) {

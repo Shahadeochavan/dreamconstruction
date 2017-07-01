@@ -176,12 +176,15 @@ public class ProductinventoryController {
 				}
 				
 			}
+			if(productInventoryDTOs != null&& productInventoryDTOs.isEmpty()){
+				System.out.println(productInventoryDTOs);
+				mailSendingProductInventroy(productInventoryDTOs);	
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(productInventoryDTOs);
-		mailSendingProductInventroy(productInventoryDTOs);
+		
 	}
 	private void mailSendingProductInventroy(List<ProductInventoryDTO> productInventoryDTOs) throws Exception{
 		  Mail mail = new Mail();

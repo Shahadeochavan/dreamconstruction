@@ -353,6 +353,7 @@ public class RawmaterialorderinvoiceController {
 			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class, rawmaterialorderassociation.getRawmaterial().getId());
 			Rawmaterialvendorassociation rawmaterialvendorassociation = rMVAssoService.getRMVAssoByRMId(rawmaterial.getId());
 			rmOrderModelData.setAmount(rawmaterialorder.getTotalprice());
+			rmOrderModelData.setRmName(rawmaterial.getPartNumber());
 			rmOrderModelData.setDescription(rawmaterial.getDescription());
 			rmOrderModelData.setPricePerUnit(rawmaterialvendorassociation.getPricePerUnit());
 			rmOrderModelData.setQuantity(rawmaterialorderassociation.getQuantity());

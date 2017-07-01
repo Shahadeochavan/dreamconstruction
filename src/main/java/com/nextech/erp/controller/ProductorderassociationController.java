@@ -114,8 +114,8 @@ public class ProductorderassociationController {
 			productorderassociationList = productorderassociationService.getProductorderassociationByOrderId(orderId);
 			for(Productorderassociation productorderassociation : productorderassociationList){
 				List<Productinventory> productinventories = productinventoryService.getProductinventoryListByProductId(productorderassociation.getProduct().getId());
+				if(productinventories != null && ! productinventories.isEmpty()){
 				for(Productinventory productinventory : productinventories){
-
 						ProductOrderInventoryData productOrderInventoryData = new ProductOrderInventoryData();
 						Product product = productService.getEntityById(Product.class, productorderassociation.getProduct().getId());
 						productOrderInventoryData.setPartNumber(product.getPartNumber());
@@ -124,7 +124,9 @@ public class ProductorderassociationController {
 						productOrderInventoryData.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 						productOrderInventoryList.add(productOrderInventoryData);
 
-
+				}
+				}else{
+					return new Response(0,"Your Product Inventory is Empty ! Please make product for this order");
 				}
 			}
 

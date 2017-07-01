@@ -193,6 +193,7 @@ public class DispatchController {
 											null, null))));
 							Product product = productService.getEntityById(Product.class,productorderassociation.getProduct().getId());
 							Bom bom = bomService.getBomByProductId(product.getId());
+							if(bom !=null){
 							List<Bomrmvendorassociation> bomrmvendorassociations = bomRMVendorAssociationService.getBomRMVendorByBomId(bom.getId());
 							float totalCost = 0;
 							DispatchProductDTO  dispatchProductDTO = new DispatchProductDTO();
@@ -206,6 +207,9 @@ public class DispatchController {
 							}
 							dispatchProductDTOs.add(dispatchProductDTO);
 							dispatchservice.addEntity(dispatch);
+							}else{
+								return new UserStatus(1, "If you want  Pdf for Dispatch Please Make BOM");
+							}
 						}
 					}
 				}

@@ -264,21 +264,16 @@ public class RawmaterialorderinvoiceController {
 
 	private void addRMInvoiceQuantity(Rawmaterialorderinvoice rawmaterialorderinvoice,HttpServletRequest request,HttpServletResponse response) throws Exception{
 
-		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice
-				.getRmorderinvoiceintakquantities();
-		System.out.println("rmorderinvoicequntiets value is="
-				+ rawmaterialorderinvoice
-						.getRmorderinvoiceintakquantities());
-		Rawmaterialorderassociation rawmaterialorderassociation = rawmaterialorderassociationService.getEntityById(Rawmaterialorderassociation.class,rawmaterialorderinvoice.getPo_No());
-		if (rmorderinvoiceintakquantities != null
-				&& !rmorderinvoiceintakquantities.isEmpty()) {
+		List<Rmorderinvoiceintakquantity> rmorderinvoiceintakquantities = rawmaterialorderinvoice.getRmorderinvoiceintakquantities();
+		if (rmorderinvoiceintakquantities != null	&& !rmorderinvoiceintakquantities.isEmpty()) {
 			for (Rmorderinvoiceintakquantity rmorderinvoiceintakquantity : rmorderinvoiceintakquantities) {
-				rmorderinvoiceintakquantity
-						.setRawmaterialorderinvoice(rawmaterialorderinvoice);
+				rmorderinvoiceintakquantity.setRawmaterialorderinvoice(rawmaterialorderinvoice);
 				rmorderinvoiceintakquantity.setIsactive(true);
+				rmorderinvoiceintakquantity.setShortquantity(rmorderinvoiceintakquantity.getShortquantity()-rmorderinvoiceintakquantity.getQuantity());
 				rmorderinvoiceintakquantity.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				rmorderinvoiceintakquantityService
-						.addEntity(rmorderinvoiceintakquantity);
+				if(rmorderinvoiceintakquantity.getQuantity()>0){
+				rmorderinvoiceintakquantityService.addEntity(rmorderinvoiceintakquantity);
+				}
 			}
 		}
 	}

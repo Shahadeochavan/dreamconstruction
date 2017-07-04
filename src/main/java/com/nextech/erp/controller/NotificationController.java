@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.model.Notification;
+import com.nextech.erp.model.Status;
 import com.nextech.erp.service.NotificationService;
+import com.nextech.erp.service.StatusService;
 import com.nextech.erp.status.UserStatus;
 
 
@@ -33,6 +36,8 @@ public class NotificationController {
 	
 	@Autowired
 	private MessageSource messageSource;
+	@Autowired
+	StatusService statusService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addNotification(@Valid @RequestBody Notification notification,
@@ -42,6 +47,8 @@ public class NotificationController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			Status status = statusService.getEntityById(Status.class, 1);
+			notification.setStatus2(status);
 			notification.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			notification.setIsactive(true);
 			notificationservice.addEntity(notification);

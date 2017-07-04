@@ -355,7 +355,7 @@ public class ProductorderController {
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
 
-	    String fileName = "ProductOrder.pdf";
+	    String fileName = "Productorder.pdf";
 	    response.setContentType("application/pdf");
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 

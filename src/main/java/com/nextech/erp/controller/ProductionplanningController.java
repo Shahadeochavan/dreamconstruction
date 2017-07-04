@@ -294,9 +294,9 @@ public class ProductionplanningController {
 							}
 						}
 					}
-				}else{
+				}/*else{
 					return new Response(101,"Please get RM from RM Store Out. So that Today's Production Plan will be generated.",productionplanningFinalList);
-				}
+				}*/
 				if(isProductRemaining)
 					productionplanningFinalList.add(productionplanning);
 			}

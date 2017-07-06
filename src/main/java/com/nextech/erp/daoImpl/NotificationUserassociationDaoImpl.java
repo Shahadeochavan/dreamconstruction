@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.NotificationUserassociationDao;
 import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.Product;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 
 @Repository
 @Transactional
@@ -52,13 +54,10 @@ public class NotificationUserassociationDaoImpl extends
 	public List<Notificationuserassociation> getNotificationuserassociationBynotificationId(
 			long notificationId) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session
-				.createCriteria(Notificationuserassociation.class);
-		criteria.add(Restrictions.eq("isactive", true));
+		Criteria criteria = session.createCriteria(Notificationuserassociation.class);
 		criteria.add(Restrictions.eq("notification.id", notificationId));
-		return (criteria.list().size() > 0 ? (List<Notificationuserassociation>) criteria
-				.list() : null);
+		criteria.add(Restrictions.eq("isactive", true));
+		return (criteria.list().size() > 0 ? (List<Notificationuserassociation>)criteria.list() : null);
 	}
 
 }

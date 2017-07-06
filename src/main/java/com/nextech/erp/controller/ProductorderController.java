@@ -347,7 +347,7 @@ public class ProductorderController {
 			productOrderData.setAmount(product.getRatePerUnit()*productorderassociation.getQuantity());
 			productOrderDatas.add(productOrderData);
 		}
-		//downloadPDF(request, response, productorder,productOrderDatas,client);
+		downloadPDF(request, response, productorder,productOrderDatas,client);
 	}
 	public void downloadPDF(HttpServletRequest request, HttpServletResponse response,Productorder productorder,List<ProductOrderData> productOrderDatas,Client client) throws IOException {
 

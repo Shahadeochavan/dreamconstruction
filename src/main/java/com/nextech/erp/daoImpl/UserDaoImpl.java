@@ -87,9 +87,6 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 		Criteria criteria = session.createCriteria(User.class);
 		criteria.add(Restrictions.eq("isactive", true));
 		criteria.add(Restrictions.eq("id", id));
-		criteria .setProjection(Projections.projectionList()
-			      .add(Projections.property("email"), "email"))
-			    .setResultTransformer(Transformers.aliasToBean(User.class));
 		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
 		return user;
 		

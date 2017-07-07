@@ -6,10 +6,8 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,6 +59,32 @@ public class ProductRMAssoDaoImpl extends SuperDaoImpl<Productrawmaterialassocia
 		criteria.setProjection(Projections.distinct(Projections.property("product.id")));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Long>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Productrawmaterialassociation> getProductRMListByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
+		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
+		criteria.add(Restrictions.eq("isactive", true));
+		return (List<Productrawmaterialassociation>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
+
+	@Override
+	public Productrawmaterialassociation getProductRMListByProductId(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+ 		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productrawmaterialassociation.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("product.id", productId));
+		Productrawmaterialassociation Productrawmaterialassociation = criteria.list().size() > 0 ? (Productrawmaterialassociation) criteria.list().get(0) : null;
+		return Productrawmaterialassociation;
 	}
 }
 

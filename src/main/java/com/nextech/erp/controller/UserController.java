@@ -283,6 +283,11 @@ public class UserController {
 
 		try {
 			User user = userservice.getEntityById(User.class, id);
+			List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationByUserId(user.getId());
+			for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
+				notificationuserassociation.setIsactive(false);
+				notificationUserAssService.updateEntity(notificationuserassociation);
+			}
 			user.setIsactive(false);
 			userservice.updateEntity(user);
 			return new UserStatus(1, "User deleted Successfully !");

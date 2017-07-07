@@ -11,4 +11,8 @@ public interface ProductRMAssoDao extends SuperDao<Productrawmaterialassociation
 	public List<Productrawmaterialassociation> getProductRMAssoListByProductId(long productID) throws Exception;
 	
 	public List<Long> getProductList() throws Exception;
+	
+	public List<Productrawmaterialassociation> getProductRMListByRMId(long rmId) throws Exception;
+	
+	public Productrawmaterialassociation getProductRMListByProductId(long productId) throws Exception;
 }

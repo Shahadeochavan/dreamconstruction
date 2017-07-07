@@ -46,4 +46,16 @@ public class RawmaterialorderassociationDaoImpl extends SuperDaoImpl<Rawmaterial
 		return rawmaterialorderassociation;
 	}
 
+	@Override
+	public List<Rawmaterialorderassociation> getRMOrderListByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		Criteria criteria = session.createCriteria(Rawmaterialorderassociation.class);
+		criteria.add(Restrictions.eq("rawmaterial.id", rmId));
+		criteria.add(Restrictions.eq("isactive", true));
+		//criteria.add(Restrictions.gt("remainingQuantity", new Long(0)));
+		return (criteria.list().size() > 0 ? (List<Rawmaterialorderassociation>)criteria.list() : null);
+	}
+
 }

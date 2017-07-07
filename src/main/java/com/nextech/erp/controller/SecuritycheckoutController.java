@@ -69,13 +69,15 @@ public class SecuritycheckoutController {
 			Securitycheckout securitycheckout = new Securitycheckout();
 			securitycheckout.setClientname(securityCheckOutDTO.getClientname());
 			securitycheckout.setDescription(securityCheckOutDTO.getDescription());
-			securitycheckout.setDriver_Name(securityCheckOutDTO.getDriver_Name());
+			securitycheckout.setFirstName(securityCheckOutDTO.getFirstName());
+			securitycheckout.setLastName(securityCheckOutDTO.getLastName());
 			securitycheckout.setCreateDate(securityCheckOutDTO.getCreateDate());
 			securitycheckout.setPoNo(securityCheckOutDTO.getPoNo());
 			securitycheckout.setIntime(securityCheckOutDTO.getIntime());
 			securitycheckout.setOuttime(securityCheckOutDTO.getOuttime());
 			securitycheckout.setVehicleNo(securityCheckOutDTO.getVehicleNo());
 			securitycheckout.setInvoice_No(securityCheckOutDTO.getInvoice_No());
+			securitycheckout.setLicence_no(securityCheckOutDTO.getLicence_no());
 			securitycheckout.setIsactive(true);
 			securitycheckout.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 			securitycheckout.setStatus(statusService.getEntityById(Status.class, Long.parseLong(messageSource.getMessage(ERPConstants.SECURITY_CHECK_COMPLETE, null, null))));

@@ -10,5 +10,7 @@ public interface RawmaterialorderassociationDao extends
 			long id) throws Exception;
 	public Rawmaterialorderassociation getRMOrderRMAssociationByRMOrderIdandRMId(
 			long id, long rmId)throws Exception;
+	
+	public List<Rawmaterialorderassociation> getRMOrderListByRMId(long rmId) throws Exception;
 
 }

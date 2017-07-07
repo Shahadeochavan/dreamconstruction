@@ -4,10 +4,13 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.List;
 
+import javax.persistence.Column;
+
 public class SecurityCheckOutDTO {
 
 	private String description;
-	private String driver_Name;
+	private String firstName;
+	private String lastName;
 	private Date createDate;
 	private Time intime;
 	private String invoice_No;
@@ -15,6 +18,7 @@ public class SecurityCheckOutDTO {
 	private int poNo;
 	private String vehicleNo;
 	private String clientname;
+	private String licence_no;
 	private List<SecurityCheckOutPart> securityCheckOutParts;
 
 	public String getDescription() {
@@ -24,13 +28,22 @@ public class SecurityCheckOutDTO {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
 
-	public String getDriver_Name() {
-		return driver_Name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setDriver_Name(String driver_Name) {
-		this.driver_Name = driver_Name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public Time getIntime() {
@@ -54,6 +67,14 @@ public class SecurityCheckOutDTO {
 
 	public void setPoNo(int poNo) {
 		this.poNo = poNo;
+	}
+
+	public String getLicence_no() {
+		return licence_no;
+	}
+
+	public void setLicence_no(String licence_no) {
+		this.licence_no = licence_no;
 	}
 
 	public String getVehicleNo() {

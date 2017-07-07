@@ -32,4 +32,18 @@ public class ProductRMAssoServiceImpl extends CRUDServiceImpl<Productrawmaterial
 		
 		return productrmassDao.getProductList();
 	}
+
+	@Override
+	public List<Productrawmaterialassociation> getProductRMListByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return productrmassDao.getProductRMListByRMId(rmId);
+	}
+
+	@Override
+	public Productrawmaterialassociation getProductRMListByProductId(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+		return productrmassDao.getProductRMListByProductId(productId);
+	}
 }

@@ -277,4 +277,12 @@ public class ProductionplanningServiceImpl extends
 		// TODO Auto-generated method stub
 		return productionplanningDao.getProductionplanByProdutId(date,productID);
 	}
+
+	@Override
+	public List<Productionplanning> getProductionplanListByProductId(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+		return productionplanningDao.getProductionplanListByProductId(productId);
+	}
+	
 }

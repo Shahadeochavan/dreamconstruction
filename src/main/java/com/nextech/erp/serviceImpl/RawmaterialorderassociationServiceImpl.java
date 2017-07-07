@@ -26,4 +26,11 @@ public class RawmaterialorderassociationServiceImpl extends CRUDServiceImpl<Rawm
 		return rawmaterialorderassociationDao.getRMOrderRMAssociationByRMOrderIdandRMId(id, rmId);
 	}
 
+	@Override
+	public List<Rawmaterialorderassociation> getRMOrderListByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

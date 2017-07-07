@@ -127,4 +127,16 @@ public class ProductionplanningDaoImpl extends SuperDaoImpl<Productionplanning>
 		return criteria.list();
 	}
 
+	@Override
+	public List<Productionplanning> getProductionplanListByProductId(
+			long productId) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productionplanning.class);
+		criteria.add(Restrictions.eq("product.id", productId));
+		criteria.add(Restrictions.eq("isactive", true));
+		return criteria.list();
+	}
+
 }

@@ -22,12 +22,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.ProductNewAssoicatedList;
+import com.nextech.erp.model.Bom;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productionplanning;
+import com.nextech.erp.model.Productorderassociation;
 import com.nextech.erp.model.Productrawmaterialassociation;
+import com.nextech.erp.service.BomService;
 import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.ProductService;
 import com.nextech.erp.service.ProductinventoryService;
+import com.nextech.erp.service.ProductionplanningService;
+import com.nextech.erp.service.ProductorderassociationService;
 import com.nextech.erp.status.Response;
 import com.nextech.erp.status.UserStatus;
 
@@ -46,6 +52,15 @@ public class ProductController {
 
 	@Autowired
 	ProductRMAssoService productRMAssoService;
+	
+	@Autowired
+	BomService bomService;
+	
+	@Autowired
+	ProductorderassociationService productorderassociationService;
+	
+	@Autowired 
+	ProductionplanningService productionplanningService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
@@ -165,6 +180,29 @@ public class ProductController {
 
 		try {
 			Product product = productService.getEntityById(Product.class,id);
+			List<Productorderassociation> productorderassociations = productorderassociationService.getProductorderassociationByProdcutId(product.getId());
+			for (Productorderassociation productorderassociation : productorderassociations) {
+				productorderassociation.setIsactive(false);
+				productorderassociationService.updateEntity(productorderassociation);
+				}
+			List<Productionplanning> productionplannings = productionplanningService.getProductionplanListByProductId(product.getId());
+			for (Productionplanning productionplanning : productionplannings) {
+				productionplanning.setIsactive(false);
+				productionplanningService.updateEntity(productionplanning);
+			}
+			
+			Productrawmaterialassociation productrawmaterialassociation = productRMAssoService.getProductRMListByProductId(product.getId());
+			productrawmaterialassociation.setIsactive(false);
+			productRMAssoService.updateEntity(productrawmaterialassociation);
+			
+		    Productinventory productinventory = productinventoryService.getProductinventoryByProductId(product.getId());
+		    productinventory.setIsactive(false);
+		    productinventoryService.updateEntity(productinventory);
+		     
+		    Bom bom  = bomService.getBomByProductId(product.getId());
+		    bom.setIsactive(false);
+		    bomService.updateEntity(bom);
+		    		
 			product.setIsactive(false);
 			productService.updateEntity(product);
 			return new UserStatus(1, "Product deleted Successfully !");

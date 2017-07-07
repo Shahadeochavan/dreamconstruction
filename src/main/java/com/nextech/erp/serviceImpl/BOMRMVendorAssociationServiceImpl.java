@@ -19,6 +19,12 @@ public class BOMRMVendorAssociationServiceImpl extends CRUDServiceImpl<Bomrmvend
 		// TODO Auto-generated method stub
 		return bOMRMVendorAssociationDao.getBomRMVendorByBomId(bomId);
 	}
+	@Override
+	public List<Bomrmvendorassociation> getBomRMListByRMId(long rmId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 

@@ -20,13 +20,19 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
+import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Product;
 import com.nextech.erp.model.Productinventory;
+import com.nextech.erp.model.Productrawmaterialassociation;
 import com.nextech.erp.model.Rawmaterial;
 import com.nextech.erp.model.Rawmaterialinventory;
+import com.nextech.erp.model.Rawmaterialorderassociation;
 import com.nextech.erp.model.Rawmaterialvendorassociation;
+import com.nextech.erp.service.BOMRMVendorAssociationService;
+import com.nextech.erp.service.ProductRMAssoService;
 import com.nextech.erp.service.RawmaterialService;
 import com.nextech.erp.service.RawmaterialinventoryService;
+import com.nextech.erp.service.RawmaterialorderassociationService;
 import com.nextech.erp.status.UserStatus;
 @Controller
 @RequestMapping("/rawmaterial")
@@ -37,6 +43,16 @@ public class RawmaterialController {
 	
 	@Autowired
 	RawmaterialinventoryService rawmaterialinventoryService;
+	
+	@Autowired 
+	RawmaterialorderassociationService rawmaterialorderassociationService;
+	
+	@Autowired
+	BOMRMVendorAssociationService bOMRMVendorAssociationService;
+	
+	@Autowired
+	ProductRMAssoService productRMAssoService;
+	
 
 	@Autowired
 	private MessageSource messageSource;
@@ -109,6 +125,25 @@ public class RawmaterialController {
 
 		try {
 			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class,id);
+			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderListByRMId(rawmaterial.getId());
+			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
+				rawmaterialorderassociation.setIsactive(false);
+				rawmaterialorderassociationService.updateEntity(rawmaterialorderassociation);
+			}
+			List<Productrawmaterialassociation> productrawmaterialassociations =productRMAssoService.getProductRMListByRMId(rawmaterial.getId());
+			for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
+				productrawmaterialassociation.setIsactive(false);
+				productRMAssoService.updateEntity(productrawmaterialassociation);
+			}
+			List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationService.getBomRMListByRMId(rawmaterial.getId());
+			for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+				bomrmvendorassociation.setIsactive(false);
+				bOMRMVendorAssociationService.updateEntity(bomrmvendorassociation);
+			}
+			Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(rawmaterial.getId());
+		    rawmaterialinventory.setIsactive(false);
+		    rawmaterialinventoryService.updateEntity(rawmaterialinventory);
+			
 			rawmaterial.setIsactive(false);
 			rawmaterialService.updateEntity(rawmaterial);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));

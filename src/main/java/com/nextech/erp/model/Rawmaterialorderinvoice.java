@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.sql.Time;
 import java.util.Date;
 import java.sql.Timestamp;
@@ -40,12 +41,18 @@ public class Rawmaterialorderinvoice implements Serializable {
 	private String description;
 
 	@Size(min = 2, max = 255, message = "{Driver name  sholud be greater than 2 or less than 255 characters}")
-	private String driver_Name;
+	@Column(name="first_name")
+	private String firstName;
+
+	@Column(name="last_name")
+	private String lastName;
 
 	private Time intime;
 
 	@Size(min = 2, max = 255, message = "{Invoice Number  sholud be greater than 2 or less than 255 characters or digits}")
 	private String invoice_No;
+	
+	private String licence_no;
 
 	private boolean isactive;
 
@@ -139,14 +146,19 @@ public class Rawmaterialorderinvoice implements Serializable {
 		this.description = description;
 	}
 
-	public String getDriver_Name() {
-		return this.driver_Name;
-	}
 
-	public void setDriver_Name(String driver_Name) {
-		this.driver_Name = driver_Name;
+	public String getFirstName() {
+		return firstName;
 	}
-
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 	public Time getIntime() {
 		return this.intime;
 	}
@@ -163,6 +175,12 @@ public class Rawmaterialorderinvoice implements Serializable {
 		this.invoice_No = invoice_No;
 	}
 
+	public String getLicence_no() {
+		return licence_no;
+	}
+	public void setLicence_no(String licence_no) {
+		this.licence_no = licence_no;
+	}
 	public boolean getIsactive() {
 		return this.isactive;
 	}

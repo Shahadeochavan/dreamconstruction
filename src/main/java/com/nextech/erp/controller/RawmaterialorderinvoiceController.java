@@ -237,7 +237,7 @@ public class RawmaterialorderinvoiceController {
 			Notification notification = notificationService.getNotifiactionByStatus(status.getId());
 			Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
 			//TODO mail sending
-	        mailSending(notification, rawmaterialorder, vendor);
+	    //    mailSending(notification, rawmaterialorder, vendor);
 
 		}else{
 			message = messageSource.getMessage(ERPConstants.RM_ORDER_INVOICE_EXIT, null, null);
@@ -276,6 +276,12 @@ public class RawmaterialorderinvoiceController {
 				}
 			}
 		}
+		Rawmaterialorder rawmaterialorder = rawmaterialorderService.getEntityById(Rawmaterialorder.class, rawmaterialorderinvoice.getPo_No());
+
+		Status status = statusService.getEntityById(Status.class, rawmaterialorderinvoice.getStatus().getId());
+		Notification notification = notificationService.getNotifiactionByStatus(status.getId());
+		Vendor vendor = vendorService.getEntityById(Vendor.class, Long.parseLong(rawmaterialorderinvoice.getVendorname()));
+		mailSending(notification, rawmaterialorder, vendor);
 	}
 
 	private void addOrderHistory(Rawmaterialorderinvoice rawmaterialorderinvoice,Rawmaterialorder rawmaterialorder,HttpServletRequest request,HttpServletResponse response) throws Exception{
@@ -301,31 +307,6 @@ public class RawmaterialorderinvoiceController {
 		rawmaterialorder.setIsactive(true);
 		rawmaterialorderService.updateEntity(rawmaterialorder);
 	}
-
-/*	private void mailSending(Notification notification,Vendor vendor) throws Exception{
-		  Mail mail = new Mail();
-		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());
-		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
-			  User user = userService.getEntityById(User.class, notificationuserassociation.getUser().getId());
-			  if(notificationuserassociation.getTo()==true){
-				  mail.setMailTo(vendor.getEmail());
-			  }else if(notificationuserassociation.getBcc()==true){
-				  mail.setMailBcc(user.getEmail());
-			  }else if(notificationuserassociation.getCc()==true){
-				  mail.setMailCc(user.getEmail());
-			  }
-			
-		}
-	        mail.setMailSubject(notification.getSubject());
-	        Map < String, Object > model = new HashMap < String, Object > ();
-	        model.put("firstName", vendor.getFirstName());
-	        model.put("lastName", vendor.getLastName());
-	        model.put("location", "Pune");
-	        model.put("signature", "www.NextechServices.in");
-	        mail.setModel(model);
-
-		mailService.sendEmailWithoutPdF(mail,notification);
-	}*/
 	
 	private void mailSending(Notification notification,Rawmaterialorder rawmaterialorder,Vendor vendor) throws Exception{
 		List<Notificationuserassociation> notificationuserassociations = notificationUserAssociationService.getNotificationuserassociationBynotificationId(notification.getId());

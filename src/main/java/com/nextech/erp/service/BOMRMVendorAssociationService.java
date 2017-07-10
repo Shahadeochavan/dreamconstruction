@@ -10,5 +10,7 @@ public interface BOMRMVendorAssociationService extends CRUDService<Bomrmvendoras
 	public List<Bomrmvendorassociation> getBomRMVendorByBomId(long bomId) throws Exception;
 	
 	public List<Bomrmvendorassociation> getBomRMListByRMId(long rmId) throws Exception;
+	
+	public List<Bomrmvendorassociation> getBomRMListByVendorId(long vendorId) throws Exception;
 
 }

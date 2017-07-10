@@ -24,13 +24,21 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
+import com.nextech.erp.model.Bomrmvendorassociation;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Rawmaterialorderinvoice;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 import com.nextech.erp.model.User;
 import com.nextech.erp.model.Vendor;
+import com.nextech.erp.service.BOMRMVendorAssociationService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.RMVAssoService;
+import com.nextech.erp.service.RawmaterialorderService;
+import com.nextech.erp.service.RawmaterialorderinvoiceService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.service.VendorService;
 import com.nextech.erp.status.UserStatus;
@@ -53,6 +61,19 @@ public class VendorController {
 
 	@Autowired
 	NotificationUserAssociationService notificationUserAssService;
+	
+	@Autowired
+	RMVAssoService rMVAssoService;
+	
+	@Autowired
+	RawmaterialorderService rawmaterialorderService;
+	
+	@Autowired
+	RawmaterialorderinvoiceService rawmaterialorderinvoiceService;
+	
+	@Autowired
+	BOMRMVendorAssociationService bOMRMVendorAssociationService;
+	
 
 	@Autowired
 	MailService mailService;
@@ -154,6 +175,27 @@ public class VendorController {
 
 		try {
 			Vendor vendor = vendorService.getEntityById(Vendor.class, id);
+			List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rMVAssoService.getRawmaterialvendorassociationByVendorId(vendor.getId());
+			for (Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations) {
+				rawmaterialvendorassociation.setIsactive(false);
+				rMVAssoService.updateEntity(rawmaterialvendorassociation);
+			}
+			List<Rawmaterialorder> rawmaterialorders = rawmaterialorderService.getRMOrderByVendor(vendor.getId());
+			for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
+				rawmaterialorder.setIsactive(false);
+				rawmaterialorderService.updateEntity(rawmaterialorder);
+			}
+			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceService.getRawmaterialorderinvoiceByVendorName(String.valueOf(vendor.getId()));
+			for (Rawmaterialorderinvoice rawmaterialorderinvoice : rawmaterialorderinvoices) {
+				rawmaterialorderinvoice.setIsactive(false);
+				rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
+			}
+			List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationService.getBomRMListByVendorId(vendor.getId());
+			for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
+				bomrmvendorassociation.setIsactive(false);
+				bOMRMVendorAssociationService.updateEntity(bomrmvendorassociation);
+			}
+			
 			vendor.setIsactive(false);
 			vendorService.updateEntity(vendor);
 			return new UserStatus(1, "Vendor deleted Successfully !");

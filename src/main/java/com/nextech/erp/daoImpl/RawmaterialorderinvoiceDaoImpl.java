@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.RawmaterialorderinvoiceDao;
+import com.nextech.erp.model.Rawmaterialorder;
 import com.nextech.erp.model.Rawmaterialorderinvoice;
 
 @Repository
@@ -47,5 +48,18 @@ public class RawmaterialorderinvoiceDaoImpl extends
 				: null;
 		//  //session.close();
 		return rawmaterialorderinvoice;
+	}
+	@Override
+	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByVendorName(
+			String vendorName) throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialorderinvoice.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("vendorname", vendorName));
+		@SuppressWarnings("unchecked")
+		List<Rawmaterialorderinvoice> rawmaterialorderinvoices = criteria.list().size() > 0 ? (List<Rawmaterialorderinvoice>) criteria.list() : null;
+		return rawmaterialorderinvoices;
 	}
 }

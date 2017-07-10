@@ -23,4 +23,11 @@ public class RawmaterialorderinvoiceServiceImpl extends CRUDServiceImpl<Rawmater
 	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String invoiceNo,String vendorName,int poNo) throws Exception {
 		return rawmaterialorderinvoiceDao.getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(invoiceNo,vendorName,poNo);
 	}
+
+	@Override
+	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByVendorName(
+			String vendorName) throws Exception {
+		// TODO Auto-generated method stub
+		return rawmaterialorderinvoiceDao.getRawmaterialorderinvoiceByVendorName(vendorName);
+	}
 }

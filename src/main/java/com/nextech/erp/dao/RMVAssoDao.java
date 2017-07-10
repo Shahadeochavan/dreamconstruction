@@ -12,4 +12,6 @@ public interface RMVAssoDao extends SuperDao<Rawmaterialvendorassociation>{
 	
 	public Rawmaterialvendorassociation getRMVAssoByRMId(long rmId)	throws Exception;
 	
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationByVendorId(long vendorId)throws Exception;
+	
 }

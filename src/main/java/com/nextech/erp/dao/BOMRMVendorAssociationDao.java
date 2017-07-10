@@ -10,6 +10,8 @@ public interface BOMRMVendorAssociationDao extends SuperDao<Bomrmvendorassociati
 	
 	public List<Bomrmvendorassociation> getBomRMListByRMId(long rmId) throws Exception;
 	
+	public List<Bomrmvendorassociation> getBomRMListByVendorId(long vendorId) throws Exception;
+	
 	
 	
 	

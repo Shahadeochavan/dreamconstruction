@@ -28,4 +28,10 @@ public class ProductorderServiceImpl extends CRUDServiceImpl<Productorder> imple
 		// TODO Auto-generated method stub
 		return productorderDao.getInCompleteProductOrder(clientId,statusId,statusId1);
 	}
+	@Override
+	public List<Productorder> getProductPrderByClientId(long clientId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -33,6 +33,13 @@ public class RMVAssoServiceImpl extends CRUDServiceImpl<Rawmaterialvendorassocia
 		// TODO Auto-generated method stub
 		return rMVAssoDao.getRMVAssoByRMId(rmId);
 	}
+
+	@Override
+	public List<Rawmaterialvendorassociation> getRawmaterialvendorassociationByVendorId(
+			long vendorId) throws Exception {
+		// TODO Auto-generated method stub
+		return rMVAssoDao.getRawmaterialvendorassociationByVendorId(vendorId);
+	}
 	
 }
 

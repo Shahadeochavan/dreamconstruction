@@ -44,4 +44,18 @@ public class BOMRMVendorAssociationDaoImpl extends
 		return (List<Bomrmvendorassociation>) (criteria.list().size() > 0 ? criteria
 				.list() : null);
 	}
+
+	@Override
+	public List<Bomrmvendorassociation> getBomRMListByVendorId(long vendorId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session
+				.createCriteria(Bomrmvendorassociation.class);
+		criteria.add(Restrictions.eq("vendor.id", vendorId));
+		criteria.add(Restrictions.eq("isactive", true));
+		return (List<Bomrmvendorassociation>) (criteria.list().size() > 0 ? criteria
+				.list() : null);
+	}
 }

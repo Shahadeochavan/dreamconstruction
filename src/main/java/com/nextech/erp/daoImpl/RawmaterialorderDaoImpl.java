@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dao.RawmaterialorderDao;
 import com.nextech.erp.model.Rawmaterialorder;
+import com.nextech.erp.model.Rawmaterialvendorassociation;
 
 @Repository
 @Transactional
@@ -99,6 +100,18 @@ public class RawmaterialorderDaoImpl extends SuperDaoImpl<Rawmaterialorder>
 		@SuppressWarnings("unchecked")
 		List<Rawmaterialorder> rawmaterialorder = criteria.list().size() > 0 ? (List<Rawmaterialorder>) criteria.list() : null;
 		return rawmaterialorder;
+	}
+
+	@Override
+	public List<Rawmaterialorder> getRMOrderByVendor(long vendorId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Rawmaterialorder.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("vendor.id", vendorId));
+		return (criteria.list().size() > 0 ? (List<Rawmaterialorder>)criteria.list() : null);
 	}
 	}
 

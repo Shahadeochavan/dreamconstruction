@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.erp.dao.ProductorderDao;
 import com.nextech.erp.model.Productorder;
+import com.nextech.erp.model.Rawmaterialorderinvoice;
 
 @Repository
 @Transactional
@@ -52,6 +53,20 @@ public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
 		criteria.add(Restrictions.and(criterion));
 		criteria.add(Restrictions.eq("isactive", true));
 		return (List<Productorder>) (criteria.list().size() > 0 ? criteria.list() : null);
+	}
+
+	@Override
+	public List<Productorder> getProductPrderByClientId(long clientId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		session = sessionFactory.openSession();
+		@SuppressWarnings("deprecation")
+		Criteria criteria = session.createCriteria(Productorder.class);
+		criteria.add(Restrictions.eq("isactive", true));
+		criteria.add(Restrictions.eq("client.id", clientId));
+		@SuppressWarnings("unchecked")
+		List<Productorder> productorders = criteria.list().size() > 0 ? (List<Productorder>) criteria.list() : null;
+		return productorders;
 	}
 
 }

@@ -8,7 +8,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -20,18 +19,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.erp.constants.ERPConstants;
 import com.nextech.erp.dto.Mail;
 import com.nextech.erp.model.Client;
 import com.nextech.erp.model.Notification;
 import com.nextech.erp.model.Notificationuserassociation;
+import com.nextech.erp.model.Productorder;
 import com.nextech.erp.model.User;
-import com.nextech.erp.model.Vendor;
 import com.nextech.erp.service.ClientService;
 import com.nextech.erp.service.MailService;
 import com.nextech.erp.service.NotificationService;
 import com.nextech.erp.service.NotificationUserAssociationService;
+import com.nextech.erp.service.ProductorderService;
 import com.nextech.erp.service.UserService;
 import com.nextech.erp.status.UserStatus;
 
@@ -51,6 +50,9 @@ public class ClientController {
 
 	@Autowired
 	NotificationUserAssociationService notificationUserAssService;
+	
+	@Autowired
+	ProductorderService productorderService;
 	
 	@Autowired
 	UserService userService;
@@ -167,6 +169,11 @@ public class ClientController {
 
 		try {
 			Client client = clientService.getEntityById(Client.class, id);
+			List<Productorder> productorders = productorderService.getProductPrderByClientId(client.getId());
+			for (Productorder productorder : productorders) {
+				productorder.setIsactive(false);
+				productorderService.updateEntity(productorder);
+			}
 			client.setIsactive(false);
 			clientService.updateEntity(client);
 			return new UserStatus(1, messageSource.getMessage(

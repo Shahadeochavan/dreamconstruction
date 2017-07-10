@@ -11,5 +11,7 @@ public interface RawmaterialorderinvoiceService extends
 	
 	public Rawmaterialorderinvoice getRMOrderInvoiceByInVoiceNoVendorNameAndPoNo(String InVoiceNO,String VendorName,int poNo) throws Exception;
 	
+	public List<Rawmaterialorderinvoice> getRawmaterialorderinvoiceByVendorName(String vendorName) throws Exception;
+	
 	/*public Rawmaterialorderinvoice getRMOrderQuantity(long quantity);*/
 }

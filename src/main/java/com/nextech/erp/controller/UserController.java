@@ -284,9 +284,11 @@ public class UserController {
 		try {
 			User user = userservice.getEntityById(User.class, id);
 			List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationByUserId(user.getId());
+			if(notificationuserassociations !=null && !notificationuserassociations.isEmpty()){
 			for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 				notificationuserassociation.setIsactive(false);
 				notificationUserAssService.updateEntity(notificationuserassociation);
+			}
 			}
 			user.setIsactive(false);
 			userservice.updateEntity(user);

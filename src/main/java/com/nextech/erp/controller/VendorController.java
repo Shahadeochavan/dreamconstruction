@@ -176,24 +176,34 @@ public class VendorController {
 		try {
 			Vendor vendor = vendorService.getEntityById(Vendor.class, id);
 			List<Rawmaterialvendorassociation> rawmaterialvendorassociations = rMVAssoService.getRawmaterialvendorassociationByVendorId(vendor.getId());
+			if(rawmaterialvendorassociations !=null&& ! rawmaterialvendorassociations.isEmpty()){
 			for (Rawmaterialvendorassociation rawmaterialvendorassociation : rawmaterialvendorassociations) {
 				rawmaterialvendorassociation.setIsactive(false);
 				rMVAssoService.updateEntity(rawmaterialvendorassociation);
 			}
+			}
 			List<Rawmaterialorder> rawmaterialorders = rawmaterialorderService.getRMOrderByVendor(vendor.getId());
+			if(rawmaterialorders !=null&& !rawmaterialorders.isEmpty()){
 			for (Rawmaterialorder rawmaterialorder : rawmaterialorders) {
 				rawmaterialorder.setIsactive(false);
 				rawmaterialorderService.updateEntity(rawmaterialorder);
 			}
+			}
+			
 			List<Rawmaterialorderinvoice> rawmaterialorderinvoices = rawmaterialorderinvoiceService.getRawmaterialorderinvoiceByVendorName(String.valueOf(vendor.getId()));
+			if(rawmaterialorderinvoices !=null && !rawmaterialorderinvoices.isEmpty()){
 			for (Rawmaterialorderinvoice rawmaterialorderinvoice : rawmaterialorderinvoices) {
 				rawmaterialorderinvoice.setIsactive(false);
 				rawmaterialorderinvoiceService.updateEntity(rawmaterialorderinvoice);
 			}
+			}
+			
 			List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationService.getBomRMListByVendorId(vendor.getId());
+			if(bomrmvendorassociations != null&& ! rawmaterialorderinvoices.isEmpty()){
 			for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
 				bomrmvendorassociation.setIsactive(false);
 				bOMRMVendorAssociationService.updateEntity(bomrmvendorassociation);
+			}
 			}
 			
 			vendor.setIsactive(false);

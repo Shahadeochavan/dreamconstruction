@@ -126,24 +126,31 @@ public class RawmaterialController {
 		try {
 			Rawmaterial rawmaterial = rawmaterialService.getEntityById(Rawmaterial.class,id);
 			List<Rawmaterialorderassociation> rawmaterialorderassociations = rawmaterialorderassociationService.getRMOrderListByRMId(rawmaterial.getId());
+			if(rawmaterialorderassociations != null && ! rawmaterialorderassociations.isEmpty()){
 			for (Rawmaterialorderassociation rawmaterialorderassociation : rawmaterialorderassociations) {
 				rawmaterialorderassociation.setIsactive(false);
 				rawmaterialorderassociationService.updateEntity(rawmaterialorderassociation);
 			}
+			}
 			List<Productrawmaterialassociation> productrawmaterialassociations =productRMAssoService.getProductRMListByRMId(rawmaterial.getId());
+			if(productrawmaterialassociations != null&& !productrawmaterialassociations.isEmpty()){
 			for (Productrawmaterialassociation productrawmaterialassociation : productrawmaterialassociations) {
 				productrawmaterialassociation.setIsactive(false);
 				productRMAssoService.updateEntity(productrawmaterialassociation);
 			}
+			}
 			List<Bomrmvendorassociation> bomrmvendorassociations = bOMRMVendorAssociationService.getBomRMListByRMId(rawmaterial.getId());
+			if(bomrmvendorassociations !=null && ! bomrmvendorassociations.isEmpty()){
 			for (Bomrmvendorassociation bomrmvendorassociation : bomrmvendorassociations) {
 				bomrmvendorassociation.setIsactive(false);
 				bOMRMVendorAssociationService.updateEntity(bomrmvendorassociation);
 			}
+			}
 			Rawmaterialinventory rawmaterialinventory = rawmaterialinventoryService.getByRMId(rawmaterial.getId());
+			if(rawmaterialinventory !=null){
 		    rawmaterialinventory.setIsactive(false);
 		    rawmaterialinventoryService.updateEntity(rawmaterialinventory);
-			
+			}
 			rawmaterial.setIsactive(false);
 			rawmaterialService.updateEntity(rawmaterial);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.RAW_MATERAIL_DELETE, null, null));

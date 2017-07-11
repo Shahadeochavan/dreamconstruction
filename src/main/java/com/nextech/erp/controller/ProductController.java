@@ -181,24 +181,33 @@ public class ProductController {
 		try {
 			Product product = productService.getEntityById(Product.class,id);
 			List<Productorderassociation> productorderassociations = productorderassociationService.getProductorderassociationByProdcutId(product.getId());
+			if(productorderassociations !=null && !productorderassociations.isEmpty()){
 			for (Productorderassociation productorderassociation : productorderassociations) {
 				productorderassociation.setIsactive(false);
 				productorderassociationService.updateEntity(productorderassociation);
 				}
+			}
+			
 			List<Productionplanning> productionplannings = productionplanningService.getProductionplanListByProductId(product.getId());
+			if(productionplannings !=null&& !productionplannings.isEmpty()){
 			for (Productionplanning productionplanning : productionplannings) {
 				productionplanning.setIsactive(false);
 				productionplanningService.updateEntity(productionplanning);
 			}
+			}
 			
 			Productrawmaterialassociation productrawmaterialassociation = productRMAssoService.getProductRMListByProductId(product.getId());
+			if(productrawmaterialassociation != null){
 			productrawmaterialassociation.setIsactive(false);
 			productRMAssoService.updateEntity(productrawmaterialassociation);
+			}
 			
 		    Productinventory productinventory = productinventoryService.getProductinventoryByProductId(product.getId());
+		    if(productinventory !=null){
 		    productinventory.setIsactive(false);
 		    productinventoryService.updateEntity(productinventory);
-		     
+		    }
+		    
 		    Bom bom  = bomService.getBomByProductId(product.getId());
 		    bom.setIsactive(false);
 		    bomService.updateEntity(bom);

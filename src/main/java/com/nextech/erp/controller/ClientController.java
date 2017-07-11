@@ -170,9 +170,11 @@ public class ClientController {
 		try {
 			Client client = clientService.getEntityById(Client.class, id);
 			List<Productorder> productorders = productorderService.getProductPrderByClientId(client.getId());
+			if(productorders !=null && !productorders.isEmpty()){
 			for (Productorder productorder : productorders) {
 				productorder.setIsactive(false);
 				productorderService.updateEntity(productorder);
+			}
 			}
 			client.setIsactive(false);
 			clientService.updateEntity(client);

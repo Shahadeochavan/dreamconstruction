@@ -303,7 +303,7 @@ public class UserController {
 	private void mailSending(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
 			  Mail mail = new Mail();
 
-			  Notification notification = notificationService.getEntityById(Notification.class,5);
+			  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
 			  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 			  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 				  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());
@@ -332,7 +332,7 @@ public class UserController {
 	private void mailSendingUpdate(User user,HttpServletRequest request,HttpServletResponse response) throws NumberFormatException, Exception{
 		  Mail mail = new Mail();
 
-		  Notification notification = notificationService.getEntityById(Notification.class,16);
+		  Notification notification = notificationService.getEntityById(Notification.class,Long.parseLong(messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
 		  List<Notificationuserassociation> notificationuserassociations = notificationUserAssService.getNotificationuserassociationBynotificationId(notification.getId());
 		  for (Notificationuserassociation notificationuserassociation : notificationuserassociations) {
 			  User user1 = userservice.getEmailUserById(notificationuserassociation.getUser().getId());

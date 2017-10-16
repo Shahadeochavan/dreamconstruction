@@ -117,6 +117,5 @@ public class UsertypepageassociationController {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 }

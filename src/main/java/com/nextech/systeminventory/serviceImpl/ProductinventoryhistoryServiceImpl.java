@@ -7,5 +7,4 @@ import com.nextech.systeminventory.service.ProductinventoryhistoryService;
 @Service
 public class ProductinventoryhistoryServiceImpl extends CRUDServiceImpl<Productinventoryhistory> implements
 		ProductinventoryhistoryService {
-
 }

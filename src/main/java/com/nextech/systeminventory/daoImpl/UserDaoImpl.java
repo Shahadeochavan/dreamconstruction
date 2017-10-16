@@ -1,19 +1,13 @@
 package com.nextech.systeminventory.daoImpl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.ProjectionList;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.transform.Transformers;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nextech.systeminventory.dao.UserDao;
-import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.User;
 
 @Repository

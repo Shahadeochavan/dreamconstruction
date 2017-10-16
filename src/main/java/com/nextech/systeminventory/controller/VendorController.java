@@ -1,8 +1,6 @@
 package com.nextech.systeminventory.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.model.Vendor;
-import com.nextech.systeminventory.service.UserService;
 import com.nextech.systeminventory.service.VendorService;
 import com.nextech.systeminventory.status.UserStatus;
 

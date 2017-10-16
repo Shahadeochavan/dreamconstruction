@@ -1,6 +1,5 @@
 package com.nextech.systeminventory.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import com.nextech.systeminventory.model.Productorderassociation;

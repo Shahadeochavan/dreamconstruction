@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.model.Client;
-import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.service.ClientService;
 import com.nextech.systeminventory.service.ProductorderService;
 import com.nextech.systeminventory.status.UserStatus;

@@ -90,7 +90,6 @@ public class PageController {
 		List<Page> PageList = null;
 		try {
 			PageList = pageservice.getEntityList(Page.class);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -53,7 +53,7 @@ public class ProductStoreInAndOut {
 	private static final int STATUS_PRODUCT_ORDER_COMPLETE = 75;
 	
 	@RequestMapping(value = "/inventoryIn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus listDispatch(
+	public @ResponseBody UserStatus inventoryIn(
 			@RequestBody ProductInventoryDTO productInventoryDTO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -63,13 +63,17 @@ public class ProductStoreInAndOut {
 			}
 			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
 				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId());
-				
+				if(productinventory !=null){
+					
 				productinventory.setQuantityavailable(productInvetoryMultipleData.getQuantity()+productinventory.getQuantityavailable());
 				productinventoryService.updateEntity(productinventory);
 				
 				updateProductOrderAssoRemainingQuantity(productInventoryDTO, productInvetoryMultipleData, request, response);
 				
 				updateProductOrder(productInventoryDTO, request, response);
+			}else{
+				return new UserStatus(1,"please check product inventory for this product ");
+			}
 				
 			}
 			return new UserStatus(1, "Product Inventory Store In added Successfully !");
@@ -120,5 +124,35 @@ public class ProductStoreInAndOut {
 			}
 		}
 		return isOrderComplete ? STATUS_PRODUCT_ORDER_COMPLETE: STATUS_PRODUCT_ORDER_INCOMPLETE;
+	}
+	
+	@RequestMapping(value = "/inventoryOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus inventoryOut(
+			@RequestBody ProductInventoryDTO productInventoryDTO, BindingResult bindingResult,
+			HttpServletRequest request, HttpServletResponse response) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError()
+						.getDefaultMessage());
+			}
+			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
+				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId());
+				productinventory.setQuantityavailable(productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity());
+				productinventoryService.updateEntity(productinventory);
+			}
+			return new UserStatus(1, "Product Inventory Store Out Successfully !");
+		} catch (ConstraintViolationException cve) {
+			System.out.println("Inside ConstraintViolationException");
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			System.out.println("Inside PersistenceException");
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			System.out.println("Inside Exception");
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
 	}
 }

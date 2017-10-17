@@ -159,10 +159,8 @@ public class ProductorderController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productorderList;
 	}
-
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductorder(
@@ -189,7 +187,6 @@ public class ProductorderController {
 		productorder.setQuantity(productOrderAssociationModel.getProductorderassciation().size());
 		productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorder.setIsactive(true);
-		//productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorderService.addEntity(productorder);
 		return productorder;
 	}
@@ -200,27 +197,10 @@ public class ProductorderController {
 			for (Productorderassociation productorderassociation : productorderassociations) {
 				productorderassociation.setProductorder(productorder);
 				productorderassociation.setRemainingQuantity(productorderassociation.getQuantity());
-				//productorderassociation.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 				productorderassociation.setIsactive(true);
 				productorderassociationService.addEntity(productorderassociation);
 			}
 		}
-	}
-	@RequestMapping(value = "incompleteProductOrder/{CLIENT-ID}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Productorder> getInCompleteProductOrder(@PathVariable("CLIENT-ID") long clientId) {
-
-		List<Productorder> productorderList = null;
-		try {
-			// TODO afterwards you need to change it from properties.
-			productorderList = productorderService.getInCompleteProductOrder(clientId,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)),
-					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_COMPLETE, null, null)));
-
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return productorderList;
 	}
 	
 	@RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -229,13 +209,24 @@ public class ProductorderController {
 		List<Productorder> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
-			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),
-					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
+			productorderList = productorderService.getPendingProductOrders(74,76);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return productorderList;
+	}
+	
+	@RequestMapping(value = "productorderId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Productorderassociation> getProductOrder(
+			@PathVariable("orderId") long id) {
+		List<Productorderassociation> productorderassociations = null;
+		try {
+			productorderassociations = productorderassociationService.getProductorderassociationByOrderId(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return productorderassociations;
 	}
 }

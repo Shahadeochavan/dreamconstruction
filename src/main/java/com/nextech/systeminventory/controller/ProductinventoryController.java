@@ -60,9 +60,9 @@ public class ProductinventoryController {
 				productinventoryService.addEntity(productinventory);
 			}	
 			else
-				return new UserStatus(0, messageSource.getMessage(
-						ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
 			return new UserStatus(1, "Productinventory added Successfully !");
+			
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -108,14 +108,11 @@ public class ProductinventoryController {
 		try {
 			productinventoryList = productinventoryService.getEntityList(Productinventory.class);
 			if (productinventoryList.isEmpty()) {
-				return new Response(1, "Product Inventory is empty",
-						productinventoryList);
+				return new Response(1, "Product Inventory is empty",productinventoryList);
 			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return new Response(1, productinventoryList);
 	}
 
@@ -130,8 +127,8 @@ public class ProductinventoryController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
+	
 	@RequestMapping(value = "/productId/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Productinventory getProductinventoryByProductId(@PathVariable("productId") long productId) {
 		Productinventory productinventory = null;

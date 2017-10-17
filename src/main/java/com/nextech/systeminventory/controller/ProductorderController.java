@@ -210,11 +210,9 @@ public class ProductorderController {
 		try {
 			// TODO afterwards you need to change it from properties.
 			productorderList = productorderService.getPendingProductOrders(74,76);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productorderList;
 	}
 	

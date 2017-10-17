@@ -118,7 +118,6 @@ public class ProductStoreInAndOut {
 				isOrderComplete = false;
 				break;
 			}
-
 		}
 		return isOrderComplete ? STATUS_PRODUCT_ORDER_COMPLETE: STATUS_PRODUCT_ORDER_INCOMPLETE;
 	}

@@ -209,7 +209,7 @@ public class ProductorderController {
 		List<Productorder> productorderList = null;
 		try {
 			// TODO afterwards you need to change it from properties.
-			productorderList = productorderService.getPendingProductOrders(74,76);
+			productorderList = productorderService.getPendingProductOrders(Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null)),Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_PRODUCT_ORDER_INCOMPLETE, null, null)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

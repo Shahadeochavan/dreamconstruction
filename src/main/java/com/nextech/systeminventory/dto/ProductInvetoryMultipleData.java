@@ -17,5 +17,4 @@ public class ProductInvetoryMultipleData {
 	public void setQuantity(long quantity) {
 		this.quantity = quantity;
 	}
-
 }

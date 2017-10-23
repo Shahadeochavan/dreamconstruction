@@ -21,6 +21,4 @@ public class ProductInventoryDTO {
 			List<ProductInvetoryMultipleData> productInvetoryMultipleDatas) {
 		this.productInvetoryMultipleDatas = productInvetoryMultipleDatas;
 	}
-	
-
 }

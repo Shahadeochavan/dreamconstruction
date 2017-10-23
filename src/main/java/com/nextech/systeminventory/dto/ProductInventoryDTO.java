@@ -7,6 +7,7 @@ public class ProductInventoryDTO {
 	
 	private long orderId;
 	List<ProductInvetoryMultipleData> productInvetoryMultipleDatas;
+	
 	public long getOrderId() {
 		return orderId;
 	}

@@ -76,10 +76,8 @@ public class UsertypepageassociationController {
 			@RequestBody Usertypepageassociation usertypepageassociation,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			usertypepageassociation.setIsactive(true);
-			usertypepageassociationService
-					.updateEntity(usertypepageassociation);
-			return new UserStatus(1,
-					"Usertypepageassociation update Successfully !");
+			usertypepageassociationService.updateEntity(usertypepageassociation);
+			return new UserStatus(1,"Usertypepageassociation update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
@@ -91,17 +89,13 @@ public class UsertypepageassociationController {
 
 		List<Usertypepageassociation> UsertypepageassociationList = null;
 		try {
-			UsertypepageassociationList = usertypepageassociationService
-					.getEntityList(Usertypepageassociation.class);
-
+			UsertypepageassociationList = usertypepageassociationService.getEntityList(Usertypepageassociation.class);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return UsertypepageassociationList;
 	}
 
-	/* Delete an object from DB in Spring Restful Services */
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deletePageAss(@PathVariable("id") long id) {
 

@@ -4,6 +4,7 @@ public class ProductInvetoryMultipleData {
 	
 	private long productId;
 	private long quantity;
+	
 	public long getProductId() {
 		return productId;
 	}

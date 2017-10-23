@@ -14,6 +14,7 @@ public class ProductOrderAssociationModel {
 	private Date createDate;
 	private String invoiceNo;
 	private List<Productorderassociation> productorderassciation;
+	
 	public String getDescription() {
 		return description;
 	}

@@ -93,13 +93,11 @@ public class PageController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return PageList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
-
 		try {
 			Page page = pageservice.getEntityById(Page.class,id);
 			page.setIsactive(false);

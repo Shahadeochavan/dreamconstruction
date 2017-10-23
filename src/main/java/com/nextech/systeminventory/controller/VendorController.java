@@ -115,11 +115,9 @@ public class VendorController {
 		List<Vendor> userList = null;
 		try {
 			userList = vendorService.getEntityList(Vendor.class);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return userList;
 	}
 
@@ -134,6 +132,5 @@ public class VendorController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
-
 	}
 }

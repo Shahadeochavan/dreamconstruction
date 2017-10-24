@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.ProductDTO;
+import com.nextech.systeminventory.factory.ProductRequestResponseFactory;
 import com.nextech.systeminventory.model.Product;
 import com.nextech.systeminventory.model.Productinventory;
 import com.nextech.systeminventory.service.ProductService;
@@ -42,23 +44,23 @@ public class ProductController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProduct(
-			@Valid @RequestBody Product product, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody ProductDTO productDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (productService.getProductByName(product.getName()) == null) {
+			if (productService.getProductByName(productDTO.getName()) == null) {
 
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
 			}
-			if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
+			if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
 			} else {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 			}
-			product.setIsactive(true);
-			productService.addEntity(product);
+			long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO));
+			Product product = productService.getEntityById(Product.class, id);
 			addProductInventory(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -87,25 +89,24 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProduct(@RequestBody Product product,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProduct(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Product oldProductInfo = productService.getEntityById(Product.class, product.getId());
-			if(product.getName().equals(oldProductInfo.getName())){ 	
+			ProductDTO oldProductInfo = productService.getProductDTO(productDTO.getId());
+			if(productDTO.getName().equals(oldProductInfo.getName())){ 	
 				} else { 
-					if (productService.getProductByName(product.getName()) == null) {
+					if (productService.getProductByName(productDTO.getName()) == null) {
 				    }else{  
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
 					}
 				 }
-	            if(product.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
+	            if(productDTO.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
 				} else { 
-					if (productService.getProductByPartNumber(product.getPartNumber()) == null) {
+					if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
 				    }else{  
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
 					}
 				 }
-			product.setIsactive(true);
-			productService.updateEntity(product);
+			productService.updateEntity(ProductRequestResponseFactory.setProduct(productDTO));
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

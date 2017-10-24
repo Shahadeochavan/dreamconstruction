@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.nextech.systeminventory.dao.ProductDao;
 import com.nextech.systeminventory.dao.ProductorderDao;
+import com.nextech.systeminventory.dto.ProductDTO;
+import com.nextech.systeminventory.factory.ProductRequestResponseFactory;
 import com.nextech.systeminventory.model.Product;
 import com.nextech.systeminventory.service.ProductService;
 @Service
@@ -38,5 +40,14 @@ public class ProductServiceImpl extends CRUDServiceImpl<Product> implements Prod
 	public List<Product> getProductList(List<Long> productIdList) {
 		// TODO Auto-generated method stub
 		return productDao.getProductList(productIdList);
+	}
+	@Override
+	public ProductDTO getProductDTO(long id) throws Exception {
+		Product product = productDao.getById(Product.class, id);
+		if(product ==null){
+			return null;
+		}
+		ProductDTO productDTO = ProductRequestResponseFactory.setProductDto(product);
+		return productDTO;
 	}
 }

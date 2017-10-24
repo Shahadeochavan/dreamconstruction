@@ -211,20 +211,16 @@ public class UserController {
 			return new UserStatus(0, e.toString());
 		}
 	}
-
-	/* @CrossOrigin(origins = "http://localhost:8080") */
-	/* Getting List of objects in Json format in Spring Restful Services */
+	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<User> getUser() {
 
 		List<User> userList = null;
 		try {
 			userList = userservice.getEntityList(User.class);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return userList;
 	}
 
@@ -234,11 +230,9 @@ public class UserController {
 		List<User> userProfileList = null;
 		try {
 			userProfileList = userservice.getUserProfileByUserId(id);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return userProfileList;
 	}
 

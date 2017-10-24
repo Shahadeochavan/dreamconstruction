@@ -88,17 +88,14 @@ public class ProductinventoryhistoryController {
 		List<Productinventoryhistory> productinventoryhistoryList = null;
 		try {
 			productinventoryhistoryList = productinventoryhistoryService.getEntityList(Productinventoryhistory.class);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return productinventoryhistoryList;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deleteProductinventoryhistory(@PathVariable("id") long id) {
-
 		try {
 			Productinventoryhistory productinventoryhistory = productinventoryhistoryService.getEntityById(Productinventoryhistory.class,id);
 			productinventoryhistory.setIsactive(false);

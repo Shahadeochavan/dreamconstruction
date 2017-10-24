@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.ClientDTO;
+import com.nextech.systeminventory.factory.ClientFactory;
 import com.nextech.systeminventory.model.Client;
 import com.nextech.systeminventory.service.ClientService;
 import com.nextech.systeminventory.service.ProductorderService;
@@ -39,27 +42,25 @@ public class ClientController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
-			@Valid @RequestBody Client client, BindingResult bindingResult,
+			@Valid @RequestBody ClientDTO clientDTO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+			if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
 
 			} else {
 				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.COMPANY_NAME_EXIT, null, null));
-
 			}
-			if (clientService.getClientByEmail(client.getEmailid()) == null) {
+			if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
 			} else {
 				return new UserStatus(2, messageSource.getMessage(
 						ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-			client.setIsactive(true);
-			clientService.addEntity(client);
+			clientService.addEntity(ClientFactory.setClient(clientDTO));
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
@@ -88,30 +89,27 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateClient(@RequestBody Client client,
+	public @ResponseBody UserStatus updateClient(@RequestBody ClientDTO clientDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			
-			Client oldClientInfo = clientService.getEntityById(Client.class, client.getId());
+			ClientDTO oldClientInfo = clientService.getClientDTOById(clientDTO.getId());
 			System.out.println(oldClientInfo);
-			if(client.getCompanyname().equals(oldClientInfo.getCompanyname())){  	
+			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
 			} else { 
-				if (clientService.getClientByCompanyName(client.getCompanyname()) == null) {
+				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(client.getEmailid().equals(oldClientInfo.getEmailid())){  			
+            if(clientDTO.getEmailId().equals(oldClientInfo.getEmailId())){  			
 			} else { 
-				if (clientService.getClientByEmail(client.getEmailid()) == null) {
+				if (clientService.getClientByEmail(clientDTO.getEmailId()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
-			client.setIsactive(true);
-			clientService.updateEntity(client);
-			return new UserStatus(1, messageSource.getMessage(
-					ERPConstants.CLIENT_UPDATE, null, null));
+	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO));
+			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());

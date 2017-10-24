@@ -19,7 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.VendorDTO;
+import com.nextech.systeminventory.factory.VendorFactory;
 import com.nextech.systeminventory.model.Vendor;
 import com.nextech.systeminventory.service.VendorService;
 import com.nextech.systeminventory.status.UserStatus;
@@ -37,26 +40,24 @@ public class VendorController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
-			@Valid @RequestBody Vendor vendor, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody VendorDTO vendorDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
-				model.addAttribute("vendor", vendor);
+				model.addAttribute("vendor", vendorDTO);
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 
-			if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
 
 			} else {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}
-			if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
 			} else {
 				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 			}
-			//vendor.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			vendor.setIsactive(true);
-			vendorService.addEntity(vendor);
+			vendorService.addEntity(VendorFactory.setVendor(vendorDTO));
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -82,26 +83,24 @@ public class VendorController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateVendor(@RequestBody Vendor vendor,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateVendor(@RequestBody VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Vendor oldVendorInfo = vendorService.getEntityById(Vendor.class, vendor.getId());
-			System.out.println(oldVendorInfo);
-			if(vendor.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
+			VendorDTO oldVendorInfo = vendorService.getVendorById(vendorDTO.getId());
+			if(vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
 			} else { 
-				if (vendorService.getVendorByCompanyName(vendor.getCompanyName()) == null) {
+				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 				}
 			 }
-            if(vendor.getEmail().equals(oldVendorInfo.getEmail())){  	
+            if(vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
 			} else { 
-				if (vendorService.getVendorByEmail(vendor.getEmail()) == null) {
+				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
 			    }else{  
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
 				}
 			 }
-			vendor.setIsactive(true);
-			vendorService.updateEntity(vendor);
+            vendorService.updateEntity( VendorFactory.setVendor(vendorDTO));
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();

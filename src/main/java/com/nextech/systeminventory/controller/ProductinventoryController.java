@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.ProductInventoryDTO;
+import com.nextech.systeminventory.factory.ProductInventoryRequestResponseFactory;
 import com.nextech.systeminventory.model.Productinventory;
 import com.nextech.systeminventory.service.ProductService;
 import com.nextech.systeminventory.service.ProductinventoryService;
@@ -37,7 +39,6 @@ public class ProductinventoryController {
 	@Autowired
 	private MessageSource messageSource;
 	
-	
 	@Autowired
 	UserService userService;
 	
@@ -47,17 +48,15 @@ public class ProductinventoryController {
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addProductinventory(
-			@Valid @RequestBody Productinventory productinventory, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+			@Valid @RequestBody ProductInventoryDTO productInventoryDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
 			if (productinventoryService.getProductinventoryByProductId(
-				productinventory.getProduct().getId()) == null){
-				//productinventory.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				productinventory.setIsactive(true);
-				productinventoryService.addEntity(productinventory);
+					productInventoryDTO.getProductId()) == null){
+				productinventoryService.addEntity(ProductInventoryRequestResponseFactory.setProductInventory(productInventoryDTO, request));
 			}	
 			else
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_INVENTORY_ASSO_EXIT, null, null));
@@ -90,10 +89,9 @@ public class ProductinventoryController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateProductinventory(@RequestBody Productinventory productinventory,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateProductinventory(@RequestBody ProductInventoryDTO productInventoryDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productinventory.setIsactive(true);
-			productinventoryService.updateEntity(productinventory);
+			productinventoryService.updateEntity(ProductInventoryRequestResponseFactory.setProductInventoryUpdate(productInventoryDTO, request));
 			return new UserStatus(1, "Productinventory update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -133,7 +131,6 @@ public class ProductinventoryController {
 	public @ResponseBody Productinventory getProductinventoryByProductId(@PathVariable("productId") long productId) {
 		Productinventory productinventory = null;
 		try {
-			System.out.println("product is");
 			productinventory = productinventoryService.getProductinventoryByProductId(productId);
 		} catch (Exception e) {
 			e.printStackTrace();

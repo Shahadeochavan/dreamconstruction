@@ -1,26 +1,16 @@
 package com.nextech.systeminventory.dto;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
-import com.nextech.systeminventory.model.Productorderassociation;
 
-
-public class ProductOrderAssociationModel {
+public class ProductOrderDTO extends AbstractDTO {
 	
-	private String description;
 	private long clientId;
 	private Date expecteddeliveryDate;	
 	private Date createDate;
 	private String invoiceNo;
-	private List<Productorderassociation> productorderassciation;
-	
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	private List<ProductOrderAssociationDTO> productOrderAssociationDTOs;
 	
 	public Date getExpecteddeliveryDate() {
 		return expecteddeliveryDate;
@@ -35,13 +25,6 @@ public class ProductOrderAssociationModel {
 		this.createDate = createDate;
 	}
 	
-	public List<Productorderassociation> getProductorderassciation() {
-		return productorderassciation;
-	}
-	public void setProductorderassciation(
-			List<Productorderassociation> productorderassciation) {
-		this.productorderassciation = productorderassciation;
-	}
 	public String getInvoiceNo() {
 		return invoiceNo;
 	}
@@ -53,6 +36,12 @@ public class ProductOrderAssociationModel {
 	}
 	public void setClientId(long clientId) {
 		this.clientId = clientId;
+	}
+	public List<ProductOrderAssociationDTO> getProductOrderAssociationDTOs() {
+		return productOrderAssociationDTOs;
+	}
+	public void setProductOrderAssociationDTOs(
+			List<ProductOrderAssociationDTO> productOrderAssociationDTOs) {
+		this.productOrderAssociationDTOs = productOrderAssociationDTOs;
 	}	
-	
 }

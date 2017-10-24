@@ -1,9 +1,7 @@
 package com.nextech.systeminventory.controller;
 
 
-import java.util.Date;
 import java.util.List;
-
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
-import com.nextech.systeminventory.dto.ProductOrderAssociationModel;
-import com.nextech.systeminventory.model.Client;
+import com.nextech.systeminventory.dto.ProductOrderAssociationDTO;
+import com.nextech.systeminventory.dto.ProductOrderDTO;
+import com.nextech.systeminventory.factory.ProductOrderAssoRequestResponseFactory;
+import com.nextech.systeminventory.factory.ProductOrderRequestResponseFactory;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
@@ -90,7 +90,7 @@ public class ProductorderController {
 	
 	@RequestMapping(value = "/createmultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addMultipleProductorder(
-			@Valid @RequestBody ProductOrderAssociationModel productOrderAssociationModel,
+			@Valid @RequestBody ProductOrderDTO productOrderDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -99,10 +99,10 @@ public class ProductorderController {
 			}
 
 			// TODO save call product order
-			Productorder productorder = saveProductOrder(productOrderAssociationModel, request, response);
+			Productorder productorder = saveProductOrder(productOrderDTO, request, response);
 
 			// TODO add product order association
-			addProductOrderAsso(productOrderAssociationModel, productorder, request, response);
+			addProductOrderAsso(productOrderDTO, productorder, request, response);
 			
 			return new UserStatus(1,"Multiple Product Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -176,29 +176,20 @@ public class ProductorderController {
 			return new UserStatus(0, e.toString());
 		}
 	}
-	private Productorder saveProductOrder(ProductOrderAssociationModel productOrderAssociationModel,HttpServletRequest request,HttpServletResponse response)
+	private Productorder saveProductOrder(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response)
 			throws Exception {
-		Productorder productorder = new Productorder();
-		productorder.setClient(clientService.getEntityById(Client.class,productOrderAssociationModel.getClientId()));
-		productorder.setCreateDate(new Date());
-		productorder.setDescription(productOrderAssociationModel.getDescription());
-		productorder.setInvoiceNo(productOrderAssociationModel.getInvoiceNo());
-		productorder.setExpecteddeliveryDate(productOrderAssociationModel.getExpecteddeliveryDate());
-		productorder.setQuantity(productOrderAssociationModel.getProductorderassciation().size());
+		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
 		productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
-		productorder.setIsactive(true);
 		productorderService.addEntity(productorder);
 		return productorder;
 	}
 	
-	private void addProductOrderAsso(ProductOrderAssociationModel productOrderAssociationModel,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
-		List<Productorderassociation> productorderassociations = productOrderAssociationModel.getProductorderassciation();
-		if (productorderassociations != null&& !productorderassociations.isEmpty()) {
-			for (Productorderassociation productorderassociation : productorderassociations) {
-				productorderassociation.setProductorder(productorder);
-				productorderassociation.setRemainingQuantity(productorderassociation.getQuantity());
-				productorderassociation.setIsactive(true);
-				productorderassociationService.addEntity(productorderassociation);
+	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
+		List<ProductOrderAssociationDTO> ProductOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
+		if (ProductOrderAssociationDTOs != null&& !ProductOrderAssociationDTOs.isEmpty()) {
+			for (ProductOrderAssociationDTO productOrderAssociationDTO : ProductOrderAssociationDTOs) {
+				productOrderAssociationDTO.setProductOrderId(productorder.getId());
+				productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			}
 		}
 	}

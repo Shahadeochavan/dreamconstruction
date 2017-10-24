@@ -89,7 +89,6 @@ public class StatusController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return statusList;
 	}
 

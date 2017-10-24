@@ -1,5 +1,6 @@
 package com.nextech.systeminventory.service;
 
+import com.nextech.systeminventory.dto.VendorDTO;
 import com.nextech.systeminventory.model.Vendor;
 
 public interface VendorService extends CRUDService<Vendor>{
@@ -9,4 +10,6 @@ public interface VendorService extends CRUDService<Vendor>{
 	public Vendor getVendorByEmail(String email) throws Exception;
 
 	public Vendor getVendorByName(String vendorName) throws Exception;
+	
+	public VendorDTO getVendorById(long id) throws Exception;
 }

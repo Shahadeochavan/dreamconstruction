@@ -40,7 +40,6 @@ public class ClientDaoImpl extends SuperDaoImpl<Client> implements ClientDao {
 		criteria.add(Restrictions.eq("emailid", emailid));
 		Client client = criteria.list().size() > 0 ? (Client) criteria.list()
 				.get(0) : null;
-		 // //session.close();
 		return client;
 	}
 }

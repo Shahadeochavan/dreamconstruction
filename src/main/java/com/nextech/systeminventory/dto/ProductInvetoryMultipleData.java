@@ -1,14 +1,24 @@
 package com.nextech.systeminventory.dto;
 
-public class ProductInvetoryMultipleData {
+import com.nextech.systeminventory.model.Product;
+
+public class ProductInvetoryMultipleData extends AbstractDTO{
 	
-	private long productId;
+	private Product productId;
 	private long quantity;
 	
-	public long getProductId() {
+	
+	public ProductInvetoryMultipleData(){
+		
+	}
+    public ProductInvetoryMultipleData(int id){
+		this.setId(id);
+	}
+	
+	public Product getProductId() {
 		return productId;
 	}
-	public void setProductId(long productId) {
+	public void setProductId(Product productId) {
 		this.productId = productId;
 	}
 	public long getQuantity() {

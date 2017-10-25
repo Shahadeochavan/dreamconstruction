@@ -13,7 +13,6 @@ public class VendorDTO extends AbstractDTO{
 	private String divison;
 	private String email;
 	private String firstName;
-	private boolean isactive;
 	private String lastName;
 	private String postalcode;
 	private String renge; 
@@ -114,15 +113,6 @@ public class VendorDTO extends AbstractDTO{
 	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
-
-	public boolean isIsactive() {
-		return isactive;
-	}
-
-	public void setIsactive(boolean isactive) {
-		this.isactive = isactive;
-	}
-
 	public String getLastName() {
 		return lastName;
 	}

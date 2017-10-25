@@ -19,7 +19,7 @@ public class ProductOrderAssoRequestResponseFactory {
 		productorderassociation.setId(productOrderAssociationDTO.getId());
 		productorderassociation.setIsactive(true);
 		Product product =  new Product();
-		product.setId(productOrderAssociationDTO.getProductId());
+		product.setId(productOrderAssociationDTO.getProductId().getId());
 		productorderassociation.setProduct(product);
 		Productorder productorder = new Productorder();
 		productorder.setId(productOrderAssociationDTO.getProductOrderId());
@@ -35,7 +35,7 @@ public class ProductOrderAssoRequestResponseFactory {
 		productorderassociation.setId(productOrderAssociationDTO.getId());
 		productorderassociation.setIsactive(true);
 		Product product =  new Product();
-		product.setId(productOrderAssociationDTO.getProductId());
+		product.setId(productOrderAssociationDTO.getProductId().getId());
 		productorderassociation.setProduct(product);
 		Productorder productorder = new Productorder();
 		productorder.setId(productOrderAssociationDTO.getProductOrderId());
@@ -55,7 +55,7 @@ public class ProductOrderAssoRequestResponseFactory {
 		ProductDTO productDTO = new ProductDTO();
 		productDTO.setId(productorderassociation.getProduct().getId());
 		productDTO.setPartNumber(productorderassociation.getProduct().getPartNumber());
-		productOrderAssociationDTO.setProductId(productDTO.getId());
+		productOrderAssociationDTO.setProductId(productDTO);
 		productOrderAssociationDTO.setQuantity(productorderassociation.getQuantity());
 		productOrderAssociationDTO.setRemainingQuantity(productorderassociation.getRemainingQuantity());
 		productOrderAssociationDTO.setUpdatedBy(productorderassociation.getUpdatedBy());

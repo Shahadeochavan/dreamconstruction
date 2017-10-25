@@ -77,5 +77,4 @@ public class ProductInventoryDTO extends AbstractDTO{
 	public void setProductId(long productId) {
 		this.productId = productId;
 	}
-	
 }

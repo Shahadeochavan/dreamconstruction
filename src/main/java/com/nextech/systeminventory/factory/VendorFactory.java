@@ -49,7 +49,7 @@ public class VendorFactory {
 		vendorDTO.setRenge(vendor.getRenge());
 		vendorDTO.setState(vendor.getState());
 		vendorDTO.setVatNo(vendor.getVatNo());
-		vendorDTO.setIsactive(true);
+		vendorDTO.setActive(true);
 		return vendorDTO;
 	}
 

@@ -1,11 +1,13 @@
 package com.nextech.systeminventory.dto;
 
+import com.nextech.systeminventory.model.Product;
+
 
 public class ProductOrderAssociationDTO extends AbstractDTO {
 
 	private long quantity;
 	private long remainingQuantity;
-	private long productId;
+	private ProductDTO productId;
 	private long productOrderId;
 	
 	public ProductOrderAssociationDTO(){
@@ -27,16 +29,17 @@ public class ProductOrderAssociationDTO extends AbstractDTO {
 	public void setRemainingQuantity(long remainingQuantity) {
 		this.remainingQuantity = remainingQuantity;
 	}
-	public long getProductId() {
-		return productId;
-	}
-	public void setProductId(long productId) {
-		this.productId = productId;
-	}
 	public long getProductOrderId() {
 		return productOrderId;
 	}
 	public void setProductOrderId(long productOrderId) {
 		this.productOrderId = productOrderId;
 	}
+	public ProductDTO getProductId() {
+		return productId;
+	}
+	public void setProductId(ProductDTO productId) {
+		this.productId = productId;
+	}
+	
 }

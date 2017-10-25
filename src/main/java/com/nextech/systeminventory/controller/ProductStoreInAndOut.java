@@ -62,7 +62,7 @@ public class ProductStoreInAndOut {
 						.getDefaultMessage());
 			}
 			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
-				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId());
+				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
 				if(productinventory !=null){
 					
 				productinventory.setQuantityavailable(productInvetoryMultipleData.getQuantity()+productinventory.getQuantityavailable());
@@ -96,7 +96,7 @@ public class ProductStoreInAndOut {
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
 		Productorderassociation productorderassociation = productorderassociationService.getProductorderassociationByProdcutOrderIdandProdcutId(
-				productInventoryDTO.getOrderId(), productInvetoryMultipleData.getProductId());
+				productInventoryDTO.getOrderId(), productInvetoryMultipleData.getProductId().getId());
 		productorderassociation.setRemainingQuantity(productorderassociation.getRemainingQuantity() - productInvetoryMultipleData.getQuantity());
 		productorderassociationService.updateEntity(productorderassociation);
 	}
@@ -136,9 +136,11 @@ public class ProductStoreInAndOut {
 						.getDefaultMessage());
 			}
 			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
-				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId());
+				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
+				if(productinventory.getQuantityavailable()>=productInvetoryMultipleData.getQuantity()){
 				productinventory.setQuantityavailable(productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity());
 				productinventoryService.updateEntity(productinventory);
+				}
 			}
 			return new UserStatus(1, "Product Inventory Store Out Successfully !");
 		} catch (ConstraintViolationException cve) {

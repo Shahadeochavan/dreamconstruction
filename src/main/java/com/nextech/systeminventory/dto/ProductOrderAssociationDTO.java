@@ -1,6 +1,5 @@
 package com.nextech.systeminventory.dto;
 
-import com.nextech.systeminventory.model.Product;
 
 
 public class ProductOrderAssociationDTO extends AbstractDTO {

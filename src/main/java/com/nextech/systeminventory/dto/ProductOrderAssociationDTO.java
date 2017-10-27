@@ -8,6 +8,7 @@ public class ProductOrderAssociationDTO extends AbstractDTO {
 	private long remainingQuantity;
 	private ProductDTO productId;
 	private long productOrderId;
+	private long inventoryQuantity;
 	
 	public ProductOrderAssociationDTO(){
 		
@@ -39,6 +40,12 @@ public class ProductOrderAssociationDTO extends AbstractDTO {
 	}
 	public void setProductId(ProductDTO productId) {
 		this.productId = productId;
+	}
+	public long getInventoryQuantity() {
+		return inventoryQuantity;
+	}
+	public void setInventoryQuantity(long inventoryQuantity) {
+		this.inventoryQuantity = inventoryQuantity;
 	}
 	
 }

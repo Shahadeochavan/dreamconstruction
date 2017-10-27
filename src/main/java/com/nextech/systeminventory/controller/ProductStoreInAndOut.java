@@ -22,10 +22,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.systeminventory.dto.ProductInventoryDTO;
 import com.nextech.systeminventory.dto.ProductInvetoryMultipleData;
 import com.nextech.systeminventory.model.Productinventory;
+import com.nextech.systeminventory.model.Productinventoryhistory;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
 import com.nextech.systeminventory.service.ProductinventoryService;
+import com.nextech.systeminventory.service.ProductinventoryhistoryService;
 import com.nextech.systeminventory.service.ProductorderService;
 import com.nextech.systeminventory.service.ProductorderassociationService;
 import com.nextech.systeminventory.service.StatusService;
@@ -49,11 +51,14 @@ public class ProductStoreInAndOut {
 	@Autowired
 	ProductorderService productorderService;
 	
+	@Autowired
+	ProductinventoryhistoryService productinventoryhistoryService;
+	
 	private static final int STATUS_PRODUCT_ORDER_INCOMPLETE = 76;
 	private static final int STATUS_PRODUCT_ORDER_COMPLETE = 75;
 	
-	@RequestMapping(value = "/inventoryIn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus inventoryIn(
+	@RequestMapping(value = "/inventoryOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus inventoryOut(
 			@RequestBody ProductInventoryDTO productInventoryDTO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -62,21 +67,16 @@ public class ProductStoreInAndOut {
 						.getDefaultMessage());
 			}
 			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
-				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
-				if(productinventory !=null){
-					
-				productinventory.setQuantityavailable(productInvetoryMultipleData.getQuantity()+productinventory.getQuantityavailable());
-				productinventoryService.updateEntity(productinventory);
+				
+				addProductInventoryHistory(productInvetoryMultipleData);
+				
+				updateProductInvetory(productInvetoryMultipleData);
 				
 				updateProductOrderAssoRemainingQuantity(productInventoryDTO, productInvetoryMultipleData, request, response);
-				
+			
 				updateProductOrder(productInventoryDTO, request, response);
-			}else{
-				return new UserStatus(1,"please check product inventory for this product ");
 			}
-				
-			}
-			return new UserStatus(1, "Product Inventory Store In added Successfully !");
+			return new UserStatus(1, "Product Inventory Store Out added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -126,8 +126,29 @@ public class ProductStoreInAndOut {
 		return isOrderComplete ? STATUS_PRODUCT_ORDER_COMPLETE: STATUS_PRODUCT_ORDER_INCOMPLETE;
 	}
 	
-	@RequestMapping(value = "/inventoryOut", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus inventoryOut(
+	private void addProductInventoryHistory(ProductInvetoryMultipleData productInvetoryMultipleData) throws Exception {
+		Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
+		Productinventoryhistory productinventoryhistory = new Productinventoryhistory();
+		productinventoryhistory.setProductinventory(productinventory);
+		productinventoryhistory.setIsactive(true);
+		productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable());
+		productinventoryhistory.setAfterquantity((productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity()));
+		productinventoryhistory.setStatus(statusService.getEntityById(Status.class, 77));
+		productinventoryhistoryService.addEntity(productinventoryhistory);
+	}
+	
+	private Productinventory updateProductInvetory(ProductInvetoryMultipleData productInvetoryMultipleData) throws Exception{
+		Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
+		if(productinventory !=null){
+		productinventory.setQuantityavailable(productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity());
+		productinventoryService.updateEntity(productinventory);
+		}
+		return productinventory;
+		
+	}
+	
+	@RequestMapping(value = "/inventoryIn", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus inventoryIn(
 			@RequestBody ProductInventoryDTO productInventoryDTO, BindingResult bindingResult,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
@@ -137,12 +158,10 @@ public class ProductStoreInAndOut {
 			}
 			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
 				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
-				if(productinventory.getQuantityavailable()>=productInvetoryMultipleData.getQuantity()){
-				productinventory.setQuantityavailable(productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity());
+				productinventory.setQuantityavailable(productinventory.getQuantityavailable()+productInvetoryMultipleData.getQuantity());
 				productinventoryService.updateEntity(productinventory);
-				}
 			}
-			return new UserStatus(1, "Product Inventory Store Out Successfully !");
+			return new UserStatus(1, "Product Inventory Store In Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
 			cve.printStackTrace();

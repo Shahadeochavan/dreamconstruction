@@ -100,13 +100,10 @@ public class UsertypepageassociationController {
 	public @ResponseBody UserStatus deletePageAss(@PathVariable("id") long id) {
 
 		try {
-			Usertypepageassociation usertypepageassociation = usertypepageassociationService
-					.getEntityById(Usertypepageassociation.class, id);
+			Usertypepageassociation usertypepageassociation = usertypepageassociationService.getEntityById(Usertypepageassociation.class, id);
 			usertypepageassociation.setIsactive(false);
-			usertypepageassociationService
-					.updateEntity(usertypepageassociation);
-			return new UserStatus(1,
-					"Usertypepageassociation deleted Successfully !");
+			usertypepageassociationService.updateEntity(usertypepageassociation);
+			return new UserStatus(1,"Usertypepageassociation deleted Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());

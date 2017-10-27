@@ -48,7 +48,6 @@ public class VendorController {
 			}
 
 			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
-
 			} else {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
 			}

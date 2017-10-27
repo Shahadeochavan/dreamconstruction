@@ -95,10 +95,11 @@ public class ProductStoreInAndOut {
 	private void updateProductOrderAssoRemainingQuantity(ProductInventoryDTO productInventoryDTO, ProductInvetoryMultipleData productInvetoryMultipleData,
 			HttpServletRequest request, HttpServletResponse response)
 			throws Exception {
-		Productorderassociation productorderassociation = productorderassociationService.getProductorderassociationByProdcutOrderIdandProdcutId(
-				productInventoryDTO.getOrderId(), productInvetoryMultipleData.getProductId().getId());
+		Productorderassociation productorderassociation = productorderassociationService.getProductorderassociationByProdcutOrderIdandProdcutId(productInventoryDTO.getOrderId(), productInvetoryMultipleData.getProductId().getId());
+		if(productorderassociation.getRemainingQuantity()>=productInvetoryMultipleData.getQuantity()){
 		productorderassociation.setRemainingQuantity(productorderassociation.getRemainingQuantity() - productInvetoryMultipleData.getQuantity());
 		productorderassociationService.updateEntity(productorderassociation);
+		}
 	}
 	
 	private void updateProductOrder(ProductInventoryDTO productInventoryDTO,HttpServletRequest request, HttpServletResponse response)
@@ -132,16 +133,20 @@ public class ProductStoreInAndOut {
 		productinventoryhistory.setProductinventory(productinventory);
 		productinventoryhistory.setIsactive(true);
 		productinventoryhistory.setBeforequantity(productinventory.getQuantityavailable());
+		if(productinventory.getQuantityavailable()>=productInvetoryMultipleData.getQuantity()){
 		productinventoryhistory.setAfterquantity((productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity()));
 		productinventoryhistory.setStatus(statusService.getEntityById(Status.class, 77));
 		productinventoryhistoryService.addEntity(productinventoryhistory);
+		}
 	}
 	
 	private Productinventory updateProductInvetory(ProductInvetoryMultipleData productInvetoryMultipleData) throws Exception{
 		Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
 		if(productinventory !=null){
+			if(productinventory.getQuantityavailable()>=productInvetoryMultipleData.getQuantity()){
 		productinventory.setQuantityavailable(productinventory.getQuantityavailable()-productInvetoryMultipleData.getQuantity());
 		productinventoryService.updateEntity(productinventory);
+			}
 		}
 		return productinventory;
 		

@@ -40,6 +40,7 @@ import com.nextech.systeminventory.service.ProductorderassociationService;
 import com.nextech.systeminventory.service.StatusService;
 import com.nextech.systeminventory.service.UserService;
 import com.nextech.systeminventory.status.UserStatus;
+import org.apache.log4j.Logger;
 
 @Controller
 @RequestMapping("/productorder")
@@ -68,6 +69,9 @@ public class ProductorderController {
 	
 	@Autowired
 	ProductinventoryService productinventoryService;
+	
+	@Autowired
+	static Logger logger = Logger.getLogger(ProductorderController.class);
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -161,6 +165,8 @@ public class ProductorderController {
 	public @ResponseBody List<Productorder> getProductorder() {
 
 		List<Productorder> productorderList = null;
+		logger.error("this is list");
+		logger.info("this is error message");
 		try {
 			productorderList = productorderService
 					.getEntityList(Productorder.class);

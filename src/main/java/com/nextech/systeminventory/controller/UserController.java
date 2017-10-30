@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -48,6 +49,9 @@ public class UserController {
 
 	@Autowired
 	UsertypepageassociationService usertypepageassociationService;
+	
+	@Autowired
+	static Logger logger = Logger.getLogger(UserController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
@@ -108,7 +112,7 @@ public class UserController {
 		User user2 = userservice.getUserByUserId(user.getUserid());
 
 		try {
-			System.out.println(messageSource.getMessage(ERPConstants.COUNT, null,
+			logger.error(messageSource.getMessage(ERPConstants.COUNT, null,
 					null));
 			if (user2 != null && authenticate(user, user2)) {
 				Usertype usertype = userTypeService.getEntityById(

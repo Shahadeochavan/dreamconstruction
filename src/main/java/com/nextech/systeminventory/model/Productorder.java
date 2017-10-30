@@ -58,6 +58,12 @@ public class Productorder implements Serializable {
 	
 	private String invoiceNo;
 	
+	private float totalPrice;
+	
+	private float actualPrice;
+	
+	private float tax;
+	
 
 	//bi-directional many-to-one association to Orderproductassociation
 	@JsonIgnore
@@ -202,6 +208,24 @@ public class Productorder implements Serializable {
 	}
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
+	}
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	public float getActualPrice() {
+		return actualPrice;
+	}
+	public void setActualPrice(float actualPrice) {
+		this.actualPrice = actualPrice;
+	}
+	public float getTax() {
+		return tax;
+	}
+	public void setTax(float tax) {
+		this.tax = tax;
 	}
 
 }

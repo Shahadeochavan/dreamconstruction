@@ -10,6 +10,10 @@ public class ProductOrderDTO extends AbstractDTO {
 	private Date expecteddeliveryDate;	
 	private Date createDate;
 	private String invoiceNo;
+	private float totalPrice;
+	private float actualPrice;
+	private float tax;
+	
 	private List<ProductOrderAssociationDTO> productOrderAssociationDTOs;
 	
 	public Date getExpecteddeliveryDate() {
@@ -43,5 +47,23 @@ public class ProductOrderDTO extends AbstractDTO {
 	public void setProductOrderAssociationDTOs(
 			List<ProductOrderAssociationDTO> productOrderAssociationDTOs) {
 		this.productOrderAssociationDTOs = productOrderAssociationDTOs;
-	}	
+	}
+	public float getTotalPrice() {
+		return totalPrice;
+	}
+	public void setTotalPrice(float totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	public float getActualPrice() {
+		return actualPrice;
+	}
+	public void setActualPrice(float actualPrice) {
+		this.actualPrice = actualPrice;
+	}
+	public float getTax() {
+		return tax;
+	}
+	public void setTax(float tax) {
+		this.tax = tax;
+	}
 }

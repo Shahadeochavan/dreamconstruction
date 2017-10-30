@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -112,8 +113,11 @@ public class UserController {
 		User user2 = userservice.getUserByUserId(user.getUserid());
 
 		try {
+			//BasicConfigurator.configure();
 			logger.error(messageSource.getMessage(ERPConstants.COUNT, null,
 					null));
+			logger.warn("this warnning message");
+			logger.info("this is infom");
 			if (user2 != null && authenticate(user, user2)) {
 				Usertype usertype = userTypeService.getEntityById(
 						Usertype.class, user2.getUsertype().getId());

@@ -1,11 +1,14 @@
 package com.nextech.systeminventory.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.systeminventory.dto.ClientDTO;
 import com.nextech.systeminventory.dto.ProductInventoryDTO;
 import com.nextech.systeminventory.dto.ProductInvetoryMultipleData;
 import com.nextech.systeminventory.model.Productinventory;
@@ -26,12 +30,14 @@ import com.nextech.systeminventory.model.Productinventoryhistory;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
+import com.nextech.systeminventory.pdfClass.ProductOrderPdf;
 import com.nextech.systeminventory.service.ProductinventoryService;
 import com.nextech.systeminventory.service.ProductinventoryhistoryService;
 import com.nextech.systeminventory.service.ProductorderService;
 import com.nextech.systeminventory.service.ProductorderassociationService;
 import com.nextech.systeminventory.service.StatusService;
 import com.nextech.systeminventory.status.UserStatus;
+import com.nextech.systeminventory.util.PDFToByteArrayOutputStreamUtil;
 
 
 @Controller
@@ -181,4 +187,6 @@ public class ProductStoreInAndOut {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
+	
+
 }

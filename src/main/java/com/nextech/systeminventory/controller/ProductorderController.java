@@ -1,10 +1,13 @@
 package com.nextech.systeminventory.controller;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -23,15 +26,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.ClientDTO;
 import com.nextech.systeminventory.dto.ProductDTO;
 import com.nextech.systeminventory.dto.ProductOrderAssociationDTO;
 import com.nextech.systeminventory.dto.ProductOrderDTO;
+import com.nextech.systeminventory.dto.ProductOrderPDFData;
 import com.nextech.systeminventory.factory.ProductOrderAssoRequestResponseFactory;
 import com.nextech.systeminventory.factory.ProductOrderRequestResponseFactory;
 import com.nextech.systeminventory.model.Productinventory;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
+import com.nextech.systeminventory.pdfClass.ProductOrderPdf;
 import com.nextech.systeminventory.service.ClientService;
 import com.nextech.systeminventory.service.ProductService;
 import com.nextech.systeminventory.service.ProductinventoryService;
@@ -40,6 +46,8 @@ import com.nextech.systeminventory.service.ProductorderassociationService;
 import com.nextech.systeminventory.service.StatusService;
 import com.nextech.systeminventory.service.UserService;
 import com.nextech.systeminventory.status.UserStatus;
+import com.nextech.systeminventory.util.PDFToByteArrayOutputStreamUtil;
+
 import org.apache.log4j.Logger;
 
 @Controller
@@ -91,11 +99,11 @@ public class ProductorderController {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -119,15 +127,15 @@ public class ProductorderController {
 			
 			return new UserStatus(1,"Multiple Product Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -165,8 +173,6 @@ public class ProductorderController {
 	public @ResponseBody List<Productorder> getProductorder() {
 
 		List<Productorder> productorderList = null;
-		logger.error("this is list");
-		logger.info("this is error message");
 		try {
 			productorderList = productorderService
 					.getEntityList(Productorder.class);
@@ -201,12 +207,24 @@ public class ProductorderController {
 	
 	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<ProductOrderAssociationDTO> ProductOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
+		List<ProductOrderPDFData> productOrderPDFDatas = new ArrayList<ProductOrderPDFData>();
+		ClientDTO clientDTO = clientService.getClientDTOById(productOrderDTO.getClientId());
 		if (ProductOrderAssociationDTOs != null&& !ProductOrderAssociationDTOs.isEmpty()) {
 			for (ProductOrderAssociationDTO productOrderAssociationDTO : ProductOrderAssociationDTOs) {
+				ProductOrderPDFData productOrderPDFData = new ProductOrderPDFData();
 				productOrderAssociationDTO.setProductOrderId(productorder.getId());
+				ProductDTO  productDTO = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
+				productOrderPDFData.setProductPartNumber(productDTO.getPartNumber());
+				productOrderPDFData.setPricePerUnit(productDTO.getPricePerUnit());
+				productOrderPDFData.setQuantity(productOrderAssociationDTO.getQuantity());
+				productOrderPDFData.setActualPrice(productOrderDTO.getActualPrice());
+				productOrderPDFData.setTotalPrice(productOrderDTO.getTotalPrice());
+				productOrderPDFData.setTax(productOrderDTO.getTax());
+				productOrderPDFDatas.add(productOrderPDFData);
 				productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			}
 		}
+		createPdfProductOrder(request, response, productOrderPDFDatas, productOrderDTO, clientDTO);
 	}
 	
 	@RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -257,5 +275,23 @@ public class ProductorderController {
 			e.printStackTrace();
 		}
 		return productorderList;
+	}
+	
+	public void createPdfProductOrder(HttpServletRequest request, HttpServletResponse response,List<ProductOrderPDFData> productOrderPDFDatas,ProductOrderDTO productOrderDTO,ClientDTO client) throws IOException {
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+	    String fileName = "ProductOrder.pdf";
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+	    try {
+	    	ProductOrderPdf createPDFProductOrder = new ProductOrderPdf();
+	    	createPDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderPDFDatas,productOrderDTO,client);
+	 
+	       String productOrderPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+		   //emailNotificationProductOrder(notificationDTO, productOrderDatas, client, productOrderPdfFile, productOrderDTO);
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
 	}
 }

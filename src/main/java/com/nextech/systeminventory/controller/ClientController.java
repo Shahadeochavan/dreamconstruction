@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -39,6 +40,9 @@ public class ClientController {
 	
 	@Autowired
 	ProductorderService productorderService;
+	
+	@Autowired
+	static Logger logger = Logger.getLogger(ClientController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
@@ -67,11 +71,11 @@ public class ClientController {
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -93,7 +97,6 @@ public class ClientController {
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
 			ClientDTO oldClientInfo = clientService.getClientDTOById(clientDTO.getId());
-			System.out.println(oldClientInfo);
 			if(clientDTO.getCompanyName().equals(oldClientInfo.getCompanyName())){  	
 			} else { 
 				if (clientService.getClientByCompanyName(clientDTO.getCompanyName()) == null) {

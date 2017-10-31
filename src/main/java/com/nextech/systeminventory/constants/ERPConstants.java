@@ -29,6 +29,7 @@ public class ERPConstants {
    public static String TO_CHECK_QUANTITY_IN_PRODUCTINVENTORY="checkquantityInProductInventory";
    public static String STATUS_PRODUCT_ORDER_COMPLETE="productOrderComplete";
    public static String STATUS_PRODUCT_ORDER_INCOMPLETE="productOrderIncomplete";
+   public static String SESSION_EXPIRED="Session Expired! Please login again.";
 
 
 }

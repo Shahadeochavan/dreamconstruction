@@ -8,7 +8,6 @@ import com.nextech.systeminventory.model.Productinventoryhistory;
 
 @Repository
 @Transactional
-public class ProductinventoryhistoryDaoImpl extends SuperDaoImpl<Productinventoryhistory>
-		implements ProductinventoryhistoryDao {
+public class ProductinventoryhistoryDaoImpl extends SuperDaoImpl<Productinventoryhistory>implements ProductinventoryhistoryDao {
 
 }

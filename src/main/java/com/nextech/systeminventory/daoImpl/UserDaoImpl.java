@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.TypedQuery;
@@ -24,87 +22,48 @@ public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("userid", userid));
-		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> userRoot = criteria.from(User.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("userid"), userid),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<User> query = session.createQuery(criteria);
+		List<User> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 
 	@Override
 	public User getUserByEmail(String email) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("email", email));
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> userRoot = criteria.from(User.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("email"), email),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<User> query = session.createQuery(criteria);
+		List<User> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
 
 	@Override
 	public User getUserByMobile(String mobile) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("mobile", mobile));
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<User> criteria = builder.createQuery(User.class);
+		Root<User> userRoot = criteria.from(User.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("mobile"), mobile),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<User> query = session.createQuery(criteria);
+		List<User> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
 	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<User> getUserProfileByUserId(long id) throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("id", id));
-		return criteria.list();
-	}
-
-
-	@Override
-	public User getUserByFirstNamLastName(String firstName, String lastName)throws Exception {
-		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("firstName", firstName));
-		criteria.add(Restrictions.eq("lastName", lastName));
-		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
-	}
-
-	@Override
-	public User getEmailUserById(long id) throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("id", id));
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
-		
-	}
-
-	@Override
-	public User getUserByContact(String contact) throws Exception {
-		// TODO Auto-generated method stub
-		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(User.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("userid", contact));
-		System.out.println("UserDaoImpl session closed session.isOpen() : " + session.isOpen() + " sessionFactory.isOpen() : " + sessionFactory.isOpen());
-		User user = criteria.list().size() > 0 ? (User) criteria.list().get(0): null;
-		return user;
-	}
+	
 	@Override
 	public List<User> getMultipleUsersById(List<Long> ids) throws Exception {
 		session = sessionFactory.openSession();

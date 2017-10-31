@@ -36,34 +36,4 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 		return userdao.getUserByMobile(mobile);
 	}
 
-	@Override
-	public List<User> getUserProfileByUserId(long id) throws Exception {
-		// TODO Auto-generated method stub
-		return userdao.getUserProfileByUserId(id);
-	}
-
-	@Override
-	public User getUserByFirstNamLastName(String firstName,String lastName) throws Exception {
-		// TODO Auto-generated method stub
-		return userdao.getUserByFirstNamLastName(firstName, lastName);
-	}
-
-	@Override
-	public User getUserByNotifictionId(long notificatinId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public User getEmailUserById(long id) throws Exception {
-		// TODO Auto-generated method stub
-		return userdao.getEmailUserById(id);
-	}
-
-	@Override
-	public User getUserByContact(String contact) throws Exception {
-		// TODO Auto-generated method stub
-		return userdao.getUserByContact(contact);
-	}
-	
 }

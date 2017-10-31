@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -89,18 +88,18 @@ public class UserController {
 				new UserStatus(0, "User is not authenticated.");
 			}
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (AuthenticationException authException) {
 
 			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -230,18 +229,6 @@ public class UserController {
 			e.printStackTrace();
 		}
 		return userList;
-	}
-
-	@RequestMapping(value = "userProfile/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<User> getUserProfile(@PathVariable("id") long id) {
-
-		List<User> userProfileList = null;
-		try {
-			userProfileList = userservice.getUserProfileByUserId(id);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return userProfileList;
 	}
 
 	/* Delete an object from DB in Spring Restful Services */

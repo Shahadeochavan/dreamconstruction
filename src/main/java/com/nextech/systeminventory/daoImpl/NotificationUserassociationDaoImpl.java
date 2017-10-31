@@ -20,9 +20,7 @@ public class NotificationUserassociationDaoImpl extends
 
 
 	@Override
-	public List<Notificationuserassociation> getNotificationuserassociationByUserId(
-			long userId) throws Exception {
-		
+	public List<Notificationuserassociation> getNotificationuserassociationByUserId(long userId) throws Exception {
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notificationuserassociation> criteria = builder.createQuery(Notificationuserassociation.class);
@@ -43,5 +41,4 @@ public class NotificationUserassociationDaoImpl extends
 		TypedQuery<Notificationuserassociation> query = session.createQuery(criteria);
 		return query.getResultList();
 	}
-
 }

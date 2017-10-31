@@ -2,8 +2,11 @@ package com.nextech.systeminventory.daoImpl;
 
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Restrictions;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,35 +20,41 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 	@Override
 	public Product getProductByName(String productname) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Product.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("name", productname));
-		Product product = criteria.list().size() > 0 ? (Product) criteria.list().get(0) : null;
-		return product;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
+		Root<Product> userRoot = criteria.from(Product.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("name"), productname),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Product> query = session.createQuery(criteria);
+		  List<Product> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 	@Override
 	public Product getProductByPartNumber(String partNumber) throws Exception {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Product.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.eq("partNumber", partNumber));
-		Product product = criteria.list().size() > 0 ? (Product) criteria.list().get(0) : null;
-		return product;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
+		Root<Product> userRoot = criteria.from(Product.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("partNumber"), partNumber),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Product> query = session.createQuery(criteria);
+		  List<Product> list = query.getResultList();
+		  if (list.isEmpty()) {
+		        return null;
+		    }
+		    return list.get(0);
 	}
 
 	@Override
 	public List<Product> getProductList(List<Long> productIdList) {
 		session = sessionFactory.openSession();
-		@SuppressWarnings("deprecation")
-		Criteria criteria = session.createCriteria(Product.class);
-		criteria.add(Restrictions.eq("isactive", true));
-		criteria.add(Restrictions.in("id", productIdList));
-		@SuppressWarnings("unchecked")
-		List<Product> products = criteria.list().size() > 0 ? (List<Product>) criteria.list() : null;
-		return products;
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
+		Root<Product> userRoot  = criteria.from(Product.class);
+		criteria.select(userRoot).where(userRoot.in(productIdList));
+		TypedQuery<Product> query = session.createQuery(criteria);
+		return query.getResultList();
 	}
-
 }

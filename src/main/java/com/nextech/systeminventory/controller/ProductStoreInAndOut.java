@@ -1,17 +1,15 @@
 package com.nextech.systeminventory.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.systeminventory.dto.ClientDTO;
 import com.nextech.systeminventory.dto.ProductInventoryDTO;
 import com.nextech.systeminventory.dto.ProductInvetoryMultipleData;
 import com.nextech.systeminventory.model.Productinventory;
@@ -30,14 +27,12 @@ import com.nextech.systeminventory.model.Productinventoryhistory;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
-import com.nextech.systeminventory.pdfClass.ProductOrderPdf;
 import com.nextech.systeminventory.service.ProductinventoryService;
 import com.nextech.systeminventory.service.ProductinventoryhistoryService;
 import com.nextech.systeminventory.service.ProductorderService;
 import com.nextech.systeminventory.service.ProductorderassociationService;
 import com.nextech.systeminventory.service.StatusService;
 import com.nextech.systeminventory.status.UserStatus;
-import com.nextech.systeminventory.util.PDFToByteArrayOutputStreamUtil;
 
 
 @Controller
@@ -59,6 +54,9 @@ public class ProductStoreInAndOut {
 	
 	@Autowired
 	ProductinventoryhistoryService productinventoryhistoryService;
+	
+	@Autowired
+	static Logger logger = Logger.getLogger(ProductStoreInAndOut.class);
 	
 	private static final int STATUS_PRODUCT_ORDER_INCOMPLETE = 76;
 	private static final int STATUS_PRODUCT_ORDER_COMPLETE = 75;
@@ -84,15 +82,15 @@ public class ProductStoreInAndOut {
 			}
 			return new UserStatus(1, "Product Inventory Store Out added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -174,15 +172,15 @@ public class ProductStoreInAndOut {
 			}
 			return new UserStatus(1, "Product Inventory Store In Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error("Inside PersistenceException");
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error("Inside Exception");
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}

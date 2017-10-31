@@ -36,7 +36,6 @@ public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements N
 	@Override
 	public Notification getNotificationByCode(String code) throws Exception {
 		
-		
 		session = sessionFactory.openSession();
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Notification> criteria = builder.createQuery(Notification.class);
@@ -49,5 +48,4 @@ public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements N
 		    }
 		    return list.get(0);
 	}
-
 }

@@ -23,7 +23,7 @@ public class NotificationRequestResponseFactory {
 		status.setId(notificationDTO.getStatus1().getId());
 		notification.setStatus1(status);
 		notification.setStatus2(status);
-		notification.setCode(notificationDTO.getCode());
+	//	notification.setCode(notificationDTO.getCode());
 		return notification;
 	}
 	
@@ -46,7 +46,7 @@ public class NotificationRequestResponseFactory {
 		notificationDTO.setCreatedDate(notification.getCreatedDate());
 		notificationDTO.setUpdatedBy(notification.getUpdatedBy());
 		notificationDTO.setUpdatedDate(notification.getUpdatedDate());
-		notificationDTO.setCode(notification.getCode());
+		//notificationDTO.setCode(notification.getCode());
 		return notificationDTO;
 	}
 }

@@ -12,9 +12,9 @@
 								${invoiceNumber},</p>
 							<p style="font-weight: bold;">From :</p>
 							<div>${mailfrom},</div>
-							<div>Office:18,3rd Floor Vasantika Aparment</div>
-							<div>S.No,47/6B,Opp.yena Banglow beside,manglam chemmbers,</div>
-							<div>Paud Road,kothrud pune:411038</div>
+							<div>At-Shinde,Post:Vasuli</div>
+							<div>Chakan Industrial Area,</div>
+							<div>Phase2,Tal-khed Pune 410501</div>
 						</td>
 					</tr>
 				</table>
@@ -41,7 +41,7 @@
 						<td align="left">
 
 							<p style="font-weight: bold;">Hello ${companyName},</p>
-							   <p>Greetings from E.K. ELECTRONICS PVT.LTD!</p>
+							   <p>Greetings from Altan Enterprise!</p>
 						</td>
 					</tr>
 					<tr>
@@ -60,7 +60,7 @@
 											</tr>
 											#set ( $row = 1 ) 
 											#set ( $productSubtotal = 0) 
-											#foreach ($productOrderData in $productOrderDatas ) 
+											#foreach ($productOrderPDFData in $productOrderPDFDatas ) 
 												#if ( $row % 2 == 0 ) 
 													#set ($color="#CBDCFF") 
 												#else 
@@ -69,19 +69,28 @@
 											<tr>
 											<tr bgcolor="$color">
 												<td align="left">$row</td>
-												<td align="left">$productOrderData.productName</td>
-												<td align="center">$productOrderData.quantity</td>
-												<td align="center">$productOrderData.rate</td>
+												<td align="left">$productOrderPDFData.productPartNumber</td>
+												<td align="center">$productOrderPDFData.quantity</td>
+												<td align="center">$productOrderPDFData.pricePerUnit</td>
 												<td align="center">#set ( $productOrderDataTotal =
-													$productOrderData.rate * $productOrderData.quantity )
+													$productOrderPDFData.pricePerUnit * $productOrderPDFData.quantity )
 													$productOrderDataTotal</td>
 											</tr>
 												#set ( $productSubtotal = $productSubtotal + $productOrderDataTotal ) 
 												#set ( $row = $row + 1 ) 
 											#end
 											<tr bgcolor="#E3EEFF">
-												<td colspan="4" align="left"><strong> Total </strong> </td>
+												<td colspan="4" align="left"><strong> Sub Total </strong> </td>
 												<td align="center">$productSubtotal</td> 
+											</tr>
+												<tr bgcolor="#E3EEFF">
+												<td colspan="4" align="left"><strong> Tax </strong> </td>
+												<td align="center">${tax}</td> 
+											</tr>
+											</tr>
+												<tr bgcolor="#E3EEFF">
+												<td colspan="4" align="left"><strong> Total </strong> </td>
+												<td align="center">${totalPrice}</td> 
 											</tr>
 										</table>
 										<div style align="left">

@@ -27,18 +27,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.dto.ClientDTO;
+import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.ProductDTO;
 import com.nextech.systeminventory.dto.ProductOrderAssociationDTO;
 import com.nextech.systeminventory.dto.ProductOrderDTO;
 import com.nextech.systeminventory.dto.ProductOrderPDFData;
+import com.nextech.systeminventory.dto.StatusDTO;
+import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.factory.ProductOrderAssoRequestResponseFactory;
 import com.nextech.systeminventory.factory.ProductOrderRequestResponseFactory;
+import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Productinventory;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
 import com.nextech.systeminventory.pdfClass.ProductOrderPdf;
 import com.nextech.systeminventory.service.ClientService;
+import com.nextech.systeminventory.service.MailService;
+import com.nextech.systeminventory.service.NotificationService;
 import com.nextech.systeminventory.service.ProductService;
 import com.nextech.systeminventory.service.ProductinventoryService;
 import com.nextech.systeminventory.service.ProductorderService;
@@ -80,6 +86,12 @@ public class ProductorderController {
 	
 	@Autowired
 	static Logger logger = Logger.getLogger(ProductorderController.class);
+	
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	NotificationService notificationService;
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -209,6 +221,7 @@ public class ProductorderController {
 		List<ProductOrderAssociationDTO> ProductOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
 		List<ProductOrderPDFData> productOrderPDFDatas = new ArrayList<ProductOrderPDFData>();
 		ClientDTO clientDTO = clientService.getClientDTOById(productOrderDTO.getClientId());
+		productOrderDTO.setStatusId(productorder.getStatus().getId());
 		if (ProductOrderAssociationDTOs != null&& !ProductOrderAssociationDTOs.isEmpty()) {
 			for (ProductOrderAssociationDTO productOrderAssociationDTO : ProductOrderAssociationDTOs) {
 				ProductOrderPDFData productOrderPDFData = new ProductOrderPDFData();
@@ -289,9 +302,19 @@ public class ProductorderController {
 	    	createPDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderPDFDatas,productOrderDTO,client);
 	 
 	       String productOrderPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
-		   //emailNotificationProductOrder(notificationDTO, productOrderDatas, client, productOrderPdfFile, productOrderDTO);
+	 	   StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId());
+		   NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
+		   emailNotificationProductOrder(notificationDTO, productOrderPDFDatas, client, productOrderPdfFile, productOrderDTO);
 	    } catch (Exception e1) {
 	        e1.printStackTrace();
 	    }
+	}
+	private void emailNotificationProductOrder(NotificationDTO notification,List<ProductOrderPDFData> productOrderPDFDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
+		 Mail mail = mailService.setMailCCBCCAndTO(notification);
+	    String userEmailCC = mail.getMailCc()+","+client.getEmailId();
+	    mail.setMailCc(userEmailCC);
+	    mail.setAttachment(fileName);
+       mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderPDFDatas, client, productOrderDTO));
+       mailService.sendEmail(mail,notification);
 	}
 }

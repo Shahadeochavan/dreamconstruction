@@ -33,6 +33,8 @@
 				<value>com.nextech.systeminventory.model.Productorder</value>
 				<value>com.nextech.systeminventory.model.Productorderassociation</value>
 				<value>com.nextech.systeminventory.model.Client</value>
+				<value>com.nextech.systeminventory.model.Notification</value>
+				<value>com.nextech.systeminventory.model.Notificationuserassociation</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

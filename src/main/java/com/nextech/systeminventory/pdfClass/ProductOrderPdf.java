@@ -184,17 +184,16 @@ public class ProductOrderPdf {
 	     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bf123);
 	     insertCell(table, (Float.toString(productOrderDTO.getTax())), Element.ALIGN_RIGHT, 1, bf123);
 	     insertCell(table, "Total Invoice in fig", Element.ALIGN_RIGHT, 3, bf123);
-	     int totalTax= (int) (productOrderDTO.getTotalPrice());
-	     int totalFinal = (int) (totalTax+productOrderDTO.getTax());
-	     double d3 =totalFinal;
+	     int totalPrice= (int) (productOrderDTO.getTotalPrice());
+	     double d3 =totalPrice;
 		 String    finalAns= String.format("%.01f", d3);
 	     insertCell(table, finalAns, Element.ALIGN_RIGHT, 1, bf123);
 	     document.add(table);
-			if(totalFinal <= 0)   {                
+			if(totalPrice <= 0)   {                
 				System.out.println("Enter numbers greater than 0");
 			} else {
 				
-		 String  totalTaxInWord = calculationInWord(totalFinal);
+		 String  totalTaxInWord = calculationInWord(totalPrice);
 		 float[] invoiceValueColumnwidth = {69f,31f};
 	     PdfPTable invoiceValueTable = new PdfPTable(invoiceValueColumnwidth);
 	     invoiceValueTable.setWidthPercentage(100);

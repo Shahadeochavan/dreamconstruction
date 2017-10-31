@@ -13,6 +13,7 @@ public class ProductOrderDTO extends AbstractDTO {
 	private float totalPrice;
 	private float actualPrice;
 	private float tax;
+	private long statusId;
 	
 	private List<ProductOrderAssociationDTO> productOrderAssociationDTOs;
 	
@@ -66,4 +67,11 @@ public class ProductOrderDTO extends AbstractDTO {
 	public void setTax(float tax) {
 		this.tax = tax;
 	}
+	public long getStatusId() {
+		return statusId;
+	}
+	public void setStatusId(long statusId) {
+		this.statusId = statusId;
+	}
+	
 }

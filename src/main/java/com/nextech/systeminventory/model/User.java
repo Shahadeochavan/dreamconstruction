@@ -7,7 +7,11 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Date;
+import java.util.List;
 import java.sql.Timestamp;
 
 
@@ -73,6 +77,10 @@ public class User implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="usertypeid")
 	private Usertype usertype;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Notificationuserassociation> notificationuserassociations;
 
 	public User() {
 	}
@@ -198,5 +206,26 @@ public class User implements Serializable {
 
 	public void setUsertype(Usertype usertype) {
 		this.usertype = usertype;
+	}
+	public List<Notificationuserassociation> getNotificationuserassociations() {
+		return this.notificationuserassociations;
+	}
+
+	public void setNotificationuserassociations(List<Notificationuserassociation> notificationuserassociations) {
+		this.notificationuserassociations = notificationuserassociations;
+	}
+
+	public Notificationuserassociation addNotificationuserassociation(Notificationuserassociation notificationuserassociation) {
+		getNotificationuserassociations().add(notificationuserassociation);
+		notificationuserassociation.setUser(this);
+
+		return notificationuserassociation;
+	}
+
+	public Notificationuserassociation removeNotificationuserassociation(Notificationuserassociation notificationuserassociation) {
+		getNotificationuserassociations().remove(notificationuserassociation);
+		notificationuserassociation.setUser(null);
+
+		return notificationuserassociation;
 	}
 }

@@ -53,14 +53,11 @@ public class ProductController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if (productService.getProductByName(productDTO.getName()) == null) {
-
-			} else {
-				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
+			if (productService.getProductByName(productDTO.getName()) != null) {
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME_SHOULD_BE_UNIQUE, null, null));
 			}
-			if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
-			} else {
-				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
+			if (productService.getProductByPartNumber(productDTO.getPartNumber()) != null) {
+				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER_SHOULD_BE_UNIQUE, null, null));
 			}
 			long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO));
 			Product product = productService.getEntityById(Product.class, id);
@@ -95,20 +92,18 @@ public class ProductController {
 	public @ResponseBody UserStatus updateProduct(@RequestBody ProductDTO productDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			ProductDTO oldProductInfo = productService.getProductDTO(productDTO.getId());
-			if(productDTO.getName().equals(oldProductInfo.getName())){ 	
-				} else { 
-					if (productService.getProductByName(productDTO.getName()) == null) {
-				    }else{  
-				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME, null, null));
+			  if(!productDTO.getName().equals(oldProductInfo.getName())){ 	
+			     if (productService.getProductByName(productDTO.getName()) != null) {
+				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME_SHOULD_BE_UNIQUE, null, null));
+			    	}
+				 }
+			
+	            if(!productDTO.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
+					if (productService.getProductByPartNumber(productDTO.getPartNumber()) != null) {
+				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER_SHOULD_BE_UNIQUE, null, null));
 					}
 				 }
-	            if(productDTO.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
-				} else { 
-					if (productService.getProductByPartNumber(productDTO.getPartNumber()) == null) {
-				    }else{  
-				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER, null, null));
-					}
-				 }
+	            
 			productService.updateEntity(ProductRequestResponseFactory.setProduct(productDTO));
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
@@ -148,6 +143,4 @@ public class ProductController {
 		productinventory.setIsactive(true);
 		productinventoryService.addEntity(productinventory);
 	}
-	
-	
 }

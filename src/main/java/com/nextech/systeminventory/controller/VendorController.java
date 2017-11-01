@@ -51,13 +51,11 @@ public class VendorController {
 						.getDefaultMessage());
 			}
 
-			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
-			} else {
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+			if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) != null) {
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_SHOULD_BE_UNIQUE, null, null));
 			}
-			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
-			} else {
-				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+			if (vendorService.getVendorByEmail(vendorDTO.getEmail()) != null) {
+				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 			}
 			vendorService.addEntity(VendorFactory.setVendor(vendorDTO));
 			return new UserStatus(1, "vendor added Successfully !");
@@ -88,18 +86,16 @@ public class VendorController {
 	public @ResponseBody UserStatus updateVendor(@RequestBody VendorDTO vendorDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			VendorDTO oldVendorInfo = vendorService.getVendorById(vendorDTO.getId());
-			if(vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
-			} else { 
-				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) == null) {
-			    }else{  
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_EXIT, null, null));
+			
+			if(!vendorDTO.getCompanyName().equals(oldVendorInfo.getCompanyName())){  	
+				if (vendorService.getVendorByCompanyName(vendorDTO.getCompanyName()) != null) {
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.COMPANY_NAME_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
-            if(vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
-			} else { 
-				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) == null) {
-			    }else{  
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+			
+            if(!vendorDTO.getEmail().equals(oldVendorInfo.getEmail())){  	
+				if (vendorService.getVendorByEmail(vendorDTO.getEmail()) != null) {
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
             vendorService.updateEntity( VendorFactory.setVendor(vendorDTO));

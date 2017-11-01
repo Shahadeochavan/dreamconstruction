@@ -62,21 +62,14 @@ public class UserController {
 						.getDefaultMessage());
 			}
 			if ((Boolean) request.getAttribute("auth_token")) {
-				if (userservice.getUserByUserId(user.getUserid()) == null) {
-
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.USER_ID, null, null));
+				if (userservice.getUserByUserId(user.getUserid()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
 				}
-				if (userservice.getUserByEmail(user.getEmail()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+				if (userservice.getUserByEmail(user.getEmail()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
-				if (userservice.getUserByMobile(user.getMobile()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+				if (userservice.getUserByMobile(user.getMobile()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_SHOULD_BE_UNIQUE, null, null));
 				}
 				user.setIsactive(true);
 				//user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
@@ -187,26 +180,19 @@ public class UserController {
 	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			User oldUserInfo = userservice.getEntityById(User.class, user.getId());
-			if(user.getUserid().equals(oldUserInfo.getUserid())){  
-			} else { 
-				if (userservice.getUserByUserId(user.getUserid()) == null) {
-			    }else{  
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID, null, null));
+			if(!user.getUserid().equals(oldUserInfo.getUserid())){  
+				if (userservice.getUserByUserId(user.getUserid()) != null) {
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
-            if(user.getEmail().equals(oldUserInfo.getEmail())){  
-			} else { 
-				if (userservice.getUserByEmail(user.getEmail()) == null) {
-			    }else{  
-				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_ALREADY_EXIT, null, null));
+            if(!user.getEmail().equals(oldUserInfo.getEmail())){  
+				if (userservice.getUserByEmail(user.getEmail()) != null) {
+				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }           
-			if (user.getMobile().equals(oldUserInfo.getMobile())) {
-			} else {
-				if (userservice.getUserByMobile(user.getMobile()) == null) {
-				} else {
-					return new UserStatus(2, messageSource.getMessage(
-							ERPConstants.CONTACT_NUMBER_EXIT, null, null));
+			if (!user.getMobile().equals(oldUserInfo.getMobile())) {
+				if (userservice.getUserByMobile(user.getMobile()) != null) {
+					return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_SHOULD_BE_UNIQUE, null, null));
 				}
 			}
 			user.setIsactive(true);

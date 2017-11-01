@@ -41,6 +41,5 @@ public class PageDaoImpl extends SuperDaoImpl<Page> implements PageDao{
 		    }
 		    return list.get(0);
 	}
-
 }
 

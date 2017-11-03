@@ -7,6 +7,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.nextech.systeminventory.dao.NotificationDao;
@@ -16,6 +20,11 @@ import com.nextech.systeminventory.model.Notification;
 @Repository
 
 public class NotificationDaoImpl extends SuperDaoImpl<Notification> implements NotificationDao{
+	
+	@Autowired
+	SessionFactory sessionFactory;
+	Session session = null;
+	Transaction tx = null;
 
 	@Override
 	public Notification getNotifiactionByStatus(long statusId) throws Exception {

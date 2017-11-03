@@ -44,20 +44,17 @@ public class User implements Serializable {
 	@Size(min = 2, max = 255, message = "{Email sholud be greater than 2 or less than 255 characters}")
 	private String email;
 
-	@NotBlank(message="{first Name should not be blank}")
-	@Size(min = 2, max = 255, message = "{first Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="first_name")
 	private String firstName;
 
 	private boolean isactive;
 
-	@NotBlank(message="{last Name should not be blank}")
-	@Size(min = 2, max = 255, message = "{last Name sholud be greater than 2 or less than 255 characters}")
 	@Column(name="last_name")
 	private String lastName;
 
-	@Size(min = 10, max = 10, message = "{contact number should be 10 digits}")
 	private String mobile;
+	
+	private String gender;
 
 	@NotBlank(message="{password should not be blank}")
 	@Size(min = 5, max = 255, message = "{password sholud be greater than 5 or less than 255 characters or digits}")
@@ -228,4 +225,11 @@ public class User implements Serializable {
 
 		return notificationuserassociation;
 	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+	
 }

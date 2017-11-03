@@ -8,6 +8,7 @@ import com.nextech.systeminventory.dto.ClientDTO;
 import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.ProductOrderDTO;
 import com.nextech.systeminventory.dto.ProductOrderPDFData;
+import com.nextech.systeminventory.dto.UserDTO;
 
 
 public class MailResponseRequestFactory {
@@ -25,6 +26,16 @@ public class MailResponseRequestFactory {
 	        model.put("address", clientDTO.getAddress());
 	        model.put("signature", "www.NextechServices.in");
 	        return model;
+	}
+	
+	public static Map<String, Object> setMailDetailsUser(UserDTO userDTO) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("email", userDTO.getEmailId());
+		model.put("userId", userDTO.getUserId());
+		model.put("password", userDTO.getPassword());
+		model.put("location", "Pune");
+		model.put("signature", "www.NextechServices.in");
+		return model;
 	}
 	
 }

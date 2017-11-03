@@ -25,10 +25,16 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.NotificationDTO;
+import com.nextech.systeminventory.dto.UserDTO;
+import com.nextech.systeminventory.factory.MailResponseRequestFactory;
+import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Page;
 import com.nextech.systeminventory.model.User;
 import com.nextech.systeminventory.model.Usertype;
 import com.nextech.systeminventory.model.Usertypepageassociation;
+import com.nextech.systeminventory.service.MailService;
+import com.nextech.systeminventory.service.NotificationService;
 import com.nextech.systeminventory.service.UserService;
 import com.nextech.systeminventory.service.UserTypeService;
 import com.nextech.systeminventory.service.UsertypepageassociationService;
@@ -52,6 +58,12 @@ public class UserController {
 	
 	@Autowired
 	static Logger logger = Logger.getLogger(UserController.class);
+	
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	NotificationService notificationService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
@@ -61,7 +73,7 @@ public class UserController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			if ((Boolean) request.getAttribute("auth_token")) {
+
 				if (userservice.getUserByUserId(user.getUserid()) != null) {
 					return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
 				}
@@ -73,13 +85,22 @@ public class UserController {
 				}
 				user.setIsactive(true);
 				//user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				userservice.addEntity(user);
+				Usertype usertype =  new Usertype();
+				usertype.setId(10);
+				user.setUsertype(usertype);
+				UserDTO userDTO =  new UserDTO();
+				userDTO.setUserId(user.getUserid());
+				userDTO.setEmailId(user.getEmail());
+				userDTO.setPassword(user.getPassword());
 
+				userservice.addEntity(user);
+				
+				
 				//TODO sending the email for new user from admin
+				//NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+				//emailNotificationUser(userDTO, request, response,notificationDTO);
 				return new UserStatus(1, "User added Successfully !");
-			} else {
-				new UserStatus(0, "User is not authenticated.");
-			}
+			
 		} catch (ConstraintViolationException cve) {
 			logger.error("Inside ConstraintViolationException");
 			cve.printStackTrace();
@@ -96,7 +117,6 @@ public class UserController {
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
-		return new UserStatus(0, "User is not authenticated.");
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST, headers = "Accept=application/json")
@@ -205,6 +225,23 @@ public class UserController {
 		}
 	}
 	
+	@CrossOrigin(origins = "http://localhost:8080")
+	@RequestMapping(value = "/forgotPassword", method = RequestMethod.POST, headers = "Accept=application/json")
+	public @ResponseBody UserStatus forgotPassWord(@RequestBody UserDTO userDTO,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			UserDTO user2 = userservice.getUserByEmail(userDTO.getEmailId());
+			if(user2==null){
+				return new UserStatus(0,"Please enter registred email with inventory");
+			}
+			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+			emailNotificationUser(user2, request, response, notificationDTO);
+			return new UserStatus(1, "Please check your email ! you have send password on your email");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new UserStatus(0, e.toString());
+		}
+	}
+	
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<User> getUser() {
 
@@ -230,5 +267,14 @@ public class UserController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	private void emailNotificationUser(UserDTO userDTO,HttpServletRequest request, HttpServletResponse response,NotificationDTO notificationDTO) throws NumberFormatException,Exception {
+		Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+		String mailSubject  = mailService.getSubject(notificationDTO);
+		String userEmailTo = mail.getMailTo() + "," + userDTO.getEmailId();
+		mail.setMailSubject(mailSubject);
+		mail.setMailTo(userEmailTo);
+		mail.setModel(MailResponseRequestFactory.setMailDetailsUser(userDTO));
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

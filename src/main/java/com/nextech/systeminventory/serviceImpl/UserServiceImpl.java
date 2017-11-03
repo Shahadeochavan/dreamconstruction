@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import com.nextech.systeminventory.dao.UserDao;
+import com.nextech.systeminventory.dto.UserDTO;
+import com.nextech.systeminventory.factory.UserFactory;
 import com.nextech.systeminventory.model.User;
 import com.nextech.systeminventory.service.UserService;
 @Service
@@ -27,8 +29,13 @@ public class UserServiceImpl extends CRUDServiceImpl<User> implements UserServic
 	}
 
 	@Override
-	public User getUserByEmail(String email) throws Exception {
-		return userdao.getUserByEmail(email);
+	public UserDTO getUserByEmail(String email) throws Exception {
+		User user = userdao.getUserByEmail(email);
+		if(user==null){
+			return null;
+		}
+		UserDTO userDTO = UserFactory.setUserList(user);
+		return userDTO;
 	}
 
 	@Override

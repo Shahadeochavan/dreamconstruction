@@ -28,6 +28,7 @@ import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.UserDTO;
 import com.nextech.systeminventory.factory.MailResponseRequestFactory;
+import com.nextech.systeminventory.factory.UserFactory;
 import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Page;
 import com.nextech.systeminventory.model.User;
@@ -66,7 +67,7 @@ public class UserController {
 	NotificationService notificationService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUser(@Valid @RequestBody User user,
+	public @ResponseBody UserStatus addUser(@Valid @RequestBody UserDTO userDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
@@ -74,31 +75,21 @@ public class UserController {
 						.getDefaultMessage());
 			}
 
-				if (userservice.getUserByUserId(user.getUserid()) != null) {
+				if (userservice.getUserByUserId(userDTO.getUserId()) != null) {
 					return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
 				}
-				if (userservice.getUserByEmail(user.getEmail()) != null) {
+				if (userservice.getUserByEmail(userDTO.getEmailId()) != null) {
 					return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
-				if (userservice.getUserByMobile(user.getMobile()) != null) {
+				if (userservice.getUserByMobile(userDTO.getMobileNo()) != null) {
 					return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_SHOULD_BE_UNIQUE, null, null));
 				}
-				user.setIsactive(true);
-				//user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-				Usertype usertype =  new Usertype();
-				usertype.setId(10);
-				user.setUsertype(usertype);
-				UserDTO userDTO =  new UserDTO();
-				userDTO.setUserId(user.getUserid());
-				userDTO.setEmailId(user.getEmail());
-				userDTO.setPassword(user.getPassword());
-
-				userservice.addEntity(user);
-				
+			
+				userservice.addEntity(UserFactory.setUser(userDTO, request));	
 				
 				//TODO sending the email for new user from admin
-				//NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
-				//emailNotificationUser(userDTO, request, response,notificationDTO);
+				NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_ADD_NOTIFICATION, null, null)));
+				emailNotificationUser(userDTO, request, response,notificationDTO);
 				return new UserStatus(1, "User added Successfully !");
 			
 		} catch (ConstraintViolationException cve) {
@@ -128,8 +119,6 @@ public class UserController {
 			//BasicConfigurator.configure();
 			logger.error(messageSource.getMessage(ERPConstants.COUNT, null,
 					null));
-			logger.warn("this warnning message");
-			logger.info("this is infom");
 			if (user2 != null && authenticate(user, user2)) {
 				Usertype usertype = userTypeService.getEntityById(
 						Usertype.class, user2.getUsertype().getId());

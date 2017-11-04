@@ -228,7 +228,7 @@ public class ProductorderController {
 				productOrderAssociationDTO.setProductOrderId(productorder.getId());
 				ProductDTO  productDTO = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
 				productOrderPDFData.setProductPartNumber(productDTO.getPartNumber());
-				productOrderPDFData.setPricePerUnit(productDTO.getPricePerUnit());
+				productOrderPDFData.setPricePerUnit(Float.valueOf(productDTO.getPricePerUnit()));
 				productOrderPDFData.setQuantity(productOrderAssociationDTO.getQuantity());
 				productOrderPDFData.setActualPrice(productOrderDTO.getActualPrice());
 				productOrderPDFData.setTotalPrice(productOrderDTO.getTotalPrice());

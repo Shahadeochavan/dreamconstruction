@@ -40,7 +40,7 @@ public class Product implements Serializable {
 
 	private boolean isactive;
 	
-	private long pricePerUnit;
+	private float pricePerUnit;
 
 	@Size(min = 2, max = 255, message = "{Name sholud be greater than 2 or less than 255 characters}")
 	private String name;
@@ -178,12 +178,12 @@ public class Product implements Serializable {
 		return productinventory;
 	}
 
-	public long getPricePerUnit() {
+	public float getPricePerUnit() {
 		return pricePerUnit;
 	}
 
-	public void setPricePerUnit(long pricePerUnit) {
+	public void setPricePerUnit(float pricePerUnit) {
 		this.pricePerUnit = pricePerUnit;
 	}
-	
+
 }

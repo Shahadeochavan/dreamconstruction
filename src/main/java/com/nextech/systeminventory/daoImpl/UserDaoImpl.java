@@ -4,8 +4,13 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -19,6 +24,10 @@ import com.nextech.systeminventory.model.User;
 @Transactional
 public class UserDaoImpl extends SuperDaoImpl<User> implements UserDao {
 
+	@Autowired
+	SessionFactory sessionFactory;
+	Session session = null;
+	Transaction tx = null;
 	@Override
 	public User getUserByUserId(String userid) throws Exception {
 		session = sessionFactory.openSession();

@@ -16,7 +16,7 @@ public class ProductRequestResponseFactory {
 		product.setPartNumber(productDTO.getPartNumber());
 		product.setName(productDTO.getName());
 		product.setIsactive(true);
-		product.setPricePerUnit(productDTO.getPricePerUnit());
+		product.setPricePerUnit(Float.valueOf(productDTO.getPricePerUnit()));
 		return product;
 	}
 
@@ -36,7 +36,7 @@ public class ProductRequestResponseFactory {
 	public static ProductDTO setProductDto(Product product){
 		ProductDTO productDTO = new ProductDTO();
 		productDTO.setId(product.getId());
-		productDTO.setPricePerUnit(product.getPricePerUnit());
+		productDTO.setPricePerUnit(String.valueOf(product.getPricePerUnit()));
 		productDTO.setClientPartNumber(product.getClientpartnumber());
 		productDTO.setDescription(product.getDescription());
 		productDTO.setDesign(product.getDesign());

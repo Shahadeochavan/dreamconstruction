@@ -18,16 +18,13 @@ public class UserFactory {
 		user.setId(userDTO.getId());
 		user.setUserid(userDTO.getUserId());
 		user.setPassword(userDTO.getPassword());
-		user.setFirstName(userDTO.getFirstName());
-		user.setLastName(userDTO.getLastName());
 		user.setMobile(userDTO.getMobileNo());
 		user.setDob(userDTO.getDob());
-		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
 		Usertype  usertype = new Usertype();
-		usertype.setId(userDTO.getUserTypeDTO().getId());
+		usertype.setId(10);
 		user.setUsertype(usertype);
-		user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		//user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
 		return user;
 	}

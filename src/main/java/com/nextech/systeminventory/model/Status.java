@@ -52,6 +52,12 @@ public class Status implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
 	private List<Productorder> productorders;
+	
+	//bi-directional many-to-one association to Purchase
+		@JsonIgnore
+		@OneToMany(fetch = FetchType.LAZY, mappedBy = "status", cascade = CascadeType.ALL)
+		private List<Purchase> purchases;
+
 
 	public Status() {
 	}
@@ -174,5 +180,26 @@ public class Status implements Serializable {
 		productorder.setStatus(null);
 
 		return productorder;
+	}
+	public List<Purchase> getPurchases() {
+		return this.purchases;
+	}
+
+	public void setPurchases(List<Purchase> purchases) {
+		this.purchases = purchases;
+	}
+
+	public Purchase addPurchas(Purchase purchas) {
+		getPurchases().add(purchas);
+		purchas.setStatus(this);
+
+		return purchas;
+	}
+
+	public Purchase removePurchas(Purchase purchas) {
+		getPurchases().remove(purchas);
+		purchas.setStatus(null);
+
+		return purchas;
 	}
 }

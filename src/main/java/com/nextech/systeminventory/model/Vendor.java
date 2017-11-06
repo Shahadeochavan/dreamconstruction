@@ -1,8 +1,14 @@
 package com.nextech.systeminventory.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.sql.Timestamp;
+import java.util.List;
+
 /**
  * The persistent class for the vendor database table.
  * 
@@ -72,6 +78,11 @@ public class Vendor implements Serializable {
 
 	@Column(name="vat_no")
 	private String vatNo;
+	
+	//bi-directional many-to-one association to PrVndrAssn
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
+	private List<PrVndrAssn> prVndrAssns;
 
 	public Vendor() {
 	}
@@ -260,5 +271,18 @@ public class Vendor implements Serializable {
 	public void setVatNo(String vatNo) {
 		this.vatNo = vatNo;
 	}
+	public List<PrVndrAssn> getPrVndrAssns() {
+		return this.prVndrAssns;
+	}
 
+	public void setPrVndrAssns(List<PrVndrAssn> prVndrAssns) {
+		this.prVndrAssns = prVndrAssns;
+	}
+
+	public PrVndrAssn addPrVndrAssn(PrVndrAssn prVndrAssn) {
+		getPrVndrAssns().add(prVndrAssn);
+		prVndrAssn.setVendor(this);
+
+		return prVndrAssn;
+	}
 }

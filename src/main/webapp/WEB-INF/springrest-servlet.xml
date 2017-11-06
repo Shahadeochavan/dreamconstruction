@@ -38,6 +38,9 @@
 				<value>com.nextech.systeminventory.model.Client</value>
 				<value>com.nextech.systeminventory.model.Notification</value>
 				<value>com.nextech.systeminventory.model.Notificationuserassociation</value>
+				<value>com.nextech.systeminventory.model.PrVndrAssn</value>
+				<value>com.nextech.systeminventory.model.PurchaseAssn</value>
+				<value>com.nextech.systeminventory.model.Purchase</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

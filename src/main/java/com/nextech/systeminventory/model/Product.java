@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 
+
 /**
  * The persistent class for the product database table.
  *
@@ -59,6 +60,10 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<Productinventory> productinventories;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+	private List<PrVndrAssn> prVndrAssns;
 
 
 	public Product() {
@@ -186,4 +191,25 @@ public class Product implements Serializable {
 		this.pricePerUnit = pricePerUnit;
 	}
 
+	public List<PrVndrAssn> getPrVndrAssns() {
+		return this.prVndrAssns;
+	}
+
+	public void setPrVndrAssns(List<PrVndrAssn> prVndrAssns) {
+		this.prVndrAssns = prVndrAssns;
+	}
+
+	public PrVndrAssn addPrVndrAssn(PrVndrAssn prVndrAssn) {
+		getPrVndrAssns().add(prVndrAssn);
+		prVndrAssn.setProduct(this);
+
+		return prVndrAssn;
+	}
+
+	public PrVndrAssn removePrVndrAssn(PrVndrAssn prVndrAssn) {
+		getPrVndrAssns().remove(prVndrAssn);
+		prVndrAssn.setProduct(null);
+
+		return prVndrAssn;
+	}
 }

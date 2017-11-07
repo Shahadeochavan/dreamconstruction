@@ -7,6 +7,7 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 
@@ -42,6 +43,9 @@ public class Purchase implements Serializable {
 
 	@Column(name="updated_date")
 	private Timestamp updatedDate;
+	
+	@Temporal(TemporalType.DATE)
+	private Date expecteddeliveryDate;
 
 	//bi-directional many-to-one association to Status
 	@ManyToOne
@@ -52,6 +56,10 @@ public class Purchase implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "purchase", cascade = CascadeType.ALL)
 	private List<PurchaseAssn> purchaseAssns;
+	
+	@ManyToOne
+	@JoinColumn(name="vendorId")
+	private Vendor vendor;
 
 	public Purchase() {
 	}
@@ -161,6 +169,22 @@ public class Purchase implements Serializable {
 		purchaseAssn.setPurchase(null);
 
 		return purchaseAssn;
+	}
+
+	public Date getExpecteddeliveryDate() {
+		return expecteddeliveryDate;
+	}
+
+	public void setExpecteddeliveryDate(Date expecteddeliveryDate) {
+		this.expecteddeliveryDate = expecteddeliveryDate;
+	}
+
+	public Vendor getVendor() {
+		return vendor;
+	}
+
+	public void setVendor(Vendor vendor) {
+		this.vendor = vendor;
 	}
 
 }

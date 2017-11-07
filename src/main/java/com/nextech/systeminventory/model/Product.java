@@ -64,6 +64,10 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<PrVndrAssn> prVndrAssns;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
+	private List<PurchaseAssn> purchaseAssns;
 
 
 	public Product() {
@@ -212,4 +216,13 @@ public class Product implements Serializable {
 
 		return prVndrAssn;
 	}
+
+	public List<PurchaseAssn> getPurchaseAssns() {
+		return purchaseAssns;
+	}
+
+	public void setPurchaseAssns(List<PurchaseAssn> purchaseAssns) {
+		this.purchaseAssns = purchaseAssns;
+	}
+	
 }

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.systeminventory.dto.PrVndrAssnDTO;
+import com.nextech.systeminventory.factory.PrVndrAssnRequestResponseFactory;
 import com.nextech.systeminventory.model.PrVndrAssn;
 import com.nextech.systeminventory.status.UserStatus;
 import com.nextech.systeminventory.service.PrVndrAssnService;
@@ -31,15 +33,17 @@ public class PrVndrAssnController {
 	PrVndrAssnService PrVndrAssnService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPrVndrAssn(@Valid @RequestBody PrVndrAssn prVndrAssn,
+	public @ResponseBody UserStatus addPrVndrAssn(@Valid @RequestBody PrVndrAssnDTO prVndrAssnDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			prVndrAssn.setIsactive(true);
-			PrVndrAssnService.addEntity(prVndrAssn);
+			if(PrVndrAssnService.getPrVndrAssnByVendorIdProductId(prVndrAssnDTO.getVendor().getId(), prVndrAssnDTO.getProduct().getId())!=null){
+			return new UserStatus(2,"Product vendor already exist");
+			}
+			PrVndrAssnService.addEntity(PrVndrAssnRequestResponseFactory.setPrVndrAssn(prVndrAssnDTO));
 			return new UserStatus(1, "PrVndrAssn added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -105,6 +109,22 @@ public class PrVndrAssnController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
+
+	}
+	
+	@RequestMapping(value = "productList/{vendorId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody UserStatus getProductByVendorId(@PathVariable("vendorId") long vendorId) {
+		List<PrVndrAssn> prVndrAssns =null;
+
+		try {
+			prVndrAssns = PrVndrAssnService.getPrVndrAssnByVendorId(vendorId);
+			if(prVndrAssns.isEmpty()){
+				return new UserStatus(1,"Please first you can do product vendor association");
+			}
+		} catch (Exception e) {
+			return new UserStatus(0, e.toString());
+		}
+		return new UserStatus(1,prVndrAssns);
 
 	}
 }

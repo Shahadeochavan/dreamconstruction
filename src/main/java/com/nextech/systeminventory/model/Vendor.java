@@ -83,6 +83,10 @@ public class Vendor implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
 	private List<PrVndrAssn> prVndrAssns;
+	
+	@JsonIgnore
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "vendor", cascade = CascadeType.ALL)
+	private List<Purchase> purchases;
 
 	public Vendor() {
 	}
@@ -285,4 +289,11 @@ public class Vendor implements Serializable {
 
 		return prVndrAssn;
 	}
+	public List<Purchase> getPurchases() {
+		return purchases;
+	}
+	public void setPurchases(List<Purchase> purchases) {
+		this.purchases = purchases;
+	}
+	
 }

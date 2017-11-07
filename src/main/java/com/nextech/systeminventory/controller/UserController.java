@@ -266,4 +266,17 @@ public class UserController {
 		mail.setModel(MailResponseRequestFactory.setMailDetailsUser(userDTO));
 		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
+	
+	@RequestMapping(value = "userInfo/{userId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody UserStatus getUserByUserId(@PathVariable("userId") String userId) {
+		User user =null;
+
+		try {
+			user = userservice.getUserByUserId(userId);
+		} catch (Exception e) {
+			return new UserStatus(0, e.toString());
+		}
+		return new UserStatus(1,user);
+
+	}
 }

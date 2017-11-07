@@ -43,6 +43,10 @@ public class PurchaseAssn implements Serializable {
 	@ManyToOne
 	@JoinColumn(name="purchaseId")
 	private Purchase purchase;
+	
+	@ManyToOne
+	@JoinColumn(name="productid")
+	private Product product;
 
 	public PurchaseAssn() {
 	}
@@ -123,4 +127,11 @@ public class PurchaseAssn implements Serializable {
 		this.purchase = purchase;
 	}
 
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
 }

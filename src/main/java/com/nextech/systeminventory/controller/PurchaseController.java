@@ -1,5 +1,6 @@
 package com.nextech.systeminventory.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -18,7 +19,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.ProductDTO;
+import com.nextech.systeminventory.dto.ProductOrderAssociationDTO;
+import com.nextech.systeminventory.dto.PurchaseAssnDTO;
+import com.nextech.systeminventory.dto.PurchaseDTO;
+import com.nextech.systeminventory.factory.PurchaseRequestResponseFactory;
+import com.nextech.systeminventory.factory.PurhcaseAssnRequestResponseFactory;
+import com.nextech.systeminventory.model.Productinventory;
+import com.nextech.systeminventory.model.Productorder;
+import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Purchase;
+import com.nextech.systeminventory.model.PurchaseAssn;
+import com.nextech.systeminventory.service.ProductinventoryService;
+import com.nextech.systeminventory.service.PurchaseAssnService;
 import com.nextech.systeminventory.service.PurchaseService;
 import com.nextech.systeminventory.status.UserStatus;
 
@@ -28,17 +42,26 @@ public class PurchaseController {
 
 	@Autowired
 	PurchaseService purchaseService;
+	
+	@Autowired
+	PurchaseAssnService purchaseAssnService;
+	
+	@Autowired
+	ProductinventoryService productinventoryService;
 
-	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPurchase(@Valid @RequestBody Purchase purchase,
+	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			purchase.setIsactive(true);
-			purchaseService.addEntity(purchase);
+		long id =	purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO));
+		for (PurchaseAssnDTO purchaseAssnDTO : purchaseDTO.getPurchaseAssnDTOs()) {
+			purchaseAssnDTO.setPurchaseId(id);
+			purchaseAssnService.addEntity(PurhcaseAssnRequestResponseFactory.setPurchaseAssn(purchaseAssnDTO));
+		}
 			return new UserStatus(1, "Purchase added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -105,5 +128,40 @@ public class PurchaseController {
 			return new UserStatus(0, e.toString());
 		}
 
+	}
+	@RequestMapping(value = "purchaseId/{orderId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<PurchaseAssnDTO> getProductOrder(
+			@PathVariable("orderId") long id) {
+		List<PurchaseAssn> purchaseAssns = null;
+		List<PurchaseAssnDTO> purchaseAssnDTOs = new ArrayList<PurchaseAssnDTO>();
+		try {
+			purchaseAssns = purchaseAssnService.getPurchaseAssnByPurchaseId(id);
+			for (PurchaseAssn purchaseAssn : purchaseAssns) {
+				PurchaseAssnDTO  purchaseAssnDTO =  new PurchaseAssnDTO();
+				//Productinventory productinventory = productinventoryService.getProductinventoryByProductId(purchaseAssn.getProduct().getId());
+				ProductDTO productDTO =  new ProductDTO();
+				productDTO.setId(purchaseAssn.getProduct().getId());
+				productDTO.setPartNumber(purchaseAssn.getProduct().getPartNumber());
+				purchaseAssnDTO.setProductId(productDTO);
+				purchaseAssnDTO.setQuantity(purchaseAssn.getQuantity());
+				purchaseAssnDTOs.add(purchaseAssnDTO);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return purchaseAssnDTOs;
+	}
+	
+	@RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody List<Purchase> getPendingsProductorders() {
+
+		List<Purchase> purchases = null;
+		try {
+			// TODO afterwards you need to change it from properties.
+			purchases = purchaseService.getPendingPurchaseOrders(78, 80);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return purchases;
 	}
 }

@@ -50,6 +50,10 @@ public class PrVndrAssn implements Serializable {
 	public PrVndrAssn() {
 	}
 
+	public PrVndrAssn(int id) {
+		this.id=id;
+	}
+	
 	public long getId() {
 		return this.id;
 	}

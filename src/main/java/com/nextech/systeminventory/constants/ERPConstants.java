@@ -30,8 +30,10 @@ public class ERPConstants {
    public static String STATUS_PRODUCT_ORDER_COMPLETE="productOrderComplete";
    public static String STATUS_PRODUCT_ORDER_INCOMPLETE="productOrderIncomplete";
    public static String SESSION_EXPIRED="Session Expired! Please login again.";
+   public static String USER_FORGOT_NOTIFICATION="userForgotNotifiaction";
    public static String USER_UPDATE_NOTIFICATION="userupdateNotifiaction";
    public static String USER_ADD_NOTIFICATION="useraddNotification";
-
-
+   public static String PURCHASE_ORDER_INCOMPLETE="purchaseOrderIncomplete";
+   public static String PURCHASE_NEW_PRODUCT="purchaseNewProduct";
+   public static String PURCHASE_ORDER_COMPLETE="purchaseOrderComplete";
 }

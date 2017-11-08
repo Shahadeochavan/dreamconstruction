@@ -186,27 +186,28 @@ public class UserController {
 
 	@CrossOrigin(origins = "http://localhost:8080")
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updateUser(@RequestBody User user,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus updateUser(@RequestBody UserDTO userDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			User oldUserInfo = userservice.getEntityById(User.class, user.getId());
-			if(!user.getUserid().equals(oldUserInfo.getUserid())){  
-				if (userservice.getUserByUserId(user.getUserid()) != null) {
+			User oldUserInfo = userservice.getEntityById(User.class, userDTO.getId());
+			if(!userDTO.getUserId().equals(oldUserInfo.getUserid())){  
+				if (userservice.getUserByUserId(userDTO.getUserId()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.USER_ID_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }
-            if(!user.getEmail().equals(oldUserInfo.getEmail())){  
-				if (userservice.getUserByEmail(user.getEmail()) != null) {
+            if(!userDTO.getEmailId().equals(oldUserInfo.getEmail())){  
+				if (userservice.getUserByEmail(userDTO.getEmailId()) != null) {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 				}
 			 }           
-			if (!user.getMobile().equals(oldUserInfo.getMobile())) {
-				if (userservice.getUserByMobile(user.getMobile()) != null) {
+			if (!userDTO.getMobileNo().equals(oldUserInfo.getMobile())) {
+				if (userservice.getUserByMobile(userDTO.getMobileNo()) != null) {
 					return new UserStatus(2, messageSource.getMessage(ERPConstants.CONTACT_NUMBER_SHOULD_BE_UNIQUE, null, null));
 				}
 			}
-			user.setIsactive(true);
-			user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			userservice.updateEntity(user);
+			
+			userservice.updateEntity(UserFactory.setUserUpdate(userDTO, request));
+			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+			emailNotificationUser(userDTO, request, response,notificationDTO);
 			return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -222,7 +223,7 @@ public class UserController {
 			if(user2==null){
 				return new UserStatus(0,"Please enter registred email with inventory");
 			}
-			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_UPDATE_NOTIFICATION, null, null)));
+			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.USER_FORGOT_NOTIFICATION, null, null)));
 			emailNotificationUser(user2, request, response, notificationDTO);
 			return new UserStatus(1, "Please check your email ! you have send password on your email");
 		} catch (Exception e) {

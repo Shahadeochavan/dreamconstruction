@@ -1,15 +1,19 @@
 package com.nextech.systeminventory.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,21 +24,30 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.ProductDTO;
-import com.nextech.systeminventory.dto.ProductOrderAssociationDTO;
 import com.nextech.systeminventory.dto.PurchaseAssnDTO;
 import com.nextech.systeminventory.dto.PurchaseDTO;
+import com.nextech.systeminventory.dto.PurchaseOrderPdfData;
+import com.nextech.systeminventory.dto.StatusDTO;
+import com.nextech.systeminventory.dto.VendorDTO;
+import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.factory.PurchaseRequestResponseFactory;
 import com.nextech.systeminventory.factory.PurhcaseAssnRequestResponseFactory;
-import com.nextech.systeminventory.model.Productinventory;
-import com.nextech.systeminventory.model.Productorder;
-import com.nextech.systeminventory.model.Productorderassociation;
+import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Purchase;
 import com.nextech.systeminventory.model.PurchaseAssn;
+import com.nextech.systeminventory.pdfClass.PurchaseOrderPdf;
+import com.nextech.systeminventory.service.MailService;
+import com.nextech.systeminventory.service.NotificationService;
+import com.nextech.systeminventory.service.ProductService;
 import com.nextech.systeminventory.service.ProductinventoryService;
 import com.nextech.systeminventory.service.PurchaseAssnService;
 import com.nextech.systeminventory.service.PurchaseService;
+import com.nextech.systeminventory.service.StatusService;
+import com.nextech.systeminventory.service.VendorService;
 import com.nextech.systeminventory.status.UserStatus;
+import com.nextech.systeminventory.util.PDFToByteArrayOutputStreamUtil;
 
 @Controller
 @RequestMapping("/purchase")
@@ -48,6 +61,24 @@ public class PurchaseController {
 	
 	@Autowired
 	ProductinventoryService productinventoryService;
+	
+	@Autowired
+	private MessageSource messageSource;
+	
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	NotificationService notificationService;
+	
+	@Autowired
+	VendorService vendorService;
+	
+	@Autowired
+	StatusService statusService;
+	
+	@Autowired
+	ProductService productService;
 
 	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO,
@@ -58,10 +89,9 @@ public class PurchaseController {
 						.getDefaultMessage());
 			}
 		long id =	purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO));
-		for (PurchaseAssnDTO purchaseAssnDTO : purchaseDTO.getPurchaseAssnDTOs()) {
-			purchaseAssnDTO.setPurchaseId(id);
-			purchaseAssnService.addEntity(PurhcaseAssnRequestResponseFactory.setPurchaseAssn(purchaseAssnDTO));
-		}
+		purchaseDTO.setId(id);
+		
+		addPurchaseOrderAsso(purchaseDTO, request, response);
 			return new UserStatus(1, "Purchase added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -136,6 +166,7 @@ public class PurchaseController {
 		List<PurchaseAssnDTO> purchaseAssnDTOs = new ArrayList<PurchaseAssnDTO>();
 		try {
 			purchaseAssns = purchaseAssnService.getPurchaseAssnByPurchaseId(id);
+			if(!purchaseAssns.isEmpty()){
 			for (PurchaseAssn purchaseAssn : purchaseAssns) {
 				PurchaseAssnDTO  purchaseAssnDTO =  new PurchaseAssnDTO();
 				//Productinventory productinventory = productinventoryService.getProductinventoryByProductId(purchaseAssn.getProduct().getId());
@@ -144,7 +175,9 @@ public class PurchaseController {
 				productDTO.setPartNumber(purchaseAssn.getProduct().getPartNumber());
 				purchaseAssnDTO.setProductId(productDTO);
 				purchaseAssnDTO.setQuantity(purchaseAssn.getQuantity());
+				purchaseAssnDTO.setRemainingQuantity(purchaseAssn.getRemainingQuantity());
 				purchaseAssnDTOs.add(purchaseAssnDTO);
+			}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -157,11 +190,58 @@ public class PurchaseController {
 
 		List<Purchase> purchases = null;
 		try {
-			// TODO afterwards you need to change it from properties.
-			purchases = purchaseService.getPendingPurchaseOrders(78, 80);
+			purchases = purchaseService.getPendingPurchaseOrders(Long.parseLong(messageSource.getMessage(ERPConstants.PURCHASE_NEW_PRODUCT, null, null)),Long.parseLong(messageSource.getMessage(ERPConstants.PURCHASE_ORDER_INCOMPLETE, null, null)));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return purchases;
+	}
+	
+	private void addPurchaseOrderAsso(PurchaseDTO purchaseDTO,HttpServletRequest request, HttpServletResponse response) throws Exception {
+		List<PurchaseAssnDTO> purchaseAssnDTOs = purchaseDTO.getPurchaseAssnDTOs();
+		List<PurchaseOrderPdfData> productOrderPDFDatas = new ArrayList<PurchaseOrderPdfData>();
+		VendorDTO vendorDTO = vendorService.getVendorById(purchaseDTO.getVendorId());
+		if (purchaseAssnDTOs != null&& !purchaseAssnDTOs.isEmpty()) {
+			for (PurchaseAssnDTO purchaseAssnDTO : purchaseAssnDTOs) {
+				PurchaseOrderPdfData productOrderPDFData = new PurchaseOrderPdfData();
+				purchaseAssnDTO.setPurchaseId(purchaseDTO.getId());
+				ProductDTO  productDTO = productService.getProductDTO(purchaseAssnDTO.getProductId().getId());
+				productOrderPDFData.setProductPartNumber(productDTO.getPartNumber());
+				productOrderPDFDatas.add(productOrderPDFData);
+				purchaseAssnService.addEntity(PurhcaseAssnRequestResponseFactory.setPurchaseAssn(purchaseAssnDTO));
+			}
+		}
+		createPurchaseOrderPdf(request, response, purchaseDTO, productOrderPDFDatas, vendorDTO);
+	}
+	
+	public void createPurchaseOrderPdf(HttpServletRequest request, HttpServletResponse response,PurchaseDTO purchaseDTO ,List<PurchaseOrderPdfData> productOrderPDFDatas,VendorDTO vendor) throws IOException {
+		final ServletContext servletContext = request.getSession().getServletContext();
+	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
+	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
+	    String fileName = "PurchaseOrder.pdf";
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
+	    try {
+	    	PurchaseOrderPdf purchaseOrderPdf = new PurchaseOrderPdf();
+	    	purchaseOrderPdf.createPDF(temperotyFilePath+"\\"+fileName,purchaseDTO,productOrderPDFDatas,vendor);
+	    	
+	       String rmOrderPdffile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	       Purchase purchase  = purchaseService.getEntityById(Purchase.class, purchaseDTO.getId());
+			StatusDTO status = statusService.getStatusById(purchase.getStatus().getId());
+			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
+			emailNotificationPurchaseOrder(notification, purchaseDTO, vendor, rmOrderPdffile, productOrderPDFDatas);
+	    } catch (Exception e1) {
+	        e1.printStackTrace();
+	    }
+	}
+	
+	private void emailNotificationPurchaseOrder(NotificationDTO notification,PurchaseDTO purchaseDTO,VendorDTO vendor,String fileName,List<PurchaseOrderPdfData> productOrderPDFDatas) throws Exception{
+		Mail mail = mailService.setMailCCBCCAndTO(notification);
+	 String userEmailCC = mail.getMailCc()+","+vendor.getEmail();
+	    mail.setMailCc(userEmailCC);
+		mail.setMailSubject(notification.getSubject());
+		mail.setAttachment(fileName);
+		mail.setModel(MailResponseRequestFactory.setMailDetailsPurchaseOrder(notification, productOrderPDFDatas, vendor,purchaseDTO));
+		mailService.sendEmail(mail,notification);
 	}
 }

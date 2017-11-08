@@ -8,6 +8,7 @@ public class PurchaseAssnDTO extends AbstractDTO{
 	private int quantity;
 	private long purchaseId;
 	private ProductDTO productId;
+	private int remainingQuantity;
 	
 	public	PurchaseAssnDTO(){
 		
@@ -32,6 +33,12 @@ public class PurchaseAssnDTO extends AbstractDTO{
 	}
 	public void setProductId(ProductDTO productId) {
 		this.productId = productId;
+	}
+	public int getRemainingQuantity() {
+		return remainingQuantity;
+	}
+	public void setRemainingQuantity(int remainingQuantity) {
+		this.remainingQuantity = remainingQuantity;
 	}
 	
 }

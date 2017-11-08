@@ -8,7 +8,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
 import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +24,10 @@ import com.nextech.systeminventory.model.Productinventory;
 public class ProductinventoryDaoImpl extends SuperDaoImpl<Productinventory>
 		implements ProductinventoryDao {
 
+	@Autowired
+	SessionFactory sessionFactory;
+	Session session = null;
+	Transaction tx = null;
 	@Override
 	public Productinventory getProductinventoryByProductId(long productId)
 			throws Exception {

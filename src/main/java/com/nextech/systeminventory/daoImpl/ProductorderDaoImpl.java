@@ -9,6 +9,10 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +21,12 @@ import com.nextech.systeminventory.model.Productorder;
 
 @Repository
 @Transactional
-public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements
-		ProductorderDao {
+public class ProductorderDaoImpl extends SuperDaoImpl<Productorder> implements ProductorderDao {
 
+	@Autowired
+	SessionFactory sessionFactory;
+	Session session = null;
+	Transaction tx = null;
 	@Override
 	public Productorder getProductorderByProductOrderId(long pOrderId)throws Exception {
 		session = sessionFactory.openSession();

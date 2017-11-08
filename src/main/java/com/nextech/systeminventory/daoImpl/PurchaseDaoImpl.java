@@ -9,6 +9,10 @@ import javax.persistence.criteria.Root;
 import javax.persistence.metamodel.EntityType;
 import javax.persistence.metamodel.Metamodel;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +23,11 @@ import com.nextech.systeminventory.model.Purchase;
 @Transactional
 public class PurchaseDaoImpl extends SuperDaoImpl<Purchase> implements PurchaseDao {
 
+	@Autowired
+	SessionFactory sessionFactory;
+	Session session = null;
+	Transaction tx = null;
+	
 	@Override
 	public List<Purchase> getPendingPurchaseOrders(long statusId, long statusId1) {
 		// TODO Auto-generated method stub

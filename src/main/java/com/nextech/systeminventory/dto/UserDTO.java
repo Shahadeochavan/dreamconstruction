@@ -12,6 +12,7 @@ public class UserDTO extends AbstractDTO {
 	private Date dob;
 	private Date doj;
 	private String emailId;
+	private String gender;
 	private List<NotificationUserAssociatinsDTO> notificationUserAssociatinsDTOs;
 	public UserDTO(int id){
 		this.setId(id);
@@ -79,6 +80,12 @@ public class UserDTO extends AbstractDTO {
 	}
 	public void setUserTypeDTO(UserTypeDTO userTypeDTO) {
 		this.userTypeDTO = userTypeDTO;
+	}
+	public String getGender() {
+		return gender;
+	}
+	public void setGender(String gender) {
+		this.gender = gender;
 	}
 	
 }

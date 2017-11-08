@@ -165,10 +165,12 @@ public class ProductStoreInAndOut {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
+			if(productInventoryDTO.getProductInvetoryMultipleDatas() !=null&&!productInventoryDTO.getProductInvetoryMultipleDatas().isEmpty()){
 			for(ProductInvetoryMultipleData productInvetoryMultipleData :productInventoryDTO.getProductInvetoryMultipleDatas()){
 				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productInvetoryMultipleData.getProductId().getId());
 				productinventory.setQuantityavailable(productinventory.getQuantityavailable()+productInvetoryMultipleData.getQuantity());
 				productinventoryService.updateEntity(productinventory);
+			}
 			}
 			return new UserStatus(1, "Product Inventory Store In Successfully !");
 		} catch (ConstraintViolationException cve) {

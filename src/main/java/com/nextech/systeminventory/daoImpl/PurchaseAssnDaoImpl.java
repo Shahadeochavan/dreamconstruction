@@ -7,6 +7,10 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +22,11 @@ import com.nextech.systeminventory.model.PurchaseAssn;
 @Transactional
 public class PurchaseAssnDaoImpl extends SuperDaoImpl<PurchaseAssn> implements PurchaseAssnDao{
 
+	@Autowired
+	SessionFactory sessionFactory;
+	Session session = null;
+	Transaction tx = null;
+	
 	@Override
 	public List<PurchaseAssn> getPurchaseAssnByPurchaseId(long purhaseId)
 			throws Exception {
@@ -46,5 +55,4 @@ public class PurchaseAssnDaoImpl extends SuperDaoImpl<PurchaseAssn> implements P
 		    }
 		    return list.get(0);
 	}
-
 }

@@ -8,6 +8,7 @@ public class PrVndrAssnDTO extends AbstractDTO{
 
 	private Vendor vendor;
 	private Product product;
+	private float pricePerUnit;
 
 	public PrVndrAssnDTO() {
 
@@ -32,4 +33,13 @@ public class PrVndrAssnDTO extends AbstractDTO{
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	public float getPricePerUnit() {
+		return pricePerUnit;
+	}
+
+	public void setPricePerUnit(float pricePerUnit) {
+		this.pricePerUnit = pricePerUnit;
+	}
+	
 }

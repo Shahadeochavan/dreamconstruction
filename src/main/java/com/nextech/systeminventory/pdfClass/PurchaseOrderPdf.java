@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 
 
+
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -26,15 +28,8 @@ import com.nextech.systeminventory.dto.VendorDTO;
 public class PurchaseOrderPdf {
 	private static Font TIME_ROMAN = new Font(Font.FontFamily.TIMES_ROMAN, 18,Font.BOLD);
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
-	public  float grandtotal = 0;
-	private static float tax= 0;
-	public double igstTotal =0;
-	public double cgstTotal = 0;
-	public double sgstTotal =0;
-	public String igst ="";
-	public String cgst ="";
-	public String sgst ="";
-	public String subtoatl ="";
+	public  double SUB_TOTAL = 0;
+	public String total ="";
 
 	/**
 	 * @param args
@@ -96,9 +91,9 @@ public class PurchaseOrderPdf {
 		   fromEKTable.setWidthPercentage(100);
 		   PdfPTable ekTable = new PdfPTable(1);
 		   ekTable.setWidthPercentage(100);
-		   ekTable.addCell(getCell1("E.K.ELECTRONICS PVT.LTD", PdfPCell.ALIGN_CENTER,bf12));
-		   ekTable.addCell(getCell("E-64 MIDC Industrial,Ranjangon Tal Shirur Dist pune-412220", PdfPCell.ALIGN_CENTER));
-		   ekTable.addCell(getCell("Email:sachi@eksgpl.com/purchase@eksgpl.com", PdfPCell.ALIGN_CENTER));
+		   ekTable.addCell(getCell1("Altan Enterprise", PdfPCell.ALIGN_CENTER,bf12));
+		   ekTable.addCell(getCell("At-Shinde,Post:Vasuli Chakan Industrial Area Phase2,Tal-khed Pune 410501", PdfPCell.ALIGN_CENTER));
+		   ekTable.addCell(getCell("Email : contact@altanservices.com", PdfPCell.ALIGN_CENTER));
 		   ekTable.addCell(getCell1("PURCHASE ORDER", PdfPCell.ALIGN_CENTER,bf112));
 		     fromEKTable.addCell(ekTable);
 		     document.add(fromEKTable);
@@ -164,13 +159,18 @@ public class PurchaseOrderPdf {
 		   table.setHeaderRows(1);
 
      for (PurchaseOrderPdfData purchaseOrderPdfData : productOrderPDFDatas) {
-	  insertCell(table,purchaseOrderPdfData.getProductPartNumber() , Element.ALIGN_RIGHT, 1, bf1);
+	     insertCell(table,purchaseOrderPdfData.getProductPartNumber() , Element.ALIGN_RIGHT, 1, bf1);
 	    insertCell(table,(Long.toString(purchaseOrderPdfData.getQuantity())), Element.ALIGN_RIGHT, 1, bf1);
+	    insertCell(table,(Float.toString(purchaseOrderPdfData.getPricePerUnit())), Element.ALIGN_RIGHT, 1, bf1);
+	     float amout = 0;
+	     amout = purchaseOrderPdfData.getQuantity()*purchaseOrderPdfData.getPricePerUnit();
+	    insertCell(table, (Float.toString(amout)), Element.ALIGN_RIGHT, 1, bf12);
+	    SUB_TOTAL = SUB_TOTAL+amout;
+	    double d3 =SUB_TOTAL;
+	    total= String.format("%.01f", d3);
     }
- /*    int totalTax= (int) (cgstTotal+igstTotal+sgstTotal);
-     Integer intValue = (int) Float.parseFloat(subtoatl);
-     grandtotal = (int) (totalTax+intValue);
-     insertCell(table, (Float.toString(grandtotal)), Element.ALIGN_RIGHT, 1, bfBold12);*/
+     insertCell(table, "Total", Element.ALIGN_RIGHT, 3, bf123);
+     insertCell(table, total, Element.ALIGN_RIGHT, 1, bf123);
      document.add(table);
      PdfPTable termsAndCondtionTable = new PdfPTable(2);
      termsAndCondtionTable.setWidthPercentage(100);
@@ -202,7 +202,7 @@ public class PurchaseOrderPdf {
      noteTable.addCell(getCell2("As applicable", PdfPCell.ALIGN_LEFT,bf12));
      noteTable.addCell(getCell2("As applicable ", PdfPCell.ALIGN_LEFT,bf12));
      noteTable.addCell(getCell2("Excise Duty ", PdfPCell.ALIGN_LEFT,bf12));
-     noteTable.addCell(getCell2("At our Ranjangon factory", PdfPCell.ALIGN_LEFT,bf12));
+     noteTable.addCell(getCell2("At-Shinde,Post:Vasuli Chakan ", PdfPCell.ALIGN_LEFT,bf12));
      noteTable.addCell(getCell2("Nil ", PdfPCell.ALIGN_LEFT,bf12));
      noteTable.addCell(getCell2("Supply material of high quality only to avoid rejection ", PdfPCell.ALIGN_LEFT,bf12));
      noteTable.addCell(getCell2("1)PDIR REPORT ", PdfPCell.ALIGN_LEFT,bf112));
@@ -220,7 +220,7 @@ public class PurchaseOrderPdf {
      
     PdfPTable table1 = new PdfPTable(1);
      table1.setWidthPercentage(100);
-     table1.addCell(getCell12("For EK Electronics Pvt.Ltd", PdfPCell.ALIGN_RIGHT,bf123));
+     table1.addCell(getCell12("For Altan Enterprise", PdfPCell.ALIGN_RIGHT,bf123));
      table1.addCell(getCell12("Authorised Signature", PdfPCell.ALIGN_RIGHT,bf123));
      table11.addCell(table1);
      document.add(table11);

@@ -90,11 +90,9 @@ public class PrVndrAssnController {
 		List<PrVndrAssn> PrVndrAssns = null;
 		try {
 			PrVndrAssns = PrVndrAssnService.getEntityList(PrVndrAssn.class);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return PrVndrAssns;
 	}
 
@@ -125,6 +123,5 @@ public class PrVndrAssnController {
 			return new UserStatus(0, e.toString());
 		}
 		return new UserStatus(1,prVndrAssns);
-
 	}
 }

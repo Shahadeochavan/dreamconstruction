@@ -9,6 +9,7 @@ public class PrVndrAssnRequestResponseFactory {
 		PrVndrAssn prVndrAssn =  new PrVndrAssn();
 		prVndrAssn.setVendor(prVndrAssnDTO.getVendor());
 		prVndrAssn.setProduct(prVndrAssnDTO.getProduct());
+		prVndrAssn.setPricePerUnit(prVndrAssnDTO.getPricePerUnit());
 		prVndrAssn.setIsactive(true);
 		return prVndrAssn;
 	}

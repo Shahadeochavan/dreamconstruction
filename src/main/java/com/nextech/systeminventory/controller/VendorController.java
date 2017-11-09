@@ -22,9 +22,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.VendorDTO;
+import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.factory.VendorFactory;
+import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Vendor;
+import com.nextech.systeminventory.service.MailService;
+import com.nextech.systeminventory.service.NotificationService;
 import com.nextech.systeminventory.service.VendorService;
 import com.nextech.systeminventory.status.UserStatus;
 
@@ -40,6 +45,12 @@ public class VendorController {
     
 	@Autowired
 	static Logger logger = Logger.getLogger(VendorController.class);
+	
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	NotificationService notificationService;
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addVendor(Model model,
@@ -58,6 +69,8 @@ public class VendorController {
 				return new UserStatus(2,messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 			}
 			vendorService.addEntity(VendorFactory.setVendor(vendorDTO));
+			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_ADD_NOTIFICATION, null, null)));
+			emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -99,6 +112,8 @@ public class VendorController {
 				}
 			 }
             vendorService.updateEntity( VendorFactory.setVendor(vendorDTO));
+            NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.VENDOR_UPDATE_NOTIFICATION, null, null)));
+			emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -130,5 +145,12 @@ public class VendorController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
+	}
+	private void emailNotificationVendor(VendorDTO vendorDTO,NotificationDTO  notificationDTO) throws Exception{
+		Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+		 String vendorEmail = mail.getMailTo()+","+vendorDTO.getEmail();
+		   mail.setMailTo(vendorEmail);
+		   mail.setModel(MailResponseRequestFactory.setMailDetailsVendor(vendorDTO));
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

@@ -23,7 +23,7 @@ background: rgb(120, 129, 178);
 
 <body>
 <p style="font-weight: bold;">Hello Dear,</p>
-    <p>GREETING FROM E K ELECTRONICS PVT LTD!</p>
+    <p>Greetings from Altan Enterprise!</p>
     <p>YOUR USER ID:${userId}</p>
     <p>PASSWORD :${password}</p>
     <p>EMAIL :${email}</p>

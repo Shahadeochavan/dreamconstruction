@@ -22,9 +22,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.dto.ClientDTO;
+import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.factory.ClientFactory;
+import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.model.Client;
+import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.service.ClientService;
+import com.nextech.systeminventory.service.MailService;
+import com.nextech.systeminventory.service.NotificationService;
 import com.nextech.systeminventory.service.ProductorderService;
 import com.nextech.systeminventory.status.UserStatus;
 
@@ -43,6 +48,12 @@ public class ClientController {
 	
 	@Autowired
 	static Logger logger = Logger.getLogger(ClientController.class);
+	
+	@Autowired
+	MailService mailService;
+	
+	@Autowired
+	NotificationService notificationService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addClient(
@@ -60,6 +71,8 @@ public class ClientController {
 				return new UserStatus(2, messageSource.getMessage(ERPConstants.EMAIL_SHOULD_BE_UNIQUE, null, null));
 			}
 			clientService.addEntity(ClientFactory.setClient(clientDTO));
+			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_ADD_NOTIFICATION, null, null)));
+			emailNotificationClient(clientDTO, request, response, notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
 			cve.printStackTrace();
@@ -104,6 +117,8 @@ public class ClientController {
 			 }
             
 	    	clientService.updateEntity(ClientFactory.setClientUpdate(clientDTO));
+	    	NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(ERPConstants.CLIENT_UPDATE_NOTIFICATION, null, null)));
+	    	emailNotificationClient(clientDTO, request, response, notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -135,5 +150,14 @@ public class ClientController {
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}
+	}
+	private void emailNotificationClient(ClientDTO clientDTO,HttpServletRequest request, HttpServletResponse response,NotificationDTO notificationDTO) throws NumberFormatException,Exception {
+		Mail mail = mailService.setMailCCBCCAndTO(notificationDTO);
+		String mailSubject  = mailService.getSubject(notificationDTO);
+		String clientEmailTo = mail.getMailTo() + "," + clientDTO.getEmailId();
+		mail.setMailSubject(mailSubject);
+		mail.setMailTo(clientEmailTo);
+		mail.setModel(MailResponseRequestFactory.setMailDetailsClient(clientDTO));
+		mailService.sendEmailWithoutPdF(mail, notificationDTO);
 	}
 }

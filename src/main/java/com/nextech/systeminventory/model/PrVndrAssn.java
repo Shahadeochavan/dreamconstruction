@@ -29,7 +29,7 @@ public class PrVndrAssn implements Serializable {
 
 	private boolean isactive;
 
-	private int quantity;
+	private float pricePerUnit;
 
 	@Column(name="updated_by")
 	private String updatedBy;
@@ -86,14 +86,14 @@ public class PrVndrAssn implements Serializable {
 		this.isactive = isactive;
 	}
 
-	public int getQuantity() {
-		return this.quantity;
+	public float getPricePerUnit() {
+		return pricePerUnit;
 	}
 
-	public void setQuantity(int quantity) {
-		this.quantity = quantity;
+	public void setPricePerUnit(float pricePerUnit) {
+		this.pricePerUnit = pricePerUnit;
 	}
-
+	
 	public String getUpdatedBy() {
 		return this.updatedBy;
 	}

@@ -187,6 +187,4 @@ public class ProductStoreInAndOut {
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
-	
-
 }

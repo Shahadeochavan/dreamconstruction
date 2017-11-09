@@ -35,11 +35,13 @@ import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.factory.PurchaseRequestResponseFactory;
 import com.nextech.systeminventory.factory.PurhcaseAssnRequestResponseFactory;
 import com.nextech.systeminventory.model.Mail;
+import com.nextech.systeminventory.model.PrVndrAssn;
 import com.nextech.systeminventory.model.Purchase;
 import com.nextech.systeminventory.model.PurchaseAssn;
 import com.nextech.systeminventory.pdfClass.PurchaseOrderPdf;
 import com.nextech.systeminventory.service.MailService;
 import com.nextech.systeminventory.service.NotificationService;
+import com.nextech.systeminventory.service.PrVndrAssnService;
 import com.nextech.systeminventory.service.ProductService;
 import com.nextech.systeminventory.service.ProductinventoryService;
 import com.nextech.systeminventory.service.PurchaseAssnService;
@@ -79,6 +81,9 @@ public class PurchaseController {
 	
 	@Autowired
 	ProductService productService;
+	
+	@Autowired
+	PrVndrAssnService PrVndrAssnService;
 
 	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO,
@@ -201,14 +206,24 @@ public class PurchaseController {
 		List<PurchaseAssnDTO> purchaseAssnDTOs = purchaseDTO.getPurchaseAssnDTOs();
 		List<PurchaseOrderPdfData> productOrderPDFDatas = new ArrayList<PurchaseOrderPdfData>();
 		VendorDTO vendorDTO = vendorService.getVendorById(purchaseDTO.getVendorId());
+		List<PrVndrAssn> prVndrAssns  = PrVndrAssnService.getPrVndrAssnByVendorId(vendorDTO.getId());
 		if (purchaseAssnDTOs != null&& !purchaseAssnDTOs.isEmpty()) {
 			for (PurchaseAssnDTO purchaseAssnDTO : purchaseAssnDTOs) {
-				PurchaseOrderPdfData productOrderPDFData = new PurchaseOrderPdfData();
-				purchaseAssnDTO.setPurchaseId(purchaseDTO.getId());
-				ProductDTO  productDTO = productService.getProductDTO(purchaseAssnDTO.getProductId().getId());
-				productOrderPDFData.setProductPartNumber(productDTO.getPartNumber());
-				productOrderPDFDatas.add(productOrderPDFData);
-				purchaseAssnService.addEntity(PurhcaseAssnRequestResponseFactory.setPurchaseAssn(purchaseAssnDTO));
+				if (prVndrAssns != null&& !prVndrAssns.isEmpty()) {
+				for (PrVndrAssn prVndrAssn : prVndrAssns) {
+					if(prVndrAssn.getProduct().getId()==purchaseAssnDTO.getProductId().getId()){
+						PurchaseOrderPdfData purchaseOrderPdfData = new PurchaseOrderPdfData();
+						purchaseAssnDTO.setPurchaseId(purchaseDTO.getId());
+						ProductDTO  productDTO = productService.getProductDTO(purchaseAssnDTO.getProductId().getId());
+						purchaseOrderPdfData.setProductPartNumber(productDTO.getPartNumber());
+						purchaseOrderPdfData.setPricePerUnit(prVndrAssn.getPricePerUnit());
+						purchaseOrderPdfData.setQuantity(purchaseAssnDTO.getQuantity());
+						productOrderPDFDatas.add(purchaseOrderPdfData);
+						purchaseAssnService.addEntity(PurhcaseAssnRequestResponseFactory.setPurchaseAssn(purchaseAssnDTO));
+					}
+				}
+				}
+			
 			}
 		}
 		createPurchaseOrderPdf(request, response, purchaseDTO, productOrderPDFDatas, vendorDTO);
@@ -224,9 +239,8 @@ public class PurchaseController {
 	    try {
 	    	PurchaseOrderPdf purchaseOrderPdf = new PurchaseOrderPdf();
 	    	purchaseOrderPdf.createPDF(temperotyFilePath+"\\"+fileName,purchaseDTO,productOrderPDFDatas,vendor);
-	    	
-	       String rmOrderPdffile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
-	       Purchase purchase  = purchaseService.getEntityById(Purchase.class, purchaseDTO.getId());
+	        String rmOrderPdffile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
+	        Purchase purchase  = purchaseService.getEntityById(Purchase.class, purchaseDTO.getId());
 			StatusDTO status = statusService.getStatusById(purchase.getStatus().getId());
 			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
 			emailNotificationPurchaseOrder(notification, purchaseDTO, vendor, rmOrderPdffile, productOrderPDFDatas);
@@ -237,8 +251,8 @@ public class PurchaseController {
 	
 	private void emailNotificationPurchaseOrder(NotificationDTO notification,PurchaseDTO purchaseDTO,VendorDTO vendor,String fileName,List<PurchaseOrderPdfData> productOrderPDFDatas) throws Exception{
 		Mail mail = mailService.setMailCCBCCAndTO(notification);
-	 String userEmailCC = mail.getMailCc()+","+vendor.getEmail();
-	    mail.setMailCc(userEmailCC);
+	    String userEmailTO = mail.getMailTo()+","+vendor.getEmail();
+	    mail.setMailTo(userEmailTO);
 		mail.setMailSubject(notification.getSubject());
 		mail.setAttachment(fileName);
 		mail.setModel(MailResponseRequestFactory.setMailDetailsPurchaseOrder(notification, productOrderPDFDatas, vendor,purchaseDTO));

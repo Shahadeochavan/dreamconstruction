@@ -79,7 +79,10 @@
 												#set ( $productSubtotal = $productSubtotal + $productOrderDataTotal ) 
 												#set ( $row = $row + 1 ) 
 											#end
-									
+										<tr bgcolor="#E3EEFF">
+												<td colspan="4" align="left"><strong> Total </strong> </td>
+												<td align="center">$productSubtotal</td> 
+											</tr>
 										</table>
 										<div style align="left">
 											<div>In case of any further assistance or clarification

@@ -33,7 +33,11 @@ public class ERPConstants {
    public static String USER_FORGOT_NOTIFICATION="userForgotNotifiaction";
    public static String USER_UPDATE_NOTIFICATION="userupdateNotifiaction";
    public static String USER_ADD_NOTIFICATION="useraddNotification";
+   public static String CLIENT_ADD_NOTIFICATION="clientaddNotification";
+   public static String CLIENT_UPDATE_NOTIFICATION="clientUpdateNotification";
    public static String PURCHASE_ORDER_INCOMPLETE="purchaseOrderIncomplete";
    public static String PURCHASE_NEW_PRODUCT="purchaseNewProduct";
    public static String PURCHASE_ORDER_COMPLETE="purchaseOrderComplete";
+   public static String VENDOR_ADD_NOTIFICATION="vendorAddNotification";
+   public static String VENDOR_UPDATE_NOTIFICATION="vendorUpdateNotification";
 }

@@ -52,5 +52,23 @@ public class MailResponseRequestFactory {
 		model.put("signature", "www.NextechServices.in");
 		return model;
 	}
-	
+	public static Map<String,Object> setMailDetailsClient(ClientDTO clientDTO){
+		 Map < String, Object > model = new HashMap < String, Object > ();
+	        model.put("firstName", clientDTO.getCompanyName());
+	        model.put("email", clientDTO.getEmailId());
+	        model.put("contactNumber", clientDTO.getContactNumber());
+	        model.put("location", "Pune");
+	        model.put("signature", "www.NextechServices.in");
+	        return model;
+	}
+	public static Map<String, Object> setMailDetailsVendor(VendorDTO vendorDTO) {
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("firstName", vendorDTO.getFirstName());
+		model.put("lastName", vendorDTO.getLastName());
+		model.put("email", vendorDTO.getEmail());
+		 model.put("contactNumber", vendorDTO.getContactNumberMobile());
+		model.put("location", "Pune");
+		model.put("signature", "www.NextechServices.in");
+		return model;
+	}
 }

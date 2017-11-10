@@ -1,13 +1,16 @@
 package com.nextech.systeminventory.factory;
 
 
+import javax.servlet.http.HttpServletRequest;
+
+
 import com.nextech.systeminventory.dto.ProductDTO;
 import com.nextech.systeminventory.model.Product;
 
 
 public class ProductRequestResponseFactory {
 	
-	public static Product setProduct(ProductDTO productDTO){
+	public static Product setProduct(ProductDTO productDTO,HttpServletRequest request){
 		Product product = new Product();
 		product.setId(productDTO.getId());
 		product.setClientpartnumber(productDTO.getClientPartNumber());
@@ -17,6 +20,7 @@ public class ProductRequestResponseFactory {
 		product.setName(productDTO.getName());
 		product.setIsactive(true);
 		product.setPricePerUnit(Float.valueOf(productDTO.getPricePerUnit()));
+		//product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return product;
 	}
 

@@ -73,12 +73,15 @@ public class VendorController {
 			emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "vendor added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -90,6 +93,7 @@ public class VendorController {
 		try {
 			vendor = vendorService.getEntityById(Vendor.class, id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return vendor;
@@ -116,6 +120,7 @@ public class VendorController {
 			emailNotificationVendor(vendorDTO, notificationDTO);
 			return new UserStatus(1, "Vendor update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -128,8 +133,9 @@ public class VendorController {
 		try {
 			userList = vendorService.getEntityList(Vendor.class);
 		} catch (Exception e) {
-			e.printStackTrace();
 			logger.error(e);
+			e.printStackTrace();
+			
 		}
 		return userList;
 	}
@@ -143,6 +149,7 @@ public class VendorController {
 			vendorService.updateEntity(vendor);
 			return new UserStatus(1, "Vendor deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}

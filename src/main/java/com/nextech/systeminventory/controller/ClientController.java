@@ -75,14 +75,15 @@ public class ClientController {
 			emailNotificationClient(clientDTO, request, response, notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_ADDED, null, null));
 		} catch (ConstraintViolationException cve) {
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -94,6 +95,7 @@ public class ClientController {
 		try {
 			client = clientService.getEntityById(Client.class, id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return client;
@@ -121,6 +123,7 @@ public class ClientController {
 	    	emailNotificationClient(clientDTO, request, response, notificationDTO);
 			return new UserStatus(1, messageSource.getMessage(ERPConstants.CLIENT_UPDATE, null, null));
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -133,6 +136,7 @@ public class ClientController {
 		try {
 			clientList = clientService.getEntityList(Client.class);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return clientList;
@@ -148,6 +152,7 @@ public class ClientController {
 			return new UserStatus(1, messageSource.getMessage(
 					ERPConstants.CLIENT_DELETE, null, null));
 		} catch (Exception e) {
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}

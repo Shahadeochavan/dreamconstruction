@@ -93,18 +93,18 @@ public class UserController {
 				return new UserStatus(1, "User added Successfully !");
 			
 		} catch (ConstraintViolationException cve) {
-			logger.error("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (AuthenticationException authException) {
 
 			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -148,6 +148,7 @@ public class UserController {
 		} catch (AuthenticationException authException) {
 			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -179,6 +180,7 @@ public class UserController {
 		try {
 			user = userservice.getEntityById(User.class, id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return user;
@@ -210,6 +212,7 @@ public class UserController {
 			emailNotificationUser(userDTO, request, response,notificationDTO);
 			return new UserStatus(1, "User update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -227,6 +230,7 @@ public class UserController {
 			emailNotificationUser(user2, request, response, notificationDTO);
 			return new UserStatus(1, "Please check your email ! you have send password on your email");
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}

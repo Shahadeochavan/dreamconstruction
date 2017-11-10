@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
@@ -84,6 +85,9 @@ public class PurchaseController {
 	
 	@Autowired
 	PrVndrAssnService PrVndrAssnService;
+	
+	@Autowired
+	static Logger logger = Logger.getLogger(PurchaseController.class);
 
 	@RequestMapping(value = "/createMultiple", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addPurchase(@Valid @RequestBody PurchaseDTO purchaseDTO,
@@ -99,15 +103,15 @@ public class PurchaseController {
 		addPurchaseOrderAsso(purchaseDTO, request, response);
 			return new UserStatus(1, "Purchase added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			System.out.println("Inside ConstraintViolationException");
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -119,6 +123,7 @@ public class PurchaseController {
 		try {
 			Purchase = purchaseService.getEntityById(Purchase.class, id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return Purchase;
@@ -145,6 +150,7 @@ public class PurchaseController {
 			Purchases = purchaseService.getEntityList(Purchase.class);
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 
@@ -160,6 +166,7 @@ public class PurchaseController {
 			purchaseService.updateEntity(Purchase);
 			return new UserStatus(1, "Purchase deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 
@@ -197,6 +204,7 @@ public class PurchaseController {
 		try {
 			purchases = purchaseService.getPendingPurchaseOrders(Long.parseLong(messageSource.getMessage(ERPConstants.PURCHASE_NEW_PRODUCT, null, null)),Long.parseLong(messageSource.getMessage(ERPConstants.PURCHASE_ORDER_INCOMPLETE, null, null)));
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return purchases;
@@ -245,6 +253,7 @@ public class PurchaseController {
 			NotificationDTO notification = notificationService.getNotifiactionByStatus(status.getId());
 			emailNotificationPurchaseOrder(notification, purchaseDTO, vendor, rmOrderPdffile, productOrderPDFDatas);
 	    } catch (Exception e1) {
+	    	logger.error(e1);
 	        e1.printStackTrace();
 	    }
 	}

@@ -1,6 +1,4 @@
 /*package com.nextech.systeminventory.filter;
-
-
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.model.User;
 import com.nextech.systeminventory.service.PageService;
 import com.nextech.systeminventory.service.UserService;
@@ -19,7 +18,6 @@ import com.nextech.systeminventory.service.UserTypeService;
 import com.nextech.systeminventory.service.UsertypepageassociationService;
 
 public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
-
 	@Autowired
 	UserService userService;
 
@@ -46,31 +44,25 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 			String url = ((HttpServletRequest) request).getRequestURL().toString();
 			if (!url.contains("login")) {
 				try {
-					if(((HttpServletRequest) request).getHeader("auth_token") == null){
-						String token = TokenFactory.decrypt(((HttpServletRequest) request).getHeader("auth_token"), TokenFactory.getSecretKeySpec());
-						String[] string = token.split("-");
-						User user = userService.getUserByUserId(string[0]);
-//						Page page = pageservice.getPageByUrl(url);
-						if(user != null && user.getPassword().equals(string[1])){
-							//String str = string[string.length - 1];
-							//Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
-//							System.out.println(new Long(str) + time > new Date().getTime());
-//							System.out.println(new Long(str) + time );
-//							System.out.println(new Date().getTime());
-							//if (new Long(str) > new Date().getTime() - time) {
+					if(((HttpServletRequest) request).getHeader("auth_token") != null){
+						String encryptedToken = ((HttpServletRequest) request).getHeader("auth_token");
+						User user = userService.getUserByUserId(TokenFactory.getUserId(encryptedToken));
+						if(user != null && user.getPassword().equals(TokenFactory.getUserPassword(encryptedToken))){
+							Long time = new Long(messageSource.getMessage(ERPConstants.SESSIONTIMEOUT,null, null));
+							if (TokenFactory.isValidSession(encryptedToken, time)) {
 								String generatedToken = TokenFactory.createAccessJwtToken(user);
 								request.setAttribute("current_user", user.getId());
-								//((HttpServletResponse) response).addHeader("auth_token", generatedToken);
-								//request.setAttribute("auth_token", true);
+								((HttpServletResponse) response).addHeader("auth_token", generatedToken);
+								request.setAttribute("auth_token", true);
 								return true;
 							} else {
 								HttpServletResponse httpServletResponse = setResponse(request, response);
-								httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
+								httpServletResponse.sendError(599,ERPConstants.SESSION_EXPIRED);
 							}
-						
+						}
 						else{
 							HttpServletResponse httpServletResponse = setResponse(request, response);
-							httpServletResponse.sendError(599,ERPConstants.SESSION_EXPIRED);
+							httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 						}
 					}else{
 						if(((HttpServletRequest) request).getHeader("Access-Control-Request-Headers")==null){
@@ -78,10 +70,7 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 							httpServletResponse.sendError(HttpServletResponse.SC_FORBIDDEN);
 						}
 					}
-						}
-					}
-				}
-				 catch (Exception e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} else {
@@ -123,5 +112,4 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 		httpServletResponse.setHeader("Access-Control-Expose-Headers", "auth_token, Origin");
 		return httpServletResponse;
 	}
-}
-*/
+}*/

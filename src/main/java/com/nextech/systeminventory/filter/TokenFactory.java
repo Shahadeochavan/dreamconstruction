@@ -47,14 +47,25 @@ public class TokenFactory {
 		return encryptedText;
 	}
 
-	public static String decrypt(String encryptedText, SecretKey secretKey)
-			throws Exception {
+	public static String decrypt(String encryptedText) throws Exception {
 		Cipher cipher = Cipher.getInstance("AES");
 		Base64.Decoder decoder = Base64.getDecoder();
 		byte[] encryptedTextByte = decoder.decode(encryptedText);
-		cipher.init(Cipher.DECRYPT_MODE, secretKey);
+		cipher.init(Cipher.DECRYPT_MODE, getSecretKeySpec());
 		byte[] decryptedByte = cipher.doFinal(encryptedTextByte);
 		String decryptedText = new String(decryptedByte);
 		return decryptedText;
+	}
+	
+	public static String getUserId(String encryptedText) throws Exception {
+		return decrypt(encryptedText).split("-")[0];
+	}
+	
+	public static String getUserPassword(String encryptedText) throws Exception {
+		return decrypt(encryptedText).split("-")[1];
+	}
+	
+	public static boolean isValidSession(String encryptedText,long sessionTime) throws Exception {
+		return Long.parseLong(decrypt(encryptedText).split("-")[2]) > (new Date().getTime() - sessionTime);
 	}
 }*/

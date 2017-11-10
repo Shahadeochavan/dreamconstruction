@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -28,6 +29,9 @@ public class StatusController {
 
 	@Autowired
 	StatusService statusService;
+	
+	@Autowired
+	static Logger logger = Logger.getLogger(StatusController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus addStatustransition(
@@ -42,14 +46,15 @@ public class StatusController {
 			statusService.addEntity(status);
 			return new UserStatus(1, "Status added Successfully !");
 		} catch (ConstraintViolationException cve) {
+			logger.error(cve);
 			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			System.out.println("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			System.out.println("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -61,6 +66,7 @@ public class StatusController {
 		try {
 			status = statusService.getEntityById(Status.class, id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return status;
@@ -74,7 +80,7 @@ public class StatusController {
 			statusService.updateEntity(status);
 			return new UserStatus(1, "Status update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -87,6 +93,7 @@ public class StatusController {
 			statusList = statusService.getEntityList(Status.class);
 
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return statusList;
@@ -101,6 +108,7 @@ public class StatusController {
 			statusService.updateEntity(status);
 			return new UserStatus(1, "Status deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 

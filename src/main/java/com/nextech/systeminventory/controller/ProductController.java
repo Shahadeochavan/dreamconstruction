@@ -61,19 +61,19 @@ public class ProductController {
 			if (productService.getProductByPartNumber(productDTO.getPartNumber()) != null) {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER_SHOULD_BE_UNIQUE, null, null));
 			}
-			long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO));
+			long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 			Product product = productService.getEntityById(Product.class, id);
 			addProductInventory(product);
 			return new UserStatus(1, "product added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			cve.printStackTrace();
+			logger.error(cve);
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
@@ -85,6 +85,7 @@ public class ProductController {
 		try {
 			product = productService.getEntityById(Product.class,id);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return product;
@@ -106,9 +107,10 @@ public class ProductController {
 					}
 				 }
 	            
-			productService.updateEntity(ProductRequestResponseFactory.setProduct(productDTO));
+			productService.updateEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
@@ -120,6 +122,7 @@ public class ProductController {
 		try {
 			ProductList = productService.getEntityList(Product.class);
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
 		return ProductList;
@@ -134,6 +137,7 @@ public class ProductController {
 			productService.updateEntity(product);
 			return new UserStatus(1, "Product deleted Successfully !");
 		} catch (Exception e) {
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -162,7 +166,7 @@ public class ProductController {
 			}
 			if(!productDTOs.isEmpty()){
 			for (ProductDTO productDTO : productDTOs) {
-				long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO));
+				long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
 				Product product = productService.getEntityById(Product.class, id);
 				addProductInventory(product);	
 			}
@@ -171,14 +175,14 @@ public class ProductController {
 			}
 			return new UserStatus(1, "Product added Successfully !");
 		} catch (ConstraintViolationException cve) {
-			cve.printStackTrace();
+			logger.error(cve);
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
-			logger.error("Inside PersistenceException");
+			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
-			logger.error("Inside Exception");
+			logger.error(e);
 			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}

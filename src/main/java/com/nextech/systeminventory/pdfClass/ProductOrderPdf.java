@@ -34,8 +34,14 @@ public class ProductOrderPdf {
 	private static Font TIME_ROMAN_SMALL = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.BOLD);
 	public  double SUB_TOTAL = 0;
 	public double igstTotal =0;
-	public double cgstTotal = 0;
-	public double sgstTotal =0;
+	public double cgstTotal14 = 0;
+	public double cgstTotal9 = 0;
+	public double cgstTotal6 = 0;
+	public double cgstTotal2 = 0;
+	public double sgstTotal14 =0;
+	public double sgstTotal9 =0;
+	public double sgstTotal6 =0;
+	public double sgstTotal2 =0;
 	public String igst ="";
 	public String cgst ="";
 	public String sgst ="";
@@ -89,59 +95,60 @@ public class ProductOrderPdf {
 		   creteEmptyLine(preface, 2);
 		   document.add(preface);
 		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
-		    float[] columnWidthImageInvoice = {30f, 30f,30f};
+		    float[] columnWidthImageInvoice = {20f,50f,25f,25f};
 		     PdfPTable imageInvoiceDateTable = new PdfPTable(columnWidthImageInvoice);
 		     imageInvoiceDateTable.setWidthPercentage(100f);
 		   
+		     PdfPTable fromTabel = new PdfPTable(1);
+		     fromTabel.addCell(getCell("FROM :", PdfPCell.ALIGN_LEFT,bf12));
+		     fromTabel.addCell(getCell("ALTAN ENTERPRISES", PdfPCell.ALIGN_LEFT,bf12));
+		     fromTabel.addCell(getCell("At-Shinde,Post:Vasuli Chakan Industrial Area Phase2,Tal-khed Pune 410501", PdfPCell.ALIGN_LEFT,font3));
+		     fromTabel.addCell(getCell("Email : contact@altanservices.com", PdfPCell.ALIGN_LEFT,font3));
+		     fromTabel.addCell(getCell("Contact no : 9850799344/7030900294", PdfPCell.ALIGN_LEFT,font3));
+		     //fromTabel.addCell(getCell("Date of Invoice  :"+simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,font3));
+		     
 		     PdfPTable imageTable = new PdfPTable(1);
 		     imageTable.setWidthPercentage(100);
-		     //TODO change image path
-		    // Image img = Image.getInstance("C:/Users/welcome/git/erp-be/ERP/src/main/webapp/img/ekimage.png");
-		   //  imageTable.addCell(img);
-		     //   document.add(img);
-		     
-		     PdfPTable invoiceTable = new PdfPTable(1);
-		     invoiceTable.addCell(getCell("Invoice No -"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
-		     
-			  PdfPTable dateCopyTable = new PdfPTable(2);
-			  dateCopyTable.setWidthPercentage(100);
+		     Image img = Image.getInstance("C:/Users/welcome/Downloads/logo1.png");
+		     imageTable.addCell(getCell(""+img, PdfPCell.ALIGN_LEFT,bf12));
+		   
+			  
+			  PdfPTable invoiceTableData = new PdfPTable(1);
+			  invoiceTableData.addCell(getCell("INVOICE NO :"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,bf12));
+			  invoiceTableData.addCell(getCell("CHALLAN NO :             ",PdfPCell.ALIGN_LEFT,bf12));
+			  invoiceTableData.addCell(getCell("",PdfPCell.ALIGN_LEFT,bf12));
+			  invoiceTableData.addCell(getCell("P.O.NO   :             ",PdfPCell.ALIGN_LEFT,bf12));
+			  invoiceTableData.addCell(getCell("SAC CODE   :             ",PdfPCell.ALIGN_LEFT,bf12));
 			     
-			  PdfPTable dateTable = new PdfPTable(1);
-			  dateTable.addCell(getCell("Date -", PdfPCell.ALIGN_LEFT,bf12));
-			  dateTable.addCell(getCell(simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf12));
-			     
-			   PdfPTable recipientTable = new PdfPTable(1);
-			   recipientTable.addCell(getCell("ORIGINAL FOR RECIPIENT", PdfPCell.ALIGN_LEFT,bf12));
-			   dateCopyTable.addCell(dateTable);
-			   dateCopyTable.addCell(recipientTable);
-		     
-		     imageInvoiceDateTable.addCell(imageTable);
-		     imageInvoiceDateTable.addCell(invoiceTable);
-		     imageInvoiceDateTable.addCell(dateCopyTable);
-		     document.add(imageInvoiceDateTable);
+			   PdfPTable dateTableData = new PdfPTable(1);
+			   dateTableData.addCell(getCell("DATE :"+simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,bf12));
+			   dateTableData.addCell(getCell("DATE :", PdfPCell.ALIGN_LEFT,bf12));
+			   dateTableData.addCell(getCell("PLACE OF SUPPLY :PUNE Maharashtra",PdfPCell.ALIGN_LEFT,bf12));
+		
+			   imageInvoiceDateTable.addCell(imageTable);
+			   imageInvoiceDateTable.addCell(fromTabel);
+		       imageInvoiceDateTable.addCell(invoiceTableData);
+		       imageInvoiceDateTable.addCell(dateTableData);
+		       document.add(imageInvoiceDateTable);
 		     
 		     
 		     float[] fromConsigneeColumWidth = {50f,50f};
 		     PdfPTable fromConsigneeTable = new PdfPTable(fromConsigneeColumWidth);
 		     fromConsigneeTable.setWidthPercentage(100f);
-		 
-		     PdfPTable fromTabel = new PdfPTable(1);
-		     fromTabel.addCell(getCell("GSTIN : "+"27AACCE3429L1ZI", PdfPCell.ALIGN_LEFT,bf12));
-		     fromTabel.addCell(getCell("Altan Enterprise", PdfPCell.ALIGN_LEFT,bf12));
-		     fromTabel.addCell(getCell("At-Shinde,Post:Vasuli Chakan Industrial Area Phase2,Tal-khed Pune 410501", PdfPCell.ALIGN_LEFT,font3));
-		     fromTabel.addCell(getCell("Email : contact@altanservices.com", PdfPCell.ALIGN_LEFT,font3));
-		     fromTabel.addCell(getCell("Serial No. of Invoice  :"+productOrderDTO.getInvoiceNo(), PdfPCell.ALIGN_LEFT,font3));
-		     fromTabel.addCell(getCell("Date of Invoice  :"+simpleDateFormat.format(new Date()), PdfPCell.ALIGN_LEFT,font3));
 		     
 		    
 		     PdfPTable reciverTable = new PdfPTable(1);
-		     reciverTable.addCell(getCell("Details of Recevier(Billed to)", PdfPCell.ALIGN_LEFT,bf12));
+		     reciverTable.addCell(getCell("BUYER)", PdfPCell.ALIGN_LEFT,bf12));
 		     reciverTable.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
 		     reciverTable.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
-		     reciverTable.addCell(getCell("GSTIN/Unique ID:-"+"AAAAGBV1234", PdfPCell.ALIGN_LEFT,bf12));
+		     
+		     PdfPTable taxTable = new PdfPTable(1);
+		     taxTable.addCell(getCell("GSTIN NO. : "+"27AABCH7371R1ZV", PdfPCell.ALIGN_LEFT,font3));
+		     taxTable.addCell(getCell("TIN NO. : ", PdfPCell.ALIGN_LEFT,font3));
+		     taxTable.addCell(getCell("PAN NO. : ", PdfPCell.ALIGN_LEFT,font3));
 		   
 		     fromConsigneeTable.addCell(reciverTable);
-		     fromConsigneeTable.addCell(fromTabel);
+		     fromConsigneeTable.addCell(taxTable);
 		     document.add(fromConsigneeTable);
 	}
 
@@ -158,41 +165,117 @@ public class ProductOrderPdf {
 			   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10); 
 			   
 			   Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
-			   float[] columnWidths = {1.5f, 1.5f, 1.5f, 1.5f};
+			   float[] columnWidths = {2.5f, 1.5f,1.5f,1.5f, 1.5f, 1.5f};
 			   PdfPTable table = new PdfPTable(columnWidths);
 			   table.setWidthPercentage(100f);
 
-			   insertCell(table, "Description of ProductS", Element.ALIGN_RIGHT, 1, bf123);
+			   insertCell(table, "Description of Goods", Element.ALIGN_RIGHT, 1, bf123);
+			   insertCell(table, "HSN Code", Element.ALIGN_LEFT, 1, bf123);
 			   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bf123);
 			   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bf123);
+			   insertCell(table, "T/GST/%", Element.ALIGN_LEFT, 1, bf123);
 			   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bf123);
 			   table.setHeaderRows(1);
 
 	     for (ProductOrderPDFData productOrderData : productOrderDatas) {
 		     insertCell(table,productOrderData.getProductPartNumber() , Element.ALIGN_RIGHT, 1, bf12);
+		     insertCell(table,productOrderData.getHsnCode() , Element.ALIGN_RIGHT, 1, bf12);
 		      insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_CENTER, 1, bf12);
 		      insertCell(table, (Float.toString(productOrderData.getPricePerUnit())), Element.ALIGN_CENTER, 1, bf12);
-		     float amout = 0;
-		     amout = productOrderData.getQuantity()*productOrderData.getPricePerUnit();
-		    insertCell(table, (Float.toString(amout)), Element.ALIGN_RIGHT, 1, bf12);
-		    SUB_TOTAL = SUB_TOTAL+amout;
-		    double d3 =SUB_TOTAL;
-		    subtoatl= String.format("%.01f", d3);
+		      String  gst = String.valueOf(productOrderData.getGst())+"%";
+		      insertCell(table,gst , Element.ALIGN_RIGHT, 1, bf12);
+		       float amout = 0;
+		      amout = productOrderData.getQuantity()*productOrderData.getPricePerUnit();
+		      double d2 =amout;
+			   String  amountToatl= String.format("%.02f", d2);
+		      insertCell(table, amountToatl, Element.ALIGN_RIGHT, 1, bf12);
+		      SUB_TOTAL = SUB_TOTAL+amout;
+		      double d3 =SUB_TOTAL;
+		       subtoatl= String.format("%.01f", d3);
+		       float  cgst =0;
+		     
+		       if(productOrderData.getGst()==28){
+		    	   cgst = 14*amout;
+		    	   cgstTotal14 = cgstTotal14+cgst/100;
+		    	   sgstTotal14 = cgstTotal14;
+		       }
+		       if(productOrderData.getGst()==18){
+		    	   cgst = 9*amout;
+		    	   cgstTotal9 = cgstTotal9+cgst/100;
+		    	   sgstTotal9 = cgstTotal9;
+		       }
+		       if(productOrderData.getGst()==12){
+		    	   cgst = 6*amout;
+		    	   cgstTotal6 = cgstTotal6+cgst/100;
+		    	   sgstTotal6 = cgstTotal6;
+		       }
+		       if(productOrderData.getGst()==5){
+		    	   cgst = (float) (2.5*amout);
+		    	   cgstTotal2 = cgstTotal2+cgst/100;
+		    	   sgstTotal2 = cgstTotal2;
+		       }
 	    }
-	     insertCell(table, "SubTotal", Element.ALIGN_RIGHT, 3, bf123);
+	     
+	     insertCell(table, "BASE VALUE", Element.ALIGN_RIGHT, 5, bf123);
 	     insertCell(table, subtoatl, Element.ALIGN_RIGHT, 1, bf123);
-	     insertCell(table, "Tax", Element.ALIGN_RIGHT, 3, bf123);
-	     insertCell(table, (Float.toString(productOrderDTO.getTax())), Element.ALIGN_RIGHT, 1, bf123);
-	     insertCell(table, "Total Invoice in fig", Element.ALIGN_RIGHT, 3, bf123);
-	     int totalPrice= (int) (productOrderDTO.getTotalPrice());
+	     if(cgstTotal14>0){
+	    	 double d2 =cgstTotal14;
+		   String  cgst= String.format("%.02f", d2);
+	    	 insertCell(table, "CGST-14 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, cgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(sgstTotal14>0){
+	    	 double d2 =sgstTotal14;
+			   String  sgst= String.format("%.02f", d2);
+	    	 insertCell(table, "SGST-14 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, sgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(cgstTotal9>0){
+	    	 double d2 =cgstTotal9;
+			   String  cgst= String.format("%.02f", d2);
+	    	 insertCell(table, "CGST-9 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, cgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(sgstTotal9>0){
+	    	 double d2 =sgstTotal9;
+			   String  sgst= String.format("%.02f", d2);
+	    	 insertCell(table, "SGST-9 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, sgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(cgstTotal6>0){
+	    	 double d2 =cgstTotal6;
+			   String  cgst= String.format("%.02f", d2);
+	    	 insertCell(table, "CGST-6 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, cgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(sgstTotal6>0){
+	    	 double d2 =sgstTotal6;
+			   String  sgst= String.format("%.02f", d2);
+	    	 insertCell(table, "SGST-6 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table,sgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(cgstTotal2>0){
+	    	 double d2 =cgstTotal2;
+			   String  cgst= String.format("%.02f", d2);
+	    	 insertCell(table, "CGST-2.5 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, cgst, Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     if(sgstTotal2>0){
+	    	 insertCell(table, "SGST-2.5 %", Element.ALIGN_RIGHT, 5, bf123);
+		     insertCell(table, String.valueOf(sgstTotal2), Element.ALIGN_RIGHT, 1, bf123);
+	     }
+	     
+	     insertCell(table, "Total Invoice in fig", Element.ALIGN_RIGHT, 5, bf123);
+	     int totalPrice= (int) (SUB_TOTAL+cgstTotal14+cgstTotal2+cgstTotal9+cgstTotal6+sgstTotal14+sgstTotal9+sgstTotal6+sgstTotal2);
 	     double d3 =totalPrice;
-		 String    finalAns= String.format("%.01f", d3);
+		 String    finalAns= String.format("%.02f", d3);
 	     insertCell(table, finalAns, Element.ALIGN_RIGHT, 1, bf123);
 	     document.add(table);
 			if(totalPrice <= 0)   {                
 				System.out.println("Enter numbers greater than 0");
 			} else {
-				
+
+	
 		 String  totalTaxInWord = calculationInWord(totalPrice);
 		 float[] invoiceValueColumnwidth = {69f,31f};
 	     PdfPTable invoiceValueTable = new PdfPTable(invoiceValueColumnwidth);
@@ -222,6 +305,7 @@ public class ProductOrderPdf {
 	     dateTimeTable.addCell(dateTimeRemovalTable);
 	     dateTimeTable.addCell(dateRemovalTable);
 	     document.add(dateTimeTable);
+	    
 	     
 	     float[] declrationWidth = {65f, 35f};
 	     PdfPTable declarationekTable = new PdfPTable(declrationWidth);

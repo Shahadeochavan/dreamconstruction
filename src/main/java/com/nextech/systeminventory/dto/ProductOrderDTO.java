@@ -12,6 +12,7 @@ public class ProductOrderDTO extends AbstractDTO {
 	private String invoiceNo;
 	private float totalPrice;
 	private float actualPrice;
+	private String poNO;
 	private float tax;
 	private long statusId;
 	
@@ -72,6 +73,12 @@ public class ProductOrderDTO extends AbstractDTO {
 	}
 	public void setStatusId(long statusId) {
 		this.statusId = statusId;
+	}
+	public String getPoNO() {
+		return poNO;
+	}
+	public void setPoNO(String poNO) {
+		this.poNO = poNO;
 	}
 	
 }

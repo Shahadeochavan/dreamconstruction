@@ -54,7 +54,7 @@ public class ProductOrderAssoRequestResponseFactory {
 		productOrderAssociationDTO.setId(productorderassociation.getId());
 		ProductDTO productDTO = new ProductDTO();
 		productDTO.setId(productorderassociation.getProduct().getId());
-		productDTO.setPartNumber(productorderassociation.getProduct().getPartNumber());
+		productDTO.setProductCode(productorderassociation.getProduct().getProductCode());
 		productOrderAssociationDTO.setProductId(productDTO);
 		productOrderAssociationDTO.setQuantity(productorderassociation.getQuantity());
 		productOrderAssociationDTO.setRemainingQuantity(productorderassociation.getRemainingQuantity());

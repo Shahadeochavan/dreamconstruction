@@ -25,9 +25,6 @@ public class Product implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long id;
 
-	@Size(min = 2, max = 255, message = "{Client Part Number sholud be greater than 2 or less than 255 characters or digits}")
-	private String clientpartnumber;
-
 	@Column(name="created_by")
 	private long createdBy;
 
@@ -46,9 +43,11 @@ public class Product implements Serializable {
 	@Size(min = 2, max = 255, message = "{Name sholud be greater than 2 or less than 255 characters}")
 	private String name;
 
-	@Size(min = 2, max = 255, message = "{Part Number sholud be greater than 2 or less than 255 characters or digits}")
-	@Column(name="part_number")
-	private String partNumber;
+	private String productCode;
+	
+	private String hsnCode;
+	
+	private double gst;
 
 	@Column(name="updated_by")
 	private long updatedBy;
@@ -83,14 +82,6 @@ public class Product implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getClientpartnumber() {
-		return this.clientpartnumber;
-	}
-
-	public void setClientpartnumber(String clientpartnumber) {
-		this.clientpartnumber = clientpartnumber;
 	}
 
 	public long getCreatedBy() {
@@ -140,13 +131,14 @@ public class Product implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
 
-	public String getPartNumber() {
-		return this.partNumber;
+	public String getProductCode() {
+		return productCode;
 	}
 
-	public void setPartNumber(String partNumber) {
-		this.partNumber = partNumber;
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
 	}
 
 	public long getUpdatedBy() {
@@ -223,6 +215,22 @@ public class Product implements Serializable {
 
 	public void setPurchaseAssns(List<PurchaseAssn> purchaseAssns) {
 		this.purchaseAssns = purchaseAssns;
+	}
+
+	public String getHsnCode() {
+		return hsnCode;
+	}
+
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
+	}
+
+	public double getGst() {
+		return gst;
+	}
+
+	public void setGst(double gst) {
+		this.gst = gst;
 	}
 	
 }

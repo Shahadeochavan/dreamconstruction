@@ -134,7 +134,11 @@ public class ProductorderController {
 			// TODO save call product order
 			Productorder productorder = saveProductOrder(productOrderDTO, request, response);
 
+			String invoiceNumber = generateInvoice() + productorder.getId();
+			productorder.setInvoiceNo(invoiceNumber);
+			productorderService.updateEntity(productorder);
 			// TODO add product order association
+			productOrderDTO.setInvoiceNo(productorder.getInvoiceNo());
 			addProductOrderAsso(productOrderDTO, productorder, request, response);
 			
 			return new UserStatus(1,"Multiple Product Order added Successfully !");
@@ -169,11 +173,10 @@ public class ProductorderController {
 	
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateProductorder(
-			@RequestBody Productorder productorder,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			productorder.setIsactive(true);
-			productorder.setStatus(statusService.getEntityById(Status.class,
-					Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
+			Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
+			productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(ERPConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Product Order update Successfully !");
 		} catch (Exception e) {
@@ -231,12 +234,14 @@ public class ProductorderController {
 				ProductOrderPDFData productOrderPDFData = new ProductOrderPDFData();
 				productOrderAssociationDTO.setProductOrderId(productorder.getId());
 				ProductDTO  productDTO = productService.getProductDTO(productOrderAssociationDTO.getProductId().getId());
-				productOrderPDFData.setProductPartNumber(productDTO.getPartNumber());
+				productOrderPDFData.setProductPartNumber(productDTO.getProductCode());
 				productOrderPDFData.setPricePerUnit(Float.valueOf(productDTO.getPricePerUnit()));
+				productOrderPDFData.setHsnCode(productDTO.getHsnCode());
 				productOrderPDFData.setQuantity(productOrderAssociationDTO.getQuantity());
 				productOrderPDFData.setActualPrice(productOrderDTO.getActualPrice());
 				productOrderPDFData.setTotalPrice(productOrderDTO.getTotalPrice());
 				productOrderPDFData.setTax(productOrderDTO.getTax());
+				productOrderPDFData.setGst(productDTO.getGst());
 				productOrderPDFDatas.add(productOrderPDFData);
 				productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			}
@@ -270,7 +275,7 @@ public class ProductorderController {
 				Productinventory productinventory = productinventoryService.getProductinventoryByProductId(productorderassociation.getProduct().getId());
 				ProductDTO productDTO =  new ProductDTO();
 				productDTO.setId(productorderassociation.getProduct().getId());
-				productDTO.setPartNumber(productorderassociation.getProduct().getPartNumber());
+				productDTO.setProductCode(productorderassociation.getProduct().getProductCode());
 				productOrderAssociationDTO.setProductId(productDTO);
 				productOrderAssociationDTO.setInventoryQuantity(productinventory.getQuantityavailable());
 				productOrderAssociationDTO.setQuantity(productorderassociation.getQuantity());
@@ -324,5 +329,11 @@ public class ProductorderController {
 	    mail.setAttachment(fileName);
        mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderPDFDatas, client, productOrderDTO));
        mailService.sendEmail(mail,notification);
+	}
+	
+	private String generateInvoice() {
+		String invoiceNumber = "";
+		invoiceNumber = "000";
+		return invoiceNumber;
 	}
 }

@@ -58,7 +58,7 @@ public class ProductController {
 			if (productService.getProductByName(productDTO.getName()) != null) {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PRODUCT_NAME_SHOULD_BE_UNIQUE, null, null));
 			}
-			if (productService.getProductByPartNumber(productDTO.getPartNumber()) != null) {
+			if (productService.getProductByPartNumber(productDTO.getProductCode()) != null) {
 				return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER_SHOULD_BE_UNIQUE, null, null));
 			}
 			long id =productService.addEntity(ProductRequestResponseFactory.setProduct(productDTO, request));
@@ -101,8 +101,8 @@ public class ProductController {
 			    	}
 				 }
 			
-	            if(!productDTO.getPartNumber().equals(oldProductInfo.getPartNumber())){  			
-					if (productService.getProductByPartNumber(productDTO.getPartNumber()) != null) {
+	            if(!productDTO.getProductCode().equals(oldProductInfo.getProductCode())){  			
+					if (productService.getProductByPartNumber(productDTO.getProductCode()) != null) {
 				    	return new UserStatus(0, messageSource.getMessage(ERPConstants.PART_NUMBER_SHOULD_BE_UNIQUE, null, null));
 					}
 				 }

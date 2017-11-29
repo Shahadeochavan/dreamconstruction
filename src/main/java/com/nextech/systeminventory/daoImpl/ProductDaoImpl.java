@@ -46,7 +46,7 @@ public class ProductDaoImpl extends SuperDaoImpl<Product> implements ProductDao 
 		CriteriaBuilder builder = session.getCriteriaBuilder();
 		CriteriaQuery<Product> criteria = builder.createQuery(Product.class);
 		Root<Product> userRoot = criteria.from(Product.class);
-		criteria.select(userRoot).where(builder.equal(userRoot.get("partNumber"), partNumber),builder.equal(userRoot.get("isactive"), true));
+		criteria.select(userRoot).where(builder.equal(userRoot.get("productCode"), partNumber),builder.equal(userRoot.get("isactive"), true));
 		TypedQuery<Product> query = session.createQuery(criteria);
 		  List<Product> list = query.getResultList();
 		  if (list.isEmpty()) {

@@ -3,6 +3,7 @@ package com.nextech.systeminventory.controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -39,6 +40,7 @@ import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.PrVndrAssn;
 import com.nextech.systeminventory.model.Purchase;
 import com.nextech.systeminventory.model.PurchaseAssn;
+import com.nextech.systeminventory.model.Status;
 import com.nextech.systeminventory.pdfClass.PurchaseOrderPdf;
 import com.nextech.systeminventory.service.MailService;
 import com.nextech.systeminventory.service.NotificationService;
@@ -99,7 +101,10 @@ public class PurchaseController {
 			}
 		long id =	purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO));
 		purchaseDTO.setId(id);
-		
+		Purchase purchase =  purchaseService.getEntityById(Purchase.class, id);
+		String poNumber = generatePoId()+purchase.getId();
+		purchase.setName(poNumber);;
+		purchaseService.updateEntity(purchase);
 		addPurchaseOrderAsso(purchaseDTO, request, response);
 			return new UserStatus(1, "Purchase added Successfully !");
 		} catch (ConstraintViolationException cve) {
@@ -184,7 +189,7 @@ public class PurchaseController {
 				//Productinventory productinventory = productinventoryService.getProductinventoryByProductId(purchaseAssn.getProduct().getId());
 				ProductDTO productDTO =  new ProductDTO();
 				productDTO.setId(purchaseAssn.getProduct().getId());
-				productDTO.setPartNumber(purchaseAssn.getProduct().getPartNumber());
+				productDTO.setProductCode(purchaseAssn.getProduct().getProductCode());
 				purchaseAssnDTO.setProductId(productDTO);
 				purchaseAssnDTO.setQuantity(purchaseAssn.getQuantity());
 				purchaseAssnDTO.setRemainingQuantity(purchaseAssn.getRemainingQuantity());
@@ -223,7 +228,7 @@ public class PurchaseController {
 						PurchaseOrderPdfData purchaseOrderPdfData = new PurchaseOrderPdfData();
 						purchaseAssnDTO.setPurchaseId(purchaseDTO.getId());
 						ProductDTO  productDTO = productService.getProductDTO(purchaseAssnDTO.getProductId().getId());
-						purchaseOrderPdfData.setProductPartNumber(productDTO.getPartNumber());
+						purchaseOrderPdfData.setProductPartNumber(productDTO.getProductCode());
 						purchaseOrderPdfData.setPricePerUnit(prVndrAssn.getPricePerUnit());
 						purchaseOrderPdfData.setQuantity(purchaseAssnDTO.getQuantity());
 						productOrderPDFDatas.add(purchaseOrderPdfData);
@@ -266,5 +271,24 @@ public class PurchaseController {
 		mail.setAttachment(fileName);
 		mail.setModel(MailResponseRequestFactory.setMailDetailsPurchaseOrder(notification, productOrderPDFDatas, vendor,purchaseDTO));
 		mailService.sendEmail(mail,notification);
+	}
+	
+	
+	private String generatePoId(){
+		String year="";
+		Date currentDate = new Date();
+		if(currentDate.getMonth()+1 > 3){
+			int str = currentDate.getYear()+1900;
+			int stri = str + 1;
+			String strDate = stri+"";
+			year = str+"/"+strDate.substring(2);
+		}else{
+			int str = currentDate.getYear()+1899;
+			int stri = str + 1;
+			String strDate = stri+"";
+			year = str+"/"+strDate.substring(2);
+		}
+		year = "AS/PO/"+year+"/";
+		return year;
 	}
 }

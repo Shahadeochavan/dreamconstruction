@@ -61,7 +61,7 @@ public class ProductInventoryRequestResponseFactory {
 		productInventoryDTO.setName(productinventory.getName());
 		ProductDTO productDTO =  new ProductDTO();
 		productDTO.setId(productinventory.getProduct().getId());
-		productDTO.setPartNumber(productinventory.getProduct().getPartNumber());
+		productDTO.setProductCode(productinventory.getProduct().getProductCode());
 		productInventoryDTO.setProductId(productDTO.getId());
 		productInventoryDTO.setQuantityAvailable(productinventory.getQuantityavailable());
 		productInventoryDTO.setRackNumber(productinventory.getRacknumber());

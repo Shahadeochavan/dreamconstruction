@@ -17,7 +17,7 @@ public class ProductOrderRequestResponseFactory {
 		productorder.setDescription(productOrderDTO.getDescription());
 		productorder.setExpecteddeliveryDate(productOrderDTO.getExpecteddeliveryDate());
 		productorder.setId(productOrderDTO.getId());
-		productorder.setInvoiceNo(productOrderDTO.getInvoiceNo());
+		productorder.setPoNO(productOrderDTO.getPoNO());
 		productorder.setQuantity(productOrderDTO.getProductOrderAssociationDTOs().size());
 		productorder.setTotalPrice(productOrderDTO.getTotalPrice());
 		productorder.setTax(productOrderDTO.getTax());
@@ -51,6 +51,7 @@ public class ProductOrderRequestResponseFactory {
 		productOrderDTO.setTotalPrice(productorder.getTotalPrice());
 		productOrderDTO.setActualPrice(productorder.getActualPrice());
 		productOrderDTO.setTax(productorder.getActualPrice());
+		productOrderDTO.setPoNO(productorder.getPoNO());
 		return productOrderDTO;
 	}
 }

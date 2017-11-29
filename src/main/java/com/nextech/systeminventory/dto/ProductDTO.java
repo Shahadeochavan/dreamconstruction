@@ -3,11 +3,12 @@ package com.nextech.systeminventory.dto;
 
 public class ProductDTO  extends AbstractDTO{
 
-	private String clientPartNumber;
 	private String design;
 	private String name;
-	private String partNumber;
+    private String productCode;
+	private String hsnCode;
 	private String pricePerUnit;
+	private double gst;
 	
 	public ProductDTO(){
 		
@@ -15,12 +16,7 @@ public class ProductDTO  extends AbstractDTO{
 	public ProductDTO(int id){
 		this.setId(id);
 	}
-	public String getClientPartNumber() {
-		return clientPartNumber;
-	}
-	public void setClientPartNumber(String clientPartNumber) {
-		this.clientPartNumber = clientPartNumber;
-	}
+
 	public String getDesign() {
 		return design;
 	}
@@ -33,11 +29,18 @@ public class ProductDTO  extends AbstractDTO{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getPartNumber() {
-		return partNumber;
+	
+	public String getProductCode() {
+		return productCode;
 	}
-	public void setPartNumber(String partNumber) {
-		this.partNumber = partNumber;
+	public void setProductCode(String productCode) {
+		this.productCode = productCode;
+	}
+	public String getHsnCode() {
+		return hsnCode;
+	}
+	public void setHsnCode(String hsnCode) {
+		this.hsnCode = hsnCode;
 	}
 	public String getPricePerUnit() {
 		return pricePerUnit;
@@ -45,6 +48,11 @@ public class ProductDTO  extends AbstractDTO{
 	public void setPricePerUnit(String pricePerUnit) {
 		this.pricePerUnit = pricePerUnit;
 	}
-
+	public double getGst() {
+		return gst;
+	}
+	public void setGst(double gst) {
+		this.gst = gst;
+	}
 
 }

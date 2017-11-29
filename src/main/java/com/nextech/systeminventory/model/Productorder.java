@@ -64,6 +64,7 @@ public class Productorder implements Serializable {
 	
 	private float tax;
 	
+	private String poNO;	
 
 	//bi-directional many-to-one association to Orderproductassociation
 	@JsonIgnore
@@ -226,6 +227,12 @@ public class Productorder implements Serializable {
 	}
 	public void setTax(float tax) {
 		this.tax = tax;
+	}
+	public String getPoNO() {
+		return poNO;
+	}
+	public void setPoNO(String poNO) {
+		this.poNO = poNO;
 	}
 
 }

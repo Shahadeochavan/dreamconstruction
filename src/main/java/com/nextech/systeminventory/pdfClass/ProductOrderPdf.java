@@ -10,6 +10,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -42,7 +45,6 @@ public class ProductOrderPdf {
 	public double sgstTotal9 =0;
 	public double sgstTotal6 =0;
 	public double sgstTotal2 =0;
-	public String igst ="";
 	public String cgst ="";
 	public String sgst ="";
 	public String subtoatl ="";
@@ -88,20 +90,23 @@ public class ProductOrderPdf {
 	private  void addTitlePage(Document document,ClientDTO client,ProductOrderDTO productOrderDTO)
 			throws DocumentException, MalformedURLException, IOException {
 
-		Paragraph preface = new Paragraph();
+
+		Paragraph paragraph = new Paragraph();
+		paragraph.add("TAX INVOICE");
+		paragraph.setAlignment(Element.ALIGN_CENTER);
+		creteEmptyLine(paragraph, 2);
+		document.add(paragraph);
 		   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10,Font.BOLD); 
 		   Font font3 = new Font(Font.FontFamily.TIMES_ROMAN, 10);
 		  
-		   creteEmptyLine(preface, 2);
-		   document.add(preface);
 		   SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		    float[] columnWidthImageInvoice = {25f,50f,25f,25f};
 		     PdfPTable imageInvoiceDateTable = new PdfPTable(columnWidthImageInvoice);
 		     imageInvoiceDateTable.setWidthPercentage(100f);
 		     
 		     PdfPTable imageTable = new PdfPTable(1);
-		     Image img = Image.getInstance("C:/Users/welcome/Downloads/logo1.png");
-		     imageTable.addCell(getCell(""+img, PdfPCell.ALIGN_LEFT,bf12));
+		     Image img = Image.getInstance((getClass().getResource("/images/logo1.png")));
+		     imageTable.addCell(img);
 		   
 		     PdfPTable fromTabel = new PdfPTable(1);
 		     fromTabel.addCell(getCell("FROM :", PdfPCell.ALIGN_LEFT,bf12));
@@ -284,10 +289,10 @@ public class ProductOrderPdf {
 	     invoiceValueTable.setWidthPercentage(100);
 	     
 	     PdfPTable valueTable = new PdfPTable(1);
-	     valueTable.addCell(getCell("GRAND TOTAL IN WORDS:", PdfPCell.ALIGN_LEFT,bf1));
+	     valueTable.addCell(getCell("GRAND TOTAL IN WORDS:", PdfPCell.ALIGN_LEFT,bf123));
 	     
 	     PdfPTable wordTable =  new PdfPTable(1);
-	     wordTable.addCell(getCell("Indian Rupees :"+totalTaxInWord, PdfPCell.ALIGN_LEFT,bf1));
+	     wordTable.addCell(getCell("Indian Rupees :"+totalTaxInWord, PdfPCell.ALIGN_LEFT,bf123));
 	     
 	     PdfPTable valueBlankTable= new PdfPTable(1);
 	     

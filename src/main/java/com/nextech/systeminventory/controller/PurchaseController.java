@@ -222,7 +222,10 @@ public class PurchaseController {
 		if (purchaseAssnDTOs != null&& !purchaseAssnDTOs.isEmpty()) {
 			for (PurchaseAssnDTO purchaseAssnDTO : purchaseAssnDTOs) {
 				if (prVndrAssns != null&& !prVndrAssns.isEmpty()) {
+					
 				for (PrVndrAssn prVndrAssn : prVndrAssns) {
+					System.out.println("pr id"+prVndrAssn.getProduct().getId());
+					System.out.println("product id"+purchaseAssnDTO.getProductId().getId());
 					if(prVndrAssn.getProduct().getId()==purchaseAssnDTO.getProductId().getId()){
 						PurchaseOrderPdfData purchaseOrderPdfData = new PurchaseOrderPdfData();
 						purchaseAssnDTO.setPurchaseId(purchaseDTO.getId());

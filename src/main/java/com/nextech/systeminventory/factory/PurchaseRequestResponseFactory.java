@@ -22,6 +22,7 @@ public class PurchaseRequestResponseFactory {
 		Vendor vendor = new Vendor();
 		vendor.setId(purchaseDTO.getVendorId());
 		purchase.setVendor(vendor);
+		purchase.setId(purchaseDTO.getId());
 		return purchase;
 		
 	}

@@ -136,10 +136,9 @@ public class PurchaseController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUserType(
-			@RequestBody Purchase Purchase,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody PurchaseDTO purchaseDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Purchase.setIsactive(true);
-			purchaseService.updateEntity(Purchase);
+			purchaseService.updateEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO));
 			return new UserStatus(1, "Purchase update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

@@ -2,15 +2,15 @@ package com.nextech.systeminventory.controller;
 
 import java.util.List;
 
+import javax.naming.AuthenticationException;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -20,35 +20,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.systeminventory.model.Page;
-import com.nextech.systeminventory.service.PageService;
+import com.nextech.systeminventory.model.Contractor;
+import com.nextech.systeminventory.service.ContractorService;
 import com.nextech.systeminventory.status.UserStatus;
 
 @Controller
-@RequestMapping("/page")
-public class PageController {
+@RequestMapping("/contractor")
+public class ContractorController {
 
 	@Autowired
-	PageService pageservice;
+	ContractorService contractorService;
 	
 	@Autowired
-	private MessageSource messageSource;
-	
-	@Autowired
-	static Logger logger = Logger.getLogger(ClientController.class);
+	static Logger logger = Logger.getLogger(ContractorController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPage(@Valid @RequestBody Page page,
+	public @ResponseBody UserStatus addContractor(@Valid @RequestBody Contractor contractor,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			page.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			page.setIsactive(true);
-			pageservice.addEntity(page);
-			return new UserStatus(1, "Page added Successfully !");
+			contractor.setIsactive(true);
+			contractor.setCreatedBy((request.getAttribute("current_user").toString()));
+			contractorService.addEntity(contractor);
+			return new UserStatus(1, "Contractor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
 			cve.printStackTrace();
@@ -57,6 +54,9 @@ public class PageController {
 			logger.error(pe);
 			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (AuthenticationException authException) {
+
+			return new UserStatus(0, authException.getCause().getMessage());
 		} catch (Exception e) {
 			logger.error(e);
 			e.printStackTrace();
@@ -65,48 +65,51 @@ public class PageController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Page getPage(@PathVariable("id") long id) {
-		Page page = null;
+	public @ResponseBody Contractor getContractor(@PathVariable("id") long id) {
+		Contractor contractor = null;
 		try {
-			page = pageservice.getEntityById(Page.class, id);
+			contractor = contractorService.getEntityById(Contractor.class, id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return page;
+		return contractor;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updatePage(@RequestBody Page page,
-			HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody UserStatus updateContractor(
+			@RequestBody Contractor contractor,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			page.setIsactive(true);
-			pageservice.updateEntity(page);
-			return new UserStatus(1, "Page update Successfully !");
+			contractor.setIsactive(true);
+			contractorService.updateEntity(contractor);
+			return new UserStatus(1, "Contractor update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Page> getPage() {
+	public @ResponseBody List<Contractor> getContractor() {
 
-		List<Page> PageList = null;
+		List<Contractor> contractors = null;
 		try {
-			PageList = pageservice.getEntityList(Page.class);
+			contractors = contractorService.getEntityList(Contractor.class);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return PageList;
+
+		return contractors;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
+	public @ResponseBody UserStatus deleteContractor(@PathVariable("id") long id) {
+
 		try {
-			Page page = pageservice.getEntityById(Page.class,id);
-			page.setIsactive(false);
-			pageservice.updateEntity(page);
-			return new UserStatus(1, "Page deleted Successfully !");
+			Contractor contractor = contractorService.getEntityById(Contractor.class,id);
+			contractor.setIsactive(false);
+			contractorService.updateEntity(contractor);
+			return new UserStatus(1, "Contractor deleted Successfully !");
 		} catch (Exception e) {
 			return new UserStatus(0, e.toString());
 		}

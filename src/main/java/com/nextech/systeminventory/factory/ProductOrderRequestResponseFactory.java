@@ -1,6 +1,7 @@
 package com.nextech.systeminventory.factory;
 import com.nextech.systeminventory.dto.ProductOrderDTO;
 import com.nextech.systeminventory.model.Client;
+import com.nextech.systeminventory.model.Contractor;
 import com.nextech.systeminventory.model.Product;
 import com.nextech.systeminventory.model.Productorder;
 import com.nextech.systeminventory.model.Productorderassociation;
@@ -10,9 +11,9 @@ public class ProductOrderRequestResponseFactory {
 	
 	public static Productorder setProductOrder(ProductOrderDTO productOrderDTO){
 		Productorder productorder = new Productorder();
-		Client client = new Client();
-		client.setId(productOrderDTO.getClientId());
-		productorder.setClient(client);
+		Contractor contractor = new Contractor();
+		contractor.setId(productOrderDTO.getContractorId().getId());
+		productorder.setContractor(contractor);
 		productorder.setCreateDate(productOrderDTO.getCreateDate());
 		productorder.setDescription(productOrderDTO.getDescription());
 		productorder.setExpecteddeliveryDate(productOrderDTO.getExpecteddeliveryDate());
@@ -42,7 +43,7 @@ public class ProductOrderRequestResponseFactory {
 		ProductOrderDTO productOrderDTO =  new ProductOrderDTO();
 		productOrderDTO.setActive(true);
 		productOrderDTO.setId(productorder.getId());
-		productOrderDTO.setClientId(productorder.getClient().getId());
+		productOrderDTO.setContractorId(productorder.getContractor());
 		productOrderDTO.setCreatedDate(productorder.getCreatedDate());
 		productOrderDTO.setDescription(productorder.getDescription());
 		productOrderDTO.setExpecteddeliveryDate(productorder.getExpecteddeliveryDate());

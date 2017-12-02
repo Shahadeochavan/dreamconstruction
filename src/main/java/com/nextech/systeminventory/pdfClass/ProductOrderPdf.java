@@ -29,6 +29,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import com.nextech.systeminventory.dto.ClientDTO;
 import com.nextech.systeminventory.dto.ProductOrderDTO;
 import com.nextech.systeminventory.dto.ProductOrderPDFData;
+import com.nextech.systeminventory.model.Contractor;
 
 public class ProductOrderPdf {
 
@@ -53,7 +54,7 @@ public class ProductOrderPdf {
 	 */
   
 
-	public  Document createPDF(String file,List<ProductOrderPDFData> productOrderPDFDatas,ProductOrderDTO productOrderDTO,ClientDTO client) throws Exception {
+	public  Document createPDF(String file,List<ProductOrderPDFData> productOrderPDFDatas,ProductOrderDTO productOrderDTO,Contractor contractor) throws Exception {
 
 		Document document = null;
 
@@ -64,7 +65,7 @@ public class ProductOrderPdf {
 
 			addMetaData(document);
 
-			addTitlePage(document,client,productOrderDTO);
+			addTitlePage(document,contractor,productOrderDTO);
 
 		  createTable(document,productOrderPDFDatas, productOrderDTO);
 
@@ -87,7 +88,7 @@ public class ProductOrderPdf {
 		document.addCreator("Java Honk");
 	}
 
-	private  void addTitlePage(Document document,ClientDTO client,ProductOrderDTO productOrderDTO)
+	private  void addTitlePage(Document document,Contractor contractor,ProductOrderDTO productOrderDTO)
 			throws DocumentException, MalformedURLException, IOException {
 
 
@@ -105,8 +106,8 @@ public class ProductOrderPdf {
 		     imageInvoiceDateTable.setWidthPercentage(100f);
 		     
 		     PdfPTable imageTable = new PdfPTable(1);
-		     Image img = Image.getInstance((getClass().getResource("/images/logo1.png")));
-		     imageTable.addCell(img);
+		    // Image img = Image.getInstance((getClass().getResource("/images/logo1.png")));
+		   //  imageTable.addCell(img);
 		   
 		     PdfPTable fromTabel = new PdfPTable(1);
 		     fromTabel.addCell(getCell("FROM :", PdfPCell.ALIGN_LEFT,bf12));
@@ -145,8 +146,8 @@ public class ProductOrderPdf {
 		    
 		     PdfPTable reciverTable = new PdfPTable(1);
 		     reciverTable.addCell(getCell("BUYER)", PdfPCell.ALIGN_LEFT,bf12));
-		     reciverTable.addCell(getCell("Name :"+client.getCompanyName(), PdfPCell.ALIGN_LEFT,bf12));
-		     reciverTable.addCell(getCell("Address  :"+client.getAddress(), PdfPCell.ALIGN_LEFT,font3));
+		     reciverTable.addCell(getCell("Name :"+contractor.getFirstName(), PdfPCell.ALIGN_LEFT,bf12));
+		     reciverTable.addCell(getCell("Address  :"+contractor.getAddress(), PdfPCell.ALIGN_LEFT,font3));
 		     
 		     PdfPTable taxTable = new PdfPTable(1);
 		     taxTable.addCell(getCell("GSTIN NO. : "+"27AABCH7371R1ZV", PdfPCell.ALIGN_LEFT,font3));

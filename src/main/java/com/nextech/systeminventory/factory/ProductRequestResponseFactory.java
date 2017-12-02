@@ -21,7 +21,7 @@ public class ProductRequestResponseFactory {
 		product.setGst(productDTO.getGst());
 		product.setIsactive(true);
 		product.setPricePerUnit(Float.valueOf(productDTO.getPricePerUnit()));
-		//product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return product;
 	}
 

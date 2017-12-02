@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.persistence.PersistenceException;
 import javax.servlet.ServletContext;
@@ -18,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,8 +30,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.systeminventory.constants.ERPConstants;
+import com.nextech.systeminventory.dto.MultiplePurchaseOrderDTO;
 import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.ProductDTO;
+import com.nextech.systeminventory.dto.ProductOrderDTO;
 import com.nextech.systeminventory.dto.PurchaseAssnDTO;
 import com.nextech.systeminventory.dto.PurchaseDTO;
 import com.nextech.systeminventory.dto.PurchaseOrderPdfData;
@@ -41,6 +47,7 @@ import com.nextech.systeminventory.model.PrVndrAssn;
 import com.nextech.systeminventory.model.Purchase;
 import com.nextech.systeminventory.model.PurchaseAssn;
 import com.nextech.systeminventory.model.Status;
+import com.nextech.systeminventory.model.Vendor;
 import com.nextech.systeminventory.pdfClass.PurchaseOrderPdf;
 import com.nextech.systeminventory.service.MailService;
 import com.nextech.systeminventory.service.NotificationService;
@@ -218,26 +225,17 @@ public class PurchaseController {
 		List<PurchaseAssnDTO> purchaseAssnDTOs = purchaseDTO.getPurchaseAssnDTOs();
 		List<PurchaseOrderPdfData> productOrderPDFDatas = new ArrayList<PurchaseOrderPdfData>();
 		VendorDTO vendorDTO = vendorService.getVendorById(purchaseDTO.getVendorId());
-		List<PrVndrAssn> prVndrAssns  = PrVndrAssnService.getPrVndrAssnByVendorId(vendorDTO.getId());
+	//	List<PrVndrAssn> prVndrAssns  = PrVndrAssnService.getPrVndrAssnByVendorId(vendorDTO.getId());
 		if (purchaseAssnDTOs != null&& !purchaseAssnDTOs.isEmpty()) {
 			for (PurchaseAssnDTO purchaseAssnDTO : purchaseAssnDTOs) {
-				if (prVndrAssns != null&& !prVndrAssns.isEmpty()) {
-					
-				for (PrVndrAssn prVndrAssn : prVndrAssns) {
-					System.out.println("pr id"+prVndrAssn.getProduct().getId());
-					System.out.println("product id"+purchaseAssnDTO.getProductId().getId());
-					if(prVndrAssn.getProduct().getId()==purchaseAssnDTO.getProductId().getId()){
 						PurchaseOrderPdfData purchaseOrderPdfData = new PurchaseOrderPdfData();
 						purchaseAssnDTO.setPurchaseId(purchaseDTO.getId());
 						ProductDTO  productDTO = productService.getProductDTO(purchaseAssnDTO.getProductId().getId());
 						purchaseOrderPdfData.setProductPartNumber(productDTO.getProductCode());
-						purchaseOrderPdfData.setPricePerUnit(prVndrAssn.getPricePerUnit());
+						purchaseOrderPdfData.setPricePerUnit(purchaseAssnDTO.getPricePerUnit());
 						purchaseOrderPdfData.setQuantity(purchaseAssnDTO.getQuantity());
 						productOrderPDFDatas.add(purchaseOrderPdfData);
 						purchaseAssnService.addEntity(PurhcaseAssnRequestResponseFactory.setPurchaseAssn(purchaseAssnDTO));
-					}
-				}
-				}
 			
 			}
 		}
@@ -292,5 +290,74 @@ public class PurchaseController {
 		}
 		year = "AS/PO/"+year+"/";
 		return year;
+	}
+	
+	@Transactional @RequestMapping(value = "/createMultiplePurchase", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
+	public @ResponseBody UserStatus addMultipleRMOrder(
+			@Valid  @RequestBody MultiplePurchaseOrderDTO multiplePurchaseOrderDTO, BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+		try {
+			if (bindingResult.hasErrors()) {
+				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
+			}
+			//TODO save call raw material order
+			List<PurchaseDTO> purchaseDTOs =  new ArrayList<PurchaseDTO>();
+			HashMap<Long, List<PurchaseAssnDTO>> multipleOrder = new HashMap<Long, List<PurchaseAssnDTO>>();
+			PurchaseDTO purchaseDTO = new PurchaseDTO();
+			for(PurchaseDTO purDto : multiplePurchaseOrderDTO.getPurchaseDTOs()){
+				purchaseDTO.setExpectedDeliveryDate(purDto.getExpectedDeliveryDate());
+				purchaseDTO.setDescription(purDto.getDescription());
+				List<PurchaseAssnDTO> purchaseAssnDTOs = null;
+				if(multipleOrder.get(purDto.getVendorId()) == null){
+					purchaseAssnDTOs = new ArrayList<PurchaseAssnDTO>();
+				}else{
+					purchaseAssnDTOs = multipleOrder.get(purDto.getVendorId());
+				}
+				
+				for (PurchaseAssnDTO rmOrderAssociationDTO1 : purDto.getPurchaseAssnDTOs()) {
+					PurchaseAssnDTO purchaseAssnDTO = new PurchaseAssnDTO();
+					purchaseAssnDTO.setQuantity(rmOrderAssociationDTO1.getQuantity());
+					purchaseAssnDTO.setProductId(rmOrderAssociationDTO1.getProductId());
+					purchaseAssnDTO.setPricePerUnit(rmOrderAssociationDTO1.getPricePerUnit());
+					purchaseAssnDTO.setExpectedDeliveryDate(purDto.getExpectedDeliveryDate());
+					purchaseAssnDTOs.add(purchaseAssnDTO);
+					multipleOrder.put(purDto.getVendorId(), purchaseAssnDTOs);
+				}
+				
+			}
+			Set<Entry<Long, List<PurchaseAssnDTO>>> multpleRMAssoEntries =  multipleOrder.entrySet();
+			for(Entry<Long, List<PurchaseAssnDTO>> multpleRMAssoEntry : multpleRMAssoEntries){
+				PurchaseDTO purchaseDTO2 = new PurchaseDTO();
+				purchaseDTO2.setPurchaseAssnDTOs(multpleRMAssoEntry.getValue());
+				Vendor vendor =  new Vendor();
+				vendor.setId(multpleRMAssoEntry.getKey());
+				purchaseDTO2.setVendorId(vendor.getId());
+				for(PurchaseAssnDTO purchaseAssnDTO:purchaseDTO2.getPurchaseAssnDTOs()){
+					purchaseDTO2.setExpectedDeliveryDate(purchaseAssnDTO.getExpectedDeliveryDate());	
+				}
+				purchaseDTOs.add(purchaseDTO2);
+			}
+			for (PurchaseDTO purchaseDTO2 : purchaseDTOs) {
+			long id=	  purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO2));
+			      purchaseDTO2.setId(id);
+					Purchase purchase =  purchaseService.getEntityById(Purchase.class, id);
+					String poNumber = generatePoId()+purchase.getId();
+					purchase.setName(poNumber);;
+					purchaseService.updateEntity(purchase);
+				  addPurchaseOrderAsso(purchaseDTO2, request, response);
+			}
+			return new UserStatus(1, "Multiple Purchase  Order added Successfully !");
+		} catch (ConstraintViolationException cve) {
+			logger.error(cve);
+			cve.printStackTrace();
+			return new UserStatus(0, cve.getCause().getMessage());
+		} catch (PersistenceException pe) {
+			logger.error(pe);
+			pe.printStackTrace();
+			return new UserStatus(0, pe.getCause().getMessage());
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+			return new UserStatus(0, e.getCause().getMessage());
+		}
 	}
 }

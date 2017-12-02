@@ -63,9 +63,7 @@ public class Client implements Serializable {
 
 	//bi-directional many-to-one association to Productorder
 
-	@JsonIgnore
-	@OneToMany(fetch = FetchType.LAZY, mappedBy = "client", cascade = CascadeType.ALL)
-	private List<Productorder> productorders;
+
 
 	public Client() {
 	}
@@ -214,28 +212,6 @@ public class Client implements Serializable {
 
 	public void setVatNo(String vatNo) {
 		this.vatNo = vatNo;
-	}
-
-	public List<Productorder> getProductorders() {
-		return this.productorders;
-	}
-
-	public void setProductorders(List<Productorder> productorders) {
-		this.productorders = productorders;
-	}
-
-	public Productorder addProductorder(Productorder productorder) {
-		getProductorders().add(productorder);
-		productorder.setClient(this);
-
-		return productorder;
-	}
-
-	public Productorder removeProductorder(Productorder productorder) {
-		getProductorders().remove(productorder);
-		productorder.setClient(null);
-
-		return productorder;
 	}
 
 }

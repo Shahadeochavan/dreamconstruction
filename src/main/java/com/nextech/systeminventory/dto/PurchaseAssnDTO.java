@@ -1,5 +1,7 @@
 package com.nextech.systeminventory.dto;
 
+import java.util.Date;
+
 
 
 
@@ -9,6 +11,8 @@ public class PurchaseAssnDTO extends AbstractDTO{
 	private long purchaseId;
 	private ProductDTO productId;
 	private int remainingQuantity;
+	private Date expectedDeliveryDate;
+	private float pricePerUnit;
 	
 	public	PurchaseAssnDTO(){
 		
@@ -39,6 +43,18 @@ public class PurchaseAssnDTO extends AbstractDTO{
 	}
 	public void setRemainingQuantity(int remainingQuantity) {
 		this.remainingQuantity = remainingQuantity;
+	}
+	public Date getExpectedDeliveryDate() {
+		return expectedDeliveryDate;
+	}
+	public void setExpectedDeliveryDate(Date expectedDeliveryDate) {
+		this.expectedDeliveryDate = expectedDeliveryDate;
+	}
+	public float getPricePerUnit() {
+		return pricePerUnit;
+	}
+	public void setPricePerUnit(float pricePerUnit) {
+		this.pricePerUnit = pricePerUnit;
 	}
 	
 }

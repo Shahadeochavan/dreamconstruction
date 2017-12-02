@@ -78,8 +78,8 @@ public class Productorder implements Serializable {
 
 	//bi-directional many-to-one association to Client
 	@ManyToOne
-	@JoinColumn(name="clientid")
-	private Client client;
+	@JoinColumn(name="contractorId")
+	private Contractor contractor;
 
 	public Productorder() {
 	}
@@ -197,12 +197,11 @@ public class Productorder implements Serializable {
 		this.status = status;
 	}
 
-	public Client getClient() {
-		return this.client;
+	public Contractor getContractor() {
+		return contractor;
 	}
-
-	public void setClient(Client client) {
-		this.client = client;
+	public void setContractor(Contractor contractor) {
+		this.contractor = contractor;
 	}
 	public String getInvoiceNo() {
 		return invoiceNo;

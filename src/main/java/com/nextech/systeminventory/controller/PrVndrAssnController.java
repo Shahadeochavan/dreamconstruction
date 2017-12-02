@@ -133,4 +133,36 @@ public class PrVndrAssnController {
 		}
 		return new UserStatus(1,prVndrAssns);
 	}
+	
+	@RequestMapping(value = "vendorList/{productId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody UserStatus getProductByProductId(@PathVariable("productId") long productId) {
+		List<PrVndrAssn> prVndrAssns =null;
+
+		try {
+			prVndrAssns = PrVndrAssnService.getPrVndrAssnByProductId(productId);
+			if(prVndrAssns.isEmpty()){
+				return new UserStatus(1,"Please first you can do product vendor association");
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			return new UserStatus(0, e.toString());
+		}
+		return new UserStatus(1,prVndrAssns);
+	}
+	
+	@RequestMapping(value = "productVendorList/{productId}/{price}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody UserStatus getProductByprice(@PathVariable("productId") long productId,@PathVariable("price") float price) {
+		List<PrVndrAssn> prVndrAssns =null;
+
+		try {
+			prVndrAssns = PrVndrAssnService.getPrVndrAssnByprice(productId,price);
+			if(prVndrAssns.isEmpty()){
+				return new UserStatus(1,"Please first you can do product vendor association");
+			}
+		} catch (Exception e) {
+			logger.error(e);
+			return new UserStatus(0, e.toString());
+		}
+		return new UserStatus(1,prVndrAssns);
+	}
 }

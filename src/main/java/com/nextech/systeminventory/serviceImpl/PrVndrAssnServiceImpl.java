@@ -26,5 +26,16 @@ public class PrVndrAssnServiceImpl extends CRUDServiceImpl<PrVndrAssn> implement
 		// TODO Auto-generated method stub
 		return prVndrAssnDao.getPrVndrAssnByVendorIdProductId(vendorId, productId);
 	}
+	@Override
+	public List<PrVndrAssn> getPrVndrAssnByProductId(long productId)
+			throws Exception {
+		// TODO Auto-generated method stub
+		return prVndrAssnDao.getPrVndrAssnByProductId(productId);
+	}
+	@Override
+	public List<PrVndrAssn> getPrVndrAssnByprice(long productId,float price) throws Exception {
+		// TODO Auto-generated method stub
+		return prVndrAssnDao.getPrVndrAssnByprice(productId,price);
+	}
 
 }

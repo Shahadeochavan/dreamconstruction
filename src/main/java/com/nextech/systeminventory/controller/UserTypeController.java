@@ -25,6 +25,7 @@ import com.nextech.systeminventory.status.UserStatus;
 @Controller
 @RequestMapping("/usertype")
 public class UserTypeController {
+	
 	@Autowired
 	UserTypeService userTypeService;
 	

@@ -1,4 +1,4 @@
-/*package com.nextech.systeminventory.filter;
+package com.nextech.systeminventory.filter;
 
 import java.util.Base64;
 import java.util.Date;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import com.nextech.systeminventory.model.User;
+
 
 @Component
 public class TokenFactory {
@@ -68,4 +69,4 @@ public class TokenFactory {
 	public static boolean isValidSession(String encryptedText,long sessionTime) throws Exception {
 		return Long.parseLong(decrypt(encryptedText).split("-")[2]) > (new Date().getTime() - sessionTime);
 	}
-}*/
+}

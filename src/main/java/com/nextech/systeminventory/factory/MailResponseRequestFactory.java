@@ -12,13 +12,14 @@ import com.nextech.systeminventory.dto.PurchaseDTO;
 import com.nextech.systeminventory.dto.PurchaseOrderPdfData;
 import com.nextech.systeminventory.dto.UserDTO;
 import com.nextech.systeminventory.dto.VendorDTO;
+import com.nextech.systeminventory.model.Contractor;
 
 
 public class MailResponseRequestFactory {
 	
-	public static Map<String,Object> setMailDetailsProductOrder(NotificationDTO notification,List<ProductOrderPDFData> productOrderPDFDatas,ClientDTO clientDTO,ProductOrderDTO productOrderDTO){
+	public static Map<String,Object> setMailDetailsProductOrder(NotificationDTO notification,List<ProductOrderPDFData> productOrderPDFDatas,Contractor contractor,ProductOrderDTO productOrderDTO){
 	       Map < String, Object > model = new HashMap < String, Object >();
-	        model.put("companyName", clientDTO.getCompanyName());
+	        model.put("companyName", contractor.getFirstName());
 	        model.put("mailfrom", notification.getName());
 	        model.put("location", "Pune");
 	        model.put("productOrderPDFDatas",productOrderPDFDatas);
@@ -26,7 +27,7 @@ public class MailResponseRequestFactory {
 	        model.put("date",productOrderDTO.getCreatedDate());
 	        model.put("totalPrice", productOrderDTO.getTotalPrice());
 	        model.put("tax", productOrderDTO.getTax());
-	        model.put("address", clientDTO.getAddress());
+	        model.put("address", contractor.getAddress());
 	        model.put("signature", "www.NextechServices.in");
 	        return model;
 	}

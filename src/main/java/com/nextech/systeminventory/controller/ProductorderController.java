@@ -36,6 +36,7 @@ import com.nextech.systeminventory.dto.StatusDTO;
 import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.factory.ProductOrderAssoRequestResponseFactory;
 import com.nextech.systeminventory.factory.ProductOrderRequestResponseFactory;
+import com.nextech.systeminventory.model.Contractor;
 import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Productinventory;
 import com.nextech.systeminventory.model.Productorder;
@@ -43,6 +44,7 @@ import com.nextech.systeminventory.model.Productorderassociation;
 import com.nextech.systeminventory.model.Status;
 import com.nextech.systeminventory.pdfClass.ProductOrderPdf;
 import com.nextech.systeminventory.service.ClientService;
+import com.nextech.systeminventory.service.ContractorService;
 import com.nextech.systeminventory.service.MailService;
 import com.nextech.systeminventory.service.NotificationService;
 import com.nextech.systeminventory.service.ProductService;
@@ -92,6 +94,9 @@ public class ProductorderController {
 	
 	@Autowired
 	NotificationService notificationService;
+	
+	@Autowired
+	ContractorService contractorService;
 
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
@@ -227,7 +232,7 @@ public class ProductorderController {
 	private void addProductOrderAsso(ProductOrderDTO productOrderDTO,Productorder productorder,HttpServletRequest request,HttpServletResponse response) throws Exception {
 		List<ProductOrderAssociationDTO> ProductOrderAssociationDTOs = productOrderDTO.getProductOrderAssociationDTOs();
 		List<ProductOrderPDFData> productOrderPDFDatas = new ArrayList<ProductOrderPDFData>();
-		ClientDTO clientDTO = clientService.getClientDTOById(productOrderDTO.getClientId());
+		Contractor contractor = contractorService.getEntityById(Contractor.class, productOrderDTO.getContractorId().getId());
 		productOrderDTO.setStatusId(productorder.getStatus().getId());
 		if (ProductOrderAssociationDTOs != null&& !ProductOrderAssociationDTOs.isEmpty()) {
 			for (ProductOrderAssociationDTO productOrderAssociationDTO : ProductOrderAssociationDTOs) {
@@ -246,7 +251,7 @@ public class ProductorderController {
 				productorderassociationService.addEntity(ProductOrderAssoRequestResponseFactory.setProductPrderAsso(productOrderAssociationDTO, request));
 			}
 		}
-		createPdfProductOrder(request, response, productOrderPDFDatas, productOrderDTO, clientDTO);
+		createPdfProductOrder(request, response, productOrderPDFDatas, productOrderDTO, contractor);
 	}
 	
 	@RequestMapping(value = "/pendingList", method = RequestMethod.GET, headers = "Accept=application/json")
@@ -302,7 +307,7 @@ public class ProductorderController {
 		return productorderList;
 	}
 	
-	public void createPdfProductOrder(HttpServletRequest request, HttpServletResponse response,List<ProductOrderPDFData> productOrderPDFDatas,ProductOrderDTO productOrderDTO,ClientDTO client) throws IOException {
+	public void createPdfProductOrder(HttpServletRequest request, HttpServletResponse response,List<ProductOrderPDFData> productOrderPDFDatas,ProductOrderDTO productOrderDTO,Contractor contractor) throws IOException {
 		final ServletContext servletContext = request.getSession().getServletContext();
 	    final File tempDirectory = (File) servletContext.getAttribute("javax.servlet.context.tempdir");
 	    final String temperotyFilePath = tempDirectory.getAbsolutePath();
@@ -311,23 +316,23 @@ public class ProductorderController {
 	    response.setHeader("Content-disposition", "attachment; filename="+ fileName);
 	    try {
 	    	ProductOrderPdf createPDFProductOrder = new ProductOrderPdf();
-	    	createPDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderPDFDatas,productOrderDTO,client);
+	    	createPDFProductOrder.createPDF(temperotyFilePath+"\\"+fileName,productOrderPDFDatas,productOrderDTO,contractor);
 	 
 	       String productOrderPdfFile =    PDFToByteArrayOutputStreamUtil.convertPDFToByteArrayOutputStream(temperotyFilePath+"\\"+fileName);
 	 	   StatusDTO status = statusService.getStatusById(productOrderDTO.getStatusId());
 		   NotificationDTO notificationDTO = notificationService.getNotifiactionByStatus(status.getId());
-		   emailNotificationProductOrder(notificationDTO, productOrderPDFDatas, client, productOrderPdfFile, productOrderDTO);
+		   emailNotificationProductOrder(notificationDTO, productOrderPDFDatas, contractor, productOrderPdfFile, productOrderDTO);
 	    } catch (Exception e1) {
 	    	logger.error(e1);
 	        e1.printStackTrace();
 	    }
 	}
-	private void emailNotificationProductOrder(NotificationDTO notification,List<ProductOrderPDFData> productOrderPDFDatas,ClientDTO client,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
+	private void emailNotificationProductOrder(NotificationDTO notification,List<ProductOrderPDFData> productOrderPDFDatas,Contractor contractor,String fileName,ProductOrderDTO productOrderDTO) throws Exception{
 		 Mail mail = mailService.setMailCCBCCAndTO(notification);
-	    String userEmailCC = mail.getMailCc()+","+client.getEmailId();
+	    String userEmailCC = mail.getMailCc()+","+contractor.getEmailId();
 	    mail.setMailCc(userEmailCC);
 	    mail.setAttachment(fileName);
-       mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderPDFDatas, client, productOrderDTO));
+       mail.setModel(MailResponseRequestFactory.setMailDetailsProductOrder(notification, productOrderPDFDatas, contractor, productOrderDTO));
        mailService.sendEmail(mail,notification);
 	}
 	

@@ -1,4 +1,4 @@
-/*package com.nextech.systeminventory.filter;
+package com.nextech.systeminventory.filter;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -18,6 +18,7 @@ import com.nextech.systeminventory.service.UserTypeService;
 import com.nextech.systeminventory.service.UsertypepageassociationService;
 
 public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
+
 	@Autowired
 	UserService userService;
 
@@ -112,4 +113,4 @@ public class AjaxLoginProcessingFilter extends HandlerInterceptorAdapter {
 		httpServletResponse.setHeader("Access-Control-Expose-Headers", "auth_token, Origin");
 		return httpServletResponse;
 	}
-}*/
+}

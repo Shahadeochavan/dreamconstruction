@@ -3,10 +3,12 @@ package com.nextech.systeminventory.dto;
 import java.util.Date;
 import java.util.List;
 
+import com.nextech.systeminventory.model.Contractor;
+
 
 public class ProductOrderDTO extends AbstractDTO {
 	
-	private long clientId;
+	private Contractor contractorId;
 	private Date expecteddeliveryDate;	
 	private Date createDate;
 	private String invoiceNo;
@@ -37,11 +39,12 @@ public class ProductOrderDTO extends AbstractDTO {
 	public void setInvoiceNo(String invoiceNo) {
 		this.invoiceNo = invoiceNo;
 	}
-	public long getClientId() {
-		return clientId;
+
+	public Contractor getContractorId() {
+		return contractorId;
 	}
-	public void setClientId(long clientId) {
-		this.clientId = clientId;
+	public void setContractorId(Contractor contractorId) {
+		this.contractorId = contractorId;
 	}
 	public List<ProductOrderAssociationDTO> getProductOrderAssociationDTOs() {
 		return productOrderAssociationDTOs;

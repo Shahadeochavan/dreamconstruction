@@ -1,6 +1,7 @@
 package com.nextech.systeminventory.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,13 +28,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.nextech.systeminventory.constants.ERPConstants;
 import com.nextech.systeminventory.dto.NotificationDTO;
 import com.nextech.systeminventory.dto.UserDTO;
+import com.nextech.systeminventory.dto.UserTypePageAssoDTO;
 import com.nextech.systeminventory.factory.MailResponseRequestFactory;
 import com.nextech.systeminventory.factory.UserFactory;
+import com.nextech.systeminventory.filter.TokenFactory;
+import com.nextech.systeminventory.model.Authorization;
 import com.nextech.systeminventory.model.Mail;
 import com.nextech.systeminventory.model.Page;
 import com.nextech.systeminventory.model.User;
 import com.nextech.systeminventory.model.Usertype;
-import com.nextech.systeminventory.model.Usertypepageassociation;
 import com.nextech.systeminventory.service.MailService;
 import com.nextech.systeminventory.service.NotificationService;
 import com.nextech.systeminventory.service.UserService;
@@ -116,28 +119,30 @@ public class UserController {
 		User user2 = userservice.getUserByUserId(user.getUserid());
 
 		try {
-			//BasicConfigurator.configure();
 			logger.error(messageSource.getMessage(ERPConstants.COUNT, null,
 					null));
 			if (user2 != null && authenticate(user, user2)) {
+				Authorization authorization = new Authorization();
+				authorization.setUserid(user.getUserid());
+				authorization.setPassword(user.getPassword());
+				authorization.setUpdatedDate(new Date());
+				String token = TokenFactory.createAccessJwtToken(user2);
+				authorization.setToken(token);
+				response.addHeader("auth_token", token);
 				Usertype usertype = userTypeService.getEntityById(
 						Usertype.class, user2.getUsertype().getId());
-				List<Usertypepageassociation> usertypepageassociations = usertypepageassociationService
+				List<UserTypePageAssoDTO> usertypepageassociations = usertypepageassociationService
 						.getPagesByUsertype(usertype.getId());
 				HashMap<String, Object> result = new HashMap<String, Object>();
 				List<Page> pages = new ArrayList<Page>();
 				if (!usertypepageassociations.isEmpty()) {
-					for (Usertypepageassociation usertypepageassociation : usertypepageassociations) {
+					for (UserTypePageAssoDTO usertypepageassociation : usertypepageassociations) {
 						Page pageDTO = new Page();
 						pageDTO.setId(usertypepageassociation.getPage().getId());
-						pageDTO.setMenu(usertypepageassociation.getPage()
-								.getMenu());
-						pageDTO.setPageName(usertypepageassociation.getPage()
-								.getPageName());
-						pageDTO.setSubmenu(usertypepageassociation.getPage()
-								.getSubmenu());
-						pageDTO.setUrl(usertypepageassociation.getPage()
-								.getUrl());
+						pageDTO.setMenu(usertypepageassociation.getPage().getMenu());
+						pageDTO.setPageName(usertypepageassociation.getPage().getPageName());
+						pageDTO.setSubmenu(usertypepageassociation.getPage().getSubmenu());
+						pageDTO.setUrl(usertypepageassociation.getPage().getUrl());
 						pages.add(pageDTO);
 					}
 					result.put("pages", pages);
@@ -160,7 +165,6 @@ public class UserController {
 		return new UserStatus(0, "Please enter correct credentials");
 
 	}
-
 
 	private boolean authenticate(User formUser, User dbUser) {
 		if (formUser.getUserid().equals(dbUser.getUserid())

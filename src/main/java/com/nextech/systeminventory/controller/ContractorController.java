@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.systeminventory.dto.ContractorDTO;
+import com.nextech.systeminventory.factory.ContractorRequestResponseFactory;
 import com.nextech.systeminventory.model.Contractor;
 import com.nextech.systeminventory.service.ContractorService;
 import com.nextech.systeminventory.status.UserStatus;
@@ -35,16 +37,14 @@ public class ContractorController {
 	static Logger logger = Logger.getLogger(ContractorController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addContractor(@Valid @RequestBody Contractor contractor,
+	public @ResponseBody UserStatus addContractor(@Valid @RequestBody ContractorDTO contractorDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			contractor.setIsactive(true);
-			contractor.setCreatedBy((request.getAttribute("current_user").toString()));
-			contractorService.addEntity(contractor);
+			contractorService.addEntity(ContractorRequestResponseFactory.setContractor(contractorDTO, request));
 			return new UserStatus(1, "Contractor added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
@@ -77,10 +77,9 @@ public class ContractorController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateContractor(
-			@RequestBody Contractor contractor,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody ContractorDTO contractorDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			contractor.setIsactive(true);
-			contractorService.updateEntity(contractor);
+			contractorService.updateEntity(ContractorRequestResponseFactory.setContractorUpdate(contractorDTO, request));
 			return new UserStatus(1, "Contractor update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

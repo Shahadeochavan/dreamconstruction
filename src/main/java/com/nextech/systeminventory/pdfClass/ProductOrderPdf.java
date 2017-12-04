@@ -172,30 +172,30 @@ public class ProductOrderPdf {
 			   Font bf12 = new Font(FontFamily.TIMES_ROMAN, 10); 
 			   
 			   Font bf1 = new Font(FontFamily.TIMES_ROMAN, 10); 
-			   float[] columnWidths = {2.5f, 1.5f,1.5f,1.5f, 1.5f, 1.5f};
+			   float[] columnWidths = {3.5f, 3.5f,3.5f};
 			   PdfPTable table = new PdfPTable(columnWidths);
 			   table.setWidthPercentage(100f);
 
 			   insertCell(table, "Description of Goods", Element.ALIGN_RIGHT, 1, bf123);
 			   insertCell(table, "HSN Code", Element.ALIGN_LEFT, 1, bf123);
 			   insertCell(table, "Quantity", Element.ALIGN_LEFT, 1, bf123);
-			   insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bf123);
-			   insertCell(table, "T/GST/%", Element.ALIGN_LEFT, 1, bf123);
-			   insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bf123);
+			  // insertCell(table, "Rate", Element.ALIGN_LEFT, 1, bf123);
+			  // insertCell(table, "T/GST/%", Element.ALIGN_LEFT, 1, bf123);
+			 //  insertCell(table, "Amount", Element.ALIGN_LEFT, 1, bf123);
 			   table.setHeaderRows(1);
 
 	     for (ProductOrderPDFData productOrderData : productOrderDatas) {
 		     insertCell(table,productOrderData.getProductPartNumber() , Element.ALIGN_LEFT, 1, bf12);
 		     insertCell(table,productOrderData.getHsnCode() , Element.ALIGN_LEFT, 1, bf12);
 		      insertCell(table,(Long.toString(productOrderData.getQuantity())), Element.ALIGN_LEFT, 1, bf12);
-		      insertCell(table, (Float.toString(productOrderData.getPricePerUnit())), Element.ALIGN_LEFT, 1, bf12);
+		    //  insertCell(table, (Float.toString(productOrderData.getPricePerUnit())), Element.ALIGN_LEFT, 1, bf12);
 		      String  gst = String.valueOf(productOrderData.getGst())+"%";
 		      insertCell(table,gst , Element.ALIGN_LEFT, 1, bf12);
 		       float amout = 0;
 		      amout = productOrderData.getQuantity()*productOrderData.getPricePerUnit();
 		      double d2 =amout;
 			   String  amountToatl= String.format("%.02f", d2);
-		      insertCell(table, amountToatl, Element.ALIGN_RIGHT, 1, bf12);
+		    //  insertCell(table, amountToatl, Element.ALIGN_RIGHT, 1, bf12);
 		      SUB_TOTAL = SUB_TOTAL+amout;
 		      double d3 =SUB_TOTAL;
 		       subtoatl= String.format("%.02f", d3);
@@ -221,9 +221,10 @@ public class ProductOrderPdf {
 		    	   sgstTotal2 = cgstTotal2;
 		       }
 	    }
+	     document.add(table);
 	     
-	     insertCell(table, "BASE VALUE", Element.ALIGN_RIGHT, 5, bf123);
-	     insertCell(table, subtoatl, Element.ALIGN_RIGHT, 1, bf123);
+	/*   //  insertCell(table, "BASE VALUE", Element.ALIGN_RIGHT, 5, bf123);
+	     //insertCell(table, subtoatl, Element.ALIGN_RIGHT, 1, bf123);
 	     if(cgstTotal14>0){
 	    	 double d2 =cgstTotal14;
 		   String  cgst= String.format("%.02f", d2);
@@ -271,9 +272,9 @@ public class ProductOrderPdf {
 			  String  sgst= String.format("%.02f", d2);
 	    	 insertCell(table, "SGST-2.5 %", Element.ALIGN_RIGHT, 5, bf123);
 		     insertCell(table, sgst, Element.ALIGN_RIGHT, 1, bf123);
-	     }
+	     }*/
 	     
-	     insertCell(table, "GRAND TOTAL Rs", Element.ALIGN_RIGHT, 5, bf123);
+	   /*  insertCell(table, "GRAND TOTAL Rs", Element.ALIGN_RIGHT, 5, bf123);
 	     int totalPrice= (int) (SUB_TOTAL+cgstTotal14+cgstTotal2+cgstTotal9+cgstTotal6+sgstTotal14+sgstTotal9+sgstTotal6+sgstTotal2);
 	     double d3 =totalPrice;
 		 String    finalAns= String.format("%.02f", d3);
@@ -301,7 +302,7 @@ public class ProductOrderPdf {
 	     invoiceValueTable.addCell(wordTable);
 	     invoiceValueTable.addCell(valueBlankTable);
 	     document.add(invoiceValueTable);
-			}   
+			}   */
 	     
 	     float[] declrationWidth = {100f};
 	     PdfPTable declarationMainTable = new PdfPTable(declrationWidth);

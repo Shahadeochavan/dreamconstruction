@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.systeminventory.dto.UserTypeDTO;
+import com.nextech.systeminventory.factory.UserTypeFactory;
 import com.nextech.systeminventory.model.Usertype;
 import com.nextech.systeminventory.service.UserTypeService;
 import com.nextech.systeminventory.status.UserStatus;
@@ -32,16 +34,14 @@ public class UserTypeController {
 	
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addUserType(@Valid @RequestBody Usertype usertype,
+	public @ResponseBody UserStatus addUserType(@Valid @RequestBody UserTypeDTO userTypeDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			usertype.setIsactive(true);
-		//	usertype.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			userTypeService.addEntity(usertype);
+			userTypeService.addEntity(UserTypeFactory.setUserType(userTypeDTO, request));
 			return new UserStatus(1, "Usertype added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			System.out.println("Inside ConstraintViolationException");
@@ -71,10 +71,9 @@ public class UserTypeController {
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
 	public @ResponseBody UserStatus updateUserType(
-			@RequestBody Usertype userType,HttpServletRequest request,HttpServletResponse response) {
+			@RequestBody UserTypeDTO userTypeDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			userType.setIsactive(true);
-			userTypeService.updateEntity(userType);
+			userTypeService.updateEntity(UserTypeFactory.setUserTypeUpdate(userTypeDTO, request));
 			return new UserStatus(1, "UserType update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();

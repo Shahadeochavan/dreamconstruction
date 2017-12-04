@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.nextech.systeminventory.dto.PageDTO;
+import com.nextech.systeminventory.factory.PageFactory;
 import com.nextech.systeminventory.model.Page;
 import com.nextech.systeminventory.service.PageService;
 import com.nextech.systeminventory.status.UserStatus;
@@ -38,16 +40,14 @@ public class PageController {
 	static Logger logger = Logger.getLogger(ClientController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPage(@Valid @RequestBody Page page,
+	public @ResponseBody UserStatus addPage(@Valid @RequestBody PageDTO pageDTO,
 			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			page.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
-			page.setIsactive(true);
-			pageservice.addEntity(page);
+			pageservice.addEntity(PageFactory.setPage(pageDTO, request));
 			return new UserStatus(1, "Page added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
@@ -76,11 +76,10 @@ public class PageController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updatePage(@RequestBody Page page,
+	public @ResponseBody UserStatus updatePage(@RequestBody PageDTO pageDTO,
 			HttpServletRequest request, HttpServletResponse response) {
 		try {
-			page.setIsactive(true);
-			pageservice.updateEntity(page);
+			pageservice.updateEntity(PageFactory.setPageUpdate(pageDTO, request));
 			return new UserStatus(1, "Page update Successfully !");
 		} catch (Exception e) {
 			// e.printStackTrace();

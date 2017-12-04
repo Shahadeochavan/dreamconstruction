@@ -54,4 +54,21 @@ public class UsertypepageassociationDaoImpl extends SuperDaoImpl<Usertypepageass
 		    return true;
 	}
 	
+	@Override
+	public Usertypepageassociation getUserTypePageAssoByPageIduserTypeId(
+			long pageId, long userTypeId) throws Exception {
+		
+		session = sessionFactory.openSession();
+		CriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<Usertypepageassociation> criteria = builder.createQuery(Usertypepageassociation.class);
+		Root<Usertypepageassociation> userRoot = criteria.from(Usertypepageassociation.class);
+		criteria.select(userRoot).where(builder.equal(userRoot.get("page"), pageId),builder.equal(userRoot.get("usertype"), userTypeId),builder.equal(userRoot.get("isactive"), true));
+		TypedQuery<Usertypepageassociation> query = session.createQuery(criteria);
+		List<Usertypepageassociation> results = query.getResultList();
+		  if (results.isEmpty()) {
+		        return null;
+		    }
+		    return results.get(0);
+	}
+	
 }

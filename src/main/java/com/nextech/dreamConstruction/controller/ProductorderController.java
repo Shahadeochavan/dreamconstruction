@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.nextech.dreamConstruction.constants.DreamConstructionConstants;
-import com.nextech.dreamConstruction.dto.ClientDTO;
 import com.nextech.dreamConstruction.dto.NotificationDTO;
 import com.nextech.dreamConstruction.dto.ProductDTO;
 import com.nextech.dreamConstruction.dto.ProductOrderAssociationDTO;
@@ -139,7 +138,7 @@ public class ProductorderController {
 			// TODO save call product order
 			Productorder productorder = saveProductOrder(productOrderDTO, request, response);
 
-			String invoiceNumber = generateInvoice() + productorder.getId();
+			String invoiceNumber =  generateInvoice() + productorder.getId();
 			productorder.setInvoiceNo(invoiceNumber);
 			productorderService.updateEntity(productorder);
 			// TODO add product order association
@@ -180,7 +179,7 @@ public class ProductorderController {
 	public @ResponseBody UserStatus updateProductorder(
 			@RequestBody ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
+			Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO,request);
 			productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(DreamConstructionConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 			productorderService.updateEntity(productorder);
 			return new UserStatus(1, "Product Order update Successfully !");
@@ -223,7 +222,7 @@ public class ProductorderController {
 	}
 	private Productorder saveProductOrder(ProductOrderDTO productOrderDTO,HttpServletRequest request,HttpServletResponse response)
 			throws Exception {
-		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO);
+		Productorder productorder = ProductOrderRequestResponseFactory.setProductOrder(productOrderDTO,request);
 		productorder.setStatus(statusService.getEntityById(Status.class,Long.parseLong(messageSource.getMessage(DreamConstructionConstants.STATUS_NEW_PRODUCT_ORDER, null, null))));
 		productorderService.addEntity(productorder);
 		return productorder;

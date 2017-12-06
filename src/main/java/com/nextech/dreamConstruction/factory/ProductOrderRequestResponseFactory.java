@@ -1,4 +1,6 @@
 package com.nextech.dreamConstruction.factory;
+import javax.servlet.http.HttpServletRequest;
+
 import com.nextech.dreamConstruction.dto.ProductOrderDTO;
 import com.nextech.dreamConstruction.model.Client;
 import com.nextech.dreamConstruction.model.Contractor;
@@ -9,7 +11,7 @@ import com.nextech.dreamConstruction.model.Productorderassociation;
 
 public class ProductOrderRequestResponseFactory {
 	
-	public static Productorder setProductOrder(ProductOrderDTO productOrderDTO){
+	public static Productorder setProductOrder(ProductOrderDTO productOrderDTO,HttpServletRequest request){
 		Productorder productorder = new Productorder();
 		Contractor contractor = new Contractor();
 		contractor.setId(productOrderDTO.getContractorId().getId());
@@ -20,9 +22,7 @@ public class ProductOrderRequestResponseFactory {
 		productorder.setId(productOrderDTO.getId());
 		productorder.setPoNO(productOrderDTO.getPoNO());
 		productorder.setQuantity(productOrderDTO.getProductOrderAssociationDTOs().size());
-		productorder.setTotalPrice(productOrderDTO.getTotalPrice());
-		productorder.setTax(productOrderDTO.getTax());
-		productorder.setActualPrice(productOrderDTO.getActualPrice());
+		productorder.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		productorder.setIsactive(true);
 		return productorder;
 	}

@@ -19,13 +19,16 @@ public class UserFactory {
 		user.setUserid(userDTO.getUserId());
 		user.setPassword(userDTO.getPassword());
 		user.setMobile(userDTO.getMobileNo());
+		user.setFirstName(userDTO.getFirstName());
+		user.setLastName(userDTO.getLastName());
 		user.setDob(userDTO.getDob());
+		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
 		user.setGender(userDTO.getGender());
 		Usertype  usertype = new Usertype();
-		usertype.setId(10);
+		usertype.setId(userDTO.getUserTypeDTO().getId());
 		user.setUsertype(usertype);
-		//user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
 		return user;
 	}
@@ -36,13 +39,16 @@ public class UserFactory {
 		user.setUserid(userDTO.getUserId());
 		user.setPassword(userDTO.getPassword());
 		user.setMobile(userDTO.getMobileNo());
+		user.setFirstName(userDTO.getFirstName());
+		user.setLastName(userDTO.getLastName());
 		user.setDob(userDTO.getDob());
+		user.setDoj(userDTO.getDoj());
 		user.setEmail(userDTO.getEmailId());
 		Usertype  usertype = new Usertype();
 		user.setGender(userDTO.getGender());
-		usertype.setId(10);
+		usertype.setId(userDTO.getUserTypeDTO().getId());
 		user.setUsertype(usertype);
-		//user.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
+		user.setUpdatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		user.setIsactive(true);
 		return user;
 	}

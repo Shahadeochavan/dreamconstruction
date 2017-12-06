@@ -13,9 +13,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.nextech.dreamConstruction.constants.DreamConstructionConstants;
 import com.nextech.dreamConstruction.dto.InventoryDashBoardDTO;
 import com.nextech.dreamConstruction.model.Product;
-import com.nextech.dreamConstruction.model.Productorder;
+import com.nextech.dreamConstruction.model.Productinventory;
 import com.nextech.dreamConstruction.model.Purchase;
 import com.nextech.dreamConstruction.service.ProductService;
+import com.nextech.dreamConstruction.service.ProductinventoryService;
 import com.nextech.dreamConstruction.service.ProductorderService;
 import com.nextech.dreamConstruction.service.PurchaseService;
 
@@ -33,18 +34,21 @@ public class InventoryDashBoardController {
 	PurchaseService purchaseService;
 	
 	@Autowired
+	ProductinventoryService productinventoryService;
+	
+	@Autowired
 	private MessageSource messageSource;
 
 	@RequestMapping(method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody InventoryDashBoardDTO getInventoryDashBoard() {
 		List<Product> productList = null;
-		List<Productorder> productorderList = null;
 		List<Purchase> purchases =null;
+		List<Productinventory> productinventories = null;
 		InventoryDashBoardDTO inventoryDashBoardDTO = new InventoryDashBoardDTO();
 		try {
 			productList = productService.getEntityList(Product.class);
-			productorderList = productorderService.getEntityList(Productorder.class);
 			purchases =purchaseService.getEntityList(Purchase.class);
+            productinventories = productinventoryService.getEntityList(Productinventory.class);
 			
 			long productOrderCompleteCountCurrentDate = 0;
 			long productOrderInCompleteCountCurrentDate = 0;
@@ -71,7 +75,11 @@ public class InventoryDashBoardController {
 					productOrderNewCount++;
 				}
 			}
-		
+			for (Productinventory productinventory : productinventories) {
+				if(productinventory.getQuantityavailable()<=productinventory.getMinimum_quantity()){
+					
+				}
+			}
 			inventoryDashBoardDTO.setProductCount(productList.size());
 			inventoryDashBoardDTO.setProductOrderCompleteCount(productOrderCompleteCount);
 			inventoryDashBoardDTO.setProductOrderIncompleteCount(productOrderIncompleteCount);

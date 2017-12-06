@@ -58,11 +58,11 @@ public class UsertypepageassociationController {
 			for (UserTypePageAssoPart userTypePageAssoPart : userTypePageAssoParts) {	
 			if (usertypepageassociationService.getUserTypePageAssoByPageIduserTypeId((userTypePageAssoPart.getPageId().getId()),userTypePageAssoDTO.getUsertypeId().getId()) == null){
 				usertypepageassociationService.addMultipleUserTypePageAsso(userTypePageAssoDTO, request.getAttribute("current_user").toString());
-			}else{
+			}/*else{
 				PageDTO pageDTO = pageservice.getPageDTOById(userTypePageAssoPart.getPageId().getId());
 				String pageName = pageDTO.getPageName()+" already exists";
 				return new UserStatus(2, pageName);
-			}
+			}*/
 			}
 			}else{
 				return new UserStatus(2,"Please select page and click on add button");

@@ -103,7 +103,7 @@ public class PurchaseController {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-		long id =	purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO));
+		long id =	purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO,request));
 		purchaseDTO.setId(id);
 		Purchase purchase =  purchaseService.getEntityById(Purchase.class, id);
 		String poNumber = generatePoId()+purchase.getId();
@@ -142,7 +142,7 @@ public class PurchaseController {
 	public @ResponseBody UserStatus updateUserType(
 			@RequestBody PurchaseDTO purchaseDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			purchaseService.updateEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO));
+			purchaseService.updateEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO,request));
 			return new UserStatus(1, "Purchase update Successfully !");
 		} catch (Exception e) {
 			 e.printStackTrace();
@@ -334,7 +334,7 @@ public class PurchaseController {
 				purchaseDTOs.add(purchaseDTO2);
 			}
 			for (PurchaseDTO purchaseDTO2 : purchaseDTOs) {
-			long id=	  purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO2));
+			long id=	  purchaseService.addEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO2,request));
 			      purchaseDTO2.setId(id);
 					Purchase purchase =  purchaseService.getEntityById(Purchase.class, id);
 					String poNumber = generatePoId()+purchase.getId();

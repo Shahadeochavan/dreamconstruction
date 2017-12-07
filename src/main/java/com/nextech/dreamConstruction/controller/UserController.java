@@ -228,7 +228,7 @@ public class UserController {
 		try {
 			UserDTO user2 = userservice.getUserByEmail(userDTO.getEmailId());
 			if(user2==null){
-				return new UserStatus(0,"Please enter registred email with inventory");
+				return new UserStatus(0,"Please enter registred email with dream construction");
 			}
 			NotificationDTO notificationDTO = notificationService.getNotificationByCode((messageSource.getMessage(DreamConstructionConstants.USER_FORGOT_NOTIFICATION, null, null)));
 			emailNotificationUser(user2, request, response, notificationDTO);

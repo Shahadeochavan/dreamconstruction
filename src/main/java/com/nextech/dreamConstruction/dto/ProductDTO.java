@@ -1,5 +1,7 @@
 package com.nextech.dreamConstruction.dto;
 
+import com.nextech.dreamConstruction.model.Unit;
+
 
 public class ProductDTO  extends AbstractDTO{
 
@@ -9,6 +11,8 @@ public class ProductDTO  extends AbstractDTO{
 	private String hsnCode;
 	private String pricePerUnit;
 	private double gst;
+	private Unit unit;
+	
 	
 	public ProductDTO(){
 		
@@ -53,6 +57,12 @@ public class ProductDTO  extends AbstractDTO{
 	}
 	public void setGst(double gst) {
 		this.gst = gst;
+	}
+	public Unit getUnit() {
+		return unit;
+	}
+	public void setUnit(Unit unit) {
+		this.unit = unit;
 	}
 
 }

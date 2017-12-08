@@ -285,7 +285,7 @@ public class PurchaseController {
 			String strDate = stri+"";
 			year = str+"/"+strDate.substring(2);
 		}
-		year = "AS/PO/"+year+"/";
+		year = "DC/PO/"+year+"/";
 		return year;
 	}
 	

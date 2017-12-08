@@ -67,6 +67,10 @@ public class Product implements Serializable {
 	@JsonIgnore
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "product", cascade = CascadeType.ALL)
 	private List<PurchaseAssn> purchaseAssns;
+	
+	@ManyToOne
+	@JoinColumn(name="unitId")
+	private Unit unit;
 
 
 	public Product() {
@@ -232,5 +236,11 @@ public class Product implements Serializable {
 	public void setGst(double gst) {
 		this.gst = gst;
 	}
-	
+	public Unit getUnit() {
+		return this.unit;
+	}
+
+	public void setUnit(Unit unit) {
+		this.unit = unit;
+	}
 }

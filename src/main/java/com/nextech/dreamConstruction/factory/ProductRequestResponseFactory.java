@@ -6,8 +6,10 @@ import javax.servlet.http.HttpServletRequest;
 
 
 
+
 import com.nextech.dreamConstruction.dto.ProductDTO;
 import com.nextech.dreamConstruction.model.Product;
+import com.nextech.dreamConstruction.model.Unit;
 
 
 public class ProductRequestResponseFactory {
@@ -22,6 +24,9 @@ public class ProductRequestResponseFactory {
 		product.setHsnCode(productDTO.getHsnCode());
 		product.setGst(productDTO.getGst());
 		product.setIsactive(true);
+		Unit unit = new Unit();
+		unit.setId(productDTO.getUnit().getId());
+		product.setUnit(unit);
 		product.setPricePerUnit(Float.valueOf(productDTO.getPricePerUnit()));
 		product.setCreatedBy(Long.parseLong(request.getAttribute("current_user").toString()));
 		return product;
@@ -37,6 +42,9 @@ public class ProductRequestResponseFactory {
 		product.setDesign(productDTO.getDesign());
 		product.setHsnCode(productDTO.getHsnCode());
 		product.setGst(productDTO.getGst());
+		Unit unit = new Unit();
+		unit.setId(productDTO.getUnit().getId());
+		product.setUnit(unit);
 		product.setIsactive(true);
 		return product;
 	}
@@ -57,6 +65,9 @@ public class ProductRequestResponseFactory {
 		productDTO.setUpdatedDate(product.getUpdatedDate());
 		productDTO.setDesign(product.getDesign());
 		productDTO.setGst(product.getGst());
+		Unit unit = new Unit();
+		unit.setId(product.getUnit().getId());
+		productDTO.setUnit(unit);
 		return productDTO;
 	}
 }

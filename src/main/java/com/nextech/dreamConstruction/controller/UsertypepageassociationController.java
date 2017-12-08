@@ -20,12 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.nextech.dreamConstruction.dto.PageDTO;
 import com.nextech.dreamConstruction.dto.UserTypePageAssoDTO;
 import com.nextech.dreamConstruction.dto.UserTypePageAssoPart;
 import com.nextech.dreamConstruction.model.Usertypepageassociation;
 import com.nextech.dreamConstruction.service.PageService;
 import com.nextech.dreamConstruction.service.UsertypepageassociationService;
+import com.nextech.dreamConstruction.status.Response;
 import com.nextech.dreamConstruction.status.UserStatus;
 
 @Controller
@@ -132,5 +132,23 @@ public class UsertypepageassociationController {
 			e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
+	}
+	@RequestMapping(value = "/UserTypePageAsso/{UserTypeId}", method = RequestMethod.GET, headers = "Accept=application/json")
+	public @ResponseBody Response getPageAssByUserTypeId(@PathVariable("UserTypeId") long id) {
+
+		List<UserTypePageAssoDTO> UserTypePageAssoDTO = null;
+		try {
+			UserTypePageAssoDTO = usertypepageassociationService.getPagesByUsertype(id);
+			if(UserTypePageAssoDTO==null){
+				logger.info("There is no any user type page association");
+				return new Response(1,"There is no user type page association");
+			}
+
+		} catch (Exception e) {
+			logger.error(e);
+			e.printStackTrace();
+		}
+
+		return new Response(1,UserTypePageAssoDTO);
 	}
 }

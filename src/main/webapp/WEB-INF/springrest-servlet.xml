@@ -42,6 +42,7 @@
 				<value>com.nextech.dreamConstruction.model.PurchaseAssn</value>
 				<value>com.nextech.dreamConstruction.model.Purchase</value>
 				<value>com.nextech.dreamConstruction.model.Contractor</value>
+				<value>com.nextech.dreamConstruction.model.Unit</value>
 			</list>
 		</property>
 		<property name="hibernateProperties">

@@ -10,45 +10,43 @@ import javax.validation.Valid;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.nextech.dreamConstruction.dto.PageDTO;
-import com.nextech.dreamConstruction.factory.PageFactory;
-import com.nextech.dreamConstruction.model.Page;
-import com.nextech.dreamConstruction.service.PageService;
+import com.nextech.dreamConstruction.dto.UnitDTO;
+import com.nextech.dreamConstruction.factory.UnitFactory;
+import com.nextech.dreamConstruction.service.UnitService;
+import com.nextech.dreamConstruction.status.Response;
 import com.nextech.dreamConstruction.status.UserStatus;
 
-@Controller
-@RequestMapping("/page")
-public class PageController {
+@RestController
+@RequestMapping("/unit")
+public class UnitController {
 
 	@Autowired
-	PageService pageservice;
+	UnitService unitservice;
 	
-	@Autowired
-	private MessageSource messageSource;
-	
-	@Autowired
-	static Logger logger = Logger.getLogger(PageController.class);
+	static Logger logger = Logger.getLogger(UnitController.class);
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus addPage(@Valid @RequestBody PageDTO pageDTO,
-			BindingResult bindingResult,HttpServletRequest request,HttpServletResponse response) {
+	public @ResponseBody UserStatus addUnit(@Valid @RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response,
+			BindingResult bindingResult) {
 		try {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError()
 						.getDefaultMessage());
 			}
-			pageservice.addEntity(PageFactory.setPage(pageDTO, request));
-			return new UserStatus(1, "Page added Successfully !");
+			if(unitservice.getUnitByName(unitDTO.getName())!=null){
+				return  new UserStatus(2,"Unit name already exist");
+			}
+			unitservice.addEntity(UnitFactory.setUnit(unitDTO, request));
+			return new UserStatus(1, "Unit added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
 			cve.printStackTrace();
@@ -65,49 +63,61 @@ public class PageController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody Page getPage(@PathVariable("id") long id) {
-		Page page = null;
+	public @ResponseBody Response getUnit(@PathVariable("id") long id) {
+		UnitDTO unit = null;
 		try {
-			page = pageservice.getEntityById(Page.class, id);
+			unit = unitservice.getUnitByID(id);
+			if(unit==null){
+				logger.error("There is no any unit");
+				return new Response(1,"There is no any unit");
+			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
-		return page;
+		return new Response(1,unit);
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
-	public @ResponseBody UserStatus updatePage(@RequestBody PageDTO pageDTO,
-			HttpServletRequest request, HttpServletResponse response) {
+	public @ResponseBody UserStatus updateUnit(@RequestBody UnitDTO unitDTO,HttpServletRequest request,HttpServletResponse response) {
 		try {
-			pageservice.updateEntity(PageFactory.setPageUpdate(pageDTO, request));
-			return new UserStatus(1, "Page update Successfully !");
+			unitservice.updateEntity(UnitFactory.setUnitUpdate(unitDTO, request));
+			return new UserStatus(1, "Unit update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
+			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
-	public @ResponseBody List<Page> getPage() {
-
-		List<Page> PageList = null;
+	public @ResponseBody Response getUnit() {
+		List<UnitDTO> unitList = null;
 		try {
-			PageList = pageservice.getEntityList(Page.class);
+			unitList = unitservice.getUnitList();
+			if(unitList==null){
+				logger.error("There is no any unit list");
+				return new Response(1,"There is no any unit list");
+			}
 		} catch (Exception e) {
+			logger.error(e);
 			e.printStackTrace();
 		}
-		return PageList;
+		return new Response(1,unitList);
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
-	public @ResponseBody UserStatus deletePage(@PathVariable("id") long id) {
+	public @ResponseBody Response deleteUnit(@PathVariable("id") long id) {
+
 		try {
-			Page page = pageservice.getEntityById(Page.class,id);
-			page.setIsactive(false);
-			pageservice.updateEntity(page);
-			return new UserStatus(1, "Page deleted Successfully !");
+			UnitDTO unitDTO =unitservice.deleteUnit(id);
+			if(unitDTO==null){
+				logger.error("There is no any unit");
+				return new Response(1,"There is no any unit");
+			}
+			return new Response(1, "Unit deleted Successfully !");
 		} catch (Exception e) {
-			return new UserStatus(0, e.toString());
+			logger.error(e);
+			return new Response(0, e.toString());
 		}
 
 	}

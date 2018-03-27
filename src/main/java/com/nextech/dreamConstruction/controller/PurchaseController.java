@@ -42,6 +42,7 @@ import com.nextech.dreamConstruction.factory.MailResponseRequestFactory;
 import com.nextech.dreamConstruction.factory.PurchaseRequestResponseFactory;
 import com.nextech.dreamConstruction.factory.PurhcaseAssnRequestResponseFactory;
 import com.nextech.dreamConstruction.model.Mail;
+import com.nextech.dreamConstruction.model.PrVndrAssn;
 import com.nextech.dreamConstruction.model.Purchase;
 import com.nextech.dreamConstruction.model.PurchaseAssn;
 import com.nextech.dreamConstruction.model.Vendor;
@@ -90,7 +91,7 @@ public class PurchaseController {
 	ProductService productService;
 	
 	@Autowired
-	PrVndrAssnService PrVndrAssnService;
+	PrVndrAssnService prVndrAssnService;
 	
 	@Autowired
 	static Logger logger = Logger.getLogger(PurchaseController.class);
@@ -113,29 +114,25 @@ public class PurchaseController {
 			return new UserStatus(1, "Purchase added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
-			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
 			logger.error(pe);
-			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody Purchase getPurchase(@PathVariable("id") long id) {
-		Purchase Purchase = null;
+		Purchase purchase = null;
 		try {
-			Purchase = purchaseService.getEntityById(Purchase.class, id);
+			purchase = purchaseService.getEntityById(Purchase.class, id);
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
-		return Purchase;
+		return purchase;
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.PUT, headers = "Accept=application/json")
@@ -145,7 +142,7 @@ public class PurchaseController {
 			purchaseService.updateEntity(PurchaseRequestResponseFactory.setPurchase(purchaseDTO,request));
 			return new UserStatus(1, "Purchase update Successfully !");
 		} catch (Exception e) {
-			 e.printStackTrace();
+			logger.error(e);
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -153,25 +150,24 @@ public class PurchaseController {
 	@RequestMapping(value = "/list", method = RequestMethod.GET, headers = "Accept=application/json")
 	public @ResponseBody List<Purchase> getPurchase() {
 
-		List<Purchase> Purchases = null;
+		List<Purchase> purchases = null;
 		try {
-			Purchases = purchaseService.getEntityList(Purchase.class);
+			purchases = purchaseService.getEntityList(Purchase.class);
 
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 
-		return Purchases;
+		return purchases;
 	}
 
 	@RequestMapping(value = "delete/{id}", method = RequestMethod.DELETE, headers = "Accept=application/json")
 	public @ResponseBody UserStatus deletePurchase(@PathVariable("id") long id) {
 
 		try {
-			Purchase Purchase = purchaseService.getEntityById(Purchase.class,id);
-			Purchase.setIsactive(false);
-			purchaseService.updateEntity(Purchase);
+			Purchase purchase = purchaseService.getEntityById(Purchase.class,id);
+			purchase.setIsactive(false);
+			purchaseService.updateEntity(purchase);
 			return new UserStatus(1, "Purchase deleted Successfully !");
 		} catch (Exception e) {
 			logger.error(e);
@@ -183,13 +179,12 @@ public class PurchaseController {
 	public @ResponseBody List<PurchaseAssnDTO> getProductOrder(
 			@PathVariable("orderId") long id) {
 		List<PurchaseAssn> purchaseAssns = null;
-		List<PurchaseAssnDTO> purchaseAssnDTOs = new ArrayList<PurchaseAssnDTO>();
+		List<PurchaseAssnDTO> purchaseAssnDTOs = new ArrayList<>();
 		try {
 			purchaseAssns = purchaseAssnService.getPurchaseAssnByPurchaseId(id);
 			if(!purchaseAssns.isEmpty()){
 			for (PurchaseAssn purchaseAssn : purchaseAssns) {
 				PurchaseAssnDTO  purchaseAssnDTO =  new PurchaseAssnDTO();
-				//Productinventory productinventory = productinventoryService.getProductinventoryByProductId(purchaseAssn.getProduct().getId());
 				ProductDTO productDTO =  new ProductDTO();
 				productDTO.setId(purchaseAssn.getProduct().getId());
 				productDTO.setProductCode(purchaseAssn.getProduct().getProductCode());
@@ -200,7 +195,7 @@ public class PurchaseController {
 			}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		}
 		return purchaseAssnDTOs;
 	}
@@ -213,16 +208,14 @@ public class PurchaseController {
 			purchases = purchaseService.getPendingPurchaseOrders(Long.parseLong(messageSource.getMessage(DreamConstructionConstants.PURCHASE_NEW_PRODUCT, null, null)),Long.parseLong(messageSource.getMessage(DreamConstructionConstants.PURCHASE_ORDER_INCOMPLETE, null, null)));
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return purchases;
 	}
 	
 	private void addPurchaseOrderAsso(PurchaseDTO purchaseDTO,HttpServletRequest request, HttpServletResponse response) throws Exception {
 		List<PurchaseAssnDTO> purchaseAssnDTOs = purchaseDTO.getPurchaseAssnDTOs();
-		List<PurchaseOrderPdfData> productOrderPDFDatas = new ArrayList<PurchaseOrderPdfData>();
+		List<PurchaseOrderPdfData> productOrderPDFDatas = new ArrayList<>();
 		VendorDTO vendorDTO = vendorService.getVendorById(purchaseDTO.getVendorId());
-	//	List<PrVndrAssn> prVndrAssns  = PrVndrAssnService.getPrVndrAssnByVendorId(vendorDTO.getId());
 		if (purchaseAssnDTOs != null&& !purchaseAssnDTOs.isEmpty()) {
 			for (PurchaseAssnDTO purchaseAssnDTO : purchaseAssnDTOs) {
 						PurchaseOrderPdfData purchaseOrderPdfData = new PurchaseOrderPdfData();
@@ -256,7 +249,6 @@ public class PurchaseController {
 			emailNotificationPurchaseOrder(notification, purchaseDTO, vendor, rmOrderPdffile, productOrderPDFDatas);
 	    } catch (Exception e1) {
 	    	logger.error(e1);
-	        e1.printStackTrace();
 	    }
 	}
 	
@@ -296,25 +288,25 @@ public class PurchaseController {
 			if (bindingResult.hasErrors()) {
 				return new UserStatus(0, bindingResult.getFieldError().getDefaultMessage());
 			}
-			//TODO save call raw material order
-			List<PurchaseDTO> purchaseDTOs =  new ArrayList<PurchaseDTO>();
-			HashMap<Long, List<PurchaseAssnDTO>> multipleOrder = new HashMap<Long, List<PurchaseAssnDTO>>();
+			List<PurchaseDTO> purchaseDTOs =  new ArrayList<>();
+			HashMap<Long, List<PurchaseAssnDTO>> multipleOrder = new HashMap<>();
 			PurchaseDTO purchaseDTO = new PurchaseDTO();
 			for(PurchaseDTO purDto : multiplePurchaseOrderDTO.getPurchaseDTOs()){
 				purchaseDTO.setExpectedDeliveryDate(purDto.getExpectedDeliveryDate());
 				purchaseDTO.setDescription(purDto.getDescription());
 				List<PurchaseAssnDTO> purchaseAssnDTOs = null;
 				if(multipleOrder.get(purDto.getVendorId()) == null){
-					purchaseAssnDTOs = new ArrayList<PurchaseAssnDTO>();
+					purchaseAssnDTOs = new ArrayList<>();
 				}else{
 					purchaseAssnDTOs = multipleOrder.get(purDto.getVendorId());
 				}
 				
 				for (PurchaseAssnDTO rmOrderAssociationDTO1 : purDto.getPurchaseAssnDTOs()) {
+					PrVndrAssn prVndrAssn = prVndrAssnService.getPrVndrAssnByVendorIdProductId(purDto.getVendorId(),rmOrderAssociationDTO1.getProductId().getId());
 					PurchaseAssnDTO purchaseAssnDTO = new PurchaseAssnDTO();
 					purchaseAssnDTO.setQuantity(rmOrderAssociationDTO1.getQuantity());
 					purchaseAssnDTO.setProductId(rmOrderAssociationDTO1.getProductId());
-					purchaseAssnDTO.setPricePerUnit(rmOrderAssociationDTO1.getPricePerUnit());
+					purchaseAssnDTO.setPricePerUnit(prVndrAssn.getPricePerUnit());
 					purchaseAssnDTO.setExpectedDeliveryDate(purDto.getExpectedDeliveryDate());
 					purchaseAssnDTOs.add(purchaseAssnDTO);
 					multipleOrder.put(purDto.getVendorId(), purchaseAssnDTOs);
@@ -345,15 +337,12 @@ public class PurchaseController {
 			return new UserStatus(1, "Multiple Purchase  Order added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
-			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
 			logger.error(pe);
-			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}

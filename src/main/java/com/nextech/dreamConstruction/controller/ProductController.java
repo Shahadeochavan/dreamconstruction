@@ -86,7 +86,6 @@ public class ProductController {
 			product = productService.getEntityById(Product.class,id);
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return product;
 	}
@@ -111,7 +110,6 @@ public class ProductController {
 			return new UserStatus(1, "Product update Successfully !");
 		} catch (Exception e) {
 			logger.error(e);
-			 e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
@@ -123,7 +121,6 @@ public class ProductController {
 			ProductList = productService.getEntityList(Product.class);
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 		}
 		return ProductList;
 	}
@@ -179,11 +176,9 @@ public class ProductController {
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
 			logger.error(pe);
-			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}

@@ -51,15 +51,12 @@ public class PageController {
 			return new UserStatus(1, "Page added Successfully !");
 		} catch (ConstraintViolationException cve) {
 			logger.error(cve);
-			cve.printStackTrace();
 			return new UserStatus(0, cve.getCause().getMessage());
 		} catch (PersistenceException pe) {
 			logger.error(pe);
-			pe.printStackTrace();
 			return new UserStatus(0, pe.getCause().getMessage());
 		} catch (Exception e) {
 			logger.error(e);
-			e.printStackTrace();
 			return new UserStatus(0, e.getCause().getMessage());
 		}
 	}
@@ -82,7 +79,6 @@ public class PageController {
 			pageservice.updateEntity(PageFactory.setPageUpdate(pageDTO, request));
 			return new UserStatus(1, "Page update Successfully !");
 		} catch (Exception e) {
-			// e.printStackTrace();
 			return new UserStatus(0, e.toString());
 		}
 	}
